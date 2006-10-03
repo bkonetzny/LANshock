@@ -3,10 +3,10 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL: https://svn.sourceforge.net/svnroot/lanshock/trunk/index.cfm $
-$LastChangedDate: 2006-10-03 22:14:18 +0200 (Di, 03 Okt 2006) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 7 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 --->
 
 <cfif right(cgi.script_name, Len("index.cfm")) NEQ "index.cfm" AND right(cgi.script_name, 3) NEQ "cfc">
