@@ -2,8 +2,8 @@
 <!-------------------------------------------------------------------------+
  | Copyright (C) 2002 - 2005 LANshock.com                                  |
  |                                                                         |
- | lastmodified: $Date: 2002-07-22 21:42:37 -0700 (Mon, 22 Jul 2002) $     |
- |           by: $Author: harry $                                          |
+ | lastmodified: $Date$                                                    |
+ |           by: $Author$                                                  |
  |                               http://sourceforge.net/projects/lanshock/ |
  | Released Under the GNU General Public License (v2) (see license.txt)    |
  +------------------------------------------------------------------------->
