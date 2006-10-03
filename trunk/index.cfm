@@ -1,12 +1,15 @@
 <cfsetting enablecfoutputonly="Yes">
-<!-------------------------------------------------------------------------+
- | Copyright (C) 2002 - 2005 LANshock.com                                  |
- |                                                                         |
- | lastmodified: $LastChangedDate$                                         |
- |           by: $LastChangedBy$                                                  |
- |                               http://sourceforge.net/projects/lanshock/ |
- | Released Under the GNU General Public License (v2) (see license.txt)    |
- +------------------------------------------------------------------------->
+<!---
+Copyright (C) 2002 - 2005 LANshock.com
+
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
+
+http://sourceforge.net/projects/lanshock/
+Released Under the GNU General Public License (v2) (see license.txt)
+--->
 
 <cftry>
 	<cfinclude template="core/lanshock.runtime.cfm">
