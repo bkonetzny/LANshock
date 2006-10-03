@@ -12,7 +12,6 @@ $LastChangedRevision$
 <cfscript>
 	// useful constants
 	self = "";
-	// self = "";
 	myself = "#self#?#application.fusebox.fuseactionVariable#=";
 	
 	// make important Variables accessible for Components
