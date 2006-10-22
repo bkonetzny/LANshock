@@ -1,0 +1,144 @@
+/*-------------------------------------------------------------------------+
+ | Copyright (C) 2002 - 2005 LANshock.com                                  |
+ |                                                                         |
+ | lastmodified: 05-06-09                                                  |
+ |           by: bkonetzny                                                 |
+ |                               http://sourceforge.net/projects/lanshock/ |
+ | Released Under the GNU General Public License (v2) (see license.txt)    |
+ +-------------------------------------------------------------------------*/
+
+/* LANSHOCK STYLES */
+
+.headline{
+	font-size : 18px;
+	font-weight: bold;
+	margin-bottom: 30px;
+}
+
+.headline2{
+	font-size : 14px;
+	font-weight: bold;
+	margin-top: 40px;
+	margin-bottom: 5px;
+}
+
+.text_big{
+	font-size : 18px;
+}
+
+.text_small{
+	font-size : 9px;
+}
+
+.text_light{
+	color: #999999;
+}
+
+.text_important{
+	color : #990000;
+	font-weight: bold;
+}
+
+.required{
+	font-size : 16px;
+	color : #990000;
+	font-weight: bold;
+}
+
+a.link_extended, a:link.link_extended, a:visited.link_extended, a:active.link_extended, a:hover.link_extended{
+	text-decoration : none;
+	color: #FF9900;
+	font-weight: bold;
+	padding: 1px;
+	border: 1ps solid #fff;
+}
+
+a:hover.link_extended{
+	text-decoration : none;
+	background-color: #FF9900;
+	color: #fff;
+	font-weight: bold;
+	padding: 1px;
+	border: 1ps solid #FFCC66;
+}
+
+table.vlist th{
+	width: 30%;
+	padding: 5px;
+	font-size: 10pt;
+	font-weight: normal;
+	text-align: left;
+	color: #5D5D5D;
+	background-color:#EBEBEB;
+}
+
+table.vlist td{
+	font-size: 10pt;
+	padding: 5px;
+}
+
+table.vlist td.empty{
+	background-image: url(../images/spacer.gif);
+}
+
+table.list{
+	margin-top: 10px;
+	width: 100%;
+}
+table.list td, td.alternate{
+	padding: 5px;
+	background-color: #eee;
+	border: 1px solid #ccc;
+	font-size: 10px;
+	empty-cells: show;
+	line-height: 20px;
+}
+table.list td.empty, table.list th.empty{
+	background-color: #fff;
+	border: 0px;
+}
+table.list th{
+	padding-top: 10px;
+	background-color: #eee;
+	border: 1px solid #ccc;
+	border-bottom: 4px solid #999;
+	font-size: 10px;
+	color: #666;
+}
+
+input.error_form{
+	color: fff;
+	background-color: ff7171;
+}
+
+.errorBox{
+	border: 1px solid #CC0000;
+	background-image: url(../images/layout/styles/error.gif);
+	background-repeat: no-repeat;
+	background-position: left;
+	padding: 10px;
+	padding-left: 40px;
+	margin: 20px;
+	text-align: left;
+	font-weight: bold;
+	color: #CC0000;
+}
+
+.errorBox ul, .errorBox ol{
+	padding: 10px;
+	padding-left: 20px;
+	margin: 0px;
+	margin-top: 10px;
+	font-weight: normal;
+	list-style-type: circle;
+}
+
+.errorBox a, .errorBox a:link, .errorBox a:visited, .errorBox a:active, .errorBox a:hover{
+	padding: 10px;
+	padding-left: 20px;
+	margin: 0px;
+	margin-top: 10px;
+	font-weight: normal;
+	color: #CC0000;
+	text-decoration: none;
+}
