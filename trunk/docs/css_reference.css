@@ -1,0 +1,98 @@
+﻿/* CSS REFERENCE FILE FOR LANSHOCK */
+
+.headline{
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size : 18px;
+	font-weight: bold;
+	color: 004380;
+	letter-spacing: 5px;
+	padding-left: 45px;
+	margin: 20px 0px 20px 30px;
+}
+
+.headline2{
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size : 16px;
+	font-weight: bold;
+	color: 004380;
+	letter-spacing: 5px;
+	padding-left: 45px;
+	margin: 20px 0px 20px 30px;
+}
+
+.text_big{
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size : 18px;
+}
+
+.text_small{
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+}
+
+.text_light{
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size : 10px;
+	color: #CCCCCC;
+}
+
+.required{
+	color: #CC3300;
+}
+
+.text_important{
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size : 12px;
+	font-weight: bold;
+	color: #CC3300;
+}
+
+a, a:link, a:visited, a:active, a:hover{
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size : 12px;
+	text-decoration : underline;
+}
+
+a.link_extended, a:link.link_extended, a:visited.link_extended, a:active.link_extended, a:hover.link_extended{
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size : 12px;
+	text-decoration : none;
+	color: #CC6600;
+}
+
+table{
+
+}
+
+th{
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size : 14px;
+	font-weight: bold;
+	letter-spacing: 5px;
+	text-align: center;
+	background-color: #999999;
+}
+
+td{
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size : 12px;
+	background-color: #CCCCCC;
+}
+
+.errorBox{
+	border: 1px dotted gray;
+	color: fff;
+}
+
+table.list td{
+	padding: 10px;
+}
+
+.alternate{
+	background-color: #C7DDFE;
+}
+
+input.error_form{
+	color: #ffffff;
+	background-color: #ff7171;
+}
