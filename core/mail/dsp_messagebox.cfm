@@ -40,7 +40,7 @@ $LastChangedRevision$
 			</cfif>
 			<tr>
 				<td width="100%"><a href="#myself##myfusebox.thiscircuit#.message&id=#id#&mailtype=#attributes.mailtype#&#request.session.UrlToken#"><cfif isNew><strong>#tmp_topic#</strong><cfelse>#tmp_topic#</cfif></a></td>
-				<td width="100" nowrap>#buddyname#</td>
+				<td width="100" nowrap><a href="#myself##request.lanshock.settings.modulePrefix.core#user.userdetails&id=<cfif attributes.mailtype>#user_id_to#<cfelse>#user_id_from#</cfif>&#request.session.UrlToken#">#buddyname#</a></td>
 				<td nowrap>#UDF_DateTimeFormat(datetime)#</td>
 				<td class="empty"><cfif NOT attributes.mailtype><a href="#myself##myfusebox.thiscircuit#.mail_del&id=#id#&#request.session.UrlToken#"><img src="#stImageDir.general#/btn_delete.gif" alt="" border="0"></a><cfelse>&nbsp;</cfif></td>
 			</tr>
