@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<elements>
+	<defaults>
+		<seats image="seat_t_free.gif"/>
+		<others image="nothing.gif"/>
+	</defaults>
+	<seats>
+		<package>
+			<element image="seat_t_free.gif" image_reserved="seat_t.gif"/>
+			<element image="seat_b_free.gif" image_reserved="seat_b.gif"/>
+			<element image="seat_l_free.gif" image_reserved="seat_l.gif"/>
+			<element image="seat_r_free.gif" image_reserved="seat_r.gif"/>
+		</package>
+	</seats>
+	<others>
+		<package>
+			<element image="table_t.gif"/>
+			<element image="table_b.gif"/>
+			<element image="table_l.gif"/>
+			<element image="table_r.gif"/>
+			<element image="table_corner_tr.gif"/>
+			<element image="table_corner_br.gif"/>
+			<element image="table_corner_bl.gif"/>
+			<element image="table_corner_tl.gif"/>
+			<element image="table_corner_small_tr.gif"/>
+			<element image="table_corner_small_br.gif"/>
+			<element image="table_corner_small_bl.gif"/>
+			<element image="table_corner_small_tl.gif"/>
+			<element image="table_full.gif"/>
+		</package>
+		<package>
+			<element image="door_v.gif"/>
+			<element image="door_h.gif"/>
+			<element image="window_v.gif"/>
+			<element image="window_h.gif"/>
+			<element image="stairs_v.gif"/>
+			<element image="stairs_h.gif"/>
+		</package>
+		<package>
+			<element image="nothing.gif"/>
+			<element image="wall_v.gif"/>
+			<element image="wall_h.gif"/>
+			<element image="wall_x.gif"/>
+			<element image="wall_corner_tl.gif"/>
+			<element image="wall_corner_tr.gif"/>
+			<element image="wall_corner_br.gif"/>
+			<element image="wall_corner_bl.gif"/>
+			<element image="wall_t_t.gif"/>
+			<element image="wall_t_r.gif"/>
+			<element image="wall_t_b.gif"/>
+			<element image="wall_t_l.gif"/>
+			<element image="wall_corner_tl_halffull.gif"/>
+			<element image="wall_corner_tr_halffull.gif"/>
+			<element image="wall_corner_br_halffull.gif"/>
+			<element image="wall_corner_bl_halffull.gif"/>
+			<element image="wall_corner_tl_full.gif"/>
+			<element image="wall_corner_tr_full.gif"/>
+			<element image="wall_corner_br_full.gif"/>
+			<element image="wall_corner_bl_full.gif"/>
+			<element image="wall_t_full.gif"/>
+			<element image="wall_r_full.gif"/>
+			<element image="wall_b_full.gif"/>
+			<element image="wall_l_full.gif"/>
+			<element image="wall_t_t_full.gif"/>
+			<element image="wall_t_r_full.gif"/>
+			<element image="wall_t_b_full.gif"/>
+			<element image="wall_t_l_full.gif"/>
+		</package>
+	</others>
+</elements>
