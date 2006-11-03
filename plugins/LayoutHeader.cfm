@@ -10,27 +10,17 @@ $LastChangedRevision$
 --->
 
 <cfscript>
-	request.ShowLayout = 'full';
-	
 	plugin = myFusebox.plugins[myFusebox.thisPlugin];
-	plugin.ShowLayout = request.ShowLayout;
+	plugin.ShowLayout = 'full';
 	plugin.layoutFile = "../templates/#application.lanshock.settings.layout.template#/layoutHeader.cfm";
-	
-	// check if an fuseaction has an <set name="ShowLayout" value="[full|basic|none]"> in it
-	tmpFuseboxVars = duplicate(application.fusebox.circuits[myfusebox.thiscircuit].fuseactions[myfusebox.thisfuseaction].xml.xmlchildren);
-	
-	// set ArrrayLen once - otherwise it's evaluated in every loop
-	iArrayLen = ArrayLen(tmpFuseboxVars);
-</cfscript>
+	plugin.customattributes = myfusebox.getCurrentFuseaction().getCustomAttributes('customattributes');
 
-<cfloop from="1" to="#iArrayLen#" index="idx">
-	<cfscript>
-		if(StructKeyExists(tmpFuseboxVars[idx].xmlattributes, "name") AND tmpFuseboxVars[idx].xmlattributes.name EQ "ShowLayout"){
-			plugin.ShowLayout = tmpFuseboxVars[idx].xmlattributes.value;
-			request.ShowLayout = plugin.ShowLayout;
-		}
-	</cfscript>
-</cfloop>
+	if(StructKeyExists(plugin.customattributes,'showlayout')){
+		 plugin.ShowLayout = plugin.customattributes.showlayout;
+	}
+
+	request.ShowLayout = plugin.ShowLayout;
+</cfscript>
 
 </cfsilent>
 

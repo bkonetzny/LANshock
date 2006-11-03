@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE circuit>
 <!--
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
@@ -8,7 +10,7 @@ $LastChangedBy$
 $LastChangedRevision$
 -->
 
-<circuit access="public">
+<circuit access="public" xmlns:customattributes="customattributes/">
 	
 	<fuseaction name="main">
 		<do action="start"/>
@@ -50,8 +52,7 @@ $LastChangedRevision$
 		<include template="dsp_userlist.cfm"/>
 	</fuseaction>
 
-	<fuseaction name="userlist_export">
-		<set name="ShowLayout" value="none"/>
+	<fuseaction name="userlist_export" customattributes:showlayout="none">
 		<include template="act_userlist_export.cfm"/>
 	</fuseaction>
 
@@ -80,8 +81,7 @@ $LastChangedRevision$
 		<include template="act_as_login.cfm"/>
 	</fuseaction>
 
-	<fuseaction name="userstatus_change">
-		<set name="ShowLayout" value="none"/>
+	<fuseaction name="userstatus_change" customattributes:showlayout="none">
 		<set name="check" value="#UDF_SecurityCheck(area='guest')#"/>
 		<include template="act_userstatus_change.cfm"/>
 	</fuseaction>
@@ -194,8 +194,7 @@ $LastChangedRevision$
 		<include template="dsp_system_check.cfm"/>
 	</fuseaction>
 
-	<fuseaction name="cron_dbbackup">
-		<set name="ShowLayout" value="none"/>
+	<fuseaction name="cron_dbbackup" customattributes:showlayout="none">
 		<include template="act_cron_dbbackup.cfm"/>
 	</fuseaction>
 

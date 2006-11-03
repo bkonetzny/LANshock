@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE circuit>
 <!--
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
@@ -8,7 +10,7 @@ $LastChangedBy$
 $LastChangedRevision$
 -->
 
-<circuit access="public">
+<circuit access="public" xmlns:customattributes="customattributes/">
 
 	<!-- Show Ticketlist -->
 	<fuseaction name="ticketlist">
@@ -23,8 +25,7 @@ $LastChangedRevision$
 	</fuseaction>
 
 	<!-- Panel: Tickets -->
-	<fuseaction name="panel_mytickets">
-		<set name="ShowLayout" value="basic"/>
+	<fuseaction name="panel_mytickets" customattributes:showlayout="basic">
 		<include template="act_panel_mytickets.cfm"/>
 		<include template="dsp_panel_mytickets.cfm"/>
 	</fuseaction>

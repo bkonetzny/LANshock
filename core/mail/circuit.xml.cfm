@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE circuit>
 <!--
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
@@ -8,7 +10,7 @@ $LastChangedBy$
 $LastChangedRevision$
 -->
 
-<circuit access="public">
+<circuit access="public" xmlns:customattributes="customattributes/">
 	
 	<fuseaction name="main">
 		<do action="inbox"/>
@@ -55,8 +57,7 @@ $LastChangedRevision$
 	</fuseaction>
 	
 	<!-- Show Panel Buddylist -->
-	<fuseaction name="buddylist">
-		<set name="ShowLayout" value="basic"/>
+	<fuseaction name="buddylist" customattributes:showlayout="basic">
 		<include template="act_panel_buddylist.cfm"/>
 		<include template="dsp_panel_buddylist.cfm"/>
 	</fuseaction>
@@ -89,15 +90,13 @@ $LastChangedRevision$
 	</fuseaction>
 	
 	<!-- Show Message Dialog -->
-	<fuseaction name="message_dialog">
-		<set name="ShowLayout" value="basic"/>
+	<fuseaction name="message_dialog" customattributes:showlayout="basic">
 		<include template="act_message_dialog.cfm"/>
 		<include template="dsp_message_dialog.cfm"/>
 	</fuseaction>
 	
 	<!-- Show Message-Sent Confirmation -->
-	<fuseaction name="message_dialog_confirm">
-		<set name="ShowLayout" value="basic"/>
+	<fuseaction name="message_dialog_confirm" customattributes:showlayout="basic">
 		<include template="dsp_message_dialog_confirm.cfm"/>
 	</fuseaction>
 

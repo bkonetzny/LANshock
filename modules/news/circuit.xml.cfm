@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE circuit>
 <!--
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
@@ -8,7 +10,7 @@ $LastChangedBy$
 $LastChangedRevision$
 -->
 
-<circuit access="public">
+<circuit access="public" xmlns:customattributes="customattributes/">
 
 	<fuseaction name="main">
 		<do action="news"/>
@@ -32,14 +34,12 @@ $LastChangedRevision$
 	</fuseaction>
 
 	<!-- Trackback -->
-	<fuseaction name="trackback">
-		<set name="ShowLayout" value="none"/>
+	<fuseaction name="trackback" customattributes:showlayout="none">
 		<include template="act_trackback.cfm"/>
 		<include template="dsp_trackback.cfm"/>
 	</fuseaction>
 	
-	<fuseaction name="panel_news">
-		<set name="ShowLayout" value="basic"/>
+	<fuseaction name="panel_news" customattributes:showlayout="basic">
 		<include template="act_panel_news.cfm"/>
 		<include template="dsp_panel_news.cfm"/>
 	</fuseaction>
@@ -89,8 +89,7 @@ $LastChangedRevision$
 	</fuseaction>
 
 	<!-- Show RSS -->
-	<fuseaction name="rss">
-		<set name="ShowLayout" value="none"/>
+	<fuseaction name="rss" customattributes:showlayout="none">
 		<include template="act_rss.cfm"/>
 		<include template="dsp_rss.cfm"/>
 	</fuseaction>

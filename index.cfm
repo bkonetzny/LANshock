@@ -11,9 +11,7 @@ $LastChangedRevision$
 
 <cftry>
 	<cfinclude template="core/lanshock.runtime.cfm">
-	<cfset FUSEBOX_APPLICATION_PATH = "">
-	<cfinclude template="fusebox/fusebox4.runtime.cfmx.cfm">
-
+	<cfinclude template="fusebox5/fusebox5.cfm">
 	<cfcatch>
 		<cfparam name="request.lanshock.settings.debug.show_plain_error" default="false">
 		<cfif request.lanshock.settings.debug.show_plain_error>
