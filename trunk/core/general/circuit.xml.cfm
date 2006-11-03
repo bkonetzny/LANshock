@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE circuit>
 <!--
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
@@ -8,7 +10,7 @@ $LastChangedBy$
 $LastChangedRevision$
 -->
 
-<circuit access="public">
+<circuit access="public" xmlns:customattributes="customattributes/">
 	
 	<fuseaction name="main">
 		<do action="welcome"/>
@@ -38,8 +40,7 @@ $LastChangedRevision$
 		<include template="dsp_error_noright.cfm"/>
 	</fuseaction>
 
-	<fuseaction name="panel" layout="basic">
-		<set name="ShowLayout" value="basic"/>
+	<fuseaction name="panel" customattributes:showlayout="basic">
 		<include template="act_panel.cfm"/>
 		<include template="dsp_panel.cfm"/>
 	</fuseaction>
@@ -57,8 +58,7 @@ $LastChangedRevision$
 		<include template="dsp_lanshock_code.cfm"/>
 	</fuseaction>
 	
-	<fuseaction name="lanshock_code_popup">
-		<set name="ShowLayout" value="basic"/>
+	<fuseaction name="lanshock_code_popup" customattributes:showlayout="basic">
 		<include template="dsp_lanshock_code.cfm"/>
 	</fuseaction>
 

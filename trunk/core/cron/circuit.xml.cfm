@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE circuit>
 <!--
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
@@ -8,15 +10,13 @@ $LastChangedBy$
 $LastChangedRevision$
 -->
 
-<circuit access="public">
+<circuit access="public" xmlns:customattributes="customattributes/">
 	
-	<fuseaction name="main">
-		<set name="ShowLayout" value="none"/>
+	<fuseaction name="main" customattributes:showlayout="none">
 		<do action="run"/>
 	</fuseaction>
 	
-	<fuseaction name="run">
-		<set name="ShowLayout" value="none"/>
+	<fuseaction name="run" customattributes:showlayout="none">
 		<include template="act_run.cfm"/>
 	</fuseaction>
 

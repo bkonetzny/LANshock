@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE circuit>
 <!--
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
@@ -8,7 +10,7 @@ $LastChangedBy$
 $LastChangedRevision$
 -->
 
-<circuit access="public">
+<circuit access="public" xmlns:customattributes="customattributes/">
 
 	<!-- Show Groups and Boards -->
 	<fuseaction name="overview">
@@ -61,15 +63,13 @@ $LastChangedRevision$
 	</fuseaction>
 
 	<!-- Show RSS -->
-	<fuseaction name="rss">
-		<set name="ShowLayout" value="none"/>
+	<fuseaction name="rss" customattributes:showlayout="none">
 		<include template="act_rss.cfm"/>
 		<include template="dsp_rss.cfm"/>
 	</fuseaction>
 
 	<!-- Cron -->
-	<fuseaction name="cron_monitoring">
-		<set name="ShowLayout" value="none"/>
+	<fuseaction name="cron_monitoring" customattributes:showlayout="none">
 		<include template="act_cron_monitoring.cfm"/>
 	</fuseaction>
 
