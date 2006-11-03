@@ -68,6 +68,12 @@ $LastChangedRevision$
 			<td colspan="2" class="sub02">#request.lanshock_version# (#request.lanshock_build#)</td>
 		</tr>
 		<tr>
+			<td colspan="2" class="sub01">ColdFusion Version:</td>
+		</tr>
+		<tr>
+			<td colspan="2" class="sub02">#server.coldfusion.productversion#</td>
+		</tr>
+		<tr>
 			<td colspan="2" class="sub01">Message:</td>
 		</tr>
 		<tr>
