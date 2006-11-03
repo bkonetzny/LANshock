@@ -89,7 +89,7 @@ $LastChangedRevision$
 	<cffunction name="buildFieldString" output="false" returntype="string">
 		<cfargument name="name" type="string" required="true">
 		<cfargument name="type" type="string" required="true">
-		<cfargument name="len" type="numeric" required="false" default="0">
+		<cfargument name="len" type="string" required="false" default="0">
 		<cfargument name="default" type="string" required="false">
 		<cfargument name="null" type="boolean" required="false" default="false">
 		<cfargument name="special" type="string" required="false" default="">
