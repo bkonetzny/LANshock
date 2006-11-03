@@ -31,7 +31,7 @@ $LastChangedRevision$
 					<cfcase value="viewapp">
 						<ul>
 							<li><a href="#myself##myfusebox.thiscircuit#.rootuser&#request.session.UrlToken#">&laquo #request.content.back#</a></li>
-							<li><a href="#self#">#request.content.next# &raquo;</a></li>
+							<li><a href="#myself#">#request.content.next# &raquo;</a></li>
 						</ul>
 					</cfcase>
 				
