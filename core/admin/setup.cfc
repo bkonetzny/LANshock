@@ -118,13 +118,13 @@ $LastChangedRevision$
 			</cfif>
 		</cfloop>
 		<cfset sCircuits = trim(sCircuits)>
-		
-		<cfset stCurrentFusebox = application.fusebox>
-		
-		<cfif NOT StructKeyExists(stCurrentFusebox,'password') OR NOT len(stCurrentFusebox.password)>
+				
+		<cfif NOT StructKeyExists(application,'fusebox') OR NOT StructKeyExists(application.fusebox,'password') OR NOT len(application.fusebox.password)>
+			<cfset sOldFuseboxPassword = ''>
 			<cfset sNewFuseboxPassword = CreateUUID()>
-		<cfelse>
-			<cfset sNewFuseboxPassword = stCurrentFusebox.password>		
+		<cfelse>	
+			<cfset sOldFuseboxPassword = application.fusebox.password>
+			<cfset sNewFuseboxPassword = sOldFuseboxPassword>	
 		</cfif>
 		
 		<cfsavecontent variable="sFuseboxXml">
@@ -182,7 +182,7 @@ $LastChangedRevision$
 
 		<cffile action="write" file="#application.lanshock.environment.abspath#fusebox.xml.cfm" output="#trim(sFuseboxXml)#" mode="777" addnewline="false">
 
-		<cfset reloadFusebox()>
+		<cfset reloadFusebox(password=sOldFuseboxPassword)>
 		
 		<cfreturn true>
 				
@@ -423,9 +423,11 @@ $LastChangedRevision$
 	</cffunction>
 
 	<cffunction name="reloadFusebox" output="false" returntype="boolean">
+		<cfargument name="password" type="string" required="false" default="">
 
 		<cftry>
-			<cfhttp url="#cgi.server_name##application.lanshock.environment.webpath#?fusebox.password=&fusebox.loadclean=true&fusebox.parseall=true" method="get" port="#cgi.server_port#" throwonerror="false">
+			<!--- following parameter causes the cfhttp to throw an timeout &fusebox.parseall=true --->
+			<cfhttp url="#cgi.server_name##application.lanshock.environment.webpath#?fusebox.password=#arguments.password#&fusebox.loadclean=true" method="get" port="#cgi.server_port#" throwonerror="false" timeout="1">
 			<cfreturn true>
 			<cfcatch><cfreturn false></cfcatch>
 		</cftry>
