@@ -24,8 +24,7 @@
 		
 		
 		<cftransaction>
-			<cftry>
-			<cfquery name="qryCreate" datasource="#VARIABLES.dsn#" result="qResultQryCreate">
+			<cfquery name="qryCreate" datasource="#VARIABLES.dsn#">
 			INSERT INTO
 				#ARGUMENTS.object.getObjectName()#
 			(
@@ -81,8 +80,7 @@
 				</cfloop>
 			);
 			</cfquery>
-			<cfcatch><cfoutput><cfdump var="#cfcatch#"> und weg!</cfoutput><cfabort></cfcatch>
-		</cftry>
+
 			<cfquery name="qGetID" datasource="#VARIABLES.dsn#">
 			<cfif NOT len(ARGUMENTS.object.getID())>
 				<cfif variables.DBType EQ 'MSSQL'>
