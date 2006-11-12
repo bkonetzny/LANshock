@@ -133,8 +133,9 @@ $LastChangedRevision$
 
 </cfif>
 
-<!--- should be cached --->
-<cfif len(application.lanshock.settings.layout.smileyset)>
+<cfif len(application.lanshock.settings.layout.smileyset) AND (
+		NOT StructKeyExists(application.lanshock.settings.layout,'smileyset_data')
+		OR ListLast(application.lanshock.settings.layout.smileyset_data.path_web,'/') NEQ application.lanshock.settings.layout.smileyset)>
 	<cfinvoke component="#application.lanshock.environment.componentpath#core.smileyset" method="getSmileySet" returnvariable="application.lanshock.settings.layout.smileyset_data">
 </cfif>
 
