@@ -73,7 +73,7 @@ $LastChangedRevision$
 		("<em>##CFROOT##/WEB-INF/lib/</em>" or "<em>##CFROOT##/lib/</em>")</li>
 	<li>Restart the ColdFusion service.</li>
 	<li>Add the Datasource in ColdFusion MX Administrator, using driver <strong>Other</strong>.</li>
-	<li>Enter the JDBC URL: <strong>jdbc:mysql://[host]:[port]/[database]</strong></li>
+	<li>Enter the JDBC URL: <strong>jdbc:mysql://[host]:[port]/[database]?zeroDateTimeBehavior=convertToNull</strong></li>
 	<li>Enter the Driver Class: <strong>com.mysql.jdbc.Driver</strong></li>
 	<li>Complete username/password and adjust other Datasource settings.</li>
 	<li>Submit the data source for verification.</li>
