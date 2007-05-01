@@ -18,8 +18,8 @@ $LastChangedRevision$
 <cfparam name="aError" default="#ArrayNew(1)#">
 
 <cfscript>
-	if(NOT len(attributes.url)) ArrayAppend(aError, '<!--- TODO: $$$ ---> URL required.');
-	if(NOT len(attributes.entry_id) OR NOT isNumeric(attributes.entry_id)) ArrayAppend(aError, '<!--- TODO: $$$ ---> No Entry defined.');
+	if(NOT len(attributes.url)) ArrayAppend(aError, '<!-- TODO: $$$ --> URL required.');
+	if(NOT len(attributes.entry_id) OR NOT isNumeric(attributes.entry_id)) ArrayAppend(aError, '<!-- TODO: $$$ --> No Entry defined.');
 </cfscript>
 
 <cfif NOT ArrayLen(aError)>
