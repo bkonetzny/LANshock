@@ -12,11 +12,12 @@ $LastChangedRevision$
 <cfparam name="url.reinitapp" default="false">
 <cfparam name="reinitapp" default="false">
 
-<cfif url.reinitapp OR NOT isDefined("application.lanshock") OR NOT isStruct(application.lanshock) OR NOT isDefined("application.lanshock.config.complete") OR NOT application.lanshock.config.complete>
+<cfif url.reinitapp OR NOT isDefined("application.lanshock") OR NOT isStruct(application.lanshock) OR NOT isDefined("application.lanshock.config.runable") OR NOT application.lanshock.config.runable>
 	<cfset reinitapp = true>
 </cfif>
 
-<cfif reinitapp OR NOT application.lanshock.config.configinitialized>
+<cfif reinitapp OR NOT application.lanshock.config.runable>
+	<cfsetting requesttimeout="3600">
 	<cfscript>
 		if(reinitapp){
 			StructDelete(application,'lanshock');
@@ -49,6 +50,7 @@ $LastChangedRevision$
 		application.lanshock.config.avaible = FileExists(application.lanshock.config.file);
 		application.lanshock.config.configinitialized = true;
 		application.lanshock.config.complete = false;
+		application.lanshock.config.runable = false;
 		if(application.lanshock.config.avaible){
 			application.lanshock.config.complete = true;
 			application.lanshock.config.stConfig = GetProfileSections(application.lanshock.config.file);
@@ -107,6 +109,7 @@ $LastChangedRevision$
 				StructDelete(application.lanshock.environment,'componentpath');
 			}
 		}
+		application.lanshock.config.runable = true;
 	</cfscript>
 
 </cfif>
