@@ -1,52 +1,17 @@
 <!---
-Fusebox Software License
-Version 1.0
+Copyright 2006 TeraTech, Inc. http://teratech.com/
 
-Copyright (c) 2003, 2004, 2005, 2006 The Fusebox Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-Redistribution and use in source and binary forms, with or without modification, are permitted 
-provided that the following conditions are met:
+http://www.apache.org/licenses/LICENSE-2.0
 
-1. Redistributions of source code must retain the above copyright notice, this list of conditions 
-   and the following disclaimer.
-
-2. Redistributions in binary form or otherwise encrypted form must reproduce the above copyright 
-   notice, this list of conditions and the following disclaimer in the documentation and/or other 
-   materials provided with the distribution.
-
-3. The end-user documentation included with the redistribution, if any, must include the following 
-   acknowledgment:
-
-   "This product includes software developed by the Fusebox Corporation (http://www.fusebox.org/)."
-
-   Alternately, this acknowledgment may appear in the software itself, if and wherever such 
-   third-party acknowledgments normally appear.
-
-4. The names "Fusebox" and "Fusebox Corporation" must not be used to endorse or promote products 
-   derived from this software without prior written (non-electronic) permission. For written 
-   permission, please contact fusebox@fusebox.org.
-
-5. Products derived from this software may not be called "Fusebox", nor may "Fusebox" appear in 
-   their name, without prior written (non-electronic) permission of the Fusebox Corporation. For 
-   written permission, please contact fusebox@fusebox.org.
-
-If one or more of the above conditions are violated, then this license is immediately revoked and 
-can be re-instated only upon prior written authorization of the Fusebox Corporation.
-
-THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
-DISCLAIMED. IN NO EVENT SHALL THE FUSEBOX CORPORATION OR ITS CONTRIBUTORS BE LIABLE FOR ANY 
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR 
-BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
-STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
--------------------------------------------------------------------------------
-
-This software consists of voluntary contributions made by many individuals on behalf of the 
-Fusebox Corporation. For more information on Fusebox, please see <http://www.fusebox.org/>.
-
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 --->
 <cfscript>
 	if (fb_.verbInfo.executionMode is "start") {
@@ -55,7 +20,7 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 		fb_.nAttrs = 0;
 		// required - boolean - default true
 		if (structKeyExists(fb_.verbInfo.attributes,"required")) {
-			if (listFind("true,false",fb_.verbInfo.attributes.required) eq 0) {
+			if (listFind("true,false,yes,no",fb_.verbInfo.attributes.required) eq 0) {
 				fb_throw("fusebox.badGrammar.invalidAttributeValue",
 							"Attribute has invalid value",
 							"The attribute 'required' must either be ""true"" or ""false"", for a 'include' verb in fuseaction #fb_.verbInfo.circuit#.#fb_.verbInfo.fuseaction#.");
@@ -78,7 +43,7 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 		fb_.nAttrs = fb_.nAttrs + 1;	// for contentvariable - since we default it
 		// overwrite - boolean - default true
 		if (structKeyExists(fb_.verbInfo.attributes,"overwrite")) {
-			if (listFind("true,false",fb_.verbInfo.attributes.overwrite) eq 0) {
+			if (listFind("true,false,yes,no",fb_.verbInfo.attributes.overwrite) eq 0) {
 				fb_throw("fusebox.badGrammar.invalidAttributeValue",
 							"Attribute has invalid value",
 							"The attribute 'overwrite' must either be ""true"" or ""false"", for a 'include' verb in fuseaction #fb_.verbInfo.circuit#.#fb_.verbInfo.fuseaction#.");
@@ -89,7 +54,7 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 		fb_.nAttrs = fb_.nAttrs + 1;	// for overwrite - since we default it
 		// append - boolean - default false
 		if (structKeyExists(fb_.verbInfo.attributes,"append")) {
-			if (listFind("true,false",fb_.verbInfo.attributes.append) eq 0) {
+			if (listFind("true,false,yes,no",fb_.verbInfo.attributes.append) eq 0) {
 				fb_throw("fusebox.badGrammar.invalidAttributeValue",
 							"Attribute has invalid value",
 							"The attribute 'append' must either be ""true"" or ""false"", for a 'include' verb in fuseaction #fb_.verbInfo.circuit#.#fb_.verbInfo.fuseaction#.");
@@ -100,7 +65,7 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 		fb_.nAttrs = fb_.nAttrs + 1;	// for append - since we default it
 		// prepend - boolean - default false
 		if (structKeyExists(fb_.verbInfo.attributes,"prepend")) {
-			if (listFind("true,false",fb_.verbInfo.attributes.prepend) eq 0) {
+			if (listFind("true,false,yes,no",fb_.verbInfo.attributes.prepend) eq 0) {
 				fb_throw("fusebox.badGrammar.invalidAttributeValue",
 							"Attribute has invalid value",
 							"The attribute 'prepend' must either be ""true"" or ""false"", for a 'include' verb in fuseaction #fb_.verbInfo.circuit#.#fb_.verbInfo.fuseaction#.");
@@ -141,6 +106,11 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 		} else {
 			fb_.template = fb_.verbInfo.attributes.template;
 		}
+		if (find('##',fb_.template) gt 0) {
+			fb_.templateLen = 'len("#fb_.template#")';
+		} else {
+			fb_.templateLen = len(fb_.template);
+		}
 		
 		if (fb_.app.debug) {
 			// trace inclusion of this fuse:
@@ -174,7 +144,7 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 		} else {
 			fb_appendLine('<cfoutput><cfinclude template="#fb_.verbInfo.action.getCircuit().getApplication().parseRootPath##fb_.targetCircuit.getRelativePath()##fb_.template#"></cfoutput>');
 		}
-		fb_appendLine('<cfcatch type="missingInclude"><cfif len(cfcatch.MissingFileName) gte #len(fb_.template)# and right(cfcatch.MissingFileName,#len(fb_.template)#) is "#fb_.template#">');
+		fb_appendLine('<cfcatch type="missingInclude"><cfif len(cfcatch.MissingFileName) gte #fb_.templateLen# and right(cfcatch.MissingFileName,#fb_.templateLen#) is "#fb_.template#">');
 		if (fb_.verbInfo.attributes.required) {
 			fb_appendLine('<cfthrow type="fusebox.missingFuse" message="missing Fuse" ' &
 					'detail="You tried to include a fuse #fb_.template# in circuit ' &

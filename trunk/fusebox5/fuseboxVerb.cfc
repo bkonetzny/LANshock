@@ -1,52 +1,17 @@
 <!---
-Fusebox Software License
-Version 1.0
+Copyright 2006 TeraTech, Inc. http://teratech.com/
 
-Copyright (c) 2003, 2004, 2005, 2006 The Fusebox Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-Redistribution and use in source and binary forms, with or without modification, are permitted 
-provided that the following conditions are met:
+http://www.apache.org/licenses/LICENSE-2.0
 
-1. Redistributions of source code must retain the above copyright notice, this list of conditions 
-   and the following disclaimer.
-
-2. Redistributions in binary form or otherwise encrypted form must reproduce the above copyright 
-   notice, this list of conditions and the following disclaimer in the documentation and/or other 
-   materials provided with the distribution.
-
-3. The end-user documentation included with the redistribution, if any, must include the following 
-   acknowledgment:
-
-   "This product includes software developed by the Fusebox Corporation (http://www.fusebox.org/)."
-
-   Alternately, this acknowledgment may appear in the software itself, if and wherever such 
-   third-party acknowledgments normally appear.
-
-4. The names "Fusebox" and "Fusebox Corporation" must not be used to endorse or promote products 
-   derived from this software without prior written (non-electronic) permission. For written 
-   permission, please contact fusebox@fusebox.org.
-
-5. Products derived from this software may not be called "Fusebox", nor may "Fusebox" appear in 
-   their name, without prior written (non-electronic) permission of the Fusebox Corporation. For 
-   written permission, please contact fusebox@fusebox.org.
-
-If one or more of the above conditions are violated, then this license is immediately revoked and 
-can be re-instated only upon prior written authorization of the Fusebox Corporation.
-
-THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
-DISCLAIMED. IN NO EVENT SHALL THE FUSEBOX CORPORATION OR ITS CONTRIBUTORS BE LIABLE FOR ANY 
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR 
-BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
-STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
--------------------------------------------------------------------------------
-
-This software consists of voluntary contributions made by many individuals on behalf of the 
-Fusebox Corporation. For more information on Fusebox, please see <http://www.fusebox.org/>.
-
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 --->
 <cfcomponent output="false" hint="I represent a verb that is implemented as part of a lexicon.">
 	
@@ -60,8 +25,8 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 					hint="I am the attributes for this verb." />
 		<cfargument name="children" type="any" required="true" 
 					hint="I am the XML representation of any children this verb has." />
-		
-		<cfset var ns = listFirst(arguments.customVerb,".:") />
+
+		<cfset var ns = listFirst(arguments.customVerb,".:") />		
 		<cfset var i = 0 />
 		<cfset var verb = "" />
 		<cfset var factory = arguments.action.getCircuit().getApplication().getFuseactionFactory() />
@@ -143,6 +108,17 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 			--->
 			<cfset verbInfo.skipBody = false />
 			<cfset verbInfo.hasChildren = variables.nChildren neq 0 />
+			<!---
+				Fusebox 5.1: make children available to nested verbs.
+				This actually opens up some frightening possibilities
+				which I'd prefer not to document but no doubt someone
+				will discover what you can do...
+				This was originally done for ticket 180 to allow <if>
+				to verify its own children to make sure on <true> and
+				<false> are present.
+			--->
+			<cfset verbInfo.nChildren = variables.nChildren />
+			<cfset verbInfo.children = variables.children />
 
 			<cfif structKeyExists(arguments,"context")>
 				<cfset verbInfo.parent = arguments.context />
@@ -168,6 +144,24 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 		</cfif>
 		
 		<cfset variables.factory.freeLexiconCompiler(compiler) />
+
+	</cffunction>
+
+	<cffunction name="getNamespace" returntype="string" access="public" output="false"
+				hint="I return the namespace for this verb.">
+
+		<!--- make sure we hide the Fuebox lexicon name --->
+		<cfif variables.factory.getBuiltinLexicon().namespace is variables.lexicon.namespace>
+			<cfreturn "" />
+		<cfelse>
+			<cfreturn variables.lexicon.namespace />
+		</cfif>
+
+	</cffunction>	
+	
+	<cffunction name="getVerb" returntype="string" access="public" output="false">
+
+		<cfreturn variables.verb />
 
 	</cffunction>
 	

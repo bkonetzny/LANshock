@@ -1,52 +1,17 @@
 <!---
-Fusebox Software License
-Version 1.0
+Copyright 2006 TeraTech, Inc. http://teratech.com/
 
-Copyright (c) 2003, 2004, 2005, 2006 The Fusebox Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-Redistribution and use in source and binary forms, with or without modification, are permitted 
-provided that the following conditions are met:
+http://www.apache.org/licenses/LICENSE-2.0
 
-1. Redistributions of source code must retain the above copyright notice, this list of conditions 
-   and the following disclaimer.
-
-2. Redistributions in binary form or otherwise encrypted form must reproduce the above copyright 
-   notice, this list of conditions and the following disclaimer in the documentation and/or other 
-   materials provided with the distribution.
-
-3. The end-user documentation included with the redistribution, if any, must include the following 
-   acknowledgment:
-
-   "This product includes software developed by the Fusebox Corporation (http://www.fusebox.org/)."
-
-   Alternately, this acknowledgment may appear in the software itself, if and wherever such 
-   third-party acknowledgments normally appear.
-
-4. The names "Fusebox" and "Fusebox Corporation" must not be used to endorse or promote products 
-   derived from this software without prior written (non-electronic) permission. For written 
-   permission, please contact fusebox@fusebox.org.
-
-5. Products derived from this software may not be called "Fusebox", nor may "Fusebox" appear in 
-   their name, without prior written (non-electronic) permission of the Fusebox Corporation. For 
-   written permission, please contact fusebox@fusebox.org.
-
-If one or more of the above conditions are violated, then this license is immediately revoked and 
-can be re-instated only upon prior written authorization of the Fusebox Corporation.
-
-THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
-DISCLAIMED. IN NO EVENT SHALL THE FUSEBOX CORPORATION OR ITS CONTRIBUTORS BE LIABLE FOR ANY 
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR 
-BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
-STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
--------------------------------------------------------------------------------
-
-This software consists of voluntary contributions made by many individuals on behalf of the 
-Fusebox Corporation. For more information on Fusebox, please see <http://www.fusebox.org/>.
-
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 --->
 <cfcomponent output="false" hint="I am the Fusebox application object, formerly the application.fusebox data structure.">
 
@@ -91,12 +56,20 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 					hint="I am FUSEBOX_APPLICATION_PATH." />
 		<cfargument name="myFusebox" type="myFusebox" required="true" 
 					hint="I am the myFusebox data structure." />
+		<cfargument name="callerPath" type="string" required="true" 
+					hint="I am FUSEBOX_CALLER_PATH." />
 		
-		<cfset var myVersion = "5.0.0" />
+		<!--- ticket 171 created Fusebox 5.1.0 --->
+<!--- 		
+		<cfset var myVersion = "5.1.0.#REReplace('$LastChangedRevision$','[^0-9]','','all')#" />
+ --->		
+		<cfset var myVersion = "5.1.0" />
 
 		<cfset variables.factory = createObject("component","fuseboxFactory").init() />
 		<cfset variables.fuseboxLexicon = variables.factory.getBuiltinLexicon() />
 		<cfset variables.customAttributes = structNew() />
+		
+		<cfset variables.fuseboxFileExtension = "" />
 
 		<cfset variables.fuseboxVersion = myVersion />
 		
@@ -104,14 +77,8 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 		<cfset this.webrootdirectory = replace(getDirectoryFromPath(getBaseTemplatePath()),"\","/","all") />
 		<cfset variables.coreRoot = replace(getDirectoryFromPath(getCurrentTemplatePath()),"\","/","all") />
 
-		<cfset this.approotdirectory = this.webrootdirectory & replace(arguments.appPath,"\","/","all") />
-		<cfif right(this.approotdirectory,1) is not "/">
-			<cfset this.approotdirectory = this.approotdirectory & "/" />
-		</cfif>
-		<!--- remove pairs of directory/../ to form canonical path: --->
-		<cfloop condition="find('/../',this.approotdirectory) gt 0">
-			<cfset this.approotdirectory = REreplace(this.approotdirectory,"[^\.:/]*/\.\./","") />
-		</cfloop>
+		<cfset this.approotdirectory = getCanonicalPath(normalizePartialPath(arguments.callerPath) & normalizePartialPath(arguments.appPath)) />
+
 		<!--- this works on all platforms: --->
 		<cfset this.osdelimiter = "/" />
 
@@ -125,6 +92,12 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 		<cfset this.pluginsPath = "plugins/" />
 		<cfset this.lexiconPath = "lexicon/" />
 		<cfset this.errortemplatesPath = "errortemplates/" />
+		
+		<!--- new in Fusebox 5.1: --->
+		<cfset this.self = "index.cfm" />
+		<cfset this.queryStringStart = "?" />
+		<cfset this.queryStringSeparator = "&" />
+		<cfset this.queryStringEqual = "=" />
 		
 		<cfset this.circuits = structNew() />
 		<cfset reload(arguments.appKey,arguments.appPath,arguments.myFusebox) />
@@ -151,18 +124,37 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 					hint="I am the myFusebox data structure." />
 		
 		<cfset var fbFile = "fusebox.xml.cfm" />
+		<cfset var fbFileAlt = "fusebox.xml" />
 		<cfset var fbXML = "" />
 		<cfset var fbCode = "" />
 		<cfset var encodings = 0 />
 		<cfset var needToLoad = true />
 		<cfset var fuseboxFiles = 0 />
+		<cfset var myFuseboxFilePath = "" />
+		<cfset var jFuseboxFile = "" />
+		<cfset var dtLastModified = "" />
+		
+		<!---
+			since we need to check the file, regardless of whether we load it,
+			we might as well do the test up front and perform the strict check
+			that just one version exists (ticket 135)
+		--->
+		<cfif fileExists(this.approotdirectory & fbFile)>
+			<cfif this.strictMode and fileExists(this.approotdirectory & fbFileAlt)>
+				<cfthrow type="fusebox.multipleFuseboxXML" 
+						message="Both 'fusebox.xml' and 'fusebox.xml.cfm' exist" 
+						detail="'fusebox.xml.cfm' will be used but 'fusebox.xml' also exists in '#this.approotdirectory#." />
+			</cfif>
+		<cfelse>
+			<cfset fbFile = fbFileAlt />
+		</cfif>
 
 		<cfif structKeyExists(this,"timestamp")>
-			<cfdirectory action="list" directory="#this.approotdirectory#" filter="fusebox.xml*" name="fuseboxFiles" />
-			<cfif fuseboxFiles.recordCount eq 1>
-				<cfset needToLoad = parseDateTime(fuseboxFiles.dateLastModified) gt parseDateTime(this.timestamp) />
-			<!--- else ignore the ambiguity --->
-			</cfif>
+			<!--- Java timestamp solution provided by Daniel Schmid --->
+			<cfset myFuseboxFilePath = this.approotdirectory & fbFile />
+			<cfset jFuseboxFile = createObject("java","java.io.File").init(myFuseboxFilePath) />
+			<cfset dtLastModified = createObject("java","java.util.Date").init(jFuseboxFile.lastModified()) />
+			<cfset needToLoad = parseDateTime(dtLastModified) gt parseDateTime(this.timestamp) />
 		</cfif>
 
 		<cfif needToLoad>
@@ -170,14 +162,13 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 				<cfset arguments.myFusebox.trace("Compiler","Loading fusebox.xml file") />
 			</cfif>
 			<!--- attempt to load fusebox.xml(.cfm): --->
-			<cfif not fileExists(this.approotdirectory & fbFile)>
-				<cfset fbFile = "fusebox.xml" />
-			</cfif>
 			<cftry>
 				
 				<cffile action="read" file="#this.approotdirectory##fbFile#"
 						variable="fbXML"
 						charset="#this.characterEncoding#" />
+						
+				<cfset variables.fuseboxFileExtension = listLast(fbFile,".") />
 				
 				<cfcatch type="any">
 					<cfthrow type="fusebox.missingFuseboxXML" 
@@ -280,6 +271,21 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 	
 	</cffunction>
 	
+	<cffunction name="expandFuseboxPath" returntype="any" access="public" output="false" 
+				hint="I expand a path in the context of a Fusebox application.">
+		<cfargument name="partialPath" type="any" required="true" 
+					hint="I am the partial path to expand. If I do not begin with a /, prepend the Fusebox application root." />
+
+		<cfif left(arguments.partialPath,1) is "/">
+			<!--- absolute path, i.e., root-relative or mapped --->
+			<cfreturn replace(expandPath(arguments.partialPath),"\","/","all") />
+		<cfelse>
+			<!--- relative, i.e., relative to the Fusebox application root --->
+			<cfreturn getApplicationRoot() & arguments.partialPath />
+		</cfif>
+		
+	</cffunction>
+	
 	<cffunction name="getFuseboxXMLFilename" returntype="string" access="public" output="false" 
 				hint="I return the actual name of the fusebox.xml(.cfm) file.">
 	
@@ -329,8 +335,8 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 		<cfset var needRethrow = true />
 		<cfset var needTryOnFuseaction = false />
 		<cfset var parsedName = "#lCase(arguments.circuitFuseaction)#.cfm" />
-		<cfset var parsedFile = "#this.getCoreToAppRootPath()##this.parsePath##parsedName#" />
-		<cfset var fullParsedFile = "#this.getApplicationRoot()##this.parsePath##parsedName#" />
+		<cfset var parsedFile = "#this.parsePath##parsedName#" />
+		<cfset var fullParsedFile = "#this.expandFuseboxPath(this.parsePath)##parsedName#" />
 		<cfset var result = structNew() />
 		<cfset var writer = 0 />
 		
@@ -372,7 +378,7 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 		</cfif>
 		
 		<cfif not fileExists(fullParsedFile) or arguments.myFusebox.parameters.parse>
-			<cflock name="#fullParsedFile#" type="exclusive" timeout="30">
+			<cflock name="#fullParsedFile#" type="exclusive" timeout="300">
 				<cfif not fileExists(fullParsedFile) or arguments.myFusebox.parameters.parse>
 					<cfset request.__fusebox.SuppressPlugins = false />
 					<cfset writer = createObject("component","fuseboxWriter").init(this,arguments.myFusebox) />
@@ -462,7 +468,11 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 		</cfif>
 		
 		<cfset result.parsedName = parsedName />
-		<cfset result.parsedFile = parsedFile />
+		<cfif left(parsedFile,1) is "/">
+			<cfset result.parsedFile = parsedFile />
+		<cfelse>
+			<cfset result.parsedFile = this.getCoreToAppRootPath() & parsedFile />
+		</cfif>
 		<cfset result.lockName = fullParsedFile />
 		
 		<cfreturn result />
@@ -505,25 +515,35 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 				hint="I attempt to handle a Fusebox exception by looking for a handler file in the errortemplates/ directory. I return true if I handle the exception, else I return false.">
 		<cfargument name="cfcatch" type="any" required="true" 
 					hint="I am the original cfcatch structure from the exception that fusebox5.cfm caught." />
+		<cfargument name="attributes" type="struct" required="true" 
+					hint="I am the attributes 'scope'." />
+		<cfargument name="myFusebox" type="any" required="true" 
+					hint="I am the myFusebox object." />
+		<cfargument name="appKey" type="string" required="true" 
+					hint="I am the application key object." />
 		
-		<cfset var handled = false />
-		<cfset var type = cfcatch.type />
-		<cfset var ext = "." & this.scriptFileDelimiter />
-		<cfset var errorFile = this.errortemplatesPath & type & ext />
-		<cfset var handlerExists = fileExists(getApplicationRoot() & errorFile) />
-		<cfset var FUSEBOX_APPLICATION_KEY = variables.appKey />
+		<cfset var __handled = false />
+		<cfset var __type = arguments.cfcatch.type />
+		<cfset var __ext = "." & this.scriptFileDelimiter />
+		<cfset var __errorFile = this.errortemplatesPath & __type & __ext />
+		<cfset var __handlerExists = fileExists(expandFuseboxPath(__errorFile)) />
+		<cfset var FUSEBOX_APPLICATION_KEY = arguments.appKey />
 		
-		<cfloop condition="not handlerExists and len(type) gt 0">
-			<cfset type = listDeleteAt(type,listLen(type,"."),".") />
-			<cfset errorFile = this.errortemplatesPath & type & ext />
-			<cfset handlerExists = fileExists(getApplicationRoot() & errorFile) />
+		<cfloop condition="not __handlerExists and len(__type) gt 0">
+			<cfset __type = listDeleteAt(__type,listLen(__type,"."),".") />
+			<cfset __errorFile = this.errortemplatesPath & __type & __ext />
+			<cfset __handlerExists = fileExists(expandFuseboxPath(__errorFile)) />
 		</cfloop>
-		<cfif handlerExists>
-			<cfinclude template="#getCoreToAppRootPath()##errorFile#" />
-			<cfset handled = true />
+		<cfif __handlerExists>
+			<cfif left(__errorFile,1) is "/">
+				<cfinclude template="#__errorFile#" />
+			<cfelse>
+				<cfinclude template="#getCoreToAppRootPath()##__errorFile#" />
+			</cfif>
+			<cfset __handled = true />
 		</cfif>
 		
-		<cfreturn handled />
+		<cfreturn __handled />
 		
 	</cffunction>
 	
@@ -591,11 +611,18 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 		
 	</cffunction>
 	
+	<cffunction name="getFuseboxFileExtension" returntype="string" access="public" output="false" 
+				hint="I return the fusebox.xml file extension: either xml or cfm.">
+					
+		<cfreturn variables.fuseboxFileExtension />
+		
+	</cffunction>
+	
 	<cffunction name="deleteParsedFiles" returntype="void" access="private" output="false" 
 				hint="I delete all the script files in the parsed/ directory.">
 	
 		<cfset var fileQuery = 0 />
-		<cfset var parseDir = getApplicationRoot() & this.parsePath />
+		<cfset var parseDir = expandFuseboxPath(this.parsePath) />
 		
 		<cftry>
 			<cfdirectory action="list" directory="#parseDir#" 
@@ -621,6 +648,7 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 		<cfset var previousCircuits = this.circuits />
 		<cfset var alias = "" />
 		<cfset var parent = "" />
+		<cfset var relative = true />
 		<cfset var nAttrs = 0 />
 		
 		<cfset this.circuits = structNew() />
@@ -635,7 +663,7 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 			<cfif not structKeyExists(children[i].xmlAttributes,"path")>
 				<cfthrow type="fusebox.badGrammar.requiredAttributeMissing"
 						message="Required attribute is missing"
-						detail="The attribute 'path' is required, for a 'circuit' declaration in fusebox.xml." />
+						detail="The attribute 'path' is required, for the declaration of circuit '#children[i].xmlAttributes.alias#' in fusebox.xml." />
 			</cfif>
 			<cfif structKeyExists(children[i].xmlAttributes,"parent")>
 				<cfset parent = children[i].xmlAttributes.parent />
@@ -644,24 +672,36 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 				<cfset parent = "" />
 				<cfset nAttrs = 2 />
 			</cfif>
+			<cfif structKeyExists(children[i].xmlAttributes,"relative")>
+				<cfif listFind("true,false,yes,no",children[i].xmlAttributes.relative) eq 0>
+					<cfthrow type="fusebox.badGrammar.invalidAttributeValue"
+							message="Attribute has invalid value" 
+							detail="The attribute 'relative' must either be ""true"" or ""false"", for the declaration of circuit '#children[i].xmlAttributes.alias#' in fusebox.xml." />
+				</cfif>
+				<cfset relative = children[i].xmlAttributes.relative />
+				<cfset nAttrs = nAttrs + 1 />
+			<cfelse>
+				<cfset relative = true />
+			</cfif>
 			<cfif this.strictMode and nAttrs neq structCount(children[i].xmlAttributes)>
 				<cfthrow type="fusebox.badGrammar.unexpectedAttributes"
 						message="Unexpected attributes"
-						detail="Attributes other than 'alias', 'path' and 'parent' were found in the declaration of the '#alias#' circuit in fusebox.xml." />
+						detail="Attributes other than 'alias', 'path' and 'parent' were found for the declaration of circuit '#children[i].xmlAttributes.alias#' in fusebox.xml." />
 			</cfif>
 			<cfset alias = children[i].xmlAttributes.alias />
 			<!--- record each circuit load per request - optimization for development-circuit-load mode --->
 			<cfset request.__fusebox.CircuitsLoaded[alias] = true />
 			<cfif structKeyExists(previousCircuits,alias) and
 					children[i].xmlAttributes.path is previousCircuits[alias].getOriginalPath() and
-					parent is previousCircuits[alias].parent>
+					parent is previousCircuits[alias].parent and
+					relative eq previousCircuits[alias].getOriginalPathIsRelative()>
 				<!--- old circuit, we can just reload it --->
 				<cfset this.circuits[alias] = previousCircuits[alias].reload(arguments.myFusebox) />
 			<cfelse>
 				<!--- new circuit, we must create it from scratch --->
 				<cfset this.circuits[alias] =
 						createObject("component","fuseboxCircuit")
-							.init(this,alias,children[i].xmlAttributes.path,parent,arguments.myFusebox) />
+							.init(this,alias,children[i].xmlAttributes.path,parent,arguments.myFusebox,relative) />
 			</cfif>
 		</cfloop>
 		
@@ -697,15 +737,14 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 		<cfloop from="1" to="#n#" index="i">
 			<cfset aLex = structNew() />
 			<cfset aLex.namespace = children[i].xmlAttributes.namespace />
-			<cfset aLex.path = replace(children[i].xmlAttributes.path,"\","/","all") />
-			<cfif right(aLex.path,1) is not "/">
-				<cfset aLex.path = aLex.path & "/" />
-			</cfif>
-			<cfset aLex.path = getCoreToAppRootPath() & "lexicon/" & aLex.path />
+			<cfset aLex.path = normalizePartialPath(children[i].xmlAttributes.path) />
+			<!--- FB41 lexicons are deprecated so we don't support absolute / mapped paths: --->
+			<cfset aLex.path = getCoreToAppRootPath() & this.lexiconPath & aLex.path />
 			<cfset variables.fb41Lexicons[children[i].xmlAttributes.namespace] = aLex />
 		</cfloop>
 		
 		<!--- now load the new FB5 implicit lexicons from the <fusebox> tag --->
+		<cfset variables.lexicons = structNew() />
 		
 		<!--- pass 1: pull out any namespace declarations --->
 		<cfloop collection="#attributes#" item="attr">
@@ -718,7 +757,18 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 							message="Attempt to use reserved namespace" 
 							detail="You have attempted to declare a namespace '#aLex.namespace#' (in fusebox.xml) which is reserved by the Fusebox framework." />
 				</cfif>
-				<cfset aLex.path = getApplication().getCoreToAppRootPath() & getApplication().lexiconPath & attributes[attr] />
+				<cfset attributes[attr] = normalizePartialPath(attributes[attr]) />
+				<cfif left(attributes[attr],1) is "/">
+					<!--- assume mapped / root-relative path --->
+					<cfset aLex.path = attributes[attr] />
+				<cfelseif left(this.lexiconPath,1) is "/">
+					<!--- assume mapped / root-relative path --->
+					<cfset aLex.path = this.lexiconPath & attributes[attr] />
+				<cfelse>
+					<!--- relative paths --->
+					<cfset aLex.path = getCoreToAppRootPath() & 
+							this.lexiconPath & attributes[attr] />
+				</cfif>
 				<cfset variables.lexicons[aLex.namespace] = aLex />
 				<cfset variables.customAttributes[aLex.namespace] = structNew() />
 			</cfif>
@@ -828,6 +878,7 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 		<cfargument name="fbCode" type="any" required="true" 
 					hint="I am the parsed XML representation of the fusebox.xml file." />
 		
+		<!--- TODO: this xpath means that we can't spot bad phase declarations: --->
 		<cfset var children = xmlSearch(arguments.fbCode,"/fusebox/plugins/phase") />
 		<cfset var i = 0 />
 		<cfset var n = arrayLen(children) />
@@ -853,7 +904,7 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 			</cfif>
 			<cfset nn = arrayLen(children[i].xmlChildren) />
 			<cfloop from="1" to="#nn#" index="j">
-				<cfset plugin = createObject("component","fuseboxPlugin").init(phase,children[i].xmlChildren[j],this) />
+				<cfset plugin = createObject("component","fuseboxPlugin").init(phase,children[i].xmlChildren[j],this,variables.lexicons) />
 				<cfset this.plugins[plugin.getName()][phase] = plugin />
 				<cfif not structKeyExists(this.pluginphases,phase)>
 					<cfset this.pluginphases[phase] = arrayNew(1) />
@@ -900,8 +951,36 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 			</cfif>
 		</cfloop>
 		
+		<!---
+			if the user overrides certain path variables, we need to normalize them:
+			- this.parsePath (reset parseRootPath)
+			- this.pluginsPath
+			- this.lexiconPath
+			- this.errortemplatesPath
+			normalizing means changing all \ to / and appending / if not present
+		--->
+		<cfset this.parsePath = normalizePartialPath(this.parsePath) />
+		<cfset this.parseRootPath = relativePath(expandFuseboxPath(this.parsePath),getApplicationRoot()) />
+		<cfset this.pluginsPath = normalizePartialPath(this.pluginsPath) />
+		<cfset this.lexiconPath = normalizePartialPath(this.lexiconPath) />
+		<cfset this.errortemplatesPath = normalizePartialPath(this.errortemplatesPath) />
+		
+		<!--- Fusebox 5.1: default this.myself: --->
+		<cfif not structKeyExists(this,"myself")>
+			<cfset this.myself = getDefaultMyself(this.self) />
+		</cfif>
+		
 	</cffunction>
 	
+	<cffunction name="getDefaultMyself" returntype="string" access="public" output="false" 
+				hint="I return the default value of 'myself' for a given value of 'self'.">
+		<cfargument name="self" type="string" required="true" 
+					hint="I am the value of 'self' to use." />
+		
+		<cfreturn arguments.self & this.queryStringStart & this.fuseactionVariable & this.queryStringEqual />
+		
+	</cffunction>
+		
 	<cffunction name="loadGlobalProcess" returntype="void" access="private" output="false" 
 				hint="I load the globalfuseaction for the specified processing phase.">
 		<cfargument name="fbCode" type="any" required="true" 
@@ -997,6 +1076,70 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 		</cfif>
 
 		<cfreturn relative />
+		
+	</cffunction>
+	
+	<cffunction name="getCanonicalPath" returntype="string" access="public" output="false" 
+				hint="I return a canonical file path (with all /../ sections resolved).">
+		<cfargument name="path" type="string" required="true" 
+					hint="I am the path to resolve." />
+		
+		<cfset var resolvedPath = arguments.path />
+		<cfset var leadingSlash = left(resolvedPath,1) is "/" />
+		<cfset var trailingSlash = right(resolvedPath,1) is "/" />
+		<cfset var segment = ""/>
+		<cfset var j = 1 />
+		<cfset var n = 0 />
+		<cfset var pathParts = arrayNew(1) />
+		<cfset var delimiter = "" />
+
+		<!--- remove pairs of directory/../ --->		
+		<cfloop list="#resolvedPath#" delimiters="/" index="segment">
+			<cfif segment is ".">
+				<!--- just ignore this --->
+			<cfelseif segment is "..">
+				<cfif j gt 1 and pathParts[j-1] is not "..">
+					<cfset j = j - 1 />
+				<cfelse>
+					<cfset pathParts[j] = segment />
+					<cfset j = j + 1 />
+				</cfif>
+			<cfelse>
+				<cfset pathParts[j] = segment />
+				<cfset j = j + 1 />
+			</cfif>
+		</cfloop>
+		
+		<!--- rebuild the path --->
+		<cfif leadingSlash>
+			<cfset delimiter = "/" />
+		</cfif>
+		<cfset resolvedPath = "" />
+		<cfset n = j - 1 />
+		<cfloop from="1" to="#n#" index="j">
+			<cfset resolvedPath = resolvedPath & delimiter & pathParts[j] />
+			<cfset delimiter = "/" />
+		</cfloop>
+		<cfif trailingSlash>
+			<cfset resolvedPath = resolvedPath & "/" />
+		</cfif>
+
+		<cfreturn resolvedPath />
+		
+	</cffunction>
+	
+	<cffunction name="normalizePartialPath" returntype="string" access="public" output="false" 
+				hint="I return a normalized file path (that has / instead of \ and ends with /).">
+		<cfargument name="partialPath" type="string" required="true" 
+					hint="I am the path to normalize." />
+		
+		<cfset var unixPath = replace(arguments.partialPath,"\","/","all") />
+		
+		<cfif right(unixPath,1) is not "/">
+			<cfset unixPath = unixPath & "/" />
+		</cfif>
+		
+		<cfreturn unixPath />
 		
 	</cffunction>
 	
