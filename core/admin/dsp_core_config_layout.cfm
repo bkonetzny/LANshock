@@ -45,9 +45,10 @@ $LastChangedRevision$
 	<tr>
 		<th>#request.content.template#</th>
 		<td><select name="template" onChange="setPreviewImage(escape(getSelectedValue(document.formTemplate.template)))">
+				<cfset sActiveTemplate = attributes.template>
 				<cfloop query="qTemplates">
 					<cfif type EQ "dir" AND name NEQ "_scripts">
-						<option value="#name#"<cfif attributes.template EQ name> selected</cfif>>#name#</option>
+						<option value="#qTemplates.name#"<cfif sActiveTemplate EQ qTemplates.name> selected</cfif>>#qTemplates.name#</option>
 					</cfif>
 				</cfloop>
 			</select><br>
@@ -57,8 +58,9 @@ $LastChangedRevision$
 		<th><!--- TODO: $$$ ---> Smileyset</th>
 		<td><select name="smileyset">
 				<option value=""></option>
+				<cfset sActiveSmileys = attributes.smileyset>
 				<cfloop query="qSmileySets">
-					<option value="#name#"<cfif attributes.smileyset EQ name> selected</cfif>>#name#</option>
+					<option value="#qSmileySets.name#"<cfif sActiveSmileys EQ qSmileySets.name> selected</cfif>>#qSmileySets.name#</option>
 				</cfloop>
 			</select></td>
 	</tr>
