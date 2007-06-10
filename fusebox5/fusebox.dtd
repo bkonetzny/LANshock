@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 Used within the fusebox.xml page to contain the elements that configure the application.
+Ticket 159: made all elements optional - but logistically a Fusebox requires at least one circuit.
 -->
-<!ELEMENT fusebox (circuits, classes, lexicons, parameters, globalfuseactions, plugins)>
+<!ELEMENT fusebox (circuits?, classes?, lexicons?, parameters?, globalfuseactions?, plugins?)>
 <!--
 	Specify the circuits in this application.
 -->
@@ -12,6 +13,7 @@ Used within the fusebox.xml page to contain the elements that configure the appl
 	alias CDATA #REQUIRED
 	path CDATA #REQUIRED
 	parent CDATA #IMPLIED
+	relative (true | false | yes | no) "true"
 >
 <!--
 	Specify the class declarations in this application.
@@ -68,7 +70,7 @@ Used within the fusebox.xml page to contain the elements that configure the appl
 <!ATTLIST plugin
 	name CDATA #REQUIRED
 	template CDATA #REQUIRED
-	path CDATA #REQUIRED
+	path CDATA #IMPLIED
 >
 <!--
 	Plugins may have parameters.

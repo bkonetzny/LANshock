@@ -1,61 +1,27 @@
 <!---
-Fusebox Software License
-Version 1.0
+Copyright 2006 TeraTech, Inc. http://teratech.com/
 
-Copyright (c) 2003, 2004, 2005, 2006 The Fusebox Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-Redistribution and use in source and binary forms, with or without modification, are permitted 
-provided that the following conditions are met:
+http://www.apache.org/licenses/LICENSE-2.0
 
-1. Redistributions of source code must retain the above copyright notice, this list of conditions 
-   and the following disclaimer.
-
-2. Redistributions in binary form or otherwise encrypted form must reproduce the above copyright 
-   notice, this list of conditions and the following disclaimer in the documentation and/or other 
-   materials provided with the distribution.
-
-3. The end-user documentation included with the redistribution, if any, must include the following 
-   acknowledgment:
-
-   "This product includes software developed by the Fusebox Corporation (http://www.fusebox.org/)."
-
-   Alternately, this acknowledgment may appear in the software itself, if and wherever such 
-   third-party acknowledgments normally appear.
-
-4. The names "Fusebox" and "Fusebox Corporation" must not be used to endorse or promote products 
-   derived from this software without prior written (non-electronic) permission. For written 
-   permission, please contact fusebox@fusebox.org.
-
-5. Products derived from this software may not be called "Fusebox", nor may "Fusebox" appear in 
-   their name, without prior written (non-electronic) permission of the Fusebox Corporation. For 
-   written permission, please contact fusebox@fusebox.org.
-
-If one or more of the above conditions are violated, then this license is immediately revoked and 
-can be re-instated only upon prior written authorization of the Fusebox Corporation.
-
-THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
-DISCLAIMED. IN NO EVENT SHALL THE FUSEBOX CORPORATION OR ITS CONTRIBUTORS BE LIABLE FOR ANY 
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR 
-BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
-STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
--------------------------------------------------------------------------------
-
-This software consists of voluntary contributions made by many individuals on behalf of the 
-Fusebox Corporation. For more information on Fusebox, please see <http://www.fusebox.org/>.
-
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 --->
 <cfcomponent hint="I provide the per-request myFusebox data structure and some convenience methods.">
 	<cfscript>
-	this.version.runtime     = "unknown";
+	// ticket 171 created Fusebox 5.1.0
+	// this.version.runtime     = "5.1.0.#REReplace('$LastChangedRevision$','[^0-9]','','all')#";
+	this.version.runtime     = "5.1.0";
+	  
 	this.version.loader      = "unknown";
 	this.version.transformer = "unknown";
 	this.version.parser      = "unknown";
-	  
-	this.version.runtime     = "5.0.0";
 	  
 	this.thisCircuit = "";
 	this.thisFuseaction =  "";
@@ -238,6 +204,49 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 	
 	</cffunction>
 	
+	<cffunction name="getSelf" returntype="string" access="public" output="false"
+				hint="I return the 'self' string, e.g., index.cfm.">
+
+		<cfif not structKeyExists(variables,"self")>
+			<cfset variables.self = getApplication().self />
+		</cfif>
+		
+		<cfreturn variables.self />
+
+	</cffunction>	
+	
+	<cffunction name="setSelf" returntype="void" access="public" output="false" 
+				hint="I override the default value of 'self' and I also reset the value of 'myself'.">
+		<cfargument name="self" type="string" required="true" 
+					hint="I am the new value of 'self', e.g., /myapp/entry.cfm" />
+		
+		<cfset variables.self = arguments.self />
+		<!--- reset myself for consistency with self --->
+		<cfset variables.myself = getApplication().getDefaultMyself(variables.self) />
+		
+	</cffunction>
+
+	
+	<cffunction name="getMyself" returntype="string" access="public" output="false" 
+				hint="I return the 'myself' string, e.g., index.cfm?fuseaction=.">
+
+		<cfif not structKeyExists(variables,"myself")>
+			<cfset variables.myself = getApplication().myself />
+		</cfif>
+		
+		<cfreturn variables.myself />
+
+	</cffunction>	
+	
+	<cffunction name="setMyself" returntype="void" access="public" output="false" 
+				hint="I override the default value of 'myself'.">
+		<cfargument name="myself" type="string" required="true" 
+					hint="I am the new value of 'myself'." />
+		
+		<cfset variables.myself = arguments.myself />
+		
+	</cffunction>
+
 	<cffunction name="enterStackFrame" returntype="void" access="public" output="false" 
 				hint="I create a new stack frame (for scoped parameters to do/include).">
 		

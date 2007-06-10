@@ -1,52 +1,17 @@
 <!---
-Fusebox Software License
-Version 1.0
+Copyright 2006 TeraTech, Inc. http://teratech.com/
 
-Copyright (c) 2003, 2004, 2005, 2006 The Fusebox Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-Redistribution and use in source and binary forms, with or without modification, are permitted 
-provided that the following conditions are met:
+http://www.apache.org/licenses/LICENSE-2.0
 
-1. Redistributions of source code must retain the above copyright notice, this list of conditions 
-   and the following disclaimer.
-
-2. Redistributions in binary form or otherwise encrypted form must reproduce the above copyright 
-   notice, this list of conditions and the following disclaimer in the documentation and/or other 
-   materials provided with the distribution.
-
-3. The end-user documentation included with the redistribution, if any, must include the following 
-   acknowledgment:
-
-   "This product includes software developed by the Fusebox Corporation (http://www.fusebox.org/)."
-
-   Alternately, this acknowledgment may appear in the software itself, if and wherever such 
-   third-party acknowledgments normally appear.
-
-4. The names "Fusebox" and "Fusebox Corporation" must not be used to endorse or promote products 
-   derived from this software without prior written (non-electronic) permission. For written 
-   permission, please contact fusebox@fusebox.org.
-
-5. Products derived from this software may not be called "Fusebox", nor may "Fusebox" appear in 
-   their name, without prior written (non-electronic) permission of the Fusebox Corporation. For 
-   written permission, please contact fusebox@fusebox.org.
-
-If one or more of the above conditions are violated, then this license is immediately revoked and 
-can be re-instated only upon prior written authorization of the Fusebox Corporation.
-
-THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
-DISCLAIMED. IN NO EVENT SHALL THE FUSEBOX CORPORATION OR ITS CONTRIBUTORS BE LIABLE FOR ANY 
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR 
-BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
-STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
--------------------------------------------------------------------------------
-
-This software consists of voluntary contributions made by many individuals on behalf of the 
-Fusebox Corporation. For more information on Fusebox, please see <http://www.fusebox.org/>.
-
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 --->
 <cfcomponent output="false" hint="I represent a plugin declaration.">
 
@@ -58,78 +23,122 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 					hint="I am the XML representation of this plugin's declaration." />
 		<cfargument name="fbApp" type="fuseboxApplication" required="true" 
 					hint="I am the fusebox application object." />
+		<cfargument name="lexicons" type="struct" required="true" 
+					hint="I am the lexicons declared in the fusebox.xml file that are available as custom attributes." />
 	
 		<cfset var i = 0 />
 		<cfset var n = arrayLen(arguments.pluginXML.xmlChildren) />
 		<cfset var attr = 0 />
-		<cfset var nAttrs = 2 />
+		<cfset var ns = "" />
 		<cfset var verbChildren = arrayNew(1) />
 		<cfset var factory = arguments.fbApp.getFuseactionFactory() />
 		<cfset var ext = "." & arguments.fbApp.scriptFileDelimiter />
 		
-		<cfif not structKeyExists(arguments.pluginXML.xmlAttributes,"name")>
-			<cfthrow type="fusebox.badGrammar.requiredAttributeMissing"
-					message="Required attribute is missing"
-					detail="The attribute 'name' is required, for a '#arguments.phase#' plugin declaration in fusebox.xml." />
-		</cfif>
-		
-		<cfset variables.name = arguments.pluginXML.xmlAttributes.name />
-		<cfset variables.fuseboxApplication = arguments.fbApp />
-
-		<cfif not structKeyExists(arguments.pluginXML.xmlAttributes,"template")>
-			<cfthrow type="fusebox.badGrammar.requiredAttributeMissing"
-					message="Required attribute is missing"
-					detail="The attribute 'template' is required, for the '#getName()#' plugin declaration in fusebox.xml." />
-		</cfif>
-
-		<cfset variables.phase = arguments.phase />
 		<cfif arguments.pluginXML.xmlName is "plugin">
+		
+			<cfif not structKeyExists(arguments.pluginXML.xmlAttributes,"name")>
+				<cfthrow type="fusebox.badGrammar.requiredAttributeMissing"
+						message="Required attribute is missing"
+						detail="The attribute 'name' is required, for a '#arguments.phase#' plugin declaration in fusebox.xml." />
+			</cfif>
+			
+			<cfset variables.name = arguments.pluginXML.xmlAttributes.name />
+			<cfset variables.fuseboxApplication = arguments.fbApp />
+			<cfset variables.customAttribs = structNew() />
+	
+			<cfif not structKeyExists(arguments.pluginXML.xmlAttributes,"template")>
+				<cfthrow type="fusebox.badGrammar.requiredAttributeMissing"
+						message="Required attribute is missing"
+						detail="The attribute 'template' is required, for the '#getName()#' plugin declaration in fusebox.xml." />
+			</cfif>
+	
+			<cfset variables.phase = arguments.phase />
+
 			<cfset this.path = arguments.fbApp.getPluginsPath() />
+
 			<cfif structKeyExists(arguments.pluginXML.xmlAttributes,"path")>
-				<cfset this.path = this.path & replace(arguments.pluginXML.xmlAttributes.path,"\","/","all") />
-				<cfset nAttrs = 3 />
+				<cfif left(arguments.pluginXML.xmlAttributes.path,1) is "/">
+					<!--- path is absolute, ignore normal plugins path --->
+					<cfset this.path = arguments.fbApp.normalizePartialPath(arguments.pluginXML.xmlAttributes.path) />
+				<cfelse>
+					<cfset this.path = this.path & arguments.fbApp.normalizePartialPath(arguments.pluginXML.xmlAttributes.path) />
+				</cfif>
 			</cfif>
-			<cfif right(this.path,1) is not "/">
-				<cfset this.path = this.path & "/" />
-			</cfif>
+			
+			<!--- look for any valid custom attributes --->
+			<cfloop collection="#arguments.pluginXML.xmlAttributes#" item="attr">
+				<cfswitch expression="#attr#">
+
+				<cfcase value="name,template,path">
+					<!--- already processed --->
+				</cfcase>
+
+				<cfdefaultcase>
+
+					<cfif listLen(attr,":") eq 2>
+						<!--- looks like a custom attribute: --->
+						<cfset ns = listFirst(attr,":") />
+						<cfif structKeyExists(arguments.lexicons,ns)>
+							<cfset customAttribs[ns][listLast(attr,":")] = arguments.pluginXML.xmlAttributes[attr] />
+						<cfelse>
+							<cfthrow type="fusebox.badGrammar.undeclaredNamespace" 
+									message="Undeclared lexicon namespace" 
+									detail="The lexicon prefix '#ns#' was found on a custom attribute in the '#getName()#' plugin declaration in fusebox.xml but no such lexicon namespace has been declared." />
+						</cfif>
+	
+					<cfelseif arguments.fbApp.strictMode>
+						<cfthrow type="fusebox.badGrammar.unexpectedAttributes"
+								message="Unexpected attributes"
+								detail="Unexpected attribute '#attr#' found in the '#getName()#' plugin declaration in fusebox.xml." />
+					</cfif>
+					
+				</cfdefaultcase>
+
+				</cfswitch>
+			</cfloop>
+			
 			<cfset variables.template = arguments.pluginXML.xmlAttributes.template />
 			<cfif len(variables.template) lt 4 or right(variables.template,4) is not ext>
 				<cfset variables.template = variables.template & ext />
 			</cfif>
-			<cfset this.rootpath =
-					arguments.fbApp.relativePath(arguments.fbApp.getApplicationRoot() &
-													this.path,arguments.fbApp.getApplicationRoot()) />
-			<!--- remove pairs of directory/../ to form canonical path: --->
-			<cfloop condition="find('/../',this.rootpath) gt 0">
-				<cfset this.rootpath = REreplace(this.rootpath,"[^\.:/]*/\.\./","") />
-			</cfloop>
-			<cfif arguments.fbApp.strictMode and structCount(arguments.pluginXML.xmlAttributes) neq nAttrs>
-				<cfthrow type="fusebox.badGrammar.unexpectedAttributes"
-						message="Unexpected attributes"
-						detail="Unexpected attributes were found in the '#getName()#' plugin declaration in fusebox.xml." />
+			<cfif left(this.path,1) is "/">
+				<cfset this.rootpath =
+						arguments.fbApp.relativePath(arguments.fbApp.expandFuseboxPath(this.path),arguments.fbApp.getApplicationRoot()) />
+			<cfelse>
+				<cfset this.rootpath =
+						arguments.fbApp.relativePath(arguments.fbApp.getApplicationRoot() &
+														this.path,arguments.fbApp.getApplicationRoot()) />
 			</cfif>
+			
+			<cfset this.rootpath = arguments.fbApp.getCanonicalPath(this.rootpath) />
+			
 			<cfset variables.parameters = arguments.pluginXML.xmlChildren />
 			<cfset variables.paramVerbs = structNew() />
 			<cfloop from="1" to="#n#" index="i">
+				
 				<cfif not structKeyExists(variables.parameters[i].xmlAttributes,"name")>
 					<cfthrow type="fusebox.badGrammar.requiredAttributeMissing"
 							message="Required attribute is missing"
 							detail="The attribute 'name' is required, for a 'parameter' to the '#getName()#' plugin declaration in fusebox.xml." />
 				</cfif>
+
 				<cfif not structKeyExists(variables.parameters[i].xmlAttributes,"value")>
 					<cfthrow type="fusebox.badGrammar.requiredAttributeMissing"
 							message="Required attribute is missing"
 							detail="The attribute 'value' is required, for a 'parameter' to the '#getName()#' plugin declaration in fusebox.xml." />
 				</cfif>
+
 				<cfif arguments.fbApp.strictMode and structCount(variables.parameters[i].xmlAttributes) neq 2>
 					<cfthrow type="fusebox.badGrammar.unexpectedAttributes"
 							message="Unexpected attributes"
 							detail="Unexpected attributes were found in the '#variables.parameters[i].xmlAttributes.name#' parameter of the '#getName()#' plugin declaration in fusebox.xml." />
 				</cfif>
+
 				<cfset attr = structNew() />
 				<cfset attr.name = "myFusebox.plugins.#getName()#.parameters." & variables.parameters[i].xmlAttributes.name />
 				<cfset attr.value = variables.parameters[i].xmlAttributes.value />
 				<cfset variables.paramVerbs[i] = factory.create("set",this,attr,verbChildren) />
+
 			</cfloop>
 		<cfelse>
 			<cfthrow type="fusebox.badGrammar.illegalDeclaration" 
@@ -156,9 +165,15 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 		</cfif>
 		<cfswitch expression="#variables.phase#">
 		<cfcase value="processError,fuseactionException">
-			<cffile action="read" file="#variables.fuseboxApplication.getApplicationRoot()##this.path##variables.template#"
-					variable="file"
-					charset="#variables.fuseboxApplication.characterEncoding#" />
+			<cfif left(this.path,1) is "/">
+				<cffile action="read" file="#variables.fuseboxApplication.expandFuseboxPath(this.path)##variables.template#"
+						variable="file"
+						charset="#variables.fuseboxApplication.characterEncoding#" />
+			<cfelse>
+				<cffile action="read" file="#variables.fuseboxApplication.getApplicationRoot()##this.path##variables.template#"
+						variable="file"
+						charset="#variables.fuseboxApplication.characterEncoding#" />
+			</cfif>
 			<cfset arguments.writer.rawPrintln(file) />
 		</cfcase>
 		<cfdefaultcase>
@@ -168,7 +183,11 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 			<cfset p = arguments.writer.setPhase(variables.phase) />
 			<cfset arguments.writer.println('<cfset myFusebox.thisPlugin = "#getName()#"/>') />
 			<cfset arguments.writer.print('<' & 'cfoutput><' & 'cfinclude template=') />
-			<cfset arguments.writer.print('"#variables.fuseboxApplication.parseRootPath##this.path##variables.template#"') />
+			<cfif left(this.path,1) is "/">
+				<cfset arguments.writer.print('"#this.path##variables.template#"') />
+			<cfelse>
+				<cfset arguments.writer.print('"#variables.fuseboxApplication.parseRootPath##this.path##variables.template#"') />
+			</cfif>
 			<cfset arguments.writer.println('/><' & '/cfoutput>') />
 			<cfset arguments.writer.setPhase(p) />
 		</cfdefaultcase>
@@ -188,6 +207,20 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 	
 		<cfreturn variables.fuseboxApplication />
 	
+	</cffunction>
+	
+	<cffunction name="getCustomAttributes" returntype="struct" access="public" output="false" 
+				hint="I return the custom (namespace-qualified) attributes for this plugin tag.">
+		<cfargument name="ns" type="string" required="true" 
+					hint="I am the namespace prefix whose attributes should be returned." />
+		
+		<cfif structKeyExists(variables.customAttribs,arguments.ns)>
+			<!--- we structCopy() this so folks can't poke values back into the metadata! --->
+			<cfreturn structCopy(variables.customAttribs[arguments.ns]) />
+		<cfelse>
+			<cfreturn structNew() />
+		</cfif>
+		
 	</cffunction>
 	
 </cfcomponent>

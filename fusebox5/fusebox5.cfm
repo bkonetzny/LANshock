@@ -1,63 +1,32 @@
 <cftry><cfsilent> <!--- on one line to avoid leading whitespace --->
 <!---
-Fusebox Software License
-Version 1.0
+Copyright 2006 TeraTech, Inc. http://teratech.com/
 
-Copyright (c) 2003, 2004, 2005, 2006 The Fusebox Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-Redistribution and use in source and binary forms, with or without modification, are permitted 
-provided that the following conditions are met:
+http://www.apache.org/licenses/LICENSE-2.0
 
-1. Redistributions of source code must retain the above copyright notice, this list of conditions 
-   and the following disclaimer.
-
-2. Redistributions in binary form or otherwise encrypted form must reproduce the above copyright 
-   notice, this list of conditions and the following disclaimer in the documentation and/or other 
-   materials provided with the distribution.
-
-3. The end-user documentation included with the redistribution, if any, must include the following 
-   acknowledgment:
-
-   "This product includes software developed by the Fusebox Corporation (http://www.fusebox.org/)."
-
-   Alternately, this acknowledgment may appear in the software itself, if and wherever such 
-   third-party acknowledgments normally appear.
-
-4. The names "Fusebox" and "Fusebox Corporation" must not be used to endorse or promote products 
-   derived from this software without prior written (non-electronic) permission. For written 
-   permission, please contact fusebox@fusebox.org.
-
-5. Products derived from this software may not be called "Fusebox", nor may "Fusebox" appear in 
-   their name, without prior written (non-electronic) permission of the Fusebox Corporation. For 
-   written permission, please contact fusebox@fusebox.org.
-
-If one or more of the above conditions are violated, then this license is immediately revoked and 
-can be re-instated only upon prior written authorization of the Fusebox Corporation.
-
-THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
-DISCLAIMED. IN NO EVENT SHALL THE FUSEBOX CORPORATION OR ITS CONTRIBUTORS BE LIABLE FOR ANY 
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR 
-BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
-STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
--------------------------------------------------------------------------------
-
-This software consists of voluntary contributions made by many individuals on behalf of the 
-Fusebox Corporation. For more information on Fusebox, please see <http://www.fusebox.org/>.
-
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 --->
 
 <!--- FB5: allow "" default - FB41 required this variable: --->
-<cfparam name="variables.FUSEBOX_APPLICATION_PATH" type="string" default="" />
+<cfparam name="variables.FUSEBOX_APPLICATION_PATH" default="" />
 <!--- FB5: application key - FB41 always uses 'fusebox': --->
-<cfparam name="variables.FUSEBOX_APPLICATION_KEY" type="string" default="fusebox" />
+<cfparam name="variables.FUSEBOX_APPLICATION_KEY" default="fusebox" />
+<!--- FB5.1: allow application to be included from other directories: --->
+<cfparam name="variables.FUSEBOX_CALLER_PATH" default="#replace(getDirectoryFromPath(getBaseTemplatePath()),"\","/","all")#" />
 
-<cfparam name="variables.attributes" type="struct" default="#structNew()#" />
+<cfparam name="variables.attributes" default="#structNew()#" />
 <cfset structAppend(attributes,URL,true) />
 <cfset structAppend(attributes,form,true) />
+<!--- FB51: ticket 164: add OO synonym for attributes scope --->
+<cfparam name="variables.event" default="#createObject('component','fuseboxEvent').init(attributes)#" />
 
 <!--- FB5: myFusebox is an object but has FB41-compatible public properties --->
 <cfset myFusebox = createObject("component","myFusebox").init(FUSEBOX_APPLICATION_KEY,attributes) />
@@ -78,7 +47,7 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 				<!--- can't be conditional: we don't know the state of the debug flag yet --->
 				<cfset myFusebox.trace("Fusebox","Creating Fusebox application object") />
 				<cfset _fba = createObject("component","fuseboxApplication") />
-				<cfset application[FUSEBOX_APPLICATION_KEY] = _fba.init(FUSEBOX_APPLICATION_KEY,FUSEBOX_APPLICATION_PATH,myFusebox) />
+				<cfset application[FUSEBOX_APPLICATION_KEY] = _fba.init(FUSEBOX_APPLICATION_KEY,FUSEBOX_APPLICATION_PATH,myFusebox,FUSEBOX_CALLER_PATH) />
 			<cfelse>
 				<!--- can't be conditional: we don't know the state of the debug flag yet --->
 				<cfset myFusebox.trace("Fusebox","Reloading Fusebox application object") />
@@ -225,9 +194,17 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 	<cfif isDefined("_fba.debug") and _fba.debug and isDefined("myFusebox")>
 		<cfset myFusebox.trace("Fusebox","Caught Fusebox exception '#cfcatch.type#'") />
 	</cfif>
-	<cfif not isDefined("_fba.errortemplatesPath") or not _fba.handleFuseboxException(cfcatch)>
+	<cfif not isDefined("_fba.errortemplatesPath") or
+			not _fba.handleFuseboxException(cfcatch,attributes,myFusebox,variables.FUSEBOX_APPLICATION_KEY)>
 		<cfrethrow /> 
 	</cfif>
+</cfcatch>
+<cfcatch type="any">
+	<cfif isDefined("_fba.debug") and _fba.debug and isDefined("myFusebox")>
+		<cfset myFusebox.trace("Fusebox","Request failed with exception '#cfcatch.type#' (#cfcatch.message#)") />
+		<cfoutput>#myFusebox.renderTrace()#</cfoutput>
+	</cfif>
+	<cfrethrow />
 </cfcatch>
 </cftry>
 <cfset myFusebox.trace("Fusebox","Request completed") />

@@ -1,52 +1,17 @@
 <!---
-Fusebox Software License
-Version 1.0
+Copyright 2006 TeraTech, Inc. http://teratech.com/
 
-Copyright (c) 2003, 2004, 2005, 2006 The Fusebox Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-Redistribution and use in source and binary forms, with or without modification, are permitted 
-provided that the following conditions are met:
+http://www.apache.org/licenses/LICENSE-2.0
 
-1. Redistributions of source code must retain the above copyright notice, this list of conditions 
-   and the following disclaimer.
-
-2. Redistributions in binary form or otherwise encrypted form must reproduce the above copyright 
-   notice, this list of conditions and the following disclaimer in the documentation and/or other 
-   materials provided with the distribution.
-
-3. The end-user documentation included with the redistribution, if any, must include the following 
-   acknowledgment:
-
-   "This product includes software developed by the Fusebox Corporation (http://www.fusebox.org/)."
-
-   Alternately, this acknowledgment may appear in the software itself, if and wherever such 
-   third-party acknowledgments normally appear.
-
-4. The names "Fusebox" and "Fusebox Corporation" must not be used to endorse or promote products 
-   derived from this software without prior written (non-electronic) permission. For written 
-   permission, please contact fusebox@fusebox.org.
-
-5. Products derived from this software may not be called "Fusebox", nor may "Fusebox" appear in 
-   their name, without prior written (non-electronic) permission of the Fusebox Corporation. For 
-   written permission, please contact fusebox@fusebox.org.
-
-If one or more of the above conditions are violated, then this license is immediately revoked and 
-can be re-instated only upon prior written authorization of the Fusebox Corporation.
-
-THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
-DISCLAIMED. IN NO EVENT SHALL THE FUSEBOX CORPORATION OR ITS CONTRIBUTORS BE LIABLE FOR ANY 
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR 
-BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
-STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
--------------------------------------------------------------------------------
-
-This software consists of voluntary contributions made by many individuals on behalf of the 
-Fusebox Corporation. For more information on Fusebox, please see <http://www.fusebox.org/>.
-
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 --->
 <cfcomponent output="false" hint="I represent a circuit.">
 	
@@ -62,9 +27,12 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 					hint="I am the alias of the parent circuit." />
 		<cfargument name="myFusebox" type="myFusebox" required="true" 
 					hint="I am the myFusebox data structure." />
+		<cfargument name="relative" type="boolean" required="true" 
+					hint="I indicate whether the path is relative or absolute (mapped)." />
 		
 		<cfset variables.fuseboxApplication = arguments.fbApp />
 		<cfset variables.alias = arguments.alias />
+		<cfset variables.relative = arguments.relative />
 
 		<cfset variables.fuseboxLexicon = variables.fuseboxApplication.getFuseactionFactory().getBuiltinLexicon() />
 				
@@ -75,16 +43,39 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 		<cfset variables.appPath = variables.fuseboxApplication.getApplicationRoot() />
 		<cfset variables.lexicons = structNew() />
 		
-		<cfset variables.relativePath = replace(arguments.path,"\","/","all") />
-		<cfif len(variables.relativePath) and right(variables.relativePath,1) is not "/">
-			<cfset variables.relativePath = variables.relativePath & "/" />
-		</cfif>
+		<cfset variables.relativePath = variables.fuseboxApplication.normalizePartialPath(arguments.path) />
 		<cfset this.path = variables.relativePath />
-		<cfset variables.fullPath = variables.appPath & variables.relativePath />
-		<!--- remove pairs of directory/../ to form canonical path: --->
-		<cfloop condition="find('/../',variables.fullPath) gt 0">
-			<cfset variables.fullPath = REreplace(variables.fullPath,"[^\.:/]*/\.\./","") />
-		</cfloop>
+		<!--- ticket 139: allow absolute path names and mappings: --->
+		<cfif left(variables.relativePath,1) is "/">
+			<cfif variables.relative>
+				<!--- unintentional absolute path? --->
+				<cfif variables.fuseboxApplication.strictMode>
+					<cfthrow type="fusebox.badGrammar.illegalPath"
+							message="Circuit path is not relative"
+							detail="The 'path' value '#variables.originalPath#' for circuit #getAlias()# specifies an absolute path. Did you forget to specify 'relative=""false""'?" />
+				</cfif>
+				<cfset variables.fullPath = variables.appPath & variables.relativePath />
+			<cfelse>
+				<!--- explicit absolute / mapped path: --->
+				<cfset variables.fullPath = replace(expandPath(variables.relativePath),"\","/","all") />
+			</cfif>
+		<cfelse>
+			<cfif variables.relative>
+				<cfset variables.fullPath = variables.appPath & variables.relativePath />
+			<cfelse>
+				<cfthrow type="fusebox.badGrammar.illegalPath"
+						message="Circuit path is relative"
+						detail="The 'path' value '#variables.originalPath#' for circuit #getAlias()# should specify an absolute path when 'relative=""false""'." />
+			</cfif>
+		</cfif>
+		
+		<cfset variables.fullPath = variables.fuseboxApplication.getCanonicalPath(variables.fullPath) />
+
+		<!---
+			this was not correctly normalized prior to ticket 139 but it didn't really matter
+			until absolute paths were allowed in that ticket:
+		--->
+		<cfset variables.relativePath = variables.fuseboxApplication.relativePath(variables.appPath,variables.fullPath) />
 		<cfset this.rootPath = variables.fuseboxApplication.relativePath(variables.fullPath,variables.appPath) />
 
 		<cfset reload(arguments.myFusebox) />
@@ -99,27 +90,45 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 					hint="I am the myFusebox data structure." />
 
 		<cfset var circuitFile = "circuit.xml.cfm" />
+		<cfset var circuitFileAlt = "circuit.xml" />
+		<cfset var circuitImplicit = false />
 		<cfset var circuitXML = "" />
 		<cfset var circuitCode = "" />
 		<cfset var needToLoad = true />
 		<cfset var circuitFiles = 0 />
+		<cfset var myCircuitFilePath = "" />
+		<cfset var jCircuitFile = "" />
+		<cfset var dtLastModified = "" />
+
+		<!---
+			since we need to check the file, regardless of whether we load it,
+			we might as well do the test up front and perform the strict check
+			that just one version exists (ticket 135)
+		--->
+		<cfif fileExists(variables.fullPath & circuitFile)>
+			<cfif variables.fuseboxApplication.strictMode and fileExists(variables.fullPath & circuitFileAlt)>
+				<cfthrow type="fusebox.multipleCircuitXML" 
+						message="Both 'circuit.xml' and 'circuit.xml.cfm' exist" 
+						detail="'circuit.xml.cfm' will be used but 'circuit.xml' also exists in '#variables.fullPath#." />
+			</cfif>
+		<cfelse>
+			<cfset circuitFile = circuitFileAlt />
+		</cfif>
 
 		<cfif structKeyExists(this,"timestamp")>
-			<cfdirectory action="list" directory="#variables.fullPath#" filter="circuit.xml*" name="circuitFiles" />
-			<cfif circuitFiles.recordCount eq 1>
-				<cfset needToLoad = parseDateTime(circuitFiles.dateLastModified) gt parseDateTime(this.timestamp) />
-			<!--- else ignore the ambiguity --->
-			</cfif>
+			<!--- Java timestamp solution provided by Daniel Schmid --->
+			<cfset myCircuitFilePath = variables.fullPath & circuitFile />
+			<cfset jCircuitFile = createObject("java","java.io.File").init(myCircuitFilePath) />
+			<cfset dtLastModified = createObject("java","java.util.Date").init(jCircuitFile.lastModified()) />
+			<cfset needToLoad = parseDateTime(dtLastModified) gt parseDateTime(this.timestamp) />
 		</cfif>
 
 		<cfif needToLoad>
 			<cfif variables.fuseboxApplication.debug>
 				<cfset arguments.myFusebox.trace("Compiler","Loading #getAlias()# circuit.xml file") />
 			</cfif>
+
 			<!--- attempt to load circuit.xml(.cfm): --->
-			<cfif not fileExists(variables.fullPath & circuitFile)>
-				<cfset circuitFile = "circuit.xml" />
-			</cfif>
 			<cftry>
 				
 				<cffile action="read" file="#variables.fullPath##circuitFile#"
@@ -130,16 +139,28 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 				<cfcatch type="any">
 					<cfif variables.fuseboxApplication.allowImplicitCircuits>
 						<cfset circuitXML = "<circuit/>" />
+						<cfset circuitImplicit = true />
 					<cfelse>
 						<cfthrow type="fusebox.missingCircuitXML" 
 								message="missing circuit.xml" 
-								detail="The circuit xml file, #circuitFile#, for circuit #getAlias()# could not be found."
+								detail="The circuit xml file, #circuitFile#, for circuit #getAlias()# could not be found in #variables.fullPath#."
 								extendedinfo="#cfcatch.detail#" />
 					</cfif>
 				</cfcatch>
 				
 			</cftry>
+<!--- 		
+			this was initially implemented as part of ticket 135 but feedback on
+			the mailing list seems to indicate people think it is too draconian
+			a restriction, even in strict mode - and I agree! -- Sean Corfield
 			
+			<cfif variables.fuseboxApplication.strictMode and not circuitImplicit and
+					variables.fuseboxApplication.getFuseboxFileExtension() is not listLast(circuitFile,".")>
+				<cfthrow type="fusebox.inconsistentFuseboxCircuit"
+						message="Inconsistent Fusebox / Circuit file extensions" 
+						detail="The circuit xml file, #circuitFile#, in #variables.fullPath#, uses a different file extension to the application's fusebox xml file. Strict requires consistency." />
+			</cfif>
+ --->			
 			<cftry>
 				
 				<cfset circuitCode = xmlParse(circuitXML) />
@@ -193,8 +214,6 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 					hint="I am the name of the fuseaction to compile. I am required but it's faster to specify that I am not required." />
 	
 		<cfset var f = arguments.writer.setFuseaction(arguments.fuseaction) />
-		<cfset var i = 0 />
-		<cfset var n = 0 />
 
 		<cfset compilePreOrPostFuseaction(arguments.writer,"pre") />
 		
@@ -279,6 +298,13 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 				hint="I return the actual name of the circuit XML file: circuit.xml or circuit.xml.cfm.">
 	
 		<cfreturn variables.circuitFile />
+	
+	</cffunction>
+
+	<cffunction name="getOriginalPathIsRelative" returntype="string" access="public" output="false" 
+				hint="I return true if this circuit's declaration used a relative path.">
+	
+		<cfreturn variables.relative />
 	
 	</cffunction>
 
@@ -404,7 +430,18 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 							message="Attempt to use reserved namespace" 
 							detail="You have attempted to declare a namespace '#aLex.namespace#' (in Circuit #getAlias()#) which is reserved by the Fusebox framework." />
 				</cfif>
-				<cfset aLex.path = variables.fuseboxApplication.getCoreToAppRootPath() & variables.fuseboxApplication.lexiconPath & attributes[attr] />
+				<cfset attributes[attr] = variables.fuseboxApplication.normalizePartialPath(attributes[attr]) />
+				<cfif left(attributes[attr],1) is "/">
+					<!--- assume mapped / root-relative path --->
+					<cfset aLex.path = attributes[attr] />
+				<cfelseif left(variables.fuseboxApplication.lexiconPath,1) is "/">
+					<!--- assume mapped / root-relative path --->
+					<cfset aLex.path = variables.fuseboxApplication.lexiconPath & attributes[attr] />
+				<cfelse>
+					<!--- relative paths --->
+					<cfset aLex.path = variables.fuseboxApplication.getCoreToAppRootPath() & 
+							variables.fuseboxApplication.lexiconPath & attributes[attr] />
+				</cfif>
 				<cfset variables.lexicons[aLex.namespace] = aLex />
 				<cfset variables.customAttributes[aLex.namespace] = structNew() />
 			</cfif>
@@ -463,7 +500,7 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 		<cfelseif n eq 1>
 			<cfset variables.hasAction[arguments.prePost] = true />
 			<cfif structKeyExists(children[1].xmlAttributes,"callsuper")>
-				<cfif listFind("true,false",children[1].xmlAttributes.callsuper) eq 0>
+				<cfif listFind("true,false,yes,no",children[1].xmlAttributes.callsuper) eq 0>
 					<cfthrow type="fusebox.badGrammar.invalidAttributeValue"
 							message="Attribute has invalid value" 
 							detail="The attribute 'callsuper' must either be ""true"" or ""false"", for a '#arguments.prePost#fuseaction' in Circuit #getAlias()#." />
@@ -512,6 +549,8 @@ Fusebox Corporation. For more information on Fusebox, please see <http://www.fus
 		<cfloop from="1" to="#n#" index="i">
 			<!--- default fuseaction access to circuit access --->
 			<cfset access = this.access />
+			<!--- default fuseaction permissions to empty string --->
+			<cfset permissions = "" />
 			<cfset attribs = children[i].xmlAttributes />
 			
 			<cfif not structKeyExists(attribs,"name")>

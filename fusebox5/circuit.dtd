@@ -27,7 +27,7 @@ definition in the fusebox.xml file.
 -->
 <!ELEMENT prefuseaction (set | xfa | do | include | relocate | loop | if | instantiate | invoke)*>
 <!ATTLIST prefuseaction
-	callsuper (true | false) "false"
+	callsuper (true | false | yes | no) "false"
 >
 <!--
 Provides a mechanism to execute a fuseaction at the end of every call to any
@@ -43,7 +43,7 @@ the <circuit /> definition in the fusebox.xml file.
 -->
 <!ELEMENT postfuseaction (set | xfa | do | include | relocate | loop | if | instantiate | invoke)*>
 <!ATTLIST postfuseaction
-	callsuper (true | false) "false"
+	callsuper (true | false | yes | no) "false"
 >
 
 <!--
@@ -102,8 +102,8 @@ overwrite Optional, defaults to true. If set to false, evaluate will test
 <!ATTLIST set
 	name CDATA #IMPLIED
 	value CDATA #REQUIRED
-	evaluate (true | false) "false"
-	overwrite (true | false) "true"
+	evaluate (true | false | yes | no) "false"
+	overwrite (true | false | yes | no) "true"
 >
 <!-- 
 Duplicates the functionality of the <set /> element, but automatically 
@@ -130,12 +130,12 @@ overwrite Optional, defaults to true. If set to false, evaluate will test
 	for a variable xfa.#name# and if it does not exist, creates 
 	the xfa with the value provided. 
 -->
-<!ELEMENT xfa EMPTY>
+<!ELEMENT xfa (parameter*)>
 <!ATTLIST xfa
 	name CDATA #REQUIRED
 	value CDATA #REQUIRED
-	evaluate (true | false) "false"
-	overwrite (true | false) "true"
+	evaluate (true | false | yes | no) "false"
+	overwrite (true | false | yes | no) "true"
 >
 <!--
 Executes a fuseaction and optionally assigns the output of the fuseaction 
@@ -162,8 +162,8 @@ ATTRIBUTES
 <!ATTLIST do
 	action CDATA #REQUIRED
 	contentvariable CDATA #IMPLIED
-	append (true | false) "false"
-	overwrite (true | false) "true"
+	append (true | false | yes | no) "false"
+	overwrite (true | false | yes | no) "true"
 >
 <!ELEMENT parameter EMPTY>
 <!ATTLIST parameter
@@ -206,11 +206,11 @@ ATTRIBUTES
 <!ELEMENT include (parameter*)>
 <!ATTLIST include
 	template CDATA #REQUIRED
-	required (true | false) "true"
+	required (true | false | yes | no) "true"
 	circuit CDATA #IMPLIED
-	overwrite (true | false) "true"
-	append (true | false) "false"
-	prepend (true | false) "false"
+	overwrite (true | false | yes | no) "true"
+	append (true | false | yes | no) "false"
+	prepend (true | false | yes | no) "false"
 	contentvariable CDATA #IMPLIED
 >
 <!--
@@ -240,7 +240,7 @@ Note: one of "class" or "webservice" must be specified.
 	class CDATA #IMPLIED
 	webservice CDATA #IMPLIED
 	object CDATA #IMPLIED
-	overwrite (true | false) "true"
+	overwrite (true | false | yes | no) "true"
 >
 <!ELEMENT argument EMPTY>
 <!ATTLIST argument
@@ -280,7 +280,7 @@ Note: one of "method" or "methodcall" must be specified.
 	webservice CDATA #IMPLIED
 	method CDATA #IMPLIED
 	methodcall CDATA #IMPLIED
-	overwrite (true | false) "true"
+	overwrite (true | false | yes | no) "true"
 	returnvariable CDATA #IMPLIED
 >
 <!--
@@ -307,9 +307,10 @@ Note: Client Side Relocation DOES NOT use JavaScript
 -->
 <!ELEMENT relocate EMPTY>
 <!ATTLIST relocate
-	url CDATA #REQUIRED
-	type (client | server) "client"
-	addtoken (true | false) "false"
+	url CDATA #IMPLIED
+	xfa CDATA #IMPLIED
+	type (client | server | javascript | moved) "client"
+	addtoken (true | false | yes | no) "false"
 >
 <!--
 Used to iterate through a series of fuses in the fuseaction based on the
