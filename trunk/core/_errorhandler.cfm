@@ -9,6 +9,8 @@ $LastChangedBy$
 $LastChangedRevision$
 --->
 
+<cfset stGlobalCfcatch = cfcatch>
+
 <cftry>
 	<cfset logfile = "#application.lanshock.environment.abspath#/logs/error.log">
 
@@ -40,8 +42,7 @@ $LastChangedRevision$
 
 <cfinclude template="_errorhandlerrelocator.cfm">
 
-<cfoutput><cftry><cfset getPageContext().getOut().clearBuffer()><cfcatch></cfcatch></cftry>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<cfoutput><cfcontent reset="true"><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
 	<title>LANshock - Error Occurred While Processing Request</title>
@@ -77,19 +78,19 @@ $LastChangedRevision$
 			<td colspan="2" class="sub01">Message:</td>
 		</tr>
 		<tr>
-			<td colspan="2" class="sub02">#cfcatch.message#</td>
+			<td colspan="2" class="sub02">#stGlobalCfcatch.message#</td>
 		</tr>
 		<tr>
 			<td colspan="2" class="sub01">Detail:</td>
 		</tr>
 		<tr>
-			<td colspan="2" class="sub02">#cfcatch.detail#</td>
+			<td colspan="2" class="sub02">#stGlobalCfcatch.detail#</td>
 		</tr>
 		<tr>
 			<td colspan="2" class="sub01">Type:</td>
 		</tr>
 		<tr>
-			<td colspan="2" class="sub02">#cfcatch.type#</td>
+			<td colspan="2" class="sub02">#stGlobalCfcatch.type#</td>
 		</tr>
 		<tr>
 			<td colspan="2" class="sub01">Error-Status:</td>
@@ -110,24 +111,18 @@ $LastChangedRevision$
 							<th class="b_r">Column:</th>
 							<th>Template:</th>
 						</tr>
-						<cfloop from="1" to="#ArrayLen(cfcatch.tagcontext)#" index="idx">
+						<cfloop from="1" to="#ArrayLen(stGlobalCfcatch.tagcontext)#" index="idx">
 							<tr>
-								<td class="b_t b_r">#cfcatch.tagcontext[idx].type#</td>
-								<td class="b_t b_r" align="right">#cfcatch.tagcontext[idx].line#</td>
-								<td class="b_t b_r" align="right">#cfcatch.tagcontext[idx].column#</td>
-								<td class="b_t">#cfcatch.tagcontext[idx].template#</td>
+								<td class="b_t b_r">#stGlobalCfcatch.tagcontext[idx].type#</td>
+								<td class="b_t b_r" align="right">#stGlobalCfcatch.tagcontext[idx].line#</td>
+								<td class="b_t b_r" align="right">#stGlobalCfcatch.tagcontext[idx].column#</td>
+								<td class="b_t">#stGlobalCfcatch.tagcontext[idx].template#</td>
 							</tr>
 						</cfloop>
 					</table>
 					<cfcatch><em>Unknown</em></cfcatch>
 				</cftry></td>
 		</tr>
-		<!--- <tr>
-			<td colspan="2" class="sub01">Application Scope:</td>
-		</tr>
-		<tr>
-			<td colspan="2" class="sub02"><cfdump var="#application#"></td>
-		</tr> --->
 	</table>
 </body>
 </html>

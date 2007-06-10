@@ -29,18 +29,27 @@ $LastChangedRevision$
 	</cffunction>
 
 	<cffunction name="onRequestStart" returnType="boolean" output="false">
-		<cfargument name="thePage" type="string" required="true">
+		<cfargument name="thePage" type="string" required="false">
 		<cfreturn true>
 	</cffunction>
 
 	<cffunction name="onRequest" returnType="void">
-		<cfargument name="thePage" type="string" required="true">
+		<cfargument name="thePage" type="string" required="false" default=""><!--- cfmx --->
+		<cfargument name="targetpage" type="string" required="false" default=""><!--- railo --->
 		
-		<cfif ListLast(arguments.thePage,'/') NEQ 'index.cfm' AND ListLast(arguments.thePage,'.') NEQ 'cfc'>
+		<cfset var sCalledPage = ''>
+		
+		<cfif len(arguments.thePage)>
+			<cfset sCalledPage = arguments.thePage>
+		<cfelse>
+			<cfset sCalledPage = arguments.targetpage>
+		</cfif>
+		
+		<cfif ListLast(sCalledPage,'/') NEQ 'index.cfm' AND ListLast(sCalledPage,'.') NEQ 'cfc'>
 			<cflocation url="index.cfm" addtoken="false">
 		</cfif>
 		
-		<cfinclude template="#arguments.thePage#">
+		<cfinclude template="#sCalledPage#">
 	</cffunction>
 
 	<cffunction name="onRequestEnd" returnType="void" output="false">

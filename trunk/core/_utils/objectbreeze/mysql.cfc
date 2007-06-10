@@ -17,11 +17,20 @@
 		EXPLAIN #ARGUMENTS.objectName#; 
 		</cfquery>
 		
-		<cfquery name="qGetPK" dbtype="query">
-		SELECT field
-		FROM qTableExplain
-		WHERE [key] = 'PRI';
-		</cfquery>
+		<cftry>
+			<cfquery name="qGetPK" dbtype="query">
+			SELECT field
+			FROM qTableExplain
+			WHERE [key] = 'PRI';
+			</cfquery>
+			<cfcatch>
+				<cfquery name="qGetPK" dbtype="query">
+				SELECT field
+				FROM qTableExplain
+				WHERE key = 'PRI';
+				</cfquery>
+			</cfcatch>
+		</cftry>
 		
 		<cfreturn qGetPK.field />
 	</cffunction>
