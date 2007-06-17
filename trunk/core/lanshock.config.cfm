@@ -109,7 +109,8 @@ $LastChangedRevision$
 				StructDelete(application.lanshock.environment,'componentpath');
 			}
 		}
-		application.lanshock.config.runable = true;
+		if(application.lanshock.config.avaible)	application.lanshock.config.runable = true;
+		else application.lanshock.config.runable = false;
 	</cfscript>
 
 </cfif>
@@ -121,12 +122,6 @@ $LastChangedRevision$
 
 	<cfif NOT StructKeyExists(application.lanshock.environment, 'componentpath')>
 		<cfthrow message="Invalid Component Path" detail="Auto-Detection of the LANshock Mapping hasn't been successfull. Please add a Mapping, pointing to the LANshock Root, in 'ColdFusion Administrator -> Mappings'.">
-	</cfif>
-	
-	<cfif NOT application.lanshock.config.complete>
-		<cfif NOT cgi.query_string CONTAINS "=#application.lanshock.settings.modulePrefix.core#installer">
-			<cflocation url="#self#?fuseaction=#application.lanshock.settings.modulePrefix.core#installer.main" addtoken="true">
-		</cfif>
 	</cfif>
 	
 	<cfif len(application.lanshock.environment.datasource) AND len(application.lanshock.environment.datasource_type)>
