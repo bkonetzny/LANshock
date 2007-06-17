@@ -13,9 +13,7 @@ $LastChangedRevision$
 <cfif NOT isDefined("application.module") OR NOT isStruct(application.module) OR StructIsEmpty(application.module) OR NOT application.lanshock.config.modulesinitialized OR NOT application.lanshock.config.datasourceinitialized>
 
 	<!--- delete invalid module key --->
-	<cfset StructDelete(Application,"Module")>
-	
-	<!--- <cfdump var="#application.lanshock.config#"><cfabort> --->
+	<cfset StructDelete(application,"module")>
 
 	<!--- Check for modules.xml.cfm --->
 	<cfif fileExists(application.lanshock.environment.abspath & "config/modules.xml.cfm")>
@@ -56,7 +54,7 @@ $LastChangedRevision$
 			<!--- Check if stModule is a valid Structure --->
 			<cfif isStruct(stDatasource) AND NOT StructIsEmpty(stDatasource)>
 				<cflock timeout="10" throwontimeout="No" type="EXCLUSIVE" scope="APPLICATION">
-					<cfset Application.Datasource = stDatasource>
+					<cfset application.datasource = stDatasource>
 					<cfset application.lanshock.config.datasourceinitialized = true>
 				</cflock>
 			<cfelse>
@@ -70,10 +68,14 @@ $LastChangedRevision$
 
 	</cfif>
 
-	<cfif NOT application.lanshock.config.modulesinitialized OR NOT application.lanshock.config.modulesinitialized>
+	<cfif NOT application.lanshock.config.modulesinitialized OR NOT application.lanshock.config.modulesinitialized OR NOT fileExists(application.lanshock.environment.abspath & "fusebox.xml.cfm")>
 		<cfinvoke component="#application.lanshock.environment.componentpath#core.admin.setup" method="initCoreModules"/>
-		<!--- <cfset application.lanshock.config.configinitialized = false> --->
-		<!--- <cflocation url="#application.lanshock.environment.webpathfull##self#" addtoken="true"> --->
+	</cfif>
+	
+	<cfif NOT application.lanshock.config.complete>
+		<cfif NOT cgi.query_string CONTAINS "=#application.lanshock.settings.modulePrefix.core#installer">
+			<cflocation url="#self#?fuseaction=#application.lanshock.settings.modulePrefix.core#installer.main" addtoken="true">
+		</cfif>
 	</cfif>
 	
 </cfif>

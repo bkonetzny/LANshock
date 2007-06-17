@@ -35,6 +35,7 @@ $LastChangedRevision$
 		
 		<cfscript>		
 			// Refresh LANshock Application Vars
+			application.lanshock.config.runable = false;
 			application.lanshock.config.complete = false;
 			application.lanshock.config.modulesinitialized = false;
 			application.lanshock.config.datasourceinitialized = false;
