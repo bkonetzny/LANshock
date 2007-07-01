@@ -10,7 +10,7 @@ $LastChangedRevision$
 
 <cfcomponent>
 
-	<cffunction name="initModules" output="true" returntype="boolean">
+	<cffunction name="initModules" output="false" returntype="boolean">
 		<cfargument name="stModules" type="struct" required="true">
 		
 		<cfset var stLocal = StructNew()>
