@@ -84,7 +84,7 @@ $LastChangedRevision$
 <table class="vlist" width="100%">
 	<cfif request.session.userid EQ id OR (request.session.isAdmin AND UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin','boolean'))>
 		<tr>
-			<td colspan="3"><a href="#myself##myfusebox.thiscircuit#.profile_edit_logindata<cfif request.session.isAdmin>&id=#id#</cfif>&#request.session.UrlToken#" class="link_extended"><!--- TODO: $$$ ---> Logindaten und Passwort ändern</a></td>
+			<td colspan="3"><a href="#myself##myfusebox.thiscircuit#.profile_edit_logindata<cfif request.session.isAdmin>&id=#id#</cfif>&#request.session.UrlToken#" class="link_extended"><!--- TODO: $$$ ---> Logindaten und Passwort &auml;ndern</a></td>
 		</tr>
 	</cfif>
 	<tr>
@@ -97,7 +97,7 @@ $LastChangedRevision$
 		<td>#name#</td>
 		<td rowspan="4" align="center">#UserShowAvatar(id)#
 			<cfif (request.session.userid EQ id OR (request.session.isAdmin AND UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin','boolean'))) AND application.lanshock.settings.layout.avatar.mode EQ 'lanshock'>
-				<br><a href="#myself##myfusebox.thiscircuit#.profile_edit_avatar<cfif request.session.isAdmin>&id=#id#</cfif>&#request.session.UrlToken#" class="link_extended"><!--- TODO: $$$ ---> Avatar ändern</a>
+				<br><a href="#myself##myfusebox.thiscircuit#.profile_edit_avatar<cfif request.session.isAdmin>&id=#id#</cfif>&#request.session.UrlToken#" class="link_extended"><!--- TODO: $$$ ---> Avatar &auml;ndern</a>
 			</cfif>
 		</td>
 	</tr>
@@ -127,7 +127,7 @@ $LastChangedRevision$
 	</cfif>
 	<cfif request.session.userid EQ id OR (request.session.isAdmin AND UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin','boolean'))>
 		<tr>
-			<td colspan="2"><a href="#myself##myfusebox.thiscircuit#.profile_edit_personaldata<cfif request.session.isAdmin>&id=#id#</cfif>&#request.session.UrlToken#" class="link_extended"><!--- TODO: $$$ ---> Persönliche Daten ändern</a></td>
+			<td colspan="2"><a href="#myself##myfusebox.thiscircuit#.profile_edit_personaldata<cfif request.session.isAdmin>&id=#id#</cfif>&#request.session.UrlToken#" class="link_extended"><!--- TODO: $$$ ---> Pers&ouml;nliche Daten &auml;ndern</a></td>
 		</tr>
 	</cfif>
 	<tr>
@@ -243,7 +243,7 @@ $LastChangedRevision$
 <table class="vlist" width="100%">
 	<cfif request.session.userid EQ id OR (request.session.isAdmin AND UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin','boolean'))>
 		<tr>
-			<td colspan="2"><a href="#myself##myfusebox.thiscircuit#.profile_edit_settings<cfif request.session.isAdmin>&id=#id#</cfif>&#request.session.UrlToken#" class="link_extended"><!--- TODO: $$$ ---> Einstellungen ändern</a></td>
+			<td colspan="2"><a href="#myself##myfusebox.thiscircuit#.profile_edit_settings<cfif request.session.isAdmin>&id=#id#</cfif>&#request.session.UrlToken#" class="link_extended"><!--- TODO: $$$ ---> Einstellungen &auml;ndern</a></td>
 		</tr>
 	</cfif>
 	<tr>
