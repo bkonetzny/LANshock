@@ -17,11 +17,8 @@ $LastChangedRevision$
 <cfparam name="session.ip_address" default="#cgi.remote_addr#">
 <cfparam name="session.lang" default="#UCase(application.lanshock.settings.language)#">
 <cfparam name="session.stCustom" default="#StructNew()#"> <!--- struct for custom settings by other modules --->
-<cfif isNumeric(session.userID)>
-	<cftry>
-		<cfparam name="session.oPreferences" default="#CreateObject('component','#request.lanshock.environment.componentpath#core.preferences').init(session.userid)#">
-		<cfcatch></cfcatch>
-	</cftry>
+<cfif isNumeric(session.userID) AND NOT StructKeyExists(session,'oPreferences')>
+	<cfset session.oPreferences = CreateObject('component','#request.lanshock.environment.componentpath#core.preferences').init(session.userid)>
 </cfif>
 
 <cfscript>
