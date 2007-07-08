@@ -251,14 +251,14 @@ $LastChangedRevision$
 	
 		if(NOT len(trim(arguments.module))) arguments.module = myfusebox.thiscircuit;
 
-		if(request.session.isAdmin){
+		if(request.session.isAdmin AND NOT StructKeyExists(request.session, 'rights')){
 			oAdmin = CreateObject('component','#request.lanshock.environment.componentpath#core.admin.admin');
 			oAdmin.setAdminSessionRights(request.session.userid);
 		}
 		
 		if(NOT request.session.isAdmin) bResult = false;
 
-		if(NOT StructKeyExists(session, 'rights') OR 
+		if(NOT StructKeyExists(request.session, 'rights') OR 
 			NOT isStruct(request.session.rights) OR
 			NOT StructKeyExists(request.session.rights,arguments.module) OR  
 			NOT StructKeyExists(request.session.rights[arguments.module], 'areas') OR 
