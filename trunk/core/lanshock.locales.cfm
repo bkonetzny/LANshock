@@ -9,8 +9,7 @@ $LastChangedBy$
 $LastChangedRevision$
 --->
 
-<cfset StructGet('application.lanshock.cache.language')>
-<cfif StructIsEmpty(application.lanshock.cache.language)>
+<cfif isDefined("application.lanshock.cache.language") AND StructIsEmpty(application.lanshock.cache.language)>
 
 	<cfscript>
 		stGlobalLocales = StructNew();
@@ -92,6 +91,4 @@ $LastChangedRevision$
 
 </cfif>
 
-</cfsilent>
-
-<cfsetting enablecfoutputonly="No">
+</cfsilent><cfsetting enablecfoutputonly="No">
