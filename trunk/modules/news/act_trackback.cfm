@@ -17,10 +17,13 @@ $LastChangedRevision$
 <cfparam name="attributes.entry_id" default="">
 <cfparam name="aError" default="#ArrayNew(1)#">
 
-<cfscript>
+<!--- <cfscript>
 	if(NOT len(attributes.url)) ArrayAppend(aError, '<!-- TODO: $$$ --> URL required.');
 	if(NOT len(attributes.entry_id) OR NOT isNumeric(attributes.entry_id)) ArrayAppend(aError, '<!-- TODO: $$$ --> No Entry defined.');
-</cfscript>
+</cfscript> --->
+
+<!--- due to comment spam, disable trackbacks until a secure way is found --->
+<cfset ArrayAppend(aError, 'Trackbacks are disabled.')>
 
 <cfif NOT ArrayLen(aError)>
 	<cfscript>
