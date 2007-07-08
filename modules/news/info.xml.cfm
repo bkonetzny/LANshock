@@ -9,7 +9,7 @@ $LastChangedBy$
 $LastChangedRevision$
 -->
 
-<module name="News System" version="1.1.0.5" date="2006-09-05" author="LANshock" url="http://www.lanshock.com">
+<module name="News System" version="1.1.0.6" date="2007-07-08" author="LANshock" url="http://www.lanshock.com">
 	
 	<general requiresLogin="false"/>
 	
