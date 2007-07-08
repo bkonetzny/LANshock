@@ -49,7 +49,7 @@ $LastChangedRevision$
 	</form>
 </table>
 
-<div class="headline2"><!--- TODO: $$$ ---> Verf�gbare Ping URLs</div>
+<div class="headline2"><!--- TODO: $$$ ---> Verf&uuml;gbare Ping URLs</div>
 
 <table class="list">
 	<tr>
@@ -58,8 +58,8 @@ $LastChangedRevision$
 	</tr>
 	<cfloop query="qPingUrls">
 		<tr>
-			<td><a href="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&ping_id=#id#&#request.session.UrlToken#">#name#</a></td>
-			<td>#url#</td>
+			<td><a href="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&ping_id=#qPingUrls.id#&#request.session.UrlToken#">#qPingUrls.name#</a></td>
+			<td>#qPingUrls.url#</td>
 		</tr>
 	</cfloop>
 </table>
