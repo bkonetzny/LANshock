@@ -9,7 +9,9 @@ $LastChangedBy$
 $LastChangedRevision$
 --->
 
-<cfif isDefined("application.lanshock.cache.language") AND StructIsEmpty(application.lanshock.cache.language)>
+<cfif NOT isDefined("application.lanshock.cache.language")
+	OR StructIsEmpty(application.lanshock.cache.language)
+	OR NOT stModuleConfig.cache.languagefiles>
 
 	<cfscript>
 		stGlobalLocales = StructNew();
