@@ -9,6 +9,8 @@ $LastChangedBy$
 $LastChangedRevision$
 --->
 
+<cfinvoke component="#request.lanshock.environment.componentpath#core._utils.i18n.i18nUtil" method="getLocalesStruct" returnvariable="stLocales">
+
 <cfscript>
 	iListLen = ceiling(ListLen(StructKeyList(stLocales)) / 2);
 	lTheList = ListSort(StructKeyList(stLocales),'textnocase');

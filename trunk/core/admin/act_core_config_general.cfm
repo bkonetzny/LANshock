@@ -41,6 +41,8 @@ $LastChangedRevision$
 	</cfif>
 </cfif>
 
+<cfinvoke component="#request.lanshock.environment.componentpath#core._utils.i18n.i18nUtil" method="getLocalesStruct" returnvariable="stLocales">
+
 <!--- set avaible actionstrings --->
 <cfset lActionStrings = "fuseaction,method,do">
 

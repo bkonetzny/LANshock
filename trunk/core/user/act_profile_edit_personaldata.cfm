@@ -29,6 +29,8 @@ $LastChangedRevision$
 	oObUser.read(attributes.id);
 </cfscript>
 
+<cfinvoke component="#request.lanshock.environment.componentpath#core._utils.i18n.i18nUtil" method="getLocalesStruct" returnvariable="stLocales">
+
 <cfparam name="attributes.firstname" default="#oObUser.getProperty('firstname')#">
 <cfparam name="attributes.lastname" default="#oObUser.getProperty('lastname')#">
 <cfparam name="attributes.dt_birthdate" default="#oObUser.getProperty('dt_birthdate')#">

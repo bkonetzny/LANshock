@@ -68,7 +68,7 @@ $LastChangedRevision$
 						<li><a href="#myself##request.lanshock.settings.modulePrefix.core#general.info&#request.session.UrlToken#">#stNav[request.lanshock.settings.modulePrefix.core & 'general'].name#</a></li>
 						<!--- <li><a href="#myself##request.lanshock.settings.modulePrefix.core#setup.main&#request.session.UrlToken#">#stNav[request.lanshock.settings.modulePrefix.core & 'setup'].name#</a></li> --->
 						<li><a href="#myself##request.lanshock.settings.modulePrefix.core#general.online&#request.session.UrlToken#"><strong>#request.content.template_online_user# #request.application.sessions.iActiveSessions#<cfif request.application.sessions.iOnlineGuest GT 0> <em>(#request.content.template_online_guests# #request.application.sessions.iOnlineGuest#)</em></cfif></strong></a></li>
-						<li><a href="#myself##request.lanshock.settings.modulePrefix.core#general.language&#request.session.UrlToken#">#stLocales[request.session.lang]#</a></li>
+						<li><a href="#myself##request.lanshock.settings.modulePrefix.core#general.language&#request.session.UrlToken#">#GetLocaleDisplayName(request.session.lang)#</a></li>
 						<li>#UDF_DateTimeFormat(now())#</li>
 					</ul>
 				</div>

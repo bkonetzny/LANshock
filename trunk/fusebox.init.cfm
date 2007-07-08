@@ -25,8 +25,6 @@ $LastChangedRevision$
 <!--- Load LANshock UDF-Lib --->
 <cfinclude template="core/lanshock.udf.lib.cfm">
 
-<cfinvoke component="#request.lanshock.environment.componentpath#core._utils.i18n.i18nUtil" method="getLocalesStruct" returnvariable="stLocales">
-
 <cfset stNav = UDF_getNavigation()>
 <cfset aNav = StructSort(stNav,'textnocase','ASC','name')>
 
