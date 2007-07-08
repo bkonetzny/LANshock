@@ -64,4 +64,6 @@ $LastChangedRevision$
 
 </cfif>
 
+<cfinvoke component="#request.lanshock.environment.componentpath#core._utils.i18n.i18nUtil" method="getLocalesStruct" returnvariable="stLocales">
+
 <cfsetting enablecfoutputonly="No">
