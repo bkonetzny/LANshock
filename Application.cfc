@@ -2,10 +2,10 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL$
-$LastChangedDate$
-$LastChangedBy$
-$LastChangedRevision$
+$HeadURL: https://svn.sourceforge.net/svnroot/lanshock/trunk/Application.cfc $
+$LastChangedDate: 2006-11-09 22:02:06 +0100 (Do, 09 Nov 2006) $
+$LastChangedBy: majestixs $
+$LastChangedRevision: 80 $
 --->
 
 <cfcomponent output="false">
@@ -29,27 +29,18 @@ $LastChangedRevision$
 	</cffunction>
 
 	<cffunction name="onRequestStart" returnType="boolean" output="false">
-		<cfargument name="thePage" type="string" required="false">
+		<cfargument name="thePage" type="string" required="true">
 		<cfreturn true>
 	</cffunction>
 
 	<cffunction name="onRequest" returnType="void">
-		<cfargument name="thePage" type="string" required="false" default=""><!--- cfmx --->
-		<cfargument name="targetpage" type="string" required="false" default=""><!--- railo --->
+		<cfargument name="thePage" type="string" required="true">
 		
-		<cfset var sCalledPage = ''>
-		
-		<cfif len(arguments.thePage)>
-			<cfset sCalledPage = arguments.thePage>
-		<cfelse>
-			<cfset sCalledPage = arguments.targetpage>
-		</cfif>
-		
-		<cfif ListLast(sCalledPage,'/') NEQ 'index.cfm' AND ListLast(sCalledPage,'.') NEQ 'cfc'>
+		<cfif ListLast(arguments.thePage,'/') NEQ 'index.cfm' AND ListLast(arguments.thePage,'.') NEQ 'cfc'>
 			<cflocation url="index.cfm" addtoken="false">
 		</cfif>
 		
-		<cfinclude template="#sCalledPage#">
+		<cfinclude template="#arguments.thePage#">
 	</cffunction>
 
 	<cffunction name="onRequestEnd" returnType="void" output="false">
