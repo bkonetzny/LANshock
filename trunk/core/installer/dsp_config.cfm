@@ -63,31 +63,6 @@ $LastChangedRevision$
 	</tr>
 </table>
 </form>
-	
-<div style="text-align: left;">
-<em>MySQL:</em><br>
-<ol>
-	<li><a href="http://dev.mysql.com/downloads/connector/j/" target="_blank">Download MySQL Connector J JDBC driver</a></li>
-	<li>Extract <strong>mysql-connector-java-3.{n}-bin.jar</strong> from the downloaded archive.</li>
-	<li>Save <strong>mysql-connector-java-3.{n}-bin.jar</strong> in the lib folder.<br>
-		("<em>##CFROOT##/WEB-INF/lib/</em>" or "<em>##CFROOT##/lib/</em>")</li>
-	<li>Restart the ColdFusion service.</li>
-	<li>Add the Datasource in ColdFusion MX Administrator, using driver <strong>Other</strong>.</li>
-	<li>Enter the JDBC URL: <strong>jdbc:mysql://[host]:[port]/[database]?zeroDateTimeBehavior=convertToNull</strong></li>
-	<li>Enter the Driver Class: <strong>com.mysql.jdbc.Driver</strong></li>
-	<li>Complete username/password and adjust other Datasource settings.</li>
-	<li>Submit the data source for verification.</li>
-</ol>
-
-<br>&nbsp;<br>
-
-<em>Index File:</em><br>
-<ul>
-	<li>Default is <em>index.cfm</em>. If you have renamed this file enter it here.</li>
-	<li>You can leave this blank if your server can handle requests without a file.<br>
-		(like http://example.com/?fuseaction=parameter)</li>
-</ul>
-</div>
 </cfoutput>
 
 <cfsetting enablecfoutputonly="No">
