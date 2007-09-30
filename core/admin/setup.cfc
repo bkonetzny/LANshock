@@ -109,16 +109,17 @@ $LastChangedRevision$
 		<cfloop list="#listSort(StructKeyList(stModules),'textnocase')#" index="item">
 			<cfif stModules[item].general.createCircuit>
 				<cfscript>
+					item = lCase(item);
 					sModulePrefix = application.lanshock.settings.modulePrefix[stModules[item].type];
 					
 					if(stModules[item].type EQ "module") sModuleDir = "modules";
 					else sModuleDir = "core";
 				</cfscript>
-				<cfset sCircuits = sCircuits & chr(13) & chr(9) & chr(9) & '<circuit alias="#sModulePrefix##replace(item,sModulePrefix,"","ONE")#" path="#sModuleDir#/#replace(item,sModulePrefix,"","ONE")#/"/>'>
+				<cfset sCircuits = sCircuits & chr(13) & chr(9) & chr(9) & '<circuit alias="#sModulePrefix##replaceNoCase(item,sModulePrefix,"","ONE")#" path="#sModuleDir#/#replaceNoCase(item,sModulePrefix,"","ONE")#/"/>'>
 			</cfif>
 		</cfloop>
 		<cfset sCircuits = trim(sCircuits)>
-				
+		
 		<cfif NOT StructKeyExists(application,'fusebox') OR NOT StructKeyExists(application.fusebox,'password') OR NOT len(application.fusebox.password)>
 			<cfset sOldFuseboxPassword = ''>
 			<cfset sNewFuseboxPassword = CreateUUID()>
@@ -207,7 +208,8 @@ $LastChangedRevision$
 	<cffunction name="getModulesByType" output="false" returntype="struct">
 		<cfargument name="type" type="string" default="module" required="false">
 
-		<cfset stModules = StructNew()>
+		<cfset var stModules = StructNew()>
+		<cfset var sName = ''>
 		
 		<cfif arguments.type EQ "core">
 		
@@ -216,12 +218,13 @@ $LastChangedRevision$
 			<cfloop query="dirCore">
 				<cfscript>
 					if(dirCore.type EQ "dir" AND fileExists(application.lanshock.environment.abspath & "core/" & name & "/info.xml.cfm")){
-						stModules[application.lanshock.settings.modulePrefix.core & name] = StructNew();
-						stModules[application.lanshock.settings.modulePrefix.core & name].dir = name;
-						stModules[application.lanshock.settings.modulePrefix.core & name].module_path_abs = application.lanshock.environment.abspath & "core/" & name & "/";
-						stModules[application.lanshock.settings.modulePrefix.core & name].module_path_rel = "core/" & name & "/";
-						stModules[application.lanshock.settings.modulePrefix.core & name].module_path_web = application.lanshock.environment.webpath & "core/" & name & "/";
-						stModules[application.lanshock.settings.modulePrefix.core & name].type = "core";
+						sName = lCase(name);
+						stModules[application.lanshock.settings.modulePrefix.core & sName] = StructNew();
+						stModules[application.lanshock.settings.modulePrefix.core & sName].dir = sName;
+						stModules[application.lanshock.settings.modulePrefix.core & sName].module_path_abs = application.lanshock.environment.abspath & "core/" & sName & "/";
+						stModules[application.lanshock.settings.modulePrefix.core & sName].module_path_rel = "core/" & sName & "/";
+						stModules[application.lanshock.settings.modulePrefix.core & sName].module_path_web = application.lanshock.environment.webpath & "core/" & sName & "/";
+						stModules[application.lanshock.settings.modulePrefix.core & sName].type = "core";
 					}
 				</cfscript>
 			</cfloop>
@@ -233,12 +236,13 @@ $LastChangedRevision$
 			<cfloop query="dirModules">
 				<cfscript>
 					if(dirModules.type EQ "dir" AND fileExists(application.lanshock.environment.abspath & "modules/" & name & "/info.xml.cfm")){
-						stModules[application.lanshock.settings.modulePrefix.module & name] = StructNew();
-						stModules[application.lanshock.settings.modulePrefix.module & name].dir = name;
-						stModules[application.lanshock.settings.modulePrefix.module & name].module_path_abs = application.lanshock.environment.abspath & "modules/" & name & "/";
-						stModules[application.lanshock.settings.modulePrefix.module & name].module_path_rel = "modules/" & name & "/";
-						stModules[application.lanshock.settings.modulePrefix.module & name].module_path_web = application.lanshock.environment.webpath & "modules/" & name & "/";
-						stModules[application.lanshock.settings.modulePrefix.module & name].type = "module";
+						sName = lCase(name);
+						stModules[application.lanshock.settings.modulePrefix.module & sName] = StructNew();
+						stModules[application.lanshock.settings.modulePrefix.module & sName].dir = sName;
+						stModules[application.lanshock.settings.modulePrefix.module & sName].module_path_abs = application.lanshock.environment.abspath & "modules/" & sName & "/";
+						stModules[application.lanshock.settings.modulePrefix.module & sName].module_path_rel = "modules/" & sName & "/";
+						stModules[application.lanshock.settings.modulePrefix.module & sName].module_path_web = application.lanshock.environment.webpath & "modules/" & sName & "/";
+						stModules[application.lanshock.settings.modulePrefix.module & sName].type = "module";
 					}
 				</cfscript>
 			</cfloop>
