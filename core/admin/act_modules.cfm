@@ -45,7 +45,7 @@ $LastChangedRevision$
 
 	if(NOT len(application.lanshock.environment.datasource)) ArrayAppend(aError, request.content.error_no_datasource);
 	
-	if(ArrayLen(aError)) sDisabled = ' disabled';
+	if(ArrayLen(aError)) sDisabled = ' disabled="disabled"';
 </cfscript>
 
 <!--- Get Details for all Modules --->
