@@ -142,49 +142,49 @@ if ( Find("[", sConvertedText) AND Find("]", sConvertedText) ) {
 
 		// The following code copyrighted by Dain Anderson, www.cfcomet.com.  Used with Permission
 		// Pointer to Attributes.Data
-		this = CurCodeBlock;
+		thisStringPart = CurCodeBlock;
 		// Convert many standalone (not within quotes) numbers to blue, ie. myValue = 0
-		this = REReplaceNoCase(this, "(gt|lt|eq|is|,|\(|\))([[:space:]]?[0-9]{1,})", "\1<span style='color: blue;'>\2</span>", "ALL");
+		thisStringPart = REReplaceNoCase(thisStringPart, "(gt|lt|eq|is|,|\(|\))([[:space:]]?[0-9]{1,})", "\1<span style='color: blue;'>\2</span>", "ALL");
 		// Convert normal tags to navy blue
-		this = REReplaceNoCase(this, "&lt;(/?)((!d|b|c(e|i|od|om)|d|e|f(r|o)|h|i|k|l|m|n|o|p|q|r|s|t(e|i|t)|u|v|w|x)[^>]*)&gt;", "<span style='color: navi;'>&lt;\1\2&gt;</span>", "ALL");
+		thisStringPart = REReplaceNoCase(thisStringPart, "&lt;(/?)((!d|b|c(e|i|od|om)|d|e|f(r|o)|h|i|k|l|m|n|o|p|q|r|s|t(e|i|t)|u|v|w|x)[^>]*)&gt;", "<span style='color: navi;'>&lt;\1\2&gt;</span>", "ALL");
 		// Convert all table-related tags to teal
-		this = REReplaceNoCase(this, "&lt;(/?)(t(a|r|d|b|f|h)([^>]*)|c(ap|ol)([^>]*))&gt;", "<span style='color: teal;'>&lt;\1\2&gt;</span>", "ALL");
+		thisStringPart = REReplaceNoCase(thisStringPart, "&lt;(/?)(t(a|r|d|b|f|h)([^>]*)|c(ap|ol)([^>]*))&gt;", "<span style='color: teal;'>&lt;\1\2&gt;</span>", "ALL");
 		// Convert all form-related tags to orange
-		this = REReplaceNoCase(this, "&lt;(/?)((bu|f(i|or)|i(n|s)|l(a|e)|se|op|te)([^>]*))&gt;", "<span style='color: FF8000;'>&lt;\1\2&gt;</span>", "ALL");
+		thisStringPart = REReplaceNoCase(thisStringPart, "&lt;(/?)((bu|f(i|or)|i(n|s)|l(a|e)|se|op|te)([^>]*))&gt;", "<span style='color: FF8000;'>&lt;\1\2&gt;</span>", "ALL");
 		// Convert all tags starting with 'a' to green, since the others aren't used much and we get a speed gain
-		this = REReplaceNoCase(this, "&lt;(/?)(a[^>]*)&gt;", "<span style='color: green;'>&lt;\1\2&gt;</span>", "ALL");
+		thisStringPart = REReplaceNoCase(thisStringPart, "&lt;(/?)(a[^>]*)&gt;", "<span style='color: green;'>&lt;\1\2&gt;</span>", "ALL");
 		// Convert all image and style tags to purple
-		this = REReplaceNoCase(this, "&lt;(/?)((im[^>]*)|(sty[^>]*))&gt;", "<span style='color: purple;'>&lt;\1\2&gt;</span>", "ALL");
+		thisStringPart = REReplaceNoCase(thisStringPart, "&lt;(/?)((im[^>]*)|(sty[^>]*))&gt;", "<span style='color: purple;'>&lt;\1\2&gt;</span>", "ALL");
 		// Convert all ColdFusion, SCRIPT and WDDX tags to maroon
-		this = REReplaceNoCase(this, "&lt;(/?)((cf[^>]*)|(sc[^>]*)|(wddx[^>]*))&gt;", "<span style='color: maroon;'>&lt;\1\2&gt;</span>", "ALL");
+		thisStringPart = REReplaceNoCase(thisStringPart, "&lt;(/?)((cf[^>]*)|(sc[^>]*)|(wddx[^>]*))&gt;", "<span style='color: maroon;'>&lt;\1\2&gt;</span>", "ALL");
 		// Convert all inline "//" comments to gray (revised)
-		this = REReplaceNoCase(this, "([^:/]\/{2,2})([^[:cntrl:]]+)($|[[:cntrl:]])", "<span style='color: gray;'><em>\1\2</em></span>", "ALL");
+		thisStringPart = REReplaceNoCase(thisStringPart, "([^:/]\/{2,2})([^[:cntrl:]]+)($|[[:cntrl:]])", "<span style='color: gray;'><em>\1\2</em></span>", "ALL");
 		// Convert all multi-line script comments to gray
-		this = REReplaceNoCase(this, "(\/\*[^\*]*\*\/)", "<span style='color: gray;'><em>\1</em></span>", "ALL");
+		thisStringPart = REReplaceNoCase(thisStringPart, "(\/\*[^\*]*\*\/)", "<span style='color: gray;'><em>\1</em></span>", "ALL");
 		// Convert all HTML and ColdFusion comments to gray
 		// The next 10 lines of code can be replaced with the commented-out line following them, if you do care whether HTML and CFML comments contain colored markup.
 		EOF = 0; BOF = 1;
 		while(NOT EOF) {
 			sCfmlCommentStart = "<!" & "---";
-			Match = REFindNoCase("#sCfmlCommentStart#?([^-]*)-?-->", this, BOF, True);
+			Match = REFindNoCase("#sCfmlCommentStart#?([^-]*)-?-->", thisStringPart, BOF, True);
 			if (Match.pos[1]) {
-				Orig = Mid(this, Match.pos[1], Match.len[1]);
+				Orig = Mid(thisStringPart, Match.pos[1], Match.len[1]);
 				Chunk = REReplaceNoCase(Orig, "«(/?[^»]*)»", "", "ALL");
 				BOF = ((Match.pos[1] + Len(Chunk)) + 43); // 43 is the length of '<span style='color: gray;'><em></em></span>' in the next line
-				this = Replace(this, Orig, "<span style='color: gray;'><em>#Chunk#</em></span>");
+				thisStringPart = Replace(thisStringPart, Orig, "<span style='color: gray;'><em>#Chunk#</em></span>");
 			} else EOF = 1;
 		}
 		// Convert all quoted values to blue
-		this = REReplaceNoCase(this, """([^""]*)""", "<span style=""color: blue;"">""\1""</span>", "ALL");
+		thisStringPart = REReplaceNoCase(thisStringPart, """([^""]*)""", "<span style=""color: blue;"">""\1""</span>", "ALL");
 		// ***New Feature*** Convert all FILE and UNC paths to active links (i.e, file:///, \\server\, c:\myfile.cfm)
-		this = REReplaceNoCase(this, "(((file:///)|([a-z]:\\)|(\\\\[[:alpha:]]))+(\.?[[:alnum:]\/=^@*|:~`+$%?_##& -])+)", "<a href=""\1"" target=""_blank"">\1</A>", "ALL");
+		thisStringPart = REReplaceNoCase(thisStringPart, "(((file:///)|([a-z]:\\)|(\\\\[[:alpha:]]))+(\.?[[:alnum:]\/=^@*|:~`+$%?_##& -])+)", "<a href=""\1"" target=""_blank"">\1</A>", "ALL");
 		// Convert all URLs to active links (revised)
-		this = REReplaceNoCase(this, "([[:alnum:]]*://[[:alnum:]\@-]*(\.[[:alnum:]][[:alnum:]-]*[[:alnum:]]\.)?[[:alnum:]]{2,}(\.?[[:alnum:]\/=^@*|:~`+$%?_##&-])+)", "<a href=""\1"" target=""_blank"">\1</A>", "ALL");
+		thisStringPart = REReplaceNoCase(thisStringPart, "([[:alnum:]]*://[[:alnum:]\@-]*(\.[[:alnum:]][[:alnum:]-]*[[:alnum:]]\.)?[[:alnum:]]{2,}(\.?[[:alnum:]\/=^@*|:~`+$%?_##&-])+)", "<a href=""\1"" target=""_blank"">\1</A>", "ALL");
 		// Convert all email addresses to active mailto's (revised)
-		this = REReplaceNoCase(this, "(([[:alnum:]][[:alnum:]_.-]*)?[[:alnum:]]@[[:alnum:]][[:alnum:].-]*\.[[:alpha:]]{2,})", "<a href=""mailto:\1"">\1</A>", "ALL");
-		this = "<div style=""padding-left : 10px;""><pre>#this#</pre></div>";
+		thisStringPart = REReplaceNoCase(thisStringPart, "(([[:alnum:]][[:alnum:]_.-]*)?[[:alnum:]]@[[:alnum:]][[:alnum:].-]*\.[[:alpha:]]{2,})", "<a href=""mailto:\1"">\1</A>", "ALL");
+		thisStringPart = "<div style=""padding-left : 10px;""><pre>#thisStringPart#</pre></div>";
 		// The above code copyrighted by Dain Anderson, www.cfcomet.com.  Used with Permission
-		CurCodeBlock = this;
+		CurCodeBlock = thisStringPart;
 
 		ArrayAppend(CodeBlocks, CurCodeBlock);
 		sConvertedText = Insert("***#ArrayLen(CodeBlocks)#***", sConvertedText, sCodePos - 1);
