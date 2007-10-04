@@ -72,12 +72,15 @@ $LastChangedRevision$
 		</cfinvoke>
 		
 		<cfif len(attributes.trackback)>
-			<cfhttp url="#attributes.trackback#" method="post">
-				<cfhttpparam name="url" value="#application.lanshock.environment.serveraddress##application.lanshock.environment.webpath##myself##myfusebox.thiscircuit#.news_details&news_id=#rtNewsID#" type="formfield">
-				<cfhttpparam name="title" value="#attributes.title#" type="formfield">
-				<cfhttpparam name="blog_name" value="#request.lanshock.settings.appname#" type="formfield">
-				<cfhttpparam name="excerpt" value="#left(attributes.text,50)#" type="formfield">
-			</cfhttp>
+			<cftry>
+				<cfhttp url="#attributes.trackback#" method="post">
+					<cfhttpparam name="url" value="#application.lanshock.environment.serveraddress##application.lanshock.environment.webpath##myself##myfusebox.thiscircuit#.news_details&news_id=#rtNewsID#" type="formfield">
+					<cfhttpparam name="title" value="#attributes.title#" type="formfield">
+					<cfhttpparam name="blog_name" value="#request.lanshock.settings.appname#" type="formfield">
+					<cfhttpparam name="excerpt" value="#left(attributes.text,50)#" type="formfield">
+				</cfhttp>
+				<cfcatch><!--- do nothing ---></cfcatch>
+			</cftry>
 		</cfif>
 		
 		<cfif len(attributes.ping)>
