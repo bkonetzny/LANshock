@@ -1,0 +1,1 @@
+<cfcontent reset="true"><cfoutput>#trim(request.page.pageContent)#</cfoutput>
