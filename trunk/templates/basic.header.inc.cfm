@@ -10,14 +10,15 @@ $LastChangedRevision$
 --->
 
 <cfoutput>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<meta name="generator" content="LANshock #request.lanshock.settings.version#">
-	<link rel="shortcut icon" href="http://#cgi.server_name#<cfif cgi.server_port NEQ '80'>:#cgi.server_port#</cfif>#request.lanshock.environment.webpath#templates/#request.lanshock.settings.layout.template#/favicon.ico">
-	<link rel="stylesheet" href="#request.lanshock.environment.webpath#templates/#request.lanshock.settings.layout.template#/styles.css" type="text/css">
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<meta name="generator" content="LANshock #request.lanshock.settings.version#"/>
+	<link rel="shortcut icon" href="http://#cgi.server_name#<cfif cgi.server_port NEQ '80'>:#cgi.server_port#</cfif>#request.lanshock.environment.webpath#templates/#request.lanshock.settings.layout.template#/favicon.ico"/>
+	<link rel="stylesheet" href="#request.lanshock.environment.webpath#templates/#request.lanshock.settings.layout.template#/styles.css" type="text/css"/>
 	<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_scripts/scripts.js"></script>
 	<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_scripts/CalendarPopup.js"></script>
 	<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_scripts/addevent.js"></script>
 	<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_scripts/sorttable.js"></script>
+	<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_shared/js/swfobject/swfobject.js"></script>
 	<style type="text/css">
 		.collapsed {display: none;}
 		.expanded {display: block;}
