@@ -125,7 +125,6 @@ $LastChangedRevision$
 	<cfargument name="userid" type="numeric" required="true">
 	
 	<cfset var stLocal = StructNew()>
-	<cfset stLocal.sReturn = ''>
 
 	<cfif arguments.userid EQ 0>
 		<cfset stLocal.sReturn = "#request.content.__core_utils_user_guest#">
@@ -138,12 +137,12 @@ $LastChangedRevision$
 				FROM user
 			</cfquery>
 		
-			<cfquery dbtype="query" name="stLocal.qUsername">
+			<cfquery result="test" dbtype="query" name="stLocal.qUsername">
 				SELECT name
 				FROM stLocal.qUsernames
 				WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.userid#">
 			</cfquery>
-	
+			
 			<cfif stLocal.qUsername.recordcount>
 				<cfset stLocal.sReturn = stLocal.qUsername.name>			
 			<cfelse>
