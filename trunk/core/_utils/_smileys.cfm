@@ -11,8 +11,8 @@ $LastChangedRevision$
 
 <cfscript>
 	stSmileySet = application.lanshock.settings.layout.smileyset_data;
-	sPreCode = ' <img border="0" hspace="0" vspace="0" src="#stSmileySet.path_web#';
-	sPostCode = '> ';	
+	sPreCode = ' <img src="#stSmileySet.path_web#';
+	sPostCode = '/> ';	
 </cfscript>
 	
 <cfloop list="#stSmileySet.lSmileys#" index="idx">
@@ -24,9 +24,9 @@ $LastChangedRevision$
 	</cfif>
 	
 	<cfscript>
-		sConvertedText = Replace(sConvertedText, ' #tmpIdx# ', sPreCode & stSmileySet.smiley2[idx] & '" alt="#tmpIdx#"' & sPostCode, 'all');
-		sConvertedText = Replace(sConvertedText, '#tmpIdx# ', sPreCode & stSmileySet.smiley2[idx] & '" alt="#tmpIdx#"' & sPostCode, 'all');
-		sConvertedText = Replace(sConvertedText, ' #tmpIdx#', sPreCode & stSmileySet.smiley2[idx] & '" alt="#tmpIdx#"' & sPostCode, 'all');
+		sConvertedText = Replace(sConvertedText, ' #tmpIdx# ', sPreCode & stSmileySet.smiley2[idx] & '" alt="#tmpIdx#" title="#tmpIdx#"' & sPostCode, 'all');
+		sConvertedText = Replace(sConvertedText, '#tmpIdx# ', sPreCode & stSmileySet.smiley2[idx] & '" alt="#tmpIdx#" title="#tmpIdx#"' & sPostCode, 'all');
+		sConvertedText = Replace(sConvertedText, ' #tmpIdx#', sPreCode & stSmileySet.smiley2[idx] & '" alt="#tmpIdx#" title="#tmpIdx#"' & sPostCode, 'all');
 	</cfscript>
 
 </cfloop>
