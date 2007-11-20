@@ -39,12 +39,9 @@ $LastChangedRevision$
 </cfinvoke>
 
 <cfscript>
-	if(application.lanshock.settings.sessionmanagement.type EQ 'cookie'){
-		if(NOT len(UrlSessionFormat(''))) request.session.urltoken = '';
-	}
-	
+	if(application.lanshock.settings.sessionmanagement.type EQ 'cookie' AND NOT len(UrlSessionFormat(''))) request.session.urltoken = '';
 	if(application.lanshock.settings.sessionmanagement.type EQ 'force_cookie') request.session.urltoken = '';
-	
+	request.session.urltoken = replace(request.session.urltoken,'&','&amp;','ALL');
 	request.application.sessions = application.sessions;
 </cfscript>
 
