@@ -229,9 +229,9 @@ if ( Find("[", sConvertedText) AND Find("]", sConvertedText) ) {
 
 		if(arguments.allow_img){
 			// Convert Images
-			// sConvertedText = ReReplaceNoCase(sConvertedText, "\[(img|image)\]([^[«]*)\[/(img|image)\]", "<img src=""\2"">", "All");
-			sConvertedText = ReReplaceNoCase(sConvertedText, "\[(img|image) width=([0-9]*) height=([0-9]*)\]([^[«]*)\[/(img|image)\]", "<img src=""\4"" width=""\2"" height=""\3"">", "All");
-			sConvertedText = ReReplaceNoCase(sConvertedText, "\[(img|image)\]([^[<]*)\[/(img|image)\]", "<img src=""\2"">", "All");
+			// sConvertedText = ReReplaceNoCase(sConvertedText, "\[(img|image)\]([^[«]*)\[/(img|image)\]", "<img src=""\2"" alt=""\2""/>", "All");
+			sConvertedText = ReReplaceNoCase(sConvertedText, "\[(img|image) width=([0-9]*) height=([0-9]*)\]([^[«]*)\[/(img|image)\]", "<img src=""\4"" alt=""\4"" width=""\2"" height=""\3""/>", "All");
+			sConvertedText = ReReplaceNoCase(sConvertedText, "\[(img|image)\]([^[<]*)\[/(img|image)\]", "<img src=""\2"" alt=""\2""/>", "All");
 		}
 	
 		if(arguments.allow_url){
@@ -248,8 +248,8 @@ if ( Find("[", sConvertedText) AND Find("]", sConvertedText) ) {
 };
 
 // Set up Paragraphs and breaks
-sConvertedText = Replace(sConvertedText, "#Chr(13)##Chr(10)##Chr(13)##Chr(10)#", "<br>&nbsp;<br>", "ALL");
-sConvertedText = Replace(sConvertedText, "#Chr(13)##Chr(10)#", "<br>", "ALL");
+sConvertedText = Replace(sConvertedText, "#Chr(13)##Chr(10)##Chr(13)##Chr(10)#", "<br/>&nbsp;<br/>", "ALL");
+sConvertedText = Replace(sConvertedText, "#Chr(13)##Chr(10)#", "<br/>", "ALL");
 
 // Reinsert code blocks
 if (ArrayLen(CodeBlocks) GT 0) {
