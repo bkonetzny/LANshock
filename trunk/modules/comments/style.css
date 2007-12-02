@@ -1,0 +1,49 @@
+.commententry{
+	clear: both;
+	margin-bottom: 40px;
+}
+
+.commententry .commententrycount{
+	float: left;
+	background-color: #EFEFEF;
+	width: 30px;
+	height: 20px;
+	text-align: center;
+}
+
+.commententry .commententrydatetime{
+	float: left;
+	margin-left: 10px;
+	margin-right: 20px;
+	font-size: 11px;
+}
+
+.commententry .commententryauthor{
+	float: left;
+	font-size: 11px;
+}
+
+.commententry .commententryauthorimg{
+	clear: left;
+	float: left;
+	width: 90px;
+	position: relative;
+	top: 10px;
+}
+
+.commententry .commententryoptions{
+	border: 1px red;
+}
+
+.commententry .commententrytitle{
+	margin-top: 10px;
+	margin-left: 100px;
+	padding-left: 10px;
+}
+
+.commententry .commententrytext{
+	margin-top: 10px;
+	margin-left: 100px;
+	padding: 10px;
+	background-color: #EFEFEF;
+}
