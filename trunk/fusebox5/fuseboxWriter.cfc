@@ -1,5 +1,5 @@
 <!---
-Copyright 2006 TeraTech, Inc. http://teratech.com/
+Copyright 2006-2007 TeraTech, Inc. http://teratech.com/
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -64,7 +64,13 @@ limitations under the License.
 		<cfset variables.lastPhase = "" />
 		<cfset variables.lastCircuit = "" />
 		<cfset variables.lastFuseaction = "" />
-		<cfset variables.content = createObject("java","java.lang.StringBuffer").init() />
+		<!--- watch out for hosts that have createObject("java") disabled - this will be slow but it will work --->
+		<cftry>
+			<cfset variables.content = createObject("java","java.lang.StringBuffer").init() />
+		<cfcatch type="any">
+			<cfset variables.content = createObject("component","FakeStringBuffer").init() />
+		</cfcatch>
+		</cftry>
 
 	</cffunction>	
 
@@ -82,11 +88,32 @@ limitations under the License.
 	
 	<cffunction name="close" returntype="void" access="public" output="false" 
 				hint="I 'close' the parsed file and write it to disk.">
+		<cfargument name="parsedFileCache" type="struct" required="true" 
+					hint="I am a cache of parsed file text hash values." />
+		
+		<cfset var parsedText = variables.content.toString() />
+		<cfset var parsedHash = hash(parsedText) />
+		
+		<cfif variables.fuseboxApplication.conditionalParse>
+			<cfif fileExists(variables.parsedDir & "/" & variables.filename) and
+					structKeyExists(arguments.parsedFileCache,variables.filename) and
+					parsedHash is arguments.parsedFileCache[variables.filename]>
+				<cfif variables.fuseboxApplication.debug>
+					<cfset getMyFusebox().trace("Compiler","Parsed file '#variables.filename#' is unchanged and was not overwritten") />
+				</cfif>
+				<cfreturn />
+			<cfelse>
+				<cfif variables.fuseboxApplication.debug>
+					<cfset getMyFusebox().trace("Compiler","Parsed file '#variables.filename#' changed or did not exist") />
+				</cfif>
+			</cfif>
+		</cfif>
+		<cfset arguments.parsedFileCache[variables.filename] = parsedHash />
 		
 		<cfset rawPrintln('<cfsetting enablecfoutputonly="false" />') />
 		<cftry>
 			<cffile action="write" file="#variables.parsedDir#/#variables.filename#"
-					output="#variables.content.toString()#"
+					output="#parsedText#"
 					charset="#variables.fuseboxApplication.characterEncoding#" />
 		<cfcatch type="any">
 			<cfthrow type="fusebox.errorWritingParsedFile" 

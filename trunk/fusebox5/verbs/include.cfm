@@ -1,5 +1,5 @@
 <!---
-Copyright 2006 TeraTech, Inc. http://teratech.com/
+Copyright 2006-2007 TeraTech, Inc. http://teratech.com/
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -74,11 +74,16 @@ limitations under the License.
 			fb_.verbInfo.attributes.prepend = false;
 		}
 		fb_.nAttrs = fb_.nAttrs + 1;	// for prepend - since we default it
-		// circuit - string - default circuit circuit alias
+		// circuit - string - default current circuit alias
 		// FB5: official support for this undocumented feature of FB4.x
 		if (structKeyExists(fb_.verbInfo.attributes,"circuit")) {
 			fb_.nAttrs = fb_.nAttrs + 1;	// we don't default this into the attributes struct
+			// TODO: we need to figure out what to do here if the circuit is implicit and has not yet been deduced!
 			if (structKeyExists(fb_.app.circuits,fb_.verbInfo.attributes.circuit)) {
+				fb_.targetCircuit = fb_.app.circuits[fb_.verbInfo.attributes.circuit];
+			} else if (fb_.app.allowImplicitCircuits) {
+				// FB55: attempt to create an implicit circuit
+				fb_.app.circuits[fb_.verbInfo.attributes.circuit] = __makeImplicitCircuit();
 				fb_.targetCircuit = fb_.app.circuits[fb_.verbInfo.attributes.circuit];
 			} else {
 				fb_throw("fusebox.undefinedCircuit",

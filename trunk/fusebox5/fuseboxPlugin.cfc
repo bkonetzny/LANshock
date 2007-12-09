@@ -1,5 +1,5 @@
 <!---
-Copyright 2006 TeraTech, Inc. http://teratech.com/
+Copyright 2006-2007 TeraTech, Inc. http://teratech.com/
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -116,6 +116,11 @@ limitations under the License.
 			<cfset variables.paramVerbs = structNew() />
 			<cfloop from="1" to="#n#" index="i">
 				
+				<cfif variables.parameters[i].xmlName is not "parameter">
+					<cfthrow type="fusebox.badGrammar.illegalDeclaration"
+							message="Parameter expected in plugin declaration"
+							detail="A 'plugin' declaration contained '#variables.parameters[i].xmlName#' but only 'parameter' is allowed, in fusebox.xml." />
+				</cfif>
 				<cfif not structKeyExists(variables.parameters[i].xmlAttributes,"name")>
 					<cfthrow type="fusebox.badGrammar.requiredAttributeMissing"
 							message="Required attribute is missing"

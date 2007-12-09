@@ -1,5 +1,5 @@
 <!---
-Copyright 2006 TeraTech, Inc. http://teratech.com/
+Copyright 2006-2007 TeraTech, Inc. http://teratech.com/
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -52,6 +52,21 @@ limitations under the License.
 									" custom lexicon could not be found.  It is used in the '#variables.fb_.verbInfo.circuit#.#variables.fb_.verbInfo.fuseaction#' fuseaction.") />
 			</cfcatch>
 		</cftry>
+		
+	</cffunction>
+	
+	<!---
+		FB55: added this to workaround path issues when a verb needs a component
+		this was specifically added to support <include ... circuit= ... /> when
+		implicit circuits are allowed and the named circuit does not already exist
+	--->
+	<cffunction name="__makeImplicitCircuit" returntype="any" access="private" output="false"
+				hint="I return an implicit circuit for any verb that has a circuit= attribute.">
+		
+		<cfreturn createObject("component","fuseboxImplicitCircuit")
+					.init(variables.fb_.app,
+						variables.fb_.verbInfo.attributes.circuit,
+						variables.fb_writer.getMyFusebox()) />
 		
 	</cffunction>
 	

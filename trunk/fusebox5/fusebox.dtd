@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
+Copyright 2006-2007 TeraTech, Inc. http://teratech.com/
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!--
 Used within the fusebox.xml page to contain the elements that configure the application.
 Ticket 159: made all elements optional - but logistically a Fusebox requires at least one circuit.
 -->
@@ -7,7 +23,7 @@ Ticket 159: made all elements optional - but logistically a Fusebox requires at 
 <!--
 	Specify the circuits in this application.
 -->
-<!ELEMENT circuits (circuit+)>
+<!ELEMENT circuits (circuit*)>
 <!ELEMENT circuit EMPTY>
 <!ATTLIST circuit
 	alias CDATA #REQUIRED
@@ -39,7 +55,7 @@ Ticket 159: made all elements optional - but logistically a Fusebox requires at 
 	Specify the global fuseactions - appinit is optional (since it is new) but all existing
 	applications will already have preprocess followed by postprocess (even if they are empty).
 -->
-<!ELEMENT globalfuseactions (appinit?, preprocess, postprocess)>
+<!ELEMENT globalfuseactions (appinit?, preprocess?, postprocess?)>
 <!ELEMENT appinit ((do | fuseaction)*)>
 <!ELEMENT preprocess ((do | fuseaction)*)>
 <!ELEMENT postprocess ((do | fuseaction)*)>
@@ -61,7 +77,7 @@ Ticket 159: made all elements optional - but logistically a Fusebox requires at 
 	Specify the plugin declarations for the applications. In the <plugins> section
 	there are a number of phases, within each phase you can have <plugin> declarations.
 -->
-<!ELEMENT plugins (phase+)>
+<!ELEMENT plugins (phase*)>
 <!ELEMENT phase (plugin*)>
 <!ATTLIST phase
 	name (fuseactionException | postFuseaction | postProcess | preFuseaction | preProcess | processError) #REQUIRED
@@ -75,7 +91,7 @@ Ticket 159: made all elements optional - but logistically a Fusebox requires at 
 <!--
 	Plugins may have parameters.
 -->
-<!ELEMENT parameters (parameter+)>
+<!ELEMENT parameters (parameter*)>
 <!ELEMENT parameter EMPTY>
 <!ATTLIST parameter
 	name CDATA #REQUIRED

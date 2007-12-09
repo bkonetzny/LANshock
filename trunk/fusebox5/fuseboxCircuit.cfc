@@ -1,5 +1,5 @@
 <!---
-Copyright 2006 TeraTech, Inc. http://teratech.com/
+Copyright 2006-2007 TeraTech, Inc. http://teratech.com/
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -96,9 +96,6 @@ limitations under the License.
 		<cfset var circuitCode = "" />
 		<cfset var needToLoad = true />
 		<cfset var circuitFiles = 0 />
-		<cfset var myCircuitFilePath = "" />
-		<cfset var jCircuitFile = "" />
-		<cfset var dtLastModified = "" />
 
 		<!---
 			since we need to check the file, regardless of whether we load it,
@@ -117,10 +114,7 @@ limitations under the License.
 
 		<cfif structKeyExists(this,"timestamp")>
 			<!--- Java timestamp solution provided by Daniel Schmid --->
-			<cfset myCircuitFilePath = variables.fullPath & circuitFile />
-			<cfset jCircuitFile = createObject("java","java.io.File").init(myCircuitFilePath) />
-			<cfset dtLastModified = createObject("java","java.util.Date").init(jCircuitFile.lastModified()) />
-			<cfset needToLoad = parseDateTime(dtLastModified) gt parseDateTime(this.timestamp) />
+			<cfset needToLoad = getApplication().fileModificationDate(variables.fullPath & circuitFile) gt parseDateTime(this.timestamp) />
 		</cfif>
 
 		<cfif needToLoad>
@@ -135,7 +129,15 @@ limitations under the License.
 						variable="circuitXML"
 						charset="#variables.fuseboxApplication.characterEncoding#" />
 				<cfset variables.circuitPath = variables.fullPath & circuitFile />
-				
+
+				<cfcatch type="security">
+					<!--- cffile denied by sandbox security --->
+					<cfthrow type="fusebox.security" 
+							message="security error reading circuit.xml" 
+							detail="The circuit xml file, '#circuitFile#', for circuit #getAlias()# could not be read because sandbox security has disabled the cffile tag."
+							extendedinfo="#cfcatch.detail#" />
+				</cfcatch>				
+
 				<cfcatch type="any">
 					<cfif variables.fuseboxApplication.allowImplicitCircuits>
 						<cfset circuitXML = "<circuit/>" />
