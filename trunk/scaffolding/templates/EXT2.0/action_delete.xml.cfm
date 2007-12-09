@@ -18,6 +18,8 @@ limitations under the License.
 
 <<cfoutput>>
 	<fuseaction name="$$objectName$$_delete" access="public">
+		<lanshock:security area="$$objectName$$"/>
+		
 		<!-- Delete: I delete the selected $$objectName$$ records. -->
 		
 		<!-- force layout: none -->

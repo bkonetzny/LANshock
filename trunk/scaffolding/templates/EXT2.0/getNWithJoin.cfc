@@ -15,6 +15,8 @@ limitations under the License.
 --->>
 <<!--- Set the name of the object (table) being updated --->>
 <<cfset objectName = oMetaData.getSelectedTableAlias()>>
+<<!--- Get an array of fields --->>
+<<cfset aFields = oMetaData.getFieldsFromXML(objectName)>>
 <<!--- Create a list of the many to one joined objects --->>
 <<cfset aJoinedObjects = oMetaData.getRelationshipsFromXML(objectName,"manyToOne")>>
 <<!--- Get the primary key fields for the object --->>
@@ -66,6 +68,17 @@ limitations under the License.
 			<cfset QueryRecordset.setMaxrows(arguments.maxrows) />
 		</cfif>
 		
+		<<cfsilent>>
+		<<cfset lColumnsOnList = ''>>
+		<<cfloop from="1" to="$$ArrayLen(aFields)$$" index="idx">>
+			<<cfif aFields[idx].showOnList>>
+				<<cfset lColumnsOnList = ListAppend(lColumnsOnList,"$$aFields[idx].alias$$")>>
+			<</cfif>>
+		<</cfloop>>
+		<</cfsilent>>
+		<!--- return only fields on list --->
+		<cfset QueryRecordset.returnObjectFields("$$objectName$$","$$lColumnsOnList$$")>
+		
 		<!--- Return the query --->
 		<cfreturn getByQuery(QueryRecordset) />
 	</cffunction>
@@ -76,7 +89,7 @@ limitations under the License.
 		<cfargument name="maxrows" default="0" type="numeric" required="No" />
 		
 		<cfset var qResult = getNWithJoin(arguments.sortByFieldList,arguments.startrow,arguments.maxrows) />
-		<cfset var oJSON = CreateObject('component','testing.scaffolding.generated.lanshock.lib.utils.json')>
+		<cfset var oJSON = CreateObject('component','scaffolder.generated.lanshock.core._utils.json.json')>
 		<cfset var sResult = oJSON.encode(data=qResult,queryFormat='array')>
 		
 		<cfset sResult = replace(sResult,'{','{"totalRecords":#getRecordCount()#,','ONE')>

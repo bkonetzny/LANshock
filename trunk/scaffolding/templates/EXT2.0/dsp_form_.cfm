@@ -100,7 +100,7 @@ limitations under the License.
 
 <cfoutput>
 <!--- Javascript to validate the entries --->
-<script language="JavaScript">
+<script type="text/javascript">
 <!--
 	function reset(myform){
 		myform.reset();
@@ -119,140 +119,79 @@ limitations under the License.
 //-->
 </script>
 
+<h3>#request.content.__globalmodule__navigation__$$objectName$$_Listing#</h3>
+<cfif ListLast(XFA.save,'_') EQ 'Add'>
+	<h4>#request.content.$$objectName$$_grid_global_add#</h4>
+<cfelse>
+	<h4>#request.content.$$objectName$$_grid_global_edit#</h4>
+</cfif>
+
+<cfif isDefined("aTranslatedErrors") AND ArrayLen(aTranslatedErrors)>
+	<div class="errorBox">
+		#request.content.error#
+		<ul>
+			<cfloop index="i" from="1" to="#arrayLen(aTranslatedErrors)#">
+				<li>#aTranslatedErrors[i]#</li>
+			</cfloop>
+		</ul>
+	</div>
+</cfif>
+
 <!--- Start of the form --->
-<form name="frmAddEdit" onsubmit="" action="#self#" method="post">		
+<form name="frmAddEdit" action="#self#" method="post">		
 	<input type="hidden" name="_listSortByFieldList" value="#attributes._listSortByFieldList#" />
 	<input type="hidden" name="_Maxrows" value="#attributes._Maxrows#" />
 	<input type="hidden" name="_StartRow" value="#attributes._StartRow#" />
+	<input type="hidden" name="lFields" value="#fieldlist#" />
+	<input type="hidden" name="fuseaction" value="#XFA.save#" />
 	
-	<table border="0" cellpadding="2" cellspacing="2" 
-		summary="This table shows details of a Fuseaction record." class="">
-		
-		<!--- Show any Error Messages --->
-		<cfif isDefined("aErrorMessages") AND ArrayLen(aErrorMessages) GT 0 >
-			<tr>
-				<td colspan="2">
-				<p class="#variables.standardTdClass#">The following invalid entries were found, please correct them and resubmit.</p>
-				<ul>
-					<cfloop index="i" from="1" to="#arrayLen(aErrorMessages)#">
-						<li class="#variables.highlightThClass#">#aErrorMessages[i]#</li>
-					</cfloop>
-				</ul>
-				</td>
-			</tr>
-		</cfif>
-		
+	<div class="form">		
 		<!--- Show the form fields --->
 		<cfloop list="#fieldlist#" index="thisField">
+			<cfset idFormRow = replace(CreateUUID(),'-','','ALL')>
 			<cfswitch expression="#thisField#">
 				<<cfloop from="1" to="$$ArrayLen(aFields)$$" index="i">>
 				<cfcase value="$$aFields[i].alias$$">
-					<<cfif ListFindNoCase(lPKFields,aFields[i].alias)>><cfif mode is "edit">
-					<!--- Primary Key --->
-					<tr>
-						<th width="80" align="left" <cfif ListFindNocase(highlightfields,'$$aFields[i].alias$$')>class="#variables.highlightThClass#"<cfelse>class="#variables.standardThClass#"</cfif>>
-							$$aFields[i].label$$
-						</th>
-						<td>
-							#$$Format("o$$objectName$$.get$$aFields[i].alias$$()","$$aFields[i].format$$")$$#
-						</td>
-					</tr>
-					</cfif>
-					<input type="hidden" name="$$aFields[i].alias$$" value="#o$$objectName$$.get$$aFields[i].alias$$()#" />
+					<<cfif ListFindNoCase(lPKFields,aFields[i].alias)>>
+						<<cfinclude template="../templates/EXT2.0/rowtypes/pkfield.cfm">>
 					<<cfelseif aFields[i].formType IS "Dropdown">>
-					<!--- a dropdown list --->
-					<tr>
-						<th width="80" align="left" <cfif ListFindNocase(highlightfields,'$$aFields[i].alias$$')>class="#variables.highlightThClass#"<cfelse>class="#variables.standardThClass#"</cfif>>
-							$$aFields[i].label$$
-						</th>
-						<td>
-							<select name="$$aFields[i].alias$$" id="$$aFields[i].alias$$" size="1">
-								<option value=""></option>
-								<<cfsilent>><<cfset optionValues = ListWrap(oMetaData.getPKListFromXML(aFields[i].parent),"#q$$aFields[i].parent$$.","#","_")>><</cfsilent>>
-								<cfloop query="q$$aFields[i].parent$$">
-									<option value="$$optionValues$$" <cfif o$$objectName$$.get$$aFields[i].alias$$() EQ "$$optionValues$$">selected="selected"</cfif> ><<cfloop list="$$lJoinedFields$$" index="thisField">>#q$$aFields[i].parent$$.$$thisField$$#<</cfloop>></option>
-								</cfloop>
-							</select>
-						</td>
-					</tr>
+						<<cfinclude template="../templates/EXT2.0/rowtypes/select.cfm">>
 					<<cfelseif aFields[i].formType IS "Radio">>
-					<!--- radio buttons --->
-					<tr>
-						<th width="80" align="left" <cfif ListFindNocase(highlightfields,'$$aFields[i].alias$$')>class="#variables.highlightThClass#"<cfelse>class="#variables.standardThClass#"</cfif>>
-							$$aFields[i].label$$
-						</th>
-						<td>
-							<<cfsilent>><<cfset optionValues = ListWrap(oMetaData.getPKListFromXML(aFields[i].parent),"#q$$aFields[i].parent$$.","#","_")>><</cfsilent>>
-							<cfloop query="q$$aFields[i].parent$$">
-								<input name="$$aFields[i].alias$$" id="$$aFields[i].alias$$_$$optionValues$$" value="$$optionValues$$" <cfif o$$objectName$$.get$$aFields[i].alias$$() EQ "$$optionValues$$">checked="checked"</cfif> /><<cfloop list="$$lJoinedFields$$" index="thisField">>#q$$aFields[i].parent$$.$$thisField$$#<</cfloop>><br />
-							</cfloop>
-						</td>
-					</tr>
+						<<cfinclude template="../templates/EXT2.0/rowtypes/radio.cfm">>
+					<<cfelseif aFields[i].formType IS "Datetime">>
+						<<cfinclude template="../templates/EXT2.0/rowtypes/datetime.cfm">>
 					<<cfelseif aFields[i].formType IS "Checkbox">>
-					<!--- checkbox --->
-					<tr>
-						<th width="80" align="left" <cfif ListFindNocase(highlightfields,'$$aFields[i].alias$$')>class="#variables.highlightThClass#"<cfelse>class="#variables.standardThClass#"</cfif> >
-							$$aFields[i].label$$
-						</th>
-						<td>
-							<input name="$$aFields[i].alias$$" id="$$aFields[i].alias$$" value="1" <cfif o$$objectName$$.get$$aFields[i].alias$$()>checked="checked"</cfif> /><br />
-						</td>
-					</tr>
+						<<cfinclude template="../templates/EXT2.0/rowtypes/checkbox.cfm">>
+					<<cfelseif aFields[i].formType IS "Text">>
+						<<cfinclude template="../templates/EXT2.0/rowtypes/text.cfm">>
 					<<cfelseif aFields[i].formType IS "Textarea">>
-					<!--- a Textarea --->
-					<tr>
-						<th width="80" align="left" <cfif ListFindNocase(highlightfields,'$$aFields[i].alias$$')>class="#variables.highlightThClass#"<cfelse>class="#variables.standardThClass#"</cfif> >
-							$$aFields[i].label$$
-						</th>
-						<td>
-							<textarea name="$$aFields[i].alias$$" id="$$aFields[i].alias$$" cols="$$ListFirst(aFields[i].size,"x")$$" rows="$$ListLast(aFields[i].size,"x")$$"<!--- maxlength="$$aFields[i].maxlength$$" ---> >#$$Format("o$$objectName$$.get$$aFields[i].alias$$()","$$aFields[i].format$$")$$#</textarea>
-						</td>
-					</tr>
+						<<cfinclude template="../templates/EXT2.0/rowtypes/textarea.cfm">>
+					<<cfelseif aFields[i].formType IS "FckEditor">>
+						<<cfinclude template="../templates/EXT2.0/rowtypes/fckeditor.cfm">>
 					<<cfelseif aFields[i].formType IS "Hidden">>
-						<input type="hidden" name="$$aFields[i].alias$$" value="#o$$objectName$$.get$$aFields[i].alias$$()#" />
+						<<cfinclude template="../templates/EXT2.0/rowtypes/hidden.cfm">>
 					<<cfelseif aFields[i].formType IS "Display">>
-					<!--- a hidden field --->
-					<tr>
-						<th width="80" align="left" <cfif ListFindNocase(highlightfields,'$$aFields[i].alias$$')>class="#variables.highlightThClass#"<cfelse>class="#variables.standardThClass#"</cfif> >
-							$$aFields[i].label$$
-						</th>
-						<td>
-							<input type="Hidden" name="$$aFields[i].alias$$" id="$$aFields[i].alias$$" value="#$$Format("o$$objectName$$.get$$aFields[i].alias$$()","$$aFields[i].format$$")$$#" />
-						</td>
-					</tr>
+						<<cfinclude template="../templates/EXT2.0/rowtypes/display.cfm">>
 					<<cfelse>> 
-					<!--- default text box --->
-					<tr>
-						<th width="80" align="left" <cfif ListFindNocase(highlightfields,'$$aFields[i].alias$$')>class="#variables.highlightThClass#"<cfelse>class="#variables.standardThClass#"</cfif> >
-							$$aFields[i].label$$
-						</th>
-						<td>
-							<input type="Text" name="$$aFields[i].alias$$" id="$$aFields[i].alias$$" size="$$aFields[i].size$$" <<cfif structKeyExists(aFields[i],"maxlength")>>maxlength="$$aFields[i].maxlength$$"<</cfif>> value="#$$Format("o$$objectName$$.get$$aFields[i].alias$$()","$$aFields[i].format$$")$$#" />
-						</td>
-					</tr>
+						<<cfinclude template="../templates/EXT2.0/rowtypes/unknown.cfm">>
 					<</cfif>>
 				</cfcase><</cfloop>>
 			</cfswitch>
 		</cfloop>
-		<tr>
-			<td colspan="2">
-				&nbsp;
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2">
+		
+		<div class="formrow">
+			<div class="formrow_buttonbar">
 				<cfset sortParams = appendParam("","_listSortByFieldList",attributes._listSortByFieldList)>
 				<cfset sortParams = appendParam(sortParams,"_Maxrows",attributes._Maxrows)>
 				<cfset sortParams = appendParam(sortParams,"_StartRow",attributes._Startrow)>
 				<cfset sortParams = appendParam(sortParams,"fuseaction",XFA.cancel)>
-				<input type="button" value="Save" id="btnSave" onclick="Javascript:save(this.form,'#XFA.Save#')" />
-				<input type="button" value="Reset" id="btnReset" onclick="Javascript:reset(this.form)" />
-				<input type="button" value="Cancel" id="btnCancel" onclick="Javascript:location.href='#self##sortParams#'" />
-				<input type="hidden" name="fuseaction" value="#XFA.save#" />
-			</td>
-		</tr>
-	</table>
+				<input type="button" value="#request.content.form_save#" id="btnSave" onclick="Javascript:save(this.form,'#XFA.Save#')" />
+				<input type="button" value="#request.content.form_reset#" id="btnReset" onclick="Javascript:reset(this.form)" />
+				<input type="button" value="#request.content.form_cancel#" id="btnCancel" onclick="Javascript:location.href='#self##sortParams#'" />
+			</div>
+		</div>
+		<div class="clearer"></div>
+	</div>
 	</form>
 </cfoutput>
 <</cfoutput>>
-
