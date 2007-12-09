@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 --->
+<<cfsilent>>
 <<!--- Set the name of the object (table) being updated --->>
 <<cfset objectName = oMetaData.getSelectedTableAlias()>>
 <<!--- Generate a list of the table fields --->>
@@ -30,8 +31,46 @@ limitations under the License.
 <<cfset aFields = oMetaData.getFieldsFromXML(objectName)>>
 <<!--- Get an array of joinedfields --->>
 <<cfset aJoinedFields = oMetaData.getJoinedFieldsFromXML(objectName)>>
-<<cfoutput>>
 
+<<cfset sCodeDataReaderModel = ''>>
+<<cfset bFirstColumn = true>>
+<<cfloop from="1" to="$$ArrayLen(aFields)$$" index="idx">>
+	<<cfif aFields[idx].showOnList>>
+		<<cfif NOT bFirstColumn>>
+			<<cfset sCodeDataReaderModel = sCodeDataReaderModel & "," & chr(13)>>
+		<</cfif>>
+		<<cfset sCodeDataReaderModel = sCodeDataReaderModel & "{name:'$$aFields[idx].alias$$',mapping:'$$aFields[idx].alias$$'">>
+		<<!--- <<cfswitch expression="$$aFields[idx].type$$">>
+			<<cfcase value="date">>
+				<<cfset sCodeDataReaderModel = sCodeDataReaderModel & ",type:'date',dateFormat:'Y-m-d g:i'">>
+			<</cfcase>>
+		<</cfswitch>> --->>
+		<<cfset sCodeDataReaderModel = sCodeDataReaderModel & "}">>
+		<<cfset bFirstColumn = false>>
+	<</cfif>>
+<</cfloop>>
+
+<<cfset sCodeColumnModel = ''>>
+<<cfset bFirstColumn = true>>
+<<cfloop from="1" to="$$ArrayLen(aFields)$$" index="idx">>
+	<<cfif aFields[idx].showOnList>>
+		<<cfif bFirstColumn>>
+			<<cfset sCodeColumnModel = sCodeColumnModel & "{id:'id',">>
+			<<cfset bFirstColumn = false>>
+		<<cfelse>>
+			<<cfset sCodeColumnModel = sCodeColumnModel & "," & chr(13) & "{">>
+		<</cfif>>
+		<<cfset sCodeColumnModel = sCodeColumnModel & "header:'$$aFields[idx].label$$',width:30,sortable:true,dataIndex:'$$aFields[idx].alias$$'">>
+		<<!--- <<cfswitch expression="$$aFields[idx].type$$">>
+			<<cfcase value="date">>
+				<<cfset sCodeColumnModel = sCodeColumnModel & ",renderer:Ext.util.Format.dateRenderer('d.m.Y - H:i')">>
+			<</cfcase>> 
+		<</cfswitch>> --->>
+		<<cfset sCodeColumnModel = sCodeColumnModel & "}">>
+	<</cfif>>
+<</cfloop>>
+<</cfsilent>>
+<<cfoutput>>
 <cfsilent>
 <!--- -->
 <fusedoc fuse="$RCSfile: dsp_list_$$objectName$$.cfm,v $" language="ColdFusion 7.01" version="2.0"  >
@@ -112,15 +151,15 @@ limitations under the License.
 	    var cmenu = new Ext.menu.Menu('gridContextMenu');
         cmenu.add({
         	id:'cm_btn_edit',
-        	text:'Edit',
+        	text:'#jsStringFormat(request.content.$$objectName$$_grid_row_edit)#',
         	action:'edit',
-        	handler:function(e){grid.getSelectionModel().getSelected().id;},
+        	handler:function(e){window.location.href='#myself##xfa.update#&id=' + grid.getSelectionModel().getSelected().id;},
         	iconCls:'edit'
         });
         cmenu.addSeparator();
         cmenu.add({
         	id:'cm_btn_remove',
-        	text:'Delete',
+        	text:'#jsStringFormat(request.content.$$objectName$$_grid_row_delete)#',
         	action:'remove',
         	handler:doDel,
         	iconCls:'remove'
@@ -139,7 +178,7 @@ limitations under the License.
 	        	root: 'data',
 				id: '$$lPKFields$$'
 	           },[
-				<cfset bFirstCol = true><cfloop list="#variables.fieldlist#" index="thisField"><cfif NOT bFirstCol>,</cfif>{name: '#thisField#', mapping: '#thisField#'}<cfset bFirstCol = false></cfloop>
+				$$sCodeDataReaderModel$$
 			])
 	    });
 	    
@@ -148,7 +187,7 @@ limitations under the License.
 	        ds: ds,
 	        cm: new xg.ColumnModel([
 	        	sm,
-				<cfset bFirstCol = true><cfloop list="#variables.fieldlist#" index="thisField"><cfif NOT bFirstCol>,</cfif>{<cfif bFirstCol>id:'id',</cfif>header: "#thisField#", width: 30, sortable: true, dataIndex: '#thisField#'}<cfset bFirstCol = false></cfloop>
+	        	$$sCodeColumnModel$$
 	        ]),
 	        sm: sm,
 	
@@ -158,30 +197,27 @@ limitations under the License.
 	
 	        // inline toolbars
 	        tbar:[{
-	            text:'Add $$objectName$$',
-	            tooltip:'Add a new row',
+	            text:'#jsStringFormat(request.content.$$objectName$$_grid_global_add)#',
+	            tooltip:'#jsStringFormat(request.content.$$objectName$$_grid_global_add)#',
 	            iconCls:'add',
 	            handler:function(){window.location.href='#myself##xfa.add#';}
 	        },'-',{
-	            text:'Remove $$objectName$$',
-	            tooltip:'Remove the selected items',
+	            text:'#jsStringFormat(request.content.$$objectName$$_grid_global_delete)#',
+	            tooltip:'#jsStringFormat(request.content.$$objectName$$_grid_global_delete)#',
 	            iconCls:'remove',
 	            handler: doDel
 	        }],
 	
-	        width:800,
-	        height:600,
+	        width:700,
+	        height:533,
 	        frame:true,
-	        title:'$$objectName$$',
+	        title:'#jsStringFormat(request.content['__globalmodule__navigation__$$objectName$$_Listing'])#',
 	        iconCls:'icon-grid',
 	        renderTo: Ext.get('grid_$$objectName$$'),
 	        
 	        bbar: new Ext.PagingToolbar({
 	            pageSize: 20,
-	            store: ds,
-	            displayInfo: true,
-	            displayMsg: 'Displaying {0} - {1} of {2}',
-	            emptyMsg: "No results to display"
+	            store: ds
 	        })
 	    });
 	    
@@ -196,8 +232,8 @@ limitations under the License.
 	    
 	    function doDel(){
 	        var m = grid.getSelections();
-	        if(m.length > 0) Ext.MessageBox.confirm('Message', 'Do you really want to delete it?' , doDel2);
-	        else Ext.MessageBox.alert('Message', 'Please select at least one item to delete');
+	        if(m.length > 0) Ext.MessageBox.confirm('Message','#jsStringFormat(request.content.$$objectName$$_grid_global_delete_warning_confirm)#',doDel2);
+	        else Ext.MessageBox.alert('Message','#jsStringFormat(request.content.$$objectName$$_grid_global_delete_warning_select)#');
 	    }     
 	 
 	    function doDel2(btn){
@@ -216,7 +252,7 @@ limitations under the License.
 					url:"#myself##XFA.delete#",
 					params:{jsonData:jsonData}
 				})
-				<!--- // ds.load({params:{start:0, limit:myPageSize, delData:jsonData}}); --->		
+				ds.reload();		
 			}
 		}
 	});
@@ -224,7 +260,7 @@ limitations under the License.
 
 <div id="grid_$$objectName$$"></div>
 </cfoutput>
-<!--- 
+<<!--- 
 <table width="790" border="0" cellpadding="2" cellspacing="2" summary="This table shows a list of $$objectName$$ records." class="">
 	<cfoutput>
 	<tr>
@@ -332,7 +368,7 @@ limitations under the License.
 	</cfif>
 	
 	<cfoutput>[<a href="#self##appendParam(pageParams,"fuseaction",XFA.add)#">Add New $$objectName$$</a>]</cfoutput>
-</span> --->
+</span> --->>
 <!--- 
 $Log$
  --->

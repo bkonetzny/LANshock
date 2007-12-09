@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 --->>
+<<cfset sModule = oMetaData.getModule()>>
 <cfsilent>
 <!--- -->
 <fusedoc fuse="dsp_layout.cfm" language="ColdFusion 7.01" version="2.0">
@@ -41,52 +42,23 @@ limitations under the License.
 </fusedoc>
 --->
 </cfsilent>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-	<title><cfoutput>#request.page.subtitle#</cfoutput></title>
-	<script type="text/javascript" src="js/ext-2.0-alpha1/adapter/ext/ext-base.js"></script>
-	<script type="text/javascript" src="js/ext-2.0-alpha1/ext-all.js"></script>
-	<link rel="stylesheet" type="text/css" href="js/ext-2.0-alpha1/resources/css/ext-all.css" />
-	<link rel="stylesheet" type="text/css" href="js/ext-2.0-alpha1/examples/grid/grid-examples.css" />
-	<style type="text/css">
-        body .x-panel {
-            margin-bottom:20px;
-        }
-        .icon-grid {
-            background-image:url(js/ext-2.0-alpha1/examples/shared/icons/fam/grid.png) !important;
-        }
-        ##button-grid .x-panel-body {
-            border:1px solid ##99bbe8;
-            border-top:0 none;
-        }
-        .add {
-            background-image:url(js/ext-2.0-alpha1/examples/shared/icons/fam/add.gif) !important;
-        }
-        .edit {
-            background-image:url(js/ext-2.0-alpha1/examples/shared/icons/fam/cog_edit.png) !important;
-        }
-        .option {
-            background-image:url(js/ext-2.0-alpha1/examples/shared/icons/fam/plugin.gif) !important;
-        }
-        .remove {
-            background-image:url(js/ext-2.0-alpha1/examples/shared/icons/fam/delete.gif) !important;
-        }
-        .save {
-            background-image:url(js/ext-2.0-alpha1/examples/shared/icons/save.gif) !important;
-        }
-    </style>
-</head>
-<body>
-<cfoutput><h1 class="pagetitle">#request.page.subtitle#</h1></cfoutput>
-<!--- Menu --->
+
+<cfsavecontent variable="sHtmlHead">
+	<cfoutput>
+		<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0/adapter/ext/ext-base.js"></script>
+		<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0/ext-all.js"></script>
+		<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0/source/locale/ext-lang-#LCase(ListFirst(request.session.lang,'_'))#.js"></script>
+		<link rel="stylesheet" type="text/css" href="#request.lanshock.environment.webpath#templates/_shared/css/ext-all.css" />
+	</cfoutput>
+</cfsavecontent>
+
+<cfhtmlhead text="#sHtmlHead#">
+
 <cfoutput>
-<<cfoutput>>
-	<<cfloop list="$$oMetaData.getLTableAliases()$$" index="thisObject" >>
-	<a href="#self#?fuseaction=$$oMetaData.getDatasource()$$.$$thisObject$$_Listing">$$thisObject$$</a><</cfloop>>
-<</cfoutput>>
+	<cfif StructKeyExists(request,'page') AND StructKeyExists(request.page,'objectName')>
+		<h3>#request.content['__globalmodule__navigation__#request.page.objectName#_Listing']#</h3>
+	</cfif>
+	<cfif StructKeyExists(request,'page') AND StructKeyExists(request.page,'pageContent')>
+		#request.page.pageContent#
+	</cfif>
 </cfoutput>
-<!--- Page --->
-<cfoutput>#request.page.pageContent#</cfoutput>
-</body>
-</html>

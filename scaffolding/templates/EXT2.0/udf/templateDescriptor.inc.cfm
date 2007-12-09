@@ -4,7 +4,7 @@
 	stFileData = structNew();
 	stFileData.templateFile = sDirectory & "udf_appendParam";
 	stFileData.outputFile = "udf_appendParam";
-	stFileData.MVCpath = "#destinationFilePath#udfs/";
+	stFileData.MVCpath = "#destinationFilePath#core/_utils/udf/";
 	stFileData.inPlace = "false";
 	stFileData.overwrite = "false";
 	stFileData.useAliasInName = "false";

@@ -16,7 +16,7 @@ limitations under the License.
 <<!--- Set the name of the object (table) being updated --->>
 <<cfset objectName = oMetaData.getSelectedTableAlias()>>
 <<cfoutput>>
-<cfcomponent displayname="$$objectName$$Gateway.cfc" extends="reactor.project.$$oMetaData.getDatasource()$$.Gateway.$$objectName$$Gateway" >
+<cfcomponent displayname="$$objectName$$Gateway.cfc" extends="reactor.project.$$oMetaData.getDatasource()$$.Gateway.$$objectName$$Gateway">
 
 </cfcomponent>
 <</cfoutput>>

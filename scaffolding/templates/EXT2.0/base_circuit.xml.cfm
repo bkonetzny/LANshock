@@ -1,9 +1,10 @@
 <<!--- Set the name of the datasource, This is used to create the names of directories and circuits --->>
 <<cfset datasourceName = oMetaData.getDatasource()>>
+<<cfset sModule = oMetaData.getModule()>>
 
 <<cfoutput>>
 <!-- Controller -->
-<circuit xmlns:cf="cf/" xmlns:reactor="reactor/" >
+<circuit xmlns:cf="cf/" xmlns:reactor="reactor/" xmlns:lanshock="lanshock/">
 <!--
 Copyright 2006-07 Objective Internet Ltd - http://www.objectiveinternet.com
 
@@ -21,26 +22,55 @@ limitations under the License.
 -->
 	<prefuseaction>
 		<set name="request.page" value="#structNew()#"/>
+		<lanshock:i18n load="modules/$$sModule$$/i18n/lang.properties" returnvariable="request.content"/>
+		<include circuit="c_$$sModule$$" template="settings" />
 	</prefuseaction>
 	
 	<postfuseaction>
 		<if condition="isDefined('request.layout') AND request.layout EQ 'json'">
 			<true>
-				<set name="_fba.debug" value="false"/>
-				<include circuit="v$$datasourceName$$" template="dsp_layout_json" />
-			</true>
-		</if>
-		<if condition="isDefined('request.layout') AND request.layout EQ 'none'">
-			<true>
-				<set name="_fba.debug" value="false"/>
-			</true>
-		</if>
-		<if condition="NOT isDefined('request.layout') OR (isDefined('request.layout') AND request.layout EQ 'default')">
-			<true>
-				<include circuit="v$$datasourceName$$" template="dsp_layout" />
+				<if condition="request.layout EQ 'json'">
+					<true>
+						<set name="_fba.debug" value="false"/>
+						<include circuit="v_$$sModule$$" template="dsp_layout_json" />
+					</true>
+					<false>
+						<if condition="request.layout EQ 'none'">
+							<true>
+								<set name="_fba.debug" value="false"/>
+							</true>
+							<false>
+								<if condition="request.layout EQ 'admin')">
+									<true>
+										<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/raw_files/view/styles.css")>>
+											<lanshock:htmlhead type="style" content="@import url('#request.lanshock.environment.webpath#modules/$$sModule$$/view/styles.css');"/>
+										<</cfif>>
+										<include circuit="v_$$sModule$$" template="dsp_layout" />
+									</true>
+								</if>
+							</false>
+						</if>
+					</false>
+				</if>
 			</true>
 		</if>
 	</postfuseaction>
+
+	<fuseaction name="main" access="public">
+		<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/controller/circuit_main.xml.cfm")>>
+			<<cfoutput>>
+			<<cfinclude template="../templates/EXT2.0/custom/$$sModule$$/controller/circuit_main.xml.cfm">>
+			<</cfoutput>>
+		<<cfelse>>
+			<include circuit="c_$$sModule$$" template="main" />
+		<</cfif>>
+	</fuseaction>
+	
+	<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/controller/circuit.xml.cfm")>>
+		<<cfoutput>>
+		<<cfinclude template="../templates/EXT2.0/custom/$$sModule$$/controller/circuit.xml.cfm">>
+		<</cfoutput>>
+	<</cfif>>
 
 </circuit>
 <</cfoutput>>

@@ -1,4 +1,4 @@
-<circuit xmlns:cf="cf/" xmlns:reactor="reactor/" >
+<circuit xmlns:cf="cf/" xmlns:reactor="reactor/" xmlns:lanshock="lanshock/">
 <!--
 Copyright 2006-07 Objective Internet Ltd - http://www.objectiveinternet.com
 

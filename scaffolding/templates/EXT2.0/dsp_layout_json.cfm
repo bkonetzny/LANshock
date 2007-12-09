@@ -1,1 +1,1 @@
-<cfcontent reset="true"><cfoutput>#trim(request.page.pageContent)#</cfoutput>
+<cfcontent reset="true" type="text/plain;utf-8"><cfoutput>#trim(request.page.pageContent)#</cfoutput>

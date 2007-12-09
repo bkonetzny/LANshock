@@ -26,11 +26,17 @@ limitations under the License.
 <<cfset lPKFields = oMetaData.getPKListFromXML(objectName)>>
 <<!--- Generate an array of parent objects --->>
 <<cfset aManyToOne = oMetaData.getRelationshipsFromXML(objectName,"manyToOne")>>
+<<cfset sModule = oMetaData.getModule()>>
 
 <<cfoutput>>	
 	<fuseaction name="$$objectName$$_Listing" access="public">
+		<lanshock:security area="$$objectName$$"/>
+		
+		<!-- force layout: admin -->
+		<set name="request.layout" value="admin" />
+		
 		<!-- Listing: I display a list of the records in the $$objectName$$ table. -->
-		<set name="request.page.subtitle" value="$$objectName$$ List" />
+		<set name="request.page.objectName" value="$$objectName$$" />
 		<set name="request.page.description" value="I display a list of the $$objectName$$ records in the table." />
 
 		<xfa name="update" value="$$objectName$$_edit_form" />
@@ -46,10 +52,12 @@ limitations under the License.
 		
 		<set name="fieldlist" value="$$lAllFields$$"/>
 		<include circuit="udfs" template="udf_appendParam" />
-		<include circuit="v$$datasourceName$$" template="dsp_list_$$objectName$$" contentvariable="request.page.pageContent" append="true" />
+		<include circuit="v_$$sModule$$" template="dsp_list_$$objectName$$" contentvariable="request.page.pageContent" append="true" />
 	</fuseaction>
 
-	<fuseaction name="$$objectName$$_grid_json" access="public">
+	<fuseaction name="$$objectName$$_grid_json" access="public" lanshock:showlayout="none">
+		<lanshock:security area="$$objectName$$"/>
+		
 		<!-- force layout: json -->
 		<set name="request.layout" value="json" />
 		

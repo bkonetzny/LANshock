@@ -26,9 +26,12 @@ limitations under the License.
 <<cfset lPKFields = oMetaData.getPKListFromXML(objectName)>>
 <<!--- Generate an array of parent objects --->>
 <<cfset aManyToOne = oMetaData.getRelationshipsFromXML(objectName,"manyToOne")>>
+<<cfset sModule = oMetaData.getModule()>>
 
 <<cfoutput>>
 	<fuseaction name="$$objectName$$_Action_Add" access="public">
+		<lanshock:security area="$$objectName$$"/>
+		
 		<!-- Action_Add: I add a new $$objectName$$ record using the entered data. -->
 		<set name="request.page.subtitle" value="Add $$objectName$$" />
 		<set name="request.page.description" value="I add a new $$objectName$$ record using the entered data." />
@@ -39,7 +42,7 @@ limitations under the License.
 		
 		<set name="attributes.$$objectName$$_Id" value="0" overwrite="false"/>
 		<reactor:record alias="$$objectName$$" returnvariable="o$$objectName$$" />
-		<<cfloop list="lFields" index="thisField">>
+		<<cfloop list="$$lFields$$" index="thisField">>
 		<set value="#o$$objectName$$.set$$thisField$$(attributes.$$thisField$$)#" /><</cfloop>>
 		
 		<invoke object="o$$objectName$$" method="validate" />
@@ -63,10 +66,9 @@ limitations under the License.
 				
 				<set name="aErrors" value="#o$$objectName$$._getErrorCollection().getErrors()#" />
 				<set name="aTranslatedErrors" value="#o$$objectName$$._getErrorCollection().getTranslatedErrors()#" />
-				<include template="act_setupErrorsFromReactor" />
 				
 				<set name="mode" value="insert" />
-				<include circuit="v$$datasourceName$$" template="dsp_form_$$objectName$$" contentvariable="request.page.pageContent" append="true" />
+				<include circuit="v_$$sModule$$" template="dsp_form_$$objectName$$" contentvariable="request.page.pageContent" append="true" />
 			</false>
 		</if>
 		<if condition="valid">

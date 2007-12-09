@@ -26,9 +26,15 @@ limitations under the License.
 <<cfset lPKFields = oMetaData.getPKListFromXML(objectName)>>
 <<!--- Generate an array of parent objects --->>
 <<cfset aManyToOne = oMetaData.getRelationshipsFromXML(objectName,"manyToOne")>>
+<<cfset sModule = oMetaData.getModule()>>
 
 <<cfoutput>>
 	<fuseaction name="$$objectName$$_Edit_Form" access="public">
+		<lanshock:security area="$$objectName$$"/>
+		
+		<!-- force layout: admin -->
+		<set name="request.layout" value="admin" />
+		
 		<!-- Edit_Form: I display the selected $$objectName$$ record in a form which allows the user to edit it. -->
 		<set name="request.page.subtitle" value="Edit $$objectName$$" />
 		<set name="request.page.description" value="I display the selected $$objectName$$ record in a form which allows the user to edit it." />
@@ -49,7 +55,7 @@ limitations under the License.
 		<set name="fieldlist" value="$$lAllFields$$"/>
 		<set name="mode" value="edit" />
 		<include circuit="udfs" template="udf_appendParam" />
-		<include circuit="v$$datasourceName$$" template="dsp_form_$$objectName$$" contentvariable="request.page.pageContent" append="true" />
+		<include circuit="v_$$sModule$$" template="dsp_form_$$objectName$$" contentvariable="request.page.pageContent" append="true" />
 	</fuseaction>
 	
 <</cfoutput>>

@@ -16,61 +16,50 @@ limitations under the License.
 <<!--- Set the name of the datasource, This is used to create the names of directories and circuits --->>
 <<cfset DatasourceName = oMetaData.getDatasource()>>
 <<!--- Get the alias first table --->>
-<<cfset firstTable = ListFirst(oMetaData.getLTableAliases())>>
+<<cfset lTables = ListFirst(oMetaData.getLTableAliases())>>
+<<cfset sModule = oMetaData.getModule()>>
 <<cfoutput>>
 <?xml version="1.0" encoding="UTF-8"?> 
 <fusebox> 
-  <circuits>
-  	<!-- There is a model, view and controller circuit for each database. -->
-	<!-- Only the controller has an XML file the others are called implicitly. -->
-	<circuit alias="m$$DatasourceName$$" path="model/m$$DatasourceName$$/" parent="" />
-	<circuit alias="v$$DatasourceName$$" path="view/v$$DatasourceName$$/" parent="" />
-	<circuit alias="$$DatasourceName$$" path="controller/$$DatasourceName$$/" parent="" />
-	<circuit alias="udfs" path="udfs/" parent="" />
-  </circuits>
-  
-  <parameters>
-  	<parameter name="debug" value="true" />
-    <parameter name="fuseactionVariable" value="fuseaction" />
-    <parameter name="mode" value="development-full-load" />
-    <parameter name="defaultFuseaction" value="$$DatasourceName$$.$$firstTable$$_Listing" />
-    <parameter name="precedenceFormOrUrl" value="form" />
-    <parameter name="password" value="scaffold" />
-    <parameter name="scriptFileDelimiter" value="cfm" />
-    <parameter name="maskedFileDelimiters" value="htm,cfm,cfml,php,php4,asp,aspx" />
-    <parameter name="characterEncoding" value="utf-8" />
-	<parameter name="allowImplicitCircuits" value="true" />
-  </parameters> 
-  
-  <classes>
-  	<class alias="Reactor" type="component" classpath="Reactor.reactorFactory" /> 
-  </classes>
-  
-  <globalfuseactions>
-  	<appinit>
-		<do action="m$$DatasourceName$$.Initialise" />
-	</appinit>
-    <preprocess>
-		<do action="m$$DatasourceName$$.ReInitialise" />
-    </preprocess>
-    <postprocess>
-    </postprocess>
-  </globalfuseactions>
-  
-  <plugins> 
-    <phase name="preProcess">
-    </phase>
-    <phase name="preFuseaction">
-    </phase>
-    <phase name="postFuseaction">
-    </phase>
-    <phase name="postProcess">
-    </phase>
-    <phase name="processError">
-    </phase>
-    <phase name="fuseactionException">
-    </phase>
-  </plugins> 
-  
+	<circuits>
+		<!-- There is a model, view and controller circuit for each database. -->
+		<!-- Only the controller has an XML file the others are called implicitly. -->
+		<circuit alias="m_$$sModule$$" path="modules/$$sModule$$/model/" parent="" />
+		<circuit alias="v_$$sModule$$" path="modules/$$sModule$$/view/" parent="" />
+		<circuit alias="c_$$sModule$$" path="modules/$$sModule$$/controller/" parent="" />
+		<circuit alias="udfs" path="core/_utils/udf/" parent="" />
+	</circuits>
+	<parameters>
+		<parameter name="debug" value="true" />
+		<parameter name="fuseactionVariable" value="fuseaction" />
+		<parameter name="mode" value="development-full-load" />
+		<parameter name="defaultFuseaction" value="c_$$sModule$$.$$lTables$$_Listing" />
+		<parameter name="precedenceFormOrUrl" value="form" />
+		<parameter name="password" value="scaffold" />
+		<parameter name="scriptFileDelimiter" value="cfm" />
+		<parameter name="maskedFileDelimiters" value="htm,cfm,cfml,php,php4,asp,aspx" />
+		<parameter name="characterEncoding" value="utf-8" />
+		<parameter name="allowImplicitCircuits" value="true" />
+	</parameters>
+	<classes>
+		<class alias="Reactor" type="component" classpath="Reactor.reactorFactory"/> 
+	</classes>
+	<globalfuseactions>
+		<appinit>
+			<do action="m_$$sModule$$.Initialise" />
+		</appinit>
+		<preprocess>
+			<do action="m_$$sModule$$.ReInitialise"/>
+		</preprocess>
+		<postprocess/>
+	</globalfuseactions>
+	<plugins>
+		<phase name="preProcess"/>
+		<phase name="preFuseaction"/>
+		<phase name="postFuseaction"/>
+		<phase name="postProcess"/>
+		<phase name="processError"/>
+		<phase name="fuseactionException"/>
+	</plugins>
 </fusebox>
 <</cfoutput>>
