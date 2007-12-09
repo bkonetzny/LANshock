@@ -1,6 +1,6 @@
 <cfcomponent output="false" hint="I am a simple object wrapper for attributes scope.">
 <!---
-Copyright 2006 TeraTech, Inc. http://teratech.com/
+Copyright 2006-2007 TeraTech, Inc. http://teratech.com/
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,8 +19,14 @@ limitations under the License.
 				hint="I am the constructor.">
 		<cfargument name="attributes" type="struct" required="true" 
 					hint="I am the attributes scope passed in." />
+		<cfargument name="xfa" type="struct" required="true" 
+					hint="I am the XFA scope passed in." />
+		<cfargument name="myFusebox" type="any" required="true" 
+					hint="I am the myFusebox object passed in." />
 		
 		<cfset variables.attributes = arguments.attributes />
+		<cfset variables.xfa = arguments.xfa />
+		<cfset variables.myFusebox = arguments.myFusebox />
 		
 		<cfreturn this />
 	
@@ -75,6 +81,44 @@ limitations under the License.
 
 		<cfset structDelete(variables.attributes,arguments.valueName) />
 
+	</cffunction>
+	
+	<cffunction name="xfa" returntype="string" access="public" output="false" 
+				hint="I set/get an eXit FuseAction.">
+		<cfargument name="name" type="string" required="true" 
+					hint="I am the XFA to get/set." />
+		<cfargument name="value" type="string" required="false" 
+					hint="I am the optional value to set." />
+		
+		<cfset var xfaValue = "" />
+		<cfset var n = arrayLen(arguments) />
+		<cfset var i = 3 />
+		
+		<cfif structKeyExists(arguments,"value")>
+			<cfif listLen(arguments.value,".") gte 2>
+				<cfset variables.xfa[arguments.name] = arguments.value />
+			<cfelse>
+				<cfset variables.xfa[arguments.name] = variables.myFusebox.thisCircuit & "." & arguments.value />
+			</cfif>
+			<cfif n mod 2 neq 0>
+				<cfthrow type="fusebox.badGrammar,illegalArguments" 
+						message="Odd arguments to event.xfa()" 
+						detail="event.xfa() must be passed an even number of arguments as name-value pairs." />
+			</cfif>
+			<cfloop condition="i lt n">
+				<cfset variables.xfa[arguments.name] = variables.xfa[arguments.name] &
+						variables.myFusebox.getApplication().queryStringSeparator & arguments[i] &
+								variables.myFusebox.getApplication().queryStringEqual & arguments[i+1] />
+				<cfset i = i + 2 />
+			</cfloop>
+		</cfif>
+		
+		<cfif structKeyExists(variables.xfa,arguments.name)>
+			<cfset xfaValue = variables.xfa[arguments.name] />
+		</cfif>
+		
+		<cfreturn xfaValue />
+		
 	</cffunction>
 
 </cfcomponent>

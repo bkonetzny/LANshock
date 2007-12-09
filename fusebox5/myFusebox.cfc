@@ -1,5 +1,5 @@
 <!---
-Copyright 2006 TeraTech, Inc. http://teratech.com/
+Copyright 2006-2007 TeraTech, Inc. http://teratech.com/
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,9 +15,8 @@ limitations under the License.
 --->
 <cfcomponent hint="I provide the per-request myFusebox data structure and some convenience methods.">
 	<cfscript>
-	// ticket 171 created Fusebox 5.1.0
-	// this.version.runtime     = "5.1.0.#REReplace('$LastChangedRevision$','[^0-9]','','all')#";
-	this.version.runtime     = "5.1.0";
+	this.version.runtime     = "5.5.0";
+	// this.version.runtime     = "5.5.0.#REReplace('$LastChangedRevision$','[^0-9]','','all')#";
 	  
 	this.version.loader      = "unknown";
 	this.version.transformer = "unknown";
@@ -46,6 +45,9 @@ limitations under the License.
 	
 	// stack frame for do/include parameters:
 	this.stack = structNew();
+	
+	// FB55: ability to turn debug output off per-request:
+	this.showDebug = true;
 	</cfscript>
 	
 	<cffunction name="init" returntype="myFusebox" access="public" output="false" 
@@ -54,8 +56,15 @@ limitations under the License.
 					hint="I am FUSEBOX_APPLICATION_KEY." />
 		<cfargument name="attributes" type="struct" required="true" 
 					hint="I am the attributes (URL and form variables) structure." />
+		<cfargument name="topLevelVariablesScope" type="any" required="true" 
+					hint="I am the top-level variables scope." />
 		
 		<cfset var theFusebox = structNew() />
+		<cfset var urlParam = "" />
+		<cfset var urlLastArg = "" />
+		<cfset var urlIsArg = true />
+		
+		<cfset variables.variablesScope = arguments.topLevelVariablesScope />
 		
 		<cfset variables.created = getTickCount() />
 		<cfset variables.log = arrayNew(1) />
@@ -64,6 +73,9 @@ limitations under the License.
 		<cfset variables.appKey = arguments.appKey />
 		<cfset variables.attributes = arguments.attributes />
 		
+		<!--- FB5: indicates whether application was started on this request --->
+		<cfset this.applicationStart = false />
+
 		<!--- we can't guarantee the fusebox exists in application scope yet... --->
 		<cfif structKeyExists(application,variables.appKey)>
 			<cfset theFusebox = application[variables.appKey] />
@@ -111,7 +123,21 @@ limitations under the License.
 			</cfdefaultcase>
 			</cfswitch>
 		</cfif>
-
+		
+		<!--- handle SES URLs if appropriate --->
+		<cfif structKeyExists(theFusebox,"queryStringStart") and theFusebox.queryStringStart is not "?">
+			<!--- looks like SES URL generation is enabled, process CGI.PATH_INFO (we add &= to catch improperly formed URLs) --->
+			<cfloop list="#CGI.PATH_INFO#" index="urlParam" 
+					delimiters="#theFusebox.queryStringStart##theFusebox.queryStringSeparator##theFusebox.queryStringEqual#&=">
+			   <cfif urlIsArg>
+			      <cfset urlLastArg = urlParam />
+			   <cfelse>
+			      <cfset variables.attributes[urlLastArg] = urlParam />
+			   </cfif>
+			   <cfset urlIsArg = not urlIsArg />
+			</cfloop>
+		</cfif>
+		
 		<!--- did the user pass in any special "fuseboxDOT" parameters for this request? --->
 		<!--- If so, process them --->
 		<!--- note: only if attributes.fusebox.password matches the application password --->
@@ -190,6 +216,13 @@ limitations under the License.
 	
 	</cffunction>
 	
+	<cffunction name="getApplicationData" returntype="struct" access="public" output="false"
+				hint="I am a convenience method to return a reference to the application data cache.">
+	
+		<cfreturn getApplication().getApplicationData() />
+	
+	</cffunction>
+	
 	<cffunction name="getCurrentCircuit" returntype="any" access="public" output="false" 
 				hint="I am a convenience method to return the current Fusebox circuit object.">
 	
@@ -201,6 +234,20 @@ limitations under the License.
 				hint="I am a convenience method to return the current fuseboxAction (fuseaction) object.">
 	
 		<cfreturn getCurrentCircuit().fuseactions[this.thisFuseaction] />
+	
+	</cffunction>
+	
+	<cffunction name="getOriginalCircuit" returntype="any" access="public" output="false" 
+				hint="I am a convenience method to return the original Fusebox circuit object.">
+	
+		<cfreturn getApplication().circuits[this.originalCircuit] />
+	
+	</cffunction>
+	
+	<cffunction name="getOriginalFuseaction" returntype="any" access="public" output="false" 
+				hint="I am a convenience method to return the original fuseboxAction (fuseaction) object.">
+	
+		<cfreturn getCurrentCircuit().fuseactions[this.originalFuseaction] />
 	
 	</cffunction>
 	
@@ -226,7 +273,6 @@ limitations under the License.
 		
 	</cffunction>
 
-	
 	<cffunction name="getMyself" returntype="string" access="public" output="false" 
 				hint="I return the 'myself' string, e.g., index.cfm?fuseaction=.">
 
@@ -247,6 +293,97 @@ limitations under the License.
 		
 	</cffunction>
 
+	<cffunction name="do" returntype="string" access="public" output="true" 
+				hint="I compile and execute a specific fuseaction.">
+		<cfargument name="action" type="string" required="true" 
+					hint="I am the full name of the requested fuseaction (circuit.fuseaction)." />
+		<cfargument name="contentVariable" type="string" default="" 
+					hint="I indicate an attributes / event scope variable in which to store the output." />
+		<cfargument name="returnOutput" type="boolean" default="false" 
+					hint="I indicate whether to display output (false - default) or return the output (true)." />
+		<cfargument name="append" type="boolean" default="false" 
+					hint="I indicate whether to append output (false - default) to the content variable." />
+
+		<cfset var c = this.thisCircuit />
+		<cfset var f = this.thisFuseaction />
+		<cfset var output = 
+				getApplication().do(
+					arguments.action,
+					this,
+					arguments.returnOutput or arguments.contentVariable is not "") />
+	
+		<cfset this.thisFuseaction = f />
+		<cfset this.thisCircuit = c />
+			
+		<cfif arguments.contentVariable is not "">
+			<!--- ticket #290 - allow append on content variables --->
+			<cfif structKeyExists(variables.variablesScope,arguments.contentVariable) and arguments.append>
+				<cfset variables.variablesScope[arguments.contentVariable] = variables.variablesScope[arguments.contentVariable] & output />
+			<cfelse>
+				<cfset variables.variablesScope[arguments.contentVariable] = output />
+			</cfif>
+		</cfif>
+		
+		<cfreturn output />
+		
+	</cffunction>
+	
+	<cffunction name="relocate" returntype="void" access="public" output="true" 
+				hint="I provide the same functionality as the relocate verb.">
+		<cfargument name="url" type="string" required="false" />
+		<cfargument name="xfa" type="string" required="false" />
+		<cfargument name="addtoken" type="boolean" default="false" />
+		<cfargument name="type" type="string" default="client" />
+
+		<cfset var theUrl = "" />
+		
+		<!--- url/xfa - exactly one is required --->
+		<cfif structKeyExists(arguments,"url")>
+			<cfif structKeyExists(arguments,"xfa")>
+				<cfthrow type="fusebox.badGrammar.requiredAttributeMissing" 
+						message="Required attribute is missing" 
+						detail="Either the attribute 'url' or 'xfa' is required, for a 'relocate' verb in fuseaction #this.thiscircuit#.#this.thisFuseaction#." />
+			<cfelse>
+				<cfset theUrl = arguments.url />
+			</cfif>
+		<cfelseif structKeyExists(arguments,"xfa")>
+			<cfset theUrl = getMyself() & variables.variablesScope.xfa[arguments.xfa] />
+		<cfelse>
+			<cfthrow type="fusebox.badGrammar.requiredAttributeMissing" 
+					message="Required attribute is missing" 
+					detail="Either the attribute 'url' or 'xfa' is required, for a 'relocate' verb in fuseaction #this.thiscircuit#.#this.thisFuseaction#." />
+		</cfif>
+		
+		<!--- type - server|client|moved - we do not support javascript here --->
+		<cfif arguments.type is "server">
+
+			<cfset getPageContext().forward(theUrl) />
+
+		<cfelseif arguments.type is "client">
+
+			<cflocation url="#theUrl#" addtoken="#arguments.addtoken#" />
+
+		<cfelseif arguments.type is "moved">
+
+			<cfheader statuscode="301" statustext="Moved Permanently" />
+			<cfheader name="Location" value="#theUrl#" />
+			
+		<cfelse>
+			<cfthrow type="fusebox.badGrammar.invalidAttributeValue" 
+					message="Attribute has invalid value" 
+					detail="The attribute 'type' must either be ""server"", ""client"" or ""moved"", for a 'relocate' verb in fuseaction #this.thisCircuit#.#this.thisFuseaction#." />
+		</cfif>
+		
+		<cfabort />
+
+	</cffunction>
+	
+	<cffunction name="variables" returntype="any" access="public" output="false" hint="I return the top-level variables scope.">
+	
+		<cfreturn variables.variablesScope />
+	
+	</cffunction>
+	
 	<cffunction name="enterStackFrame" returntype="void" access="public" output="false" 
 				hint="I create a new stack frame (for scoped parameters to do/include).">
 		
@@ -295,35 +432,46 @@ limitations under the License.
 		<cfset var result = "" />
 		<cfset var i = 0 />
 		
-		<cfsavecontent variable="result">
-			<br />
-			<div style="clear:both;padding-top:10px;border-bottom:1px Solid #CCC;font-family:verdana;font-size:16px;font-weight:bold">Fusebox debugging:</div>
-			<br />
-			<table cellpadding="2" cellspacing="0" width="100%" style="border:1px Solid ##CCC;font-family:verdana;font-size:11pt;">
-				<tr style="background:##EAEAEA">
-					<td style="border-bottom:1px Solid ##CCC;font-family:verdana;font-size:11pt;"><strong>Time</strong></td>
-					<td style="border-bottom:1px Solid ##CCC;font-family:verdana;font-size:11pt;"><strong>Category</strong></td>
-					<td style="border-bottom:1px Solid ##CCC;font-family:verdana;font-size:11pt;"><strong>Message</strong></td>
-					<td style="border-bottom:1px Solid ##CCC;font-family:verdana;font-size:11pt;"><strong>Count</strong></td>
-				</tr>
-				<cfloop index="i" from="1" to="#arrayLen(variables.log)#">
-					<cfoutput>
-						<cfif i mod 2>
-							<tr style="background:##F9F9F9">
-						<cfelse>
-							<tr style="background:##FFFFFF">
-						</cfif>
-						<td valign="top" style="font-size:10pt;border-bottom:1px Solid ##CCC;font-family:verdana;">#variables.log[i].time#ms</td>
-						<td valign="top" style="font-size:10pt;border-bottom:1px Solid ##CCC;font-family:verdana;">#variables.log[i].type#</td>
-						<td valign="top" style="font-size:10pt;border-bottom:1px Solid ##CCC;font-family:verdana;">#variables.log[i].message#</td>
-						<td valign="top" align="center" style="font-size:10pt;border-bottom:1px Solid ##CCC;font-family:verdana;">#variables.log[i].occurrence#</td>
-					</tr></cfoutput>
-				</cfloop>
-			</table>
-		</cfsavecontent>
+		<cfif this.showDebug>
+			<cfsavecontent variable="result">
+				<style type="text/css">
+					.fuseboxdebug {clear:both;padding-top:10px;}
+					.fuseboxdebug * {font-family:verdana,sans-serif;}
+					.fuseboxdebug h3 {margin:16px 0 16px 0;padding:0;border-bottom:1px solid #CCC;font-size:16px;}
+					.fuseboxdebug table th {font-size:11pt;text-align:left;}
+					.fuseboxdebug table tr.odd {background:#F9F9F9;}
+					.fuseboxdebug table tr.even {background:#FFF;}
+					.fuseboxdebug table td {border-bottom:1px solid #CCC;font-size:10pt;text-align:left;vertical-align:top;}
+					.fuseboxdebug table td.count {text-align:center;}
+				</style>
+				<div class="fuseboxdebug">
+					<h3>Fusebox debugging:</h3>
+					<table cellpadding="2" cellspacing="0" width="100%">
+						<tr>
+							<th>Time</td>
+							<th>Category</td>
+							<th>Message</td>
+							<th>Count</td>
+						</tr>
+						<cfloop index="i" from="1" to="#arrayLen(variables.log)#">
+							<cfoutput>
+								<cfif i mod 2>
+									<tr class="odd">
+								<cfelse>
+									<tr class="even">
+								</cfif>
+								<td>#variables.log[i].time#ms</td>
+								<td>#variables.log[i].type#</td>
+								<td>#variables.log[i].message#</td>
+								<td class="count">#variables.log[i].occurrence#</td>
+							</tr></cfoutput>
+						</cfloop>
+					</table>
+				</div>
+			</cfsavecontent>
+		</cfif>
 		
 		<cfreturn result />
 		
 	</cffunction>
-
 </cfcomponent>

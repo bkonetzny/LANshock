@@ -11,10 +11,10 @@ $LastChangedRevision: 72 $
 <cfscript>
 	if (fb_.verbInfo.executionMode is "start") {
 		
-		fb_appendLine('<cfinvoke component="##application.lanshock.environment.componentpath##core.language" method="getLanguageStrings" returnvariable="#fb_.verbInfo.attributes.returnvariable#">');
+		fb_appendLine('<cfinvoke component="##application.lanshock.environment.componentpath##core.language" method="loadProperties" returnvariable="#fb_.verbInfo.attributes.returnvariable#">');
 		fb_appendLine('<cfinvokeargument name="base" value="###fb_.verbInfo.attributes.returnvariable###">');
 		fb_appendLine('<cfinvokeargument name="lang" value="##request.session.lang##">');
-		fb_appendLine('<cfinvokeargument name="path" value="##application.module[myfusebox.thiscircuit].module_path_rel##">');
+		fb_appendLine('<cfinvokeargument name="file" value="#fb_.verbInfo.attributes.load#">');
 		fb_appendLine('</cfinvoke>');
 
 	} else {

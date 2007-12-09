@@ -1,5 +1,5 @@
 <!---
-Copyright 2006 TeraTech, Inc. http://teratech.com/
+Copyright 2006-2007 TeraTech, Inc. http://teratech.com/
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,14 +25,19 @@ limitations under the License.
 	this.pluginphases = structNew();
 	this.nonFatalExceptionPrefix = "INFORMATION (can be ignored): ";
 
-	this.precedenceFormOrURL = "form";
+	// this always has to be overridden:
 	this.defaultFuseaction = "";
+
+	this.precedenceFormOrURL = "form";
 	this.fuseactionVariable = "fuseaction";
-	// this is ignored:
+
+	// these are all ignored:
 	this.parseWithComments = false;
 	this.ignoreBadGrammar = true;
 	this.allowLexicon = true;
 	this.useAssertions = true;
+	
+	// FB55: this is implemented now:
 	this.conditionalParse = false;
 	
 	this.password = "";
@@ -44,6 +49,7 @@ limitations under the License.
 	// this is ignored:
 	this.parseWithIndentation = this.parseWithComments;
 	this.strictMode = false;
+	this.allowImplicitFusebox = false;
 	this.allowImplicitCircuits = false;
 	this.debug = false;
 	</cfscript>
@@ -58,12 +64,11 @@ limitations under the License.
 					hint="I am the myFusebox data structure." />
 		<cfargument name="callerPath" type="string" required="true" 
 					hint="I am FUSEBOX_CALLER_PATH." />
+		<cfargument name="appParameters" type="struct" required="true" 
+					hint="I am FUSEBOX_PARAMETERS." />
 		
-		<!--- ticket 171 created Fusebox 5.1.0 --->
-<!--- 		
-		<cfset var myVersion = "5.1.0.#REReplace('$LastChangedRevision$','[^0-9]','','all')#" />
- --->		
-		<cfset var myVersion = "5.1.0" />
+		<cfset var myVersion = "5.5.0" />
+		<!--- <cfset var myVersion = "5.5.0.#REReplace('$LastChangedRevision$','[^0-9]','','all')#" /> --->
 
 		<cfset variables.factory = createObject("component","fuseboxFactory").init() />
 		<cfset variables.fuseboxLexicon = variables.factory.getBuiltinLexicon() />
@@ -94,13 +99,13 @@ limitations under the License.
 		<cfset this.errortemplatesPath = "errortemplates/" />
 		
 		<!--- new in Fusebox 5.1: --->
-		<cfset this.self = "index.cfm" />
+		<cfset this.self = CGI.SCRIPT_NAME />
 		<cfset this.queryStringStart = "?" />
 		<cfset this.queryStringSeparator = "&" />
 		<cfset this.queryStringEqual = "=" />
 		
 		<cfset this.circuits = structNew() />
-		<cfset reload(arguments.appKey,arguments.appPath,arguments.myFusebox) />
+		<cfset reload(arguments.appKey,arguments.appPath,arguments.myFusebox,arguments.appParameters) />
 
 		<cfif this.strictMode>
 			<!--- rootdirectory was deprecated in Fusebox 5 so we no longer set it it strict mode: --->
@@ -122,24 +127,38 @@ limitations under the License.
 					hint="I am FUSEBOX_APPLICATION_PATH." />
 		<cfargument name="myFusebox" type="myFusebox" required="true" 
 					hint="I am the myFusebox data structure." />
+		<cfargument name="appParameters" type="struct" required="true" 
+					hint="I am FUSEBOX_PARAMETERS." />
 		
 		<cfset var fbFile = "fusebox.xml.cfm" />
 		<cfset var fbFileAlt = "fusebox.xml" />
+		<cfset var fbFileExists = false />
 		<cfset var fbXML = "" />
 		<cfset var fbCode = "" />
 		<cfset var encodings = 0 />
 		<cfset var needToLoad = true />
 		<cfset var fuseboxFiles = 0 />
-		<cfset var myFuseboxFilePath = "" />
-		<cfset var jFuseboxFile = "" />
-		<cfset var dtLastModified = "" />
+		<cfset var p = "" />
+			
+		<!--- FB55: cache of parsed file signatures --->
+		<cfset variables.parsedFileCache = structNew() />
 		
+		<!--- FB55: can override fusebox.xml parameters programmatically --->
+		<!--- this sets up the defaults for the reload - prior to actually reading parameters --->
+		<cfloop collection="#arguments.appParameters#" item="p">
+			<cfset this[p] = arguments.appParameters[p] />
+		</cfloop>
+		<cfif structKeyExists(this,"allowImplicitFusebox") and this.allowImplicitFusebox>
+			<cfset this.allowImplicitCircuits = true />
+		</cfif>
+
 		<!---
 			since we need to check the file, regardless of whether we load it,
 			we might as well do the test up front and perform the strict check
 			that just one version exists (ticket 135)
 		--->
-		<cfif fileExists(this.approotdirectory & fbFile)>
+		<cfset fbFileExists = fileExists(this.approotdirectory & fbFile) />
+		<cfif fbFileExists>
 			<cfif this.strictMode and fileExists(this.approotdirectory & fbFileAlt)>
 				<cfthrow type="fusebox.multipleFuseboxXML" 
 						message="Both 'fusebox.xml' and 'fusebox.xml.cfm' exist" 
@@ -147,37 +166,77 @@ limitations under the License.
 			</cfif>
 		<cfelse>
 			<cfset fbFile = fbFileAlt />
+			<cfset fbFileExists = fileExists(this.approotdirectory & fbFile) />
 		</cfif>
 
 		<cfif structKeyExists(this,"timestamp")>
-			<!--- Java timestamp solution provided by Daniel Schmid --->
-			<cfset myFuseboxFilePath = this.approotdirectory & fbFile />
-			<cfset jFuseboxFile = createObject("java","java.io.File").init(myFuseboxFilePath) />
-			<cfset dtLastModified = createObject("java","java.util.Date").init(jFuseboxFile.lastModified()) />
-			<cfset needToLoad = parseDateTime(dtLastModified) gt parseDateTime(this.timestamp) />
+			<cfif fbFileExists>
+				<!--- we only check the time stamp if the file exists --->
+				<cfset needToLoad = fileModificationDate(this.approotdirectory & fbFile) gt parseDateTime(this.timestamp) />
+			<cfelse>
+				<!---
+					if we loaded the application and there is no fusebox.xml file,
+					then we must have loaded an implicit fusebox.xml file so there
+					is no need to reload it again because an implicit file can't change!
+				--->
+				<cfset needToLoad = false />
+			</cfif>
 		</cfif>
 
 		<cfif needToLoad>
+
 			<cfif this.debug>
 				<cfset arguments.myFusebox.trace("Compiler","Loading fusebox.xml file") />
 			</cfif>
+
 			<!--- attempt to load fusebox.xml(.cfm): --->
-			<cftry>
-				
-				<cffile action="read" file="#this.approotdirectory##fbFile#"
-						variable="fbXML"
-						charset="#this.characterEncoding#" />
-						
-				<cfset variables.fuseboxFileExtension = listLast(fbFile,".") />
-				
-				<cfcatch type="any">
+			<cfif fbFileExists>
+				<cftry>
+					
+					<cffile action="read" file="#this.approotdirectory##fbFile#"
+							variable="fbXML"
+							charset="#this.characterEncoding#" />
+							
+					<cfset variables.fuseboxFileExtension = listLast(fbFile,".") />
+					
+					<cfcatch type="security">
+						<!--- cffile denied by sandbox security --->
+						<cfthrow type="fusebox.security" 
+								message="security error reading fusebox.xml" 
+								detail="The file '#fbFile#' in the directory #this.approotdirectory# could not be read because sandbox security has disabled the cffile tag."
+								extendedinfo="#cfcatch.detail#" />
+					</cfcatch>
+					
+					<cfcatch type="any">
+						<!--- the file exists but we cannot read it --->
+						<cfthrow type="fusebox.missingFuseboxXML" 
+								message="missing fusebox.xml" 
+								detail="The file '#fbFile#' in the directory #this.approotdirectory# could not be read."
+								extendedinfo="#cfcatch.detail#" />
+					</cfcatch>
+					
+				</cftry>
+
+			<cfelse>
+
+				<cfif this.allowImplicitFusebox>
+
+					<cfif this.debug>
+						<cfset arguments.myFusebox.trace("Compiler","Implicit fusebox.xml(.cfm) identified") />
+					</cfif>
+					<cfset fbXML = "<fusebox/>" />
+					<!--- if the fusebox.xml file is missing there are no circuit declarations: --->
+					<cfset this.allowImplicitCircuits = true />
+
+				<cfelse>
+
 					<cfthrow type="fusebox.missingFuseboxXML" 
 							message="missing fusebox.xml" 
-							detail="The file '#fbFile#' could not be found in the directory #this.approotdirectory#."
-							extendedinfo="#cfcatch.detail#" />
-				</cfcatch>
-				
-			</cftry>
+							detail="The file '#fbFile#' could not be found in the directory #this.approotdirectory#." />
+
+				</cfif>
+
+			</cfif>
 			
 			<cftry>
 				
@@ -212,6 +271,34 @@ limitations under the License.
 			</cfif>
 
 			<cfset loadParameters(fbCode) />
+
+			<!--- FB55: can override fusebox.xml parameters programmatically --->
+			<cfloop collection="#arguments.appParameters#" item="p">
+				<cfset this[p] = arguments.appParameters[p] />
+			</cfloop>
+			<cfif structKeyExists(this,"allowImplicitFusebox") and this.allowImplicitFusebox>
+				<cfset this.allowImplicitCircuits = true />
+			</cfif>
+
+			<!---
+				if the user overrides certain path variables, we need to normalize them:
+				- this.parsePath (reset parseRootPath)
+				- this.pluginsPath
+				- this.lexiconPath
+				- this.errortemplatesPath
+				normalizing means changing all \ to / and appending / if not present
+			--->
+			<cfset this.parsePath = normalizePartialPath(this.parsePath) />
+			<cfset this.parseRootPath = relativePath(expandFuseboxPath(this.parsePath),getApplicationRoot()) />
+			<cfset this.pluginsPath = normalizePartialPath(this.pluginsPath) />
+			<cfset this.lexiconPath = normalizePartialPath(this.lexiconPath) />
+			<cfset this.errortemplatesPath = normalizePartialPath(this.errortemplatesPath) />
+			
+			<!--- Fusebox 5.1: default this.myself: --->
+			<cfif not structKeyExists(this,"myself")>
+				<cfset this.myself = getDefaultMyself(this.self) />
+			</cfif>
+			
 			<cfset loadLexicons(fbCode) />
 			<cfset loadClasses(fbCode) />
 			<cfset loadPlugins(fbCode) />
@@ -257,6 +344,7 @@ limitations under the License.
 	
 	</cffunction>
 	
+	<!--- FB55: exposes this directly in myFusebox for convenience --->
 	<cffunction name="getApplicationData" returntype="struct" access="public" output="false" 
 				hint="I return a reference to the application data cache. This is a new concept in Fusebox 5.">
 	
@@ -328,7 +416,7 @@ limitations under the License.
 					hint="I am the myFusebox data structure." />
 
 		<cfset var myVersion = getVersion() />
-		<cfset var circuit = listFirst(arguments.circuitFuseaction,".") />
+		<cfset var circuit = "" />
 		<cfset var fuseaction = listLast(arguments.circuitFuseaction,".") />
 		<cfset var i = 0 />
 		<cfset var n = 0 />
@@ -340,24 +428,10 @@ limitations under the License.
 		<cfset var result = structNew() />
 		<cfset var writer = 0 />
 		
-		<!--- validate format of the fuseaction: --->
-		<cfif listLen(arguments.circuitFuseaction,".") neq 2>
-			<cfthrow type="fusebox.malformedFuseaction" 
-					message="malformed Fuseaction" 
-					detail="You specified a malformed Fuseaction of #arguments.circuitFuseaction#. A fully qualified Fuseaction must be in the form [Circuit].[Fuseaction]." />	
-		</cfif>
-		
 		<!--- to track reloads on this request --->
 		<cfparam name="request.__fusebox.CircuitsLoaded" default="#structNew()#" />
 		<cfparam name="request.__fusebox.fuseactionsDone" default="#structNew()#" />
 		
-		<!--- set up myFusebox values for this request: --->
-		<cfset arguments.myFusebox.originalCircuit = circuit />
-		<cfset arguments.myFusebox.originalFuseaction = fuseaction />
-		<cfloop collection="#this.plugins#" item="i">
-			<cfset arguments.myFusebox.plugins[i] = structNew() />
-		</cfloop>
-
 		<!--- note that in Fusebox 5, these are really all the same set of files --->
 		<cfset arguments.myFusebox.version.loader = myVersion />
 		<cfset arguments.myFusebox.version.parser = myVersion />
@@ -368,6 +442,25 @@ limitations under the License.
 					message="The loader is not the same version as the runtime" />
 		</cfif>
 		
+		<!--- validate format of the fuseaction: --->
+		<cfif listLen(arguments.circuitFuseaction,".") lt 2>
+			<cfthrow type="fusebox.malformedFuseaction" 
+					message="malformed Fuseaction" 
+					detail="You specified a malformed Fuseaction of #arguments.circuitFuseaction#. A fully qualified Fuseaction must be in the form [Circuit].[Fuseaction]." />	
+		</cfif>
+		
+		<cfset circuit = left(arguments.circuitFuseaction,len(arguments.circuitFuseaction)-len(fuseaction)-1) />
+
+		<!--- set up myFusebox values for this request: --->
+		<cfset arguments.myFusebox.originalCircuit = circuit />
+		<cfset arguments.myFusebox.originalFuseaction = fuseaction />
+		<cfloop collection="#this.plugins#" item="i">
+			<cfset arguments.myFusebox.plugins[i] = structNew() />
+		</cfloop>
+
+		<!--- ticket 293 - prevent dynamic do() from executing until prerequisites complete --->
+		<cfset request.__fusebox.dynamicDoOK = true />
+		
 		<!--- check access on request - if the circuit/fuseaction doesn't exist we trap it later --->
 		<cfif structKeyExists(this.circuits,circuit) and 
 				structKeyExists(this.circuits[circuit].fuseactions,fuseaction) and
@@ -376,7 +469,7 @@ limitations under the License.
 					message="Invalid Access Modifier" 
 					detail="You tried to access #circuit#.#fuseaction# which does not have access modifier of public. A Fuseaction which is to be accessed from anywhere outside the application (such as called via an URL, or a FORM, or as a web service) must have an access modifier of public or if unspecified at least inherit such a modifier from its circuit.">
 		</cfif>
-		
+
 		<cfif not fileExists(fullParsedFile) or arguments.myFusebox.parameters.parse>
 			<cflock name="#fullParsedFile#" type="exclusive" timeout="300">
 				<cfif not fileExists(fullParsedFile) or arguments.myFusebox.parameters.parse>
@@ -390,17 +483,16 @@ limitations under the License.
 					<cfset writer.setFuseaction(fuseaction) />
 					<cfif variables.hasProcess["appinit"]>
 						<cfset writer.setPhase("appinit") />
-						<cfset writer.println("<cfif myFusebox.applicationStart>") />
-						<cfset writer.println('	<cfif not myFusebox.getApplication().applicationStarted>') />
-						<cfset writer.println('		<cflock name="##application.ApplicationName##_fusebox_##FUSEBOX_APPLICATION_KEY##_appinit" type="exclusive" timeout="30">') />
-						<cfset writer.println('			<cfif not myFusebox.getApplication().applicationStarted>') />
+						<cfset writer.println("<cfif myFusebox.applicationStart or") />
+						<cfset writer.println('		not myFusebox.getApplication().applicationStarted>') />
+						<cfset writer.println('	<cflock name="##application.ApplicationName##_fusebox_##FUSEBOX_APPLICATION_KEY##_appinit" type="exclusive" timeout="30">') />
+						<cfset writer.println('		<cfif not myFusebox.getApplication().applicationStarted>') />
 						<cfset request.__fusebox.SuppressPlugins = true />
 						<cfset variables.process["appinit"].compile(writer) />
-						<cfset writer.println('				<cfset myFusebox.getApplication().applicationStarted = true />') />
-						<cfset writer.println('			</cfif>') />
-						<cfset writer.println('		</cflock>') />
-						<cfset writer.println('	</cfif>') />
-						<cfset writer.println("</cfif>") />
+						<cfset writer.println('			<cfset myFusebox.getApplication().applicationStarted = true />') />
+						<cfset writer.println('		</cfif>') />
+						<cfset writer.println('	</cflock>') />
+						<cfset writer.println('</cfif>') />
 					</cfif>
 					<cfset request.__fusebox.SuppressPlugins = false />
 					<cfif structKeyExists(this.pluginPhases,"preProcess")>
@@ -426,7 +518,7 @@ limitations under the License.
 						</cfloop>
 					</cfif>
 					<cfset writer.setPhase("requestedFuseaction") />
-					<cfset compile(writer,circuit,fuseaction) />
+					<cfset compile(writer,circuit,fuseaction,true) />
 					<cfif structKeyExists(this.pluginPhases,"postFuseaction")>
 						<cfset n = arrayLen(this.pluginPhases["postFuseaction"]) />
 						<cfloop from="1" to="#n#" index="i">
@@ -462,7 +554,130 @@ limitations under the License.
 						<cfset writer.rawPrintln('<' & 'cfcatch><' & 'cfrethrow><' & '/cfcatch>') />
 					</cfif>
 					<cfset writer.rawPrintln("</cftry>") />
-					<cfset writer.close() />
+					<cfset writer.close(variables.parsedFileCache) />
+				</cfif>
+			</cflock>
+		</cfif>
+		
+		<cfset result.parsedName = parsedName />
+		<cfif left(parsedFile,1) is "/">
+			<cfset result.parsedFile = parsedFile />
+		<cfelse>
+			<cfset result.parsedFile = this.getCoreToAppRootPath() & parsedFile />
+		</cfif>
+		<cfset result.lockName = fullParsedFile />
+		
+		<cfreturn result />
+		
+	</cffunction>
+	
+	<cffunction name="do" returntype="string" access="public" output="true" 
+				hint="I compile and execute a specific fuseaction.">
+		<cfargument name="circuitFuseaction" type="string" required="true" 
+					hint="I am the full name of the requested fuseaction (circuit.fuseaction)." />
+		<cfargument name="myFusebox" type="myFusebox" required="true" 
+					hint="I am the myFusebox data structure." />
+		<cfargument name="returnOutput" type="boolean" required="true"
+					hint="I indicate whether to display output (false) or return the output (true)." />
+
+		<cfset var parsedFileInfo = 0 />
+		<cfset var output = "" />
+
+		<!--- ticket 293 - prevent dynamic do() from executing until prerequisites complete --->
+		<cfif not structKeyExists(request,"__fusebox") or 
+				not structKeyExists(request.__fusebox,"dynamicDoOK") or 
+					not request.__fusebox.dynamicDoOK>
+			<cfif structKeyExists(arguments.myFusebox,"originalCircuit") and 
+					structKeyExists(arguments.myFusebox,"originalFuseaction")>
+				<cfset output = output & " while executing " & arguments.myFusebox.originalCircuit & 
+						"." & arguments.myFusebox.originalFuseaction />
+			</cfif>
+			<cfthrow type="fusebox.dynamicDoNotAllowed" message="dynamic 'do' not allowed" 
+					detail="This request did not reach the state where dynamic 'do' is possible#output#." />
+		</cfif>
+		
+		<!--- allow for abbreviated circuitFuseaction form: --->
+		<cfif listLen(arguments.circuitFuseaction,".") lt 2>
+			<cfset arguments.circuitFuseaction = arguments.myFusebox.thisCircuit & "." & arguments.circuitFuseaction />
+		</cfif>
+		<!--- TODO: check for accessibility --->
+		
+		<cfset parsedFileInfo = compileDynamicDo(arguments.circuitFuseaction,arguments.myFusebox) />
+		
+		<cfif this.debug>
+			<cfset arguments.myFusebox.trace("Runtime","&lt;do action=""#arguments.circuitFuseaction#""/&gt; -- dynamic") />
+		</cfif>
+		<cfinvoke component="fuseboxExecutionContext" method="__executeDynamicDo" returnvariable="output"
+					parsedFileInfo="#parsedFileInfo#" myFusebox="#arguments.myFusebox#" returnOutput="#arguments.returnOutput#" />
+		
+		<cfreturn output />
+		
+	</cffunction>
+
+	<cffunction name="compileDynamicDo" returntype="struct" access="private" output="false" 
+				hint="I compile a specific fuseaction as a dynamic request.">
+		<cfargument name="circuitFuseaction" type="string" required="true" 
+					hint="I am the full name of the requested fuseaction (circuit.fuseaction)." />
+		<cfargument name="myFusebox" type="myFusebox" required="true" 
+					hint="I am the myFusebox data structure." />
+
+		<cfset var circuit = "" />
+		<cfset var fuseaction = listLast(arguments.circuitFuseaction,".") />
+		<cfset var i = 0 />
+		<cfset var n = 0 />
+		<cfset var needTryOnFuseaction = false />
+		<cfset var parsedName = "do.#lCase(arguments.circuitFuseaction)#.cfm" />
+		<cfset var parsedFile = "#this.parsePath##parsedName#" />
+		<cfset var fullParsedFile = "#this.expandFuseboxPath(this.parsePath)##parsedName#" />
+		<cfset var result = structNew() />
+		<cfset var writer = 0 />
+		
+		<!--- validate format of the fuseaction: --->
+		<cfif listLen(arguments.circuitFuseaction,".") lt 2>
+			<cfthrow type="fusebox.malformedFuseaction" 
+					message="malformed Fuseaction" 
+					detail="You specified a malformed Fuseaction of #arguments.circuitFuseaction#. A fully qualified Fuseaction must be in the form [Circuit].[Fuseaction]." />	
+		</cfif>
+		
+		<cfset circuit = left(arguments.circuitFuseaction,len(arguments.circuitFuseaction)-len(fuseaction)-1) />
+
+		<cfif not fileExists(fullParsedFile) or arguments.myFusebox.parameters.parse>
+			<cflock name="#fullParsedFile#" type="exclusive" timeout="300">
+				<cfif not fileExists(fullParsedFile) or arguments.myFusebox.parameters.parse>
+					<cfset writer = createObject("component","fuseboxWriter").init(this,arguments.myFusebox) />
+					<cfset writer.open(parsedName) />
+					<cfset writer.rawPrintln("<!--- circuit: #circuit# --->") />
+					<cfset writer.rawPrintln("<!--- fuseaction: #fuseaction# --->") />
+					<cfset writer.setCircuit(circuit) />
+					<cfset writer.setFuseaction(fuseaction) />
+					<cfif structKeyExists(this.pluginPhases,"fuseactionException") and
+							arrayLen(this.pluginPhases["fuseactionException"]) gt 0 and
+							not request.__fusebox.SuppressPlugins>
+						<cfset needTryOnFuseaction = true />
+						<cfset writer.rawPrintln("<cftry>") />
+					</cfif>
+					<cfif structKeyExists(this.pluginPhases,"preFuseaction")>
+						<cfset n = arrayLen(this.pluginPhases["preFuseaction"]) />
+						<cfloop from="1" to="#n#" index="i">
+							<cfset this.pluginPhases["preFuseaction"][i].compile(writer) />
+						</cfloop>
+					</cfif>
+					<cfset writer.setPhase("requestedFuseaction") />
+					<cfset compile(writer,circuit,fuseaction) />
+					<cfif structKeyExists(this.pluginPhases,"postFuseaction")>
+						<cfset n = arrayLen(this.pluginPhases["postFuseaction"]) />
+						<cfloop from="1" to="#n#" index="i">
+							<cfset this.pluginPhases["postFuseaction"][i].compile(writer) />
+						</cfloop>
+					</cfif>
+					<cfif needTryOnFuseaction>
+						<cfset n = arrayLen(this.pluginPhases["fuseactionException"]) />
+						<cfloop from="1" to="#n#" index="i">
+							<cfset this.pluginPhases["fuseactionException"][i].compile(writer) />
+						</cfloop>
+						<cfset writer.rawPrintln("</cftry>") />
+					</cfif>
+					<cfset writer.close(variables.parsedFileCache) />
 				</cfif>
 			</cflock>
 		</cfif>
@@ -487,13 +702,22 @@ limitations under the License.
 					hint="I am the circuit name. I am required but it's faster to specify that I am not required." />
 		<cfargument name="fuseaction" type="any" required="false" 
 					hint="I am the fuseaction name, within the specified circuit." />
+		<cfargument name="topLevel" type="boolean" default="false" 
+					hint="I specify whether or not this is a top-level (public) request." />
 	
 		<cfset var c = "" />
 
 		<cfif not structKeyExists(this.circuits,arguments.circuit)>
-			<cfthrow type="fusebox.undefinedCircuit" 
-					message="undefined Circuit" 
-					detail="You specified a Circuit of #arguments.circuit# which is not defined." />
+			<cfif this.allowImplicitCircuits>
+				<!--- FB55: attempt to create an implicit circuit --->
+				<cfset this.circuits[arguments.circuit] = 
+						createObject("component","fuseboxImplicitCircuit")
+							.init(this,arguments.circuit,arguments.writer.getMyFusebox()) />
+			<cfelse>
+				<cfthrow type="fusebox.undefinedCircuit" 
+						message="undefined Circuit" 
+						detail="You specified a Circuit of #arguments.circuit# which is not defined." />
+			</cfif>
 		</cfif>
 		<!--- FB5: development-circuit-load only reloads the requested circuit --->
 		<cfif this.mode is "development-circuit-load">
@@ -506,7 +730,7 @@ limitations under the License.
 	
 		<cfset c = arguments.writer.setCircuit(arguments.circuit) />
 		<cfset this.circuits[arguments.circuit]
-				.compile(arguments.writer,arguments.fuseaction) />
+				.compile(arguments.writer,arguments.fuseaction,arguments.topLevel) />
 		<cfset arguments.writer.setCircuit(c) />
 		
 	</cffunction>
@@ -951,25 +1175,6 @@ limitations under the License.
 			</cfif>
 		</cfloop>
 		
-		<!---
-			if the user overrides certain path variables, we need to normalize them:
-			- this.parsePath (reset parseRootPath)
-			- this.pluginsPath
-			- this.lexiconPath
-			- this.errortemplatesPath
-			normalizing means changing all \ to / and appending / if not present
-		--->
-		<cfset this.parsePath = normalizePartialPath(this.parsePath) />
-		<cfset this.parseRootPath = relativePath(expandFuseboxPath(this.parsePath),getApplicationRoot()) />
-		<cfset this.pluginsPath = normalizePartialPath(this.pluginsPath) />
-		<cfset this.lexiconPath = normalizePartialPath(this.lexiconPath) />
-		<cfset this.errortemplatesPath = normalizePartialPath(this.errortemplatesPath) />
-		
-		<!--- Fusebox 5.1: default this.myself: --->
-		<cfif not structKeyExists(this,"myself")>
-			<cfset this.myself = getDefaultMyself(this.self) />
-		</cfif>
-		
 	</cffunction>
 	
 	<cffunction name="getDefaultMyself" returntype="string" access="public" output="false" 
@@ -1084,8 +1289,10 @@ limitations under the License.
 		<cfargument name="path" type="string" required="true" 
 					hint="I am the path to resolve." />
 		
-		<cfset var resolvedPath = arguments.path />
+		<cfset var resolvedPath = replace(arguments.path,"\","/","all") />
 		<cfset var leadingSlash = left(resolvedPath,1) is "/" />
+		<!--- UNC fix from Phil Muhm - ticket 239 --->
+		<cfset var leadingDoubleSlash = left(resolvedPath,2) is "//" />
 		<cfset var trailingSlash = right(resolvedPath,1) is "/" />
 		<cfset var segment = ""/>
 		<cfset var j = 1 />
@@ -1123,6 +1330,10 @@ limitations under the License.
 		<cfif trailingSlash>
 			<cfset resolvedPath = resolvedPath & "/" />
 		</cfif>
+		<!--- UNC fix from Phil Muhm - ticket 239 --->
+		<cfif leadingDoubleSlash>
+			<cfset resolvedPath = "/" & resolvedPath />
+		</cfif>
 
 		<cfreturn resolvedPath />
 		
@@ -1143,4 +1354,79 @@ limitations under the License.
 		
 	</cffunction>
 	
+	<cffunction name="locateCfc" returntype="string" access="public" output="false"
+				hint="I deduce the dot-separated path to a CFC given its file system path (and a few heuristics).">
+		<cfargument name="filename" type="string" required="true" />
+	
+		<cfset var cfcPath = getCanonicalPath(filename) />
+		<cfset var webRoot = getCanonicalPath(expandPath("/")) />
+		<cfset var lenWebRoot = len(webRoot) />
+		<cfset var lenAppRoot = len(getApplicationRoot()) />
+		<cfset var lenCfcPath = len(cfcPath) />
+		<cfset var cfcDotPath = "" />
+		<cfset var firstSlash = 0 />
+		
+		<cfif lenCfcPath gt lenWebRoot and
+				left(cfcPath,lenWebRoot) is webRoot>
+			<!--- looks like it is under the webroot --->
+			<cfset cfcDotPath = replace(mid(cfcPath,lenWebRoot+1,lenCfcPath-lenWebRoot-4),"/",".","all") />
+		<cfelse>
+			<!--- must be mapped --->
+			<cfif lenCfcPath gt lenAppRoot and
+					left(cfcPath,lenAppRoot) is getApplicationRoot()>
+				<!--- looks like it is under the approot - assume approot is a mapping --->
+				<cfset cfcDotPath = listLast(getApplicationRoot(),"/") & "." &
+						replace(mid(cfcPath,lenAppRoot+1,lenCfcPath-lenAppRoot-4),"/",".","all") />
+			<cfelse>
+				<!--- dot-convert entire path and attempt to create it, dropping leading directories until we succeed --->
+				<!--- remove stuff up to leading / and also the .cfc at the end --->
+				<!--- note: this is *expensive* --->
+				<cfset firstSlash = find("/",cfcPath) />
+				<cfset cfcDotPath = replace(mid(cfcPath,firstSlash+1,lenCfcPath-firstSlash-4),"/",".","all") />
+				<cfloop condition="listLen(cfcDotPath) gt 0">
+					<cftry>
+						<cfset createObject("component",cfcDotPath) />
+						<!--- succeeded - return it --->
+						<cfbreak />
+						<cfcatch type="any">
+							<!--- failed - keep searching --->
+						</cfcatch>
+					</cftry>
+					<cfset cfcDotPath = listRest(cfcDotPath,".") />
+				</cfloop>
+			</cfif>
+		</cfif>
+		
+		<cfreturn cfcDotPath />
+	
+	</cffunction>
+	
+	<cffunction name="fileModificationDate" returntype="date" access="public" output="false" 
+				hint="I return the last modified date/time for a file.">
+		<cfargument name="filePath" type="string" required="false" 
+					hint="I am the full filesystem path to return the modification date." />
+
+		<!--- Java timestamp solution provided by Daniel Schmid --->
+		<cfset var jFile = 0 />
+		<cfset var dtLastModified = 0 />
+
+		<!--- watch out for hosts that have createObject("java") disabled - this is the buggy version from FB5 so it is not perfect --->
+		<cftry>
+			<cfset jFile = createObject("java","java.io.File").init(arguments.filePath) />
+			<cfset dtLastModified = parseDateTime(createObject("java","java.util.Date").init(jFile.lastModified())) />
+		<cfcatch type="any">
+			<cfdirectory action="list" directory="#getDirectoryFromPath(arguments.filePath)#" filter="#getFileFromPath(arguments.filePath)#" name="jFile" />
+			<cfif jFile.recordCount eq 1>
+				<cfset dtLastModified = parseDateTime(jFile.dateLastModified) />
+			<cfelse>
+				<!--- have to assume it was always modified --->
+				<cfset dtLastModified = now() />
+			</cfif>			
+		</cfcatch>
+		</cftry>
+		
+		<cfreturn dtLastModified />
+		
+	</cffunction>
+
 </cfcomponent>

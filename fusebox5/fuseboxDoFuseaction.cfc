@@ -1,5 +1,5 @@
 <!---
-Copyright 2006 TeraTech, Inc. http://teratech.com/
+Copyright 2006-2007 TeraTech, Inc. http://teratech.com/
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ limitations under the License.
 					message="Required attribute is missing"
 					detail="The attribute 'action' is required, for a '#variables.verb#' verb in fuseaction #variables.action.getCircuit().getAlias()#.#variables.action.getName()#." />
 		</cfif>
-		<cfif variables.verb is "fuseaction" and listLen(variables.attributes.action,".") neq 2>
+		<cfif variables.verb is "fuseaction" and listLen(variables.attributes.action,".") lt 2>
 			<!--- illegal: there is no circuit associated with a (global) action --->
 			<cfthrow type="fusebox.badGrammar.invalidAttributeValue"
 					message="Attribute has invalid value" 
@@ -135,14 +135,14 @@ limitations under the License.
 		<cfset var f = "" />
 		<cfset var cDotF = "" />
 		<cfset var old_c = "" />
-		<cfset var old_p = "" />
+		<cfset var old_f = "" />
 		<cfset var circuits = app.circuits />
 		<cfset var needTryOnFuseaction = false />
 
-		<cfif listLen(variables.attributes.action,".") eq 2>
+		<cfif listLen(variables.attributes.action,".") gte 2>
 			<!--- action is a circuit.fuseaction pair somewhere --->
-			<cfset c = listFirst(variables.attributes.action,".") />
 			<cfset f = listLast(variables.attributes.action,".") />
+			<cfset c = left(variables.attributes.action,len(variables.attributes.action)-len(f)-1) />
 			<cfset cDotF = variables.attributes.action />
 		<cfelse>
 			<cfset c = variables.action.getCircuit().getAlias() />
@@ -195,25 +195,39 @@ limitations under the License.
 			</cfif>
 		</cfif>
 
-		<cfif listLen(variables.attributes.action,".") eq 2>
+		<cfif listLen(variables.attributes.action,".") gte 2>
 
-			<cfif not structKeyExists(circuits,c)>
+			<cfif structKeyExists(circuits,c)>
+
+				<cfif structKeyExists(circuits[c].fuseactions,f)>
+
+					<!--- if not in the same circuit, check access is not private --->
+					<cfif c is not variables.action.getCircuit().getAlias()>
+
+						<cfif circuits[c].fuseactions[f].getAccess() is "private">
+
+							<cfthrow type="fusebox.invalidAccessModifier" 
+									message="invalid access modifier" 
+									detail="The fuseaction '#c#.#f#' has an access modifier of private and can only be called from within its own circuit. Use an access modifier of internal or public to make it available outside its immediate circuit.">
+
+						</cfif>
+
+					</cfif>
+
+				<cfelse>
+
+					<cfthrow type="fusebox.undefinedFuseaction" 
+							message="undefined Fuseaction" 
+							detail="You specified a Fuseaction of #f# which is not defined in Circuit #c#." />
+
+				</cfif>
+
+			<cfelseif not variables.action.getCircuit().getApplication().allowImplicitCircuits>
+
 				<cfthrow type="fusebox.undefinedCircuit" 
 						message="undefined Circuit" 
 						detail="You specified a Circuit of #c# which is not defined." />
-			</cfif>
-			<cfif not structKeyExists(circuits[c].fuseactions,f)>
-				<cfthrow type="fusebox.undefinedFuseaction" 
-						message="undefined Fuseaction" 
-						detail="You specified a Fuseaction of #f# which is not defined in Circuit #c#." />
-			</cfif>
-			<!--- if not in the same circuit, check access is not private --->
-			<cfif c is not variables.action.getCircuit().getAlias()>
-				<cfif circuits[c].fuseactions[f].getAccess() is "private">
-					<cfthrow type="fusebox.invalidAccessModifier" 
-							message="invalid access modifier" 
-							detail="The fuseaction '#c#.#f#' has an access modifier of private and can only be called from within its own circuit. Use an access modifier of internal or public to make it available outside its immediate circuit.">
-				</cfif>
+
 			</cfif>
 
 			<cfset variables.action.getCircuit().getApplication().compile(arguments.writer,c,f) />
