@@ -40,7 +40,7 @@ limitations under the License.
 								<set name="_fba.debug" value="false"/>
 							</true>
 							<false>
-								<if condition="request.layout EQ 'admin')">
+								<if condition="request.layout EQ 'admin'">
 									<true>
 										<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/raw_files/view/styles.css")>>
 											<lanshock:htmlhead type="style" content="@import url('#request.lanshock.environment.webpath#modules/$$sModule$$/view/styles.css');"/>
