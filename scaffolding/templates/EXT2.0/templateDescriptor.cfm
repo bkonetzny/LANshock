@@ -25,29 +25,7 @@ It assumes that all the tables have a field defined as integer, identity as prim
 <!--- This is the list for reactor ORM --->
 <!--- TODO: Create a similar list for Transfer and use a separate subdirectory for each one. --->
 
-<cfscript>
-	stFileData = structNew();
-	stFileData.templateFile = "index";
-	stFileData.outputFile = "index";
-	stFileData.MVCpath = "#destinationFilePath#";
-	stFileData.inPlace = "false";
-	stFileData.overwrite = "false";
-	stFileData.useAliasInName = "false";
-	stFileData.suffix = "cfm";
-	stFileData.perObject = "false";
-	ArrayAppend(aTemplateFiles,stFileData);
-
-	stFileData = structNew();
-	stFileData.templateFile = "fusebox.init";
-	stFileData.outputFile = "fusebox.init";
-	stFileData.MVCpath = "#destinationFilePath#";
-	stFileData.inPlace = "false";
-	stFileData.overwrite = "false";
-	stFileData.useAliasInName = "false";
-	stFileData.suffix = "cfm";
-	stFileData.perObject = "false";
-	ArrayAppend(aTemplateFiles,stFileData);
-	
+<cfscript>	
 	stFileData = structNew();
 	stFileData.templateFile = "info.xml";
 	stFileData.outputFile = "info.xml";
@@ -76,17 +54,6 @@ It assumes that all the tables have a field defined as integer, identity as prim
 	stFileData.MVCpath = "#destinationFilePath#modules/$tablename$/view/";
 	stFileData.inPlace = "false";
 	stFileData.overwrite = "true";
-	stFileData.useAliasInName = "false";
-	stFileData.suffix = "cfm";
-	stFileData.perObject = "false";
-	ArrayAppend(aTemplateFiles,stFileData);
-	
-	stFileData = structNew();
-	stFileData.templateFile = "fusebox.xml";
-	stFileData.outputFile = "fusebox.xml";
-	stFileData.MVCpath = "#destinationFilePath#";
-	stFileData.inPlace = "false";
-	stFileData.overwrite = "false";
 	stFileData.useAliasInName = "false";
 	stFileData.suffix = "cfm";
 	stFileData.perObject = "false";

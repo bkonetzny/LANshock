@@ -10,7 +10,7 @@ $LastChangedRevision: 63 $
 --->
 
 <cfif NOT isDefined("application.modulecache.news.cfc")>
-	<cfset application.modulecache.news.cfc.news = CreateObject('component','news')>
+	<cfset application.modulecache.news.cfc.news = CreateObject('component','#application.lanshock.environment.componentpath#modules.blog.model.cfc.news')>
 </cfif>
 
 <cfinvoke component="#application.modulecache.news.cfc.news#" method="getCategories" returnvariable="stCategories">
