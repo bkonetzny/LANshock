@@ -1,13 +1,10 @@
 <!---
 Serialize and deserialize JSON data into native ColdFusion objects
 http://www.epiphantastic.com/cfjson/
-
 Authors: Jehiah Czebotar (jehiah@gmail.com)
          Thomas Messier  (thomas@epiphantastic.com)
-
 Version: 1.7 March 1st, 2007
 --->
-
 <cfcomponent displayname="JSON" output="No">
 	<cffunction name="decode" hint="Converts data frm JSON to CF format" access="remote" returntype="any" output="no">
 		<cfargument name="data" type="string" required="Yes" />
@@ -35,7 +32,6 @@ Version: 1.7 March 1st, 2007
 		<cfset var unescapeToVals = """,',\,#Chr(8)#,#Chr(9)#,#Chr(10)#,#Chr(12)#,#Chr(13)#" />
 		
 		<cfset var _data = Trim(arguments.data) />
-
 		<!--- NULL --->
 		<cfif NOT IsNumeric(_data) AND _data EQ "null">
 			<cfreturn "" />
@@ -193,7 +189,6 @@ Version: 1.7 March 1st, 2007
 		<cfset var i = 1 />
 		
 		<cfset var _data = arguments.data />
-
 		<!--- BOOLEAN --->
 		<cfif IsBoolean(_data) AND NOT IsNumeric(_data) AND NOT ListFindNoCase("Yes,No", _data)>
 			<cfreturn ToString(_data) />
