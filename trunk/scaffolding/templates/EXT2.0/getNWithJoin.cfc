@@ -89,7 +89,7 @@ limitations under the License.
 		<cfargument name="maxrows" default="0" type="numeric" required="No" />
 		
 		<cfset var qResult = getNWithJoin(arguments.sortByFieldList,arguments.startrow,arguments.maxrows) />
-		<cfset var oJSON = CreateObject('component','scaffolder.generated.lanshock.core._utils.json.json')>
+		<cfset var oJSON = CreateObject('component','#application.lanshock.environment.componentpath#core._utils.json.json')>
 		<cfset var sResult = oJSON.encode(data=qResult,queryFormat='array')>
 		
 		<cfset sResult = replace(sResult,'{','{"totalRecords":#getRecordCount()#,','ONE')>
@@ -100,7 +100,7 @@ limitations under the License.
 	<cffunction name="deleteByIDlist" access="remote" output="false" returntype="void" hint="I delete the selected N records">
 		<cfargument name="jsonData" default="" type="string" required="No" Hint="I am the json data to delete"/>
 		
-		<cfset var oJSON = CreateObject('component','testing.scaffolding.generated.lanshock.lib.utils.json')>
+		<cfset var oJSON = CreateObject('component','#application.lanshock.environment.componentpath#core._utils.json.json')>
 		<cfset var aResult = oJSON.decode(data=arguments.jsonData)>
 		<cfset var idx = ''>
 
