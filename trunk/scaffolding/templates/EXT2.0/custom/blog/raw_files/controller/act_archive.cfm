@@ -11,9 +11,7 @@ $LastChangedRevision: 63 $
 
 <cfinvoke component="#application.modulecache.news.cfc.news#" method="getNews" returnvariable="qNews">
 
-<cfscript>
-	iMonth = '';
-	iYear = '';
-</cfscript>
+<cfset iMonth = ''>
+<cfset iYear = ''>
 
 <cfsetting enablecfoutputonly="No">
