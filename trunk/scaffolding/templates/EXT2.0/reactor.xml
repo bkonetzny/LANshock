@@ -20,7 +20,7 @@ limitations under the License.
 		<project value="$$oMetaData.getProject()$$"/>
 		<dsn value="$$oMetaData.getDatasource()$$"/>
 		<type value="mysql"/>
-		<mapping value="$$GetDirectoryFromPath(cgi.SCRIPT_NAME)$$generated/lanshock/model"/>
+		<mapping value="/lanshock/model"/>
 		<mode value="development"/>
 		<username value="$$oMetaData.getUsername()$$"/>
 		<password value="$$oMetaData.getPassword()$$"/>

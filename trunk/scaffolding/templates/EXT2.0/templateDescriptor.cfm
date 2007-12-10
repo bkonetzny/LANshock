@@ -25,9 +25,6 @@ It assumes that all the tables have a field defined as integer, identity as prim
 <!--- This is the list for reactor ORM --->
 <!--- TODO: Create a similar list for Transfer and use a separate subdirectory for each one. --->
 
-<cfinclude template="udf/templateDescriptor.inc.cfm">
-<cfinclude template="utils/templateDescriptor.inc.cfm">
-
 <cfscript>
 	stFileData = structNew();
 	stFileData.templateFile = "index";
