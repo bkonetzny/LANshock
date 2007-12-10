@@ -18,33 +18,37 @@ overview: before each Fuseaction's execution attempt to load all files with a na
 <cfset plugin = myFusebox.plugins[myFusebox.thisPlugin]>
 <cfset plugin.file = "mySettings.cfm">
 <cfset plugin.isRequired = "false">
-<!--- load the any Settings.cfm files from the top circuit to thisCircuit  --->
+<!--- load the any mySettings.cfm files from the top circuit to thisCircuit  --->
 
 <!--- preserve the value of myFusebox.thisCircuit --->
 <cfset plugin.thisCircuit = myFusebox.thisCircuit>			
 
-<!--- loop over each circuit from top to bottom in this circuit's circuitTrace, loading
-       the plugin.file in each --->
-<cfloop from="#arrayLen(application.fusebox.circuits[plugin.thisCircuit].circuitTrace)#" to="1" step="-1" index="plugin.i">
-	<cfset plugin.aCircuit = application.fusebox.circuits[plugin.thisCircuit].circuitTrace[plugin.i]>
-	<cfset myFusebox.thisCircuit = plugin.aCircuit>
+<cfif StructKeyExists(application.fusebox.circuits,plugin.thisCircuit)>
 
-	<cftry>
-		<cfinclude template="#application.fusebox.plugins[myFusebox.thisPlugin][myFusebox.thisPhase].rootpath##application.fusebox.circuits[plugin.aCircuit].path##plugin.file#"> 
-		<cfcatch type="missingInclude">
-			<cfif right( cfcatch.missingFileName, Len(plugin.file) ) NEQ plugin.file>
-				<cfrethrow>
-			<cfelse>
-				<cfif plugin.isRequired>
-					<cfthrow type="missingPluginInclude" message="The required plugin file #plugin.file# in the circuit #myFusebox.thisCircuit# is missing.">
-				<cfelse>
-					<!--- if the file doesn't exist then do nothing --->		
-				</cfif>
-			</cfif>
-		</cfcatch>
-	</cftry>
+	<!--- loop over each circuit from top to bottom in this circuit's circuitTrace, loading
+	       the plugin.file in each --->
+	<cfloop from="#arrayLen(application.fusebox.circuits[plugin.thisCircuit].circuitTrace)#" to="1" step="-1" index="plugin.i">
+		<cfset plugin.aCircuit = application.fusebox.circuits[plugin.thisCircuit].circuitTrace[plugin.i]>
+		<cfset myFusebox.thisCircuit = plugin.aCircuit>
 	
-</cfloop>
+		<cftry>
+			<cfinclude template="#application.fusebox.plugins[myFusebox.thisPlugin][myFusebox.thisPhase].rootpath##application.fusebox.circuits[plugin.aCircuit].path##plugin.file#"> 
+			<cfcatch type="missingInclude">
+				<cfif right( cfcatch.missingFileName, Len(plugin.file) ) NEQ plugin.file>
+					<cfrethrow>
+				<cfelse>
+					<cfif plugin.isRequired>
+						<cfthrow type="missingPluginInclude" message="The required plugin file #plugin.file# in the circuit #myFusebox.thisCircuit# is missing.">
+					<cfelse>
+						<!--- if the file doesn't exist then do nothing --->		
+					</cfif>
+				</cfif>
+			</cfcatch>
+		</cftry>
+		
+	</cfloop>
+
+</cfif>
 
 <!--- restore the value of myFusebox.thisCircuit --->
 <cfset myFusebox.thisCircuit = plugin.thisCircuit>			

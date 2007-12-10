@@ -10,7 +10,9 @@ $LastChangedRevision$
 --->
 
 <cfloop collection="#attributes#" item="idx">
-	<cfset attributes[idx] = trim(attributes[idx])>
+	<cfif isSimpleValue(attributes[idx])>
+		<cfset attributes[idx] = trim(attributes[idx])>
+	</cfif>
 </cfloop>
 
 <cfsetting enablecfoutputonly="No">
