@@ -13,9 +13,9 @@ $LastChangedRevision$
 <cfset plugin.ShowLayout = 'full'>
 <cfset plugin.layoutFile = "../templates/#application.lanshock.settings.layout.template#/layoutHeader.cfm">
 
-<cfset plugin.customattributes = myfusebox.getCurrentFuseaction().getCustomAttributes('customattributes')>
-<cfif StructKeyExists(plugin.customattributes,'showlayout')>
-	<cfset plugin.ShowLayout = plugin.customattributes.showlayout>
+<cfset plugin.lanshock = myfusebox.getCurrentFuseaction().getCustomAttributes('lanshock')>
+<cfif StructKeyExists(plugin.lanshock,'showlayout')>
+	<cfset plugin.ShowLayout = plugin.lanshock.showlayout>
 </cfif>
 <cfset request.ShowLayout = plugin.ShowLayout>
 
