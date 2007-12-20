@@ -33,7 +33,7 @@ $LastChangedRevision$
 </cfscript>
 
 <cfparam name="application.sessions" default="#StructNew()#">
-<cfinvoke component="#request.lanshock.environment.componentpath#core.session" method="refreshSessionCache" returnvariable="application.sessions">
+<cfinvoke component="#request.lanshock.environment.componentpath#core.sessionmanager" method="refreshSessionCache" returnvariable="application.sessions">
 	<cfinvokeargument name="cache" value="#application.sessions#">
 	<cfinvokeargument name="timeout" value="#application.lanshock.settings.sessionmanagement.timeout#">
 </cfinvoke>
@@ -42,7 +42,6 @@ $LastChangedRevision$
 	if(application.lanshock.settings.sessionmanagement.type EQ 'cookie' AND NOT len(UrlSessionFormat(''))) request.session.urltoken = '';
 	if(application.lanshock.settings.sessionmanagement.type EQ 'force_cookie') request.session.urltoken = '';
 	request.session.urltoken = replace(request.session.urltoken,'&','&amp;','ALL');
-	request.application.sessions = application.sessions;
 </cfscript>
-
-</cfsilent><cfsetting enablecfoutputonly="No">
+</cfsilent>
+<cfsetting enablecfoutputonly="No">
