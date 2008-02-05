@@ -9,6 +9,6 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 63 $
 --->
 
-<cfinvoke component="#application.modulecache.news.cfc.news#" method="getNews" returnvariable="qNews">
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.blog.model.cfc.news')#" method="getNews" returnvariable="qNews">
 
 <cfsetting enablecfoutputonly="No">

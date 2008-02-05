@@ -20,7 +20,7 @@ $LastChangedRevision: 63 $
 	<cfset attributes.user_id = ''>
 </cfif>
 
-<cfinvoke component="#application.modulecache.news.cfc.news#" method="getNews" returnvariable="qNews">
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.blog.model.cfc.news')#" method="getNews" returnvariable="qNews">
 	<cfif NOT len(attributes.category_id)>
 		<cfinvokeargument name="records" value="10">
 	</cfif>

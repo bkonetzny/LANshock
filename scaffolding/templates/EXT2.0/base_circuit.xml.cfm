@@ -21,39 +21,48 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 	<prefuseaction>
-		<set name="request.page" value="#structNew()#"/>
-		<lanshock:i18n load="modules/$$sModule$$/i18n/lang.properties" returnvariable="request.content"/>
-		<include circuit="c_$$sModule$$" template="settings" />
+		<lanshock:fuseaction>
+			<set name="request.page" value="#structNew()#"/>
+			<lanshock:i18n load="modules/$$sModule$$/i18n/lang.properties" returnvariable="request.content"/>
+			<include circuit="c_$$sModule$$" template="settings" />
+		</lanshock:fuseaction>
 	</prefuseaction>
 	
 	<postfuseaction>
-		<if condition="isDefined('request.layout') AND request.layout EQ 'json'">
-			<true>
-				<if condition="request.layout EQ 'json'">
-					<true>
-						<set name="_fba.debug" value="false"/>
-						<include circuit="v_$$sModule$$" template="dsp_layout_json" />
-					</true>
-					<false>
-						<if condition="request.layout EQ 'none'">
-							<true>
-								<set name="_fba.debug" value="false"/>
-							</true>
-							<false>
-								<if condition="request.layout EQ 'admin'">
-									<true>
-										<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/raw_files/view/styles.css")>>
+		<lanshock:fuseaction>
+			<if condition="isDefined('request.layout')">
+				<true>
+					<if condition="request.layout EQ 'json'">
+						<true>
+							<set name="_fba.debug" value="false"/>
+							<include circuit="v_$$sModule$$" template="dsp_layout_json" />
+						</true>
+						<false>
+							<if condition="request.layout EQ 'none'">
+								<true>
+									<set name="_fba.debug" value="false"/>
+								</true>
+								<false>
+									<if condition="request.layout EQ 'admin'">
+										<true>
+											<include circuit="v_$$sModule$$" template="dsp_layout" />
+											<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/raw_files/view/styles.css")>>
 											<lanshock:htmlhead type="style" content="@import url('#request.lanshock.environment.webpath#modules/$$sModule$$/view/styles.css');"/>
-										<</cfif>>
-										<include circuit="v_$$sModule$$" template="dsp_layout" />
-									</true>
-								</if>
-							</false>
-						</if>
-					</false>
-				</if>
-			</true>
-		</if>
+											<</cfif>>
+										</true>
+									</if>
+								</false>
+							</if>
+						</false>
+					</if>
+				</true>
+				<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/raw_files/view/styles.css")>>
+				<false>
+					<lanshock:htmlhead type="style" content="@import url('#request.lanshock.environment.webpath#modules/$$sModule$$/view/styles.css');"/>
+				</false>
+				<</cfif>>
+			</if>
+		</lanshock:fuseaction>
 	</postfuseaction>
 
 	<fuseaction name="main" access="public">

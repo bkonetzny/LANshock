@@ -15,7 +15,7 @@ $LastChangedRevision: 63 $
 	<cfset attributes.mode = 'short'>
 </cfif>
 
-<cfinvoke component="#application.modulecache.news.cfc.news#" method="generateRSS" returnvariable="sRSS">
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.blog.model.cfc.news')#" method="generateRSS" returnvariable="sRSS">
 	<cfinvokeargument name="mode" value="#attributes.mode#">
 </cfinvoke>
 

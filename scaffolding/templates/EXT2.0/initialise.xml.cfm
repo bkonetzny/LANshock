@@ -20,8 +20,5 @@ limitations under the License.
 		<!-- Initialise: I Initialise all of the required gateway objects. -->
 		<!-- Create the reactorFactory -->
 		<reactor:initialize configuration="#expandPath('config/reactor/reactor.xml')#"/>
-		<!-- Create a Gateway object for each table in the database. -->
-		<<cfloop list="$$oMetaData.getLTableAliases()$$" index="objectName" >>
-		<reactor:gateway alias="$$objectName$$" returnvariable="Application.ao__AppObj_m$$datasourceName$$_$$objectName$$_Gateway" /><</cfloop>>
 	</fuseaction>
 <</cfoutput>>

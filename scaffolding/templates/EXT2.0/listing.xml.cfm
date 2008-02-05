@@ -67,7 +67,7 @@ limitations under the License.
 		<set name="attributes.start" value="1" overwrite="false" />
 		<set name="attributes.limit" value="20" overwrite="false" />
 		
-		<invoke object="Application.ao__AppObj_m$$datasourceName$$_$$objectName$$_Gateway" method="getRecordsForGrid" returnvariable="request.page.pageContent">
+		<invoke object="application.lanshock.oFactory.load('$$objectName$$','reactorGateway')" method="getRecordsForGrid" returnvariable="request.page.pageContent">
 			<argument name="sortByFieldList" value="$$objectName$$|#attributes.sort#|#attributes.dir#" />
 			<argument name="startrow" value="#attributes.start#" />
 			<argument name="maxrows" value="#attributes.limit#" />

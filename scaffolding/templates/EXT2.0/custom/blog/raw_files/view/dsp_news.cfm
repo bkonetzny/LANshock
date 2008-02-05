@@ -15,32 +15,32 @@ $LastChangedRevision: 63 $
 <cfif len(attributes.category_id) OR len(attributes.user_id)>
 	<div class="postfilter">
 		<cfif len(attributes.category_id)>
-			<a href="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&amp;#request.session.UrlToken#">#request.content.show_all_news#</a> | #request.content.categories# #stCategories[attributes.category_id].name#
+			<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#">#request.content.show_all_news#</a> | #request.content.categories# #stCategories[attributes.category_id].name#
 		</cfif>
 		<cfif len(attributes.user_id)>
-			<a href="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&amp;#request.session.UrlToken#">#request.content.show_all_news#</a> | <!--- TODO: $$$ ---> Posted by #GetUsernameByID(attributes.user_id)#
+			<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#">#request.content.show_all_news#</a> | <!--- TODO: $$$ ---> Posted by #GetUsernameByID(attributes.user_id)#
 		</cfif>
 	</div>
 </cfif>
 </cfoutput>
 
 <cfloop query="qNews">
-	<cfinvoke component="#request.lanshock.environment.componentpath#modules.comments.comments" method="getCommentsCount" returnvariable="iCommentCount">
+	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.comments.comments')#" method="getCommentsCount" returnvariable="iCommentCount">
 		<cfinvokeargument name="module" value="#myfusebox.thiscircuit#">
 		<cfinvokeargument name="identifier" value="news#qNews.id#">
 	</cfinvoke>
 
-	<cfinvoke component="#Application.ao__AppObj_mlanshock_news_trackback_Gateway#" method="getByFields" returnvariable="qTrackbacks">
+	<cfinvoke component="#application.lanshock.oFactory.load('news_trackback','reactorGateway')#" method="getByFields" returnvariable="qTrackbacks">
 		<cfinvokeargument name="sortByFieldList" value="date"/>
 		<cfinvokeargument name="entry_id" value="#qNews.id#"/>
 	</cfinvoke>
 
 	<cfoutput>
 	<div class="blogpost">
-		<h4><a href="#myself##myfusebox.thiscircuit#.news_details&amp;news_id=#id#&amp;#request.session.UrlToken#">#qNews.title#</a></h4>
-		<div class="postinfo">Posted by <a class="author" href="#myself##request.lanshock.settings.modulePrefix.core#user.userdetails&amp;id=#author#&amp;#request.session.UrlToken#">#GetUsernameByID(author)#</a> <a class="authorposts" href="#myself##myfusebox.thiscircuit#.main&amp;user_id=#author#&amp;#request.session.UrlToken#">(all)</a> on #UDF_DateTimeFormat(date)#</div>
+		<h4><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news_details&news_id=#id#&title=#UrlEncodedFormat(qNews.title)#')#">#qNews.title#</a></h4>
+		<div class="postinfo">Posted by <a class="author" href="#application.lanshock.oHelper.buildUrl('c_user.userdetails&id=#author#')#">#application.lanshock.oHelper.GetUsernameByID(author)#</a> <a class="authorposts" href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news&user_id=#author#')#">(all)</a> on #session.oUser.dateTimeFormat(date,'datetime')#</div>
 		<cfif len(category_ids)>
-			<div class="categories">#request.content.categories# <cfloop list="#category_ids#" index="idx"><a href="#myself##myfusebox.thiscircuit#.main&amp;category_id=#idx#&amp;#request.session.UrlToken#">#stCategories[idx].name#</a><cfif idx NEQ listLast(category_ids)>, </cfif></cfloop></div>
+			<div class="categories">#request.content.categories# <cfloop list="#category_ids#" index="idx"><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news&category_id=#idx#')#">#stCategories[idx].name#</a><cfif idx NEQ listLast(category_ids)>, </cfif></cfloop></div>
 		</cfif>
 		<cfif len(mp3url)>
 			<div class="mediaplayer">
@@ -62,11 +62,11 @@ $LastChangedRevision: 63 $
 				</div>
 			</div>
 		</cfif>
-		<div class="text">#ConvertText(text=text,allow_html=ishtml)#</div>
+		<div class="text">#application.lanshock.oHelper.ConvertText(text=text,allow_html=ishtml)#</div>
 		<ul class="postoptions">
-			<li class="trackback"><a href="#myself##myfusebox.thiscircuit#.trackback&amp;entry_id=#id#">#formatContentString(request.content.trackbacks,qTrackbacks.recordcount)#</a></li>
-			<li class="comments"><a href="#myself##myfusebox.thiscircuit#.news_details&amp;news_id=#id#&amp;#request.session.UrlToken#">#iCommentCount# #request.content._core__comments__comments#</a></li>
-			<li class="readmore"><a href="#myself##myfusebox.thiscircuit#.news_details&amp;news_id=#id#&amp;#request.session.UrlToken#"><!--- TODO: $$$ --->Read more</a></li>
+			<li class="trackback"><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.trackback&entry_id=#id#')#">#application.lanshock.oHelper.formatContentString(request.content.trackbacks,qTrackbacks.recordcount)#</a></li>
+			<li class="comments"><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news_details&news_id=#id#')#">#iCommentCount# #request.content._core__comments__comments#</a></li>
+			<li class="readmore"><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news_details&news_id=#id#')#"><!--- TODO: $$$ --->Read more</a></li>
 		</ul>
 	</div>
 	</cfoutput>

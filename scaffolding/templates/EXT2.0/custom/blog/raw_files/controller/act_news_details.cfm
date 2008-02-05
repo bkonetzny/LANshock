@@ -11,15 +11,15 @@ $LastChangedRevision: 63 $
 
 <cfparam name="attributes.news_id" default="0">
 
-<cfinvoke component="#application.modulecache.news.cfc.news#" method="getNewsEntry" returnvariable="qNewsEntry">
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.blog.model.cfc.news')#" method="getNewsEntry" returnvariable="qNewsEntry">
 	<cfinvokeargument name="id" value="#attributes.news_id#">
 </cfinvoke>
 
 <cfif NOT qNewsEntry.recordcount>
-	<cflocation url="#myself##myfusebox.thiscircuit#.main&#request.session.UrlToken#" addtoken="false">
+	<cflocation url="#myself##myfusebox.thiscircuit#.main&#session.UrlToken#" addtoken="false">
 </cfif>
 	
-<cfinvoke component="#request.lanshock.environment.componentpath#modules.comments.comments" method="getCommentsPanel" returnvariable="stComments">
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.comments.comments')#" method="getCommentsPanel" returnvariable="stComments">
 	<cfinvokeargument name="module" value="#myfusebox.thiscircuit#">
 	<cfinvokeargument name="identifier" value="news#attributes.news_id#">
 	<cfinvokeargument name="linktosource" value="news_details&news_id=#attributes.news_id#">
@@ -27,7 +27,7 @@ $LastChangedRevision: 63 $
 	<cfinvokeargument name="topic_title" value="#qNewsEntry.title#">
 </cfinvoke>
 
-<cfinvoke component="#Application.ao__AppObj_mlanshock_news_trackback_Gateway#" method="getByFields" returnvariable="qTrackbacks">
+<cfinvoke component="#application.lanshock.oFactory.load('news_trackback','reactorGateway')#" method="getByFields" returnvariable="qTrackbacks">
 	<cfinvokeargument name="sortByFieldList" value="date"/>
 	<cfinvokeargument name="entry_id" value="#attributes.news_id#"/>
 </cfinvoke>
