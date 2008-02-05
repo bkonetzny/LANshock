@@ -151,7 +151,7 @@ It assumes that all the tables have a field defined as integer, identity as prim
 	ArrayAppend(aTemplateFiles,stFileData);
 	
 	stFileData = structNew();
-	stFileData.templateFile = "add_form.xml";
+	stFileData.templateFile = "form.xml";
 	stFileData.outputFile = "circuit.xml";
 	stFileData.MVCpath = "#destinationFilePath#modules/$tablename$/controller/";
 	stFileData.inPlace = "true";
@@ -162,18 +162,7 @@ It assumes that all the tables have a field defined as integer, identity as prim
 	ArrayAppend(aTemplateFiles,stFileData);
 	
 	stFileData = structNew();
-	stFileData.templateFile = "action_add.xml";
-	stFileData.outputFile = "circuit.xml";
-	stFileData.MVCpath = "#destinationFilePath#modules/$tablename$/controller/";
-	stFileData.inPlace = "true";
-	stFileData.overwrite = "true";
-	stFileData.useAliasInName = "false";
-	stFileData.suffix = "cfm";
-	stFileData.perObject = "true";
-	ArrayAppend(aTemplateFiles,stFileData);
-	
-	stFileData = structNew();
-	stFileData.templateFile = "edit_form.xml";
+	stFileData.templateFile = "action_save.xml";
 	stFileData.outputFile = "circuit.xml";
 	stFileData.MVCpath = "#destinationFilePath#modules/$tablename$/controller/";
 	stFileData.inPlace = "true";
@@ -218,7 +207,7 @@ It assumes that all the tables have a field defined as integer, identity as prim
 	
 //Model:
 	stFileData = structNew();
-	stFileData.templateFile = "Gateway";
+	stFileData.templateFile = "gateway";
 	stFileData.outputFile = "Gateway";
 	stFileData.MVCpath = "#destinationFilePath#model/gateway/";
 	stFileData.inPlace = "false";
@@ -229,29 +218,7 @@ It assumes that all the tables have a field defined as integer, identity as prim
 	ArrayAppend(aTemplateFiles,stFileData);
 	
 	stFileData = structNew();
-	stFileData.templateFile = "getAllWithJoin";
-	stFileData.outputFile = "Gateway";
-	stFileData.MVCpath = "#destinationFilePath#model/gateway/";
-	stFileData.inPlace = "true";
-	stFileData.overwrite = "true";
-	stFileData.useAliasInName = "true";
-	stFileData.suffix = "cfc";
-	stFileData.perObject = "true";
-	ArrayAppend(aTemplateFiles,stFileData);
-	
-	stFileData = structNew();
-	stFileData.templateFile = "getNWithJoin";
-	stFileData.outputFile = "Gateway";
-	stFileData.MVCpath = "#destinationFilePath#model/gateway/";
-	stFileData.inPlace = "true";
-	stFileData.overwrite = "true";
-	stFileData.useAliasInName = "true";
-	stFileData.suffix = "cfc";
-	stFileData.perObject = "true";
-	ArrayAppend(aTemplateFiles,stFileData);
-	
-	stFileData = structNew();
-	stFileData.templateFile = "getRecordCount";
+	stFileData.templateFile = "gatewayCustom";
 	stFileData.outputFile = "Gateway";
 	stFileData.MVCpath = "#destinationFilePath#model/gateway/";
 	stFileData.inPlace = "true";

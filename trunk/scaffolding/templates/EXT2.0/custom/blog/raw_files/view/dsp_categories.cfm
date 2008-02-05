@@ -14,7 +14,7 @@ $LastChangedRevision: 63 $
 
 <ul>
 <cfloop list="#ArrayToList(StructSort(stCategories,'textnocase','asc','name'))#" index="idx">
-	<li><a href="#myself##myfusebox.thiscircuit#.main&amp;category_id=#idx#&amp;#request.session.UrlToken#">#stCategories[idx].name# (#stCategories[idx].entrys#)</a></li>
+	<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news&category_id=#idx#')#">#stCategories[idx].name# (#stCategories[idx].entrys#)</a></li>
 </cfloop>
 </ul>
 </cfoutput>

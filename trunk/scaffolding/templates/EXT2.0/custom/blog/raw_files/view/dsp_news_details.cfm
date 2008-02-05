@@ -14,10 +14,10 @@ $LastChangedRevision: 63 $
 
 <cfloop query="qNewsEntry">
 	<div class="blogpost">
-		<h4><a href="#myself##myfusebox.thiscircuit#.news_details&amp;news_id=#qNewsEntry.id#&amp;#request.session.UrlToken#">#qNewsEntry.title#</a></h4>
-		<div class="postinfo"><!--- TODO: $$$ --->Posted by <a class="author" href="#myself##request.lanshock.settings.modulePrefix.core#user.userdetails&amp;id=#qNewsEntry.author#&amp;#request.session.UrlToken#">#GetUsernameByID(author)#</a> <a class="authorposts" href="#myself##myfusebox.thiscircuit#.main&amp;user_id=#qNewsEntry.author#&amp;#request.session.UrlToken#">(all)</a> on #UDF_DateTimeFormat(qNewsEntry.date)#</div>
+		<h4><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news_details&news_id=#qNewsEntry.id#')#">#qNewsEntry.title#</a></h4>
+		<div class="postinfo"><!--- TODO: $$$ --->Posted by <a class="author" href="#application.lanshock.oHelper.buildUrl('c_user.userdetails&id=#qNewsEntry.author#')#">#application.lanshock.oHelper.GetUsernameByID(author)#</a> <a class="authorposts" href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news&user_id=#qNewsEntry.author#')#">(all)</a> on #session.oUser.DateTimeFormat(qNewsEntry.date)#</div>
 		<cfif len(qNewsEntry.category_ids)>
-			<div class="categories">#request.content.categories# <cfloop list="#qNewsEntry.category_ids#" index="idx"><a href="#myself##myfusebox.thiscircuit#.main&amp;category_id=#idx#&amp;#request.session.UrlToken#">#stCategories[idx].name#</a><cfif idx NEQ listLast(qNewsEntry.category_ids)>, </cfif></cfloop></div>
+			<div class="categories">#request.content.categories# <cfloop list="#qNewsEntry.category_ids#" index="idx"><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news&category_id=#idx#')#">#stCategories[idx].name#</a><cfif idx NEQ listLast(qNewsEntry.category_ids)>, </cfif></cfloop></div>
 		</cfif>
 		<cfif len(qNewsEntry.mp3url)>
 			<div class="mediaplayer">
@@ -39,7 +39,7 @@ $LastChangedRevision: 63 $
 				</div>
 			</div>
 		</cfif>
-		<div class="text">#ConvertText(text=qNewsEntry.text,allow_html=qNewsEntry.ishtml)#</div>
+		<div class="text">#application.lanshock.oHelper.ConvertText(text=qNewsEntry.text,allow_html=qNewsEntry.ishtml)#</div>
 	</div>
 </cfloop>
 
@@ -54,7 +54,7 @@ $LastChangedRevision: 63 $
 			<cfset name = qTrackbacks.blog_name>
 		</cfif>
 		<tr>
-			<th>#UDF_DateTimeFormat(qTrackbacks.date)#</th>
+			<th>#session.oUser.DateTimeFormat(qTrackbacks.date)#</th>
 			<td><a href="#qTrackbacks.url#" title="#qTrackbacks.text#" target="_blank">#name#</a></td>
 			<td>#qTrackbacks.text#</td>
 		</tr>

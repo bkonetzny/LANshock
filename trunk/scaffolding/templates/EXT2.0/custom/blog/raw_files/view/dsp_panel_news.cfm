@@ -23,7 +23,7 @@ $LastChangedRevision: 63 $
 		</cfif>
 		<cfset dtDate = date>
 		<tr>
-			<td><span class="text_small">#LSTimeFormat(date)#</span> <a href="#myself##myfusebox.thiscircuit#.news_comments&news_id=#id#&#request.session.urltoken#">#title#</a></td>
+			<td><span class="text_small">#LSTimeFormat(date)#</span> <a href="#myself##myfusebox.thiscircuit#.news_comments&news_id=#id#&#session.urltoken#">#title#</a></td>
 		</tr>
 	</cfloop>
 </table>

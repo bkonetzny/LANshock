@@ -9,10 +9,6 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 63 $
 --->
 
-<cfif NOT isDefined("application.modulecache.news.cfc")>
-	<cfset application.modulecache.news.cfc.news = CreateObject('component','#application.lanshock.environment.componentpath#modules.blog.model.cfc.news')>
-</cfif>
-
-<cfinvoke component="#application.modulecache.news.cfc.news#" method="getCategories" returnvariable="stCategories">
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.blog.model.cfc.news')#" method="getCategories" returnvariable="stCategories">
 
 <cfsetting enablecfoutputonly="No">

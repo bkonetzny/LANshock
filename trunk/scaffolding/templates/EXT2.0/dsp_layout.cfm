@@ -45,10 +45,9 @@ limitations under the License.
 
 <cfsavecontent variable="sHtmlHead">
 	<cfoutput>
-		<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0/adapter/ext/ext-base.js"></script>
+		<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0/adapter/jquery/ext-jquery-adapter.js"></script>
 		<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0/ext-all.js"></script>
-		<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0/source/locale/ext-lang-#LCase(ListFirst(request.session.lang,'_'))#.js"></script>
-		<link rel="stylesheet" type="text/css" href="#request.lanshock.environment.webpath#templates/_shared/css/ext-all.css" />
+		<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0/source/locale/ext-lang-#LCase(ListFirst(session.lang,'_'))#.js"></script>
 	</cfoutput>
 </cfsavecontent>
 

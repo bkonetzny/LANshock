@@ -25,7 +25,7 @@ limitations under the License.
 		<!-- force layout: none -->
 		<set name="request.layout" value="none" />
 		
-		<invoke object="Application.ao__AppObj_m$$datasourceName$$_$$objectName$$_Gateway" method="deleteByIDlist" returnvariable="request.page.pageContent">
+		<invoke object="application.lanshock.oFactory.load('$$objectName$$','reactorGateway')" method="deleteByIDlist" returnvariable="request.page.pageContent">
 			<argument name="jsonData" value="#attributes.jsonData#" />
 		</invoke>
 	</fuseaction>	

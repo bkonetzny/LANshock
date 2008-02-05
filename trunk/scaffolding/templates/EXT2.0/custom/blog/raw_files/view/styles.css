@@ -38,7 +38,8 @@
 }
 
 .fbx_c_blog .blogpost .postoptions{
-	margin-top: 20px;
+	margin-top: 10px;
+	padding-top: 10px;
 	list-style: none;
 	color: grey;
 	font-size: 11px;
@@ -47,25 +48,20 @@
 .fbx_c_blog .blogpost .postoptions li{
 	float: left;
 	margin-right: 20px;
+	height: 16px;
+	background-repeat: no-repeat;
+	background-position: left;
+	padding-left: 20px;
 }
 
 .fbx_c_blog .blogpost .postoptions .trackback{
 	background-image: url('../../../templates/_shared/images/famfamfam/icons/transmit.png');
-	background-repeat: no-repeat;
-	background-position: left;
-	padding-left: 20px;
 }
 
 .fbx_c_blog .blogpost .postoptions .comments{
 	background-image: url('../../../templates/_shared/images/famfamfam/icons/comments.png');
-	background-repeat: no-repeat;
-	background-position: left;
-	padding-left: 20px;
 }
 
 .fbx_c_blog .blogpost .postoptions .readmore{
 	background-image: url('../../../templates/_shared/images/famfamfam/icons/newspaper_go.png');
-	background-repeat: no-repeat;
-	background-position: left;
-	padding-left: 20px;
 }

@@ -12,10 +12,10 @@ $LastChangedRevision: 63 $
 <cfoutput>
 <h3>#request.content.rss_feed_headline#</h3>
 
-<h4><a href="#myself##myfusebox.thiscircuit#.rss&mode=short" target="_blank">#request.content.rss_feed_short#</a></h4>
+<h4><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.rss&mode=short')#" target="_blank">#request.content.rss_feed_short#</a></h4>
 <p>#request.content.rss_feed_short_text#</p>
 
-<h4><a href="#myself##myfusebox.thiscircuit#.rss&mode=full" target="_blank">#request.content.rss_feed_full#</a></h4>
+<h4><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.rss&mode=full')#" target="_blank">#request.content.rss_feed_full#</a></h4>
 <p>#request.content.rss_feed_full_text#</p>
 </cfoutput>
 

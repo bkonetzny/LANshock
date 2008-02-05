@@ -1,11 +1,8 @@
 <cfoutput>
-	<div class="formrow">
-		<div class="formrow_label">
-			<label for="formrow_##idFormRow##">##request.content.#objectName#_rowtype_label_#aFields[i].label###</label>
-		</div>
-		<div class="formrow_input">
-			<div id="divDatePicker##idFormRow##"></div>
-			<input type="hidden" name="#aFields[i].alias#" id="formrow_##idFormRow##" value="##LsDateFormat(#Format("o#objectName#.get#aFields[i].alias#()","#aFields[i].format#")#,'YYYY-MM-DD')##"/>
+	<div class="ctrlHolder">
+		<label for="formrow_##idFormRow##">##request.content.#objectName#_rowtype_label_#aFields[i].alias###</label>
+		<div id="divDatePicker##idFormRow##"></div>
+		<input type="hidden" name="#aFields[i].alias#" id="formrow_##idFormRow##" value="##LsDateFormat(#Format("o#objectName#.get#aFields[i].alias#()","#aFields[i].format#")#,'YYYY-MM-DD')##"/>
 			<script type="text/javascript">
 				var myDatePicker##idFormRow## = new Ext.DatePicker({
 					handler : function(dp,date){
@@ -22,6 +19,5 @@
 					myDatePicker##idFormRow##.render('divDatePicker##idFormRow##');
 				});
 			</script>
-		</div>
 	</div>
 </cfoutput>

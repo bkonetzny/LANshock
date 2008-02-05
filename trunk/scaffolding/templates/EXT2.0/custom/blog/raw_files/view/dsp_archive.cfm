@@ -23,8 +23,8 @@ $LastChangedRevision: 63 $
 			<table>
 		</cfif>
 				<tr>
-					<td>#UDF_DateTimeFormat(date)#</td>
-					<td><a href="#myself##myfusebox.thiscircuit#.news_details&news_id=#id#&#request.session.UrlToken#">#title#</a></td>
+					<td>#session.oUser.DateTimeFormat(date)#</td>
+					<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news_details&news_id=#id#')#">#title#</a></td>
 				</tr>
 	</cfloop></table>
 </cfoutput>
