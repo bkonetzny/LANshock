@@ -65,5 +65,9 @@
 		<<cfloop from="1" to="$$ArrayLen(aOneToMany)$$" index="i">>
 		<invoke object="application.lanshock.oFactory.load('$$aOneToMany[i].name$$','reactorGateway')" method="getOptions" returnvariable="stRelated.stOneToMany.$$aOneToMany[i].name$$.qData"/>
 		<</cfloop>>
+		
+		<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/controller/circuit.xml.$$objectName$$_form_loadrelated.cfm")>>
+			<<cfinclude template="../templates/EXT2.0/custom/$$sModule$$/controller/circuit.xml.$$objectName$$_form_loadrelated.cfm">>
+		<</cfif>>
 	</fuseaction>
 <</cfoutput>>

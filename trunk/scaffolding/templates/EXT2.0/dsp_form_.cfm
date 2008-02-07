@@ -14,8 +14,6 @@
 <!--- XFAs are required to specify the links to other pages --->
 <cfparam name="XFA.save">
 <cfparam name="XFA.cancel">
-<!--- Specify the list of fields to be displayed --->
-<cfparam name="fieldlist" default="$$lFields$$" />
 <!--- The object being edited or added --->
 <cfparam name="o$$objectName$$">
 <!--- This parameter specifies if we are to use Search Safe URLs or not --->
@@ -60,76 +58,18 @@
 	<input type="hidden" name="_listSortByFieldList" value="#attributes._listSortByFieldList#" />
 	<input type="hidden" name="_Maxrows" value="#attributes._Maxrows#" />
 	<input type="hidden" name="_StartRow" value="#attributes._StartRow#" />
-	<input type="hidden" name="lFields" value="#fieldlist#" />
 	<input type="hidden" name="fuseaction" value="#XFA.save#" />
 	
-	<<cfloop list="aTable,aManyToOne,aManyToMany,aOneToMany" index="idxRelation">>
-		<<cfif NOT ArrayIsEmpty(stFields[idxRelation])>>
-		<fieldset class="inlineLabels">
-		<legend>$$idxRelation$$</legend>
-		<<cfif idxRelation EQ "aTable">>
-			<<cftry>>
-			<cfloop list="#fieldlist#" index="thisField">
-				<cfset idFormRow = replace(CreateUUID(),'-','','ALL')>
-				<cfswitch expression="#thisField#">
-					<<cfloop from="1" to="$$ArrayLen(stFields[idxRelation])$$" index="i">>
-						<<cfif stFields[idxRelation][i].showOnForm>>
-							<cfcase value="$$stFields[idxRelation][i].alias$$">
-								<<cfif ListFindNoCase(lPKFields,stFields[idxRelation][i].alias)>>
-									<<cfinclude template="../templates/EXT2.0/rowtypes/pkfield.cfm">>
-								<<cfelseif stFields[idxRelation][i].formType IS "Dropdown">>
-									<<cfinclude template="../templates/EXT2.0/rowtypes/select.cfm">>
-								<<cfelseif stFields[idxRelation][i].formType IS "Radio">>
-									<<cfinclude template="../templates/EXT2.0/rowtypes/radio.cfm">>
-								<<cfelseif stFields[idxRelation][i].formType IS "Datetime">>
-									<<cfinclude template="../templates/EXT2.0/rowtypes/datetime.cfm">>
-								<<cfelseif stFields[idxRelation][i].formType IS "Checkbox">>
-									<<cfinclude template="../templates/EXT2.0/rowtypes/checkbox.cfm">>
-								<<cfelseif stFields[idxRelation][i].formType IS "Text">>
-									<<cfinclude template="../templates/EXT2.0/rowtypes/text.cfm">>
-								<<cfelseif stFields[idxRelation][i].formType IS "Textarea">>
-									<<cfinclude template="../templates/EXT2.0/rowtypes/textarea.cfm">>
-								<<cfelseif stFields[idxRelation][i].formType IS "FckEditor">>
-									<<cfinclude template="../templates/EXT2.0/rowtypes/fckeditor.cfm">>
-								<<cfelseif stFields[idxRelation][i].formType IS "Hidden">>
-									<<cfinclude template="../templates/EXT2.0/rowtypes/hidden.cfm">>
-								<<cfelseif stFields[idxRelation][i].formType IS "Display">>
-									<<cfinclude template="../templates/EXT2.0/rowtypes/display.cfm">>
-								<<cfelse>> 
-									<<cfinclude template="../templates/EXT2.0/rowtypes/unknown.cfm">>
-								<</cfif>>
-							</cfcase>
-						<</cfif>>
-					<</cfloop>>
-					<<cfloop from="1" to="$$ArrayLen(stFields[idxRelation])$$" index="i">>
-						<<cfif NOT stFields[idxRelation][i].showOnForm>>
-							<cfcase value="$$stFields[idxRelation][i].alias$$">
-								<<cfinclude template="../templates/EXT2.0/rowtypes/hidden.cfm">>
-							</cfcase>
-						<</cfif>>
-					<</cfloop>>
-				</cfswitch>
-			</cfloop>
-				<<cfcatch>>
-					<<cfdump var="$$stFields[idxRelation]$$">><<cfabort>>
-				<</cfcatch>>
-			<</cftry>>
-		<<cfelseif idxRelation EQ "aManyToOne">>
-			<<cfloop from="1" to="$$ArrayLen(stFields[idxRelation])$$" index="i">>
-				<<cfinclude template="../templates/EXT2.0/rowtypes/select_manytomany.cfm">>
-			<</cfloop>>
-		<<cfelseif idxRelation EQ "aManyToMany">>
-			<<cfloop from="1" to="$$ArrayLen(stFields[idxRelation])$$" index="i">>
-				<<cfinclude template="../templates/EXT2.0/rowtypes/select_manytomany.cfm">>
-			<</cfloop>>
-		<<cfelseif idxRelation EQ "aOneToMany">>
-			<<cfloop from="1" to="$$ArrayLen(stFields[idxRelation])$$" index="i">>
-				<<cfinclude template="../templates/EXT2.0/rowtypes/select_manytomany.cfm">>
-			<</cfloop>>
-		<</cfif>>
-		</fieldset>
-		<</cfif>>
-	<</cfloop>>
+	<<cfinclude template="../templates/EXT2.0/includes/form_structure.cfm">>
+	
+	<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/view/dsp_form.$$objectName$$.form_structures.fields.cfm")
+			AND fileExists("../templates/EXT2.0/custom/$$sModule$$/view/dsp_form.$$objectName$$.form_structures.mover.cfm")>>
+		<<cfinclude template="../templates/EXT2.0/custom/$$sModule$$/view/dsp_form.$$objectName$$.form_structures.fields.cfm">>
+		<<cfinclude template="../templates/EXT2.0/includes/form_structure_mover.cfm">>
+		<<cfinclude template="../templates/EXT2.0/custom/$$sModule$$/view/dsp_form.$$objectName$$.form_structures.mover.cfm">>
+	<</cfif>>
+	
+	<<cfinclude template="../templates/EXT2.0/includes/form_layout.cfm">>
 	
 	<div class="buttonHolder">
 		<cfset sortParams = appendParam("","_listSortByFieldList",attributes._listSortByFieldList)>
