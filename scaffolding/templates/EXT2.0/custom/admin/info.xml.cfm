@@ -25,6 +25,7 @@
 		<item action="core_security_roles_Listing" reqstatus="admin"/>
 		<!-- <item action="core_security_roles_permissions_rel_Listing" reqstatus="admin"/> -->
 		<item action="core_security_users_roles_rel_Listing" reqstatus="admin"/>
+		<item action="user_Listing" reqstatus="admin"/>
 	</navigation>
 	
 	<dependencies>

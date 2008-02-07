@@ -1,0 +1,1 @@
+<cfset lFieldsMove = "country,city,street,zip,idcardnumber,notice,signature,homepage,additional_data,geo_lat,geo_long">
