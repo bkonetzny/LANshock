@@ -1,5 +1,6 @@
 <<cfset objectName = oMetaData.getSelectedTableAlias()>>
 <<cfset lFields = oMetaData.getFieldListFromXML(objectName)>>
+<<cfset stFields.aTable = oMetaData.getFieldsFromXML(objectName)>>
 <<cfset lPKFields = oMetaData.getPKListFromXML(objectName)>>
 <<cfset aManyToMany = oMetaData.getRelationshipsFromXML(objectName,"manyToMany")>>
 <<cfset sModule = oMetaData.getModule()>>
@@ -24,6 +25,11 @@
 		<xfa name="continue" value="$$objectName$$_listing" />
 		<xfa name="cancel" value="$$objectName$$_listing" />
 		
+		<<cfset idxRelation = 'aTable'>>
+		<<cfloop from="1" to="$$ArrayLen(stFields[idxRelation])$$" index="i">>
+			<<cfmodule template="../templates/EXT2.0/rowtypes/rowtype.cfm" rowtype="$$stFields[idxRelation][i].formType$$" method="xml_validation_pre">>
+		<</cfloop>>
+		
 		<set name="attributes.$$objectName$$_id" value="0" overwrite="false"/>
 		<reactor:record alias="$$objectName$$" returnvariable="o$$objectName$$" />
 		<if condition="variables.mode EQ 'insert'">
@@ -37,11 +43,15 @@
 			</false>
 		</if>
 		
-		<invoke object="o$$objectName$$" method="validate" />
-		<set name="bObjectValid" value="#NOT o$$objectName$$.hasErrors()#" />
-		<if condition="variables.bObjectValid">
+		<if condition="bHasErrors">
 			<false>
-				<set name="bHasErrors" value="true" />
+				<invoke object="o$$objectName$$" method="validate" />
+				<set name="bObjectValid" value="#NOT o$$objectName$$.hasErrors()#" />
+				<if condition="variables.bObjectValid">
+					<false>
+						<set name="bHasErrors" value="true" />
+					</false>
+				</if>
 			</false>
 		</if>
 		
