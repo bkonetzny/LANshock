@@ -9,7 +9,7 @@ $LastChangedBy$
 $LastChangedRevision$
 --->
 
-<cfset stGlobalCfcatch = cfcatch>
+<cfset stGlobalCfcatch = arguments.exception>
 
 <cftry>
 	<cfset logfile = "#application.lanshock.environment.abspath#/logs/error.log">
@@ -17,14 +17,12 @@ $LastChangedRevision$
 	<cfif FileExists(logfile)>
 		<cffile action="READ" file="#logfile#" variable="errorWDDX">
 		<cfwddx action="WDDX2CFML" input="#errorWDDX#" output="error">
-		<cfset ArrayAppend(error, cfcatch)>	
+		<cfset ArrayAppend(error, stGlobalCfcatch)>	
 		<cfwddx action="CFML2WDDX" input="#error#" output="errorWDDX">
 		<cffile action="WRITE" file="#logfile#" output="#errorWDDX#">
 	<cfelse>
-		<cfscript>
-			error = ArrayNew(1);
-			error[1] = cfcatch;
-		</cfscript>
+		<cfset error = ArrayNew(1)>
+		<cfset error[1] = stGlobalCfcatch>
 		<cfwddx action="CFML2WDDX" input="#error#" output="errorWDDX">
 		<cffile action="WRITE" file="#logfile#" output="#errorWDDX#">
 	</cfif>
@@ -40,69 +38,42 @@ $LastChangedRevision$
 	</cfcatch>
 </cftry>
 
-<cfinclude template="_errorhandlerrelocator.cfm">
-
 <cfoutput><cfcontent reset="true"><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
 	<title>LANshock - Error Occurred While Processing Request</title>
 	<meta name="generator" content="LANshock">
 	<style type="text/css" media="all">
-		th, td{ font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10px; }
-		.headline{ font-size: 20px; }
-		.sub01{ font-style: italic; line-height: 30px; padding-left: 10px; font-size: 12px; }
-		.sub02{ line-height: 10px; padding-left: 30px; }
-		.b_r{ border-right: 1px dotted gray; }
-		.b_t{ border-top: 1px dotted gray; }
+		*{font-family: Verdana, Arial, Helvetica, sans-serif;font-size: 10px;}
+		body{background-color: ##CCCCCC;}
+		##errorwrapper{border: 1px solid gray;padding: 20px;margin:0 50px 0 50px;background-color: ffffff;}
+		h1{font-size: 20px;}
+		th{text-align:left;}
+		ul,li{list-style:none;margin:0;}
+		.sub01{font-style: italic;line-height: 30px;padding-left: 10px;font-size: 12px;}
+		.sub02{line-height: 10px;padding-left: 30px;padding-bottom: 10px;}
+		.b_r{border-right: 1px dotted gray;}
+		.b_t{border-top: 1px dotted gray;}
 	</style>
 </head>
-<body style="background-color: ##CCCCCC">
-	<table style="border: 1px solid gray; background-color: ffffff; width: 90%" align="center">
-		<tr>
-			<td><img src="core/lanshock.gif"></td>
-			<td class="headline">Error Occurred While Processing Request</span></td>
-		</tr>
-		<tr>
-			<td colspan="2" class="sub01">LANshock Version:</td>
-		</tr>
-		<tr>
-			<td colspan="2" class="sub02">#request.lanshock_version# (#request.lanshock_build#)</td>
-		</tr>
-		<tr>
-			<td colspan="2" class="sub01">ColdFusion Version:</td>
-		</tr>
-		<tr>
-			<td colspan="2" class="sub02">#server.coldfusion.productversion#</td>
-		</tr>
-		<tr>
-			<td colspan="2" class="sub01">Message:</td>
-		</tr>
-		<tr>
-			<td colspan="2" class="sub02">#stGlobalCfcatch.message#</td>
-		</tr>
-		<tr>
-			<td colspan="2" class="sub01">Detail:</td>
-		</tr>
-		<tr>
-			<td colspan="2" class="sub02">#stGlobalCfcatch.detail#</td>
-		</tr>
-		<tr>
-			<td colspan="2" class="sub01">Type:</td>
-		</tr>
-		<tr>
-			<td colspan="2" class="sub02">#stGlobalCfcatch.type#</td>
-		</tr>
-		<tr>
-			<td colspan="2" class="sub01">Error-Status:</td>
-		</tr>
-		<tr>
-			<td colspan="2" class="sub02"><cfif bLogged>This Error has been logged to 'logs/error.log'.<cfelse>This Error has <strong>NOT</strong> been logged to 'logs/error.log'.</cfif></td>
-		</tr>
-		<tr>
-			<td colspan="2" class="sub01">TagContext:</td>
-		</tr>
-		<tr>
-			<td colspan="2" class="sub02">
+<body>
+	<div id="errorwrapper">
+		<h1>Error Occurred While Processing Request</h1>
+		<ul>
+			<cfif StructKeyExists(request,'lanshock_version') AND StructKeyExists(request,'lanshock_build')>
+				<li class="sub01">LANshock Version:</li>
+				<li class="sub02">#request.lanshock_version# (#request.lanshock_build#)</li>
+			</cfif>
+			<li class="sub01">ColdFusion Version:</li>
+			<li class="sub02">#server.coldfusion.productversion#</li>
+			<li class="sub01">Message:</li>
+			<li class="sub02">#stGlobalCfcatch.message#</li>
+			<li class="sub01">Detail:</li>
+			<li class="sub02">#stGlobalCfcatch.detail#</li>
+			<li class="sub01">Type:</li>
+			<li class="sub02">#stGlobalCfcatch.type#</li>
+			<li class="sub01">TagContext:</li>
+			<li class="sub02">
 				<cftry>
 					<table cellpadding="10">
 						<tr>
@@ -113,17 +84,21 @@ $LastChangedRevision$
 						</tr>
 						<cfloop from="1" to="#ArrayLen(stGlobalCfcatch.tagcontext)#" index="idx">
 							<tr>
-								<td class="b_t b_r">#stGlobalCfcatch.tagcontext[idx].type#</td>
-								<td class="b_t b_r" align="right">#stGlobalCfcatch.tagcontext[idx].line#</td>
-								<td class="b_t b_r" align="right">#stGlobalCfcatch.tagcontext[idx].column#</td>
+								<td class="b_t b_r" rowspan="2" valign="top">#stGlobalCfcatch.tagcontext[idx].type#</td>
+								<td class="b_t b_r" rowspan="2" valign="top" align="right">#stGlobalCfcatch.tagcontext[idx].line#</td>
+								<td class="b_t b_r" rowspan="2" valign="top" align="right">#stGlobalCfcatch.tagcontext[idx].column#</td>
 								<td class="b_t">#stGlobalCfcatch.tagcontext[idx].template#</td>
+							</tr>
+							<tr>
+								<td class="b_t">#stGlobalCfcatch.tagcontext[idx].codeprinthtml#</td>
 							</tr>
 						</cfloop>
 					</table>
 					<cfcatch><em>Unknown</em></cfcatch>
-				</cftry></td>
-		</tr>
-	</table>
+				</cftry>
+			</li>
+		</ul>
+	</div>
 </body>
 </html>
 </cfoutput>

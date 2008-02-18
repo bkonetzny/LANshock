@@ -8,59 +8,89 @@ $LastChangedBy$
 $LastChangedRevision$
 --->
 
-<cfcomponent hint="Session Manager">
+<cfcomponent>
 	
-	<cffunction name="refreshSessionCache" output="false">
-		<cfargument name="cache" type="struct" default="#StructNew()#">
-		<cfargument name="timeout" type="numeric" default="300">
+	<cffunction name="init" output="false" returntype="void">
+	
+		<cfset variables.stSessions = StructNew()>
+		<cfset variables.iTimeout = 300>
+		<cfset variables.iSessions = 0>
+	
+	</cffunction>
+	
+	<cffunction name="checkSession" output="false" returntype="void">
 		
-		<cfscript>
-			var stCache = '';
-			var stSessions = '';
-		</cfscript>
+		<cfset var idx = 0>
+		<cfset var sSessionIP = ''>
 		
-		<cfparam name="arguments.cache.stSessions" default="#StructNew()#">
+		<cfif NOT StructKeyExists(session,'oUser')>
+			<cfset session.dtSessionCreated = now()>
+			<cfset session.oUser = application.lanshock.oFactory.load('lanshock.core.session')>
+			<cfset session.oUser.init()>
+			<cfset session.oPreferences = application.lanshock.oFactory.load('lanshock.core.preferences')>
+		</cfif>
 		
-		<cfscript>
-			stCache = StructNew();
-			stCache.iOnlineUser = 0;
-			stCache.iOnlineGuest = 0;
-			stCache.lUserIDs = '';
-			stSessions = arguments.cache.stSessions;
-			sKey = '';
+		<!--- check session hijacking --->
+		<cfif application.lanshock.settings.security.check_sessionhijack>
+			<cfif session.ip_address NEQ cgi.remote_addr AND application.lanshock.oApplication.getMyFusebox().originalCircuit NEQ 'c_general'>
+				<cfset sSessionIP = session.ip_address>
+				<cfset session = StructNew()>
+				<cfloop collection="#cookie#" item="idx">
+					<cfcookie name="#idx#" expires="now">
+				</cfloop>
+				<cflocation url="#application.lanshock.oApplication.getMyFusebox().getMyself()#c_general.error_session_hijack&ip_session=#UrlEncodedFormat(ip_session)#" addtoken="false">
+			</cfif>
+		</cfif>
+		
+		<!--- TODO: check in circuit code?
+				check if user may access the module --->
+		<!--- <cfif application.lanshock.settings.security.check_useraccess_module AND NOT session.userloggedin>
+			<cfif StructKeyExists(application.module,application.lanshock.oApplication.getMyFusebox().originalCircuit) AND 
+					StructKeyExists(application.module[application.lanshock.oApplication.getMyFusebox().originalCircuit], 'general') AND 
+					StructKeyExists(application.module[application.lanshock.oApplication.getMyFusebox().originalCircuit].general, 'reqlogin') AND 
+					application.module[application.lanshock.oApplication.getMyFusebox().originalCircuit].general.reqlogin AND 
+					application.lanshock.oApplication.getMyFusebox().originalCircuit NEQ 'c_user'>
+				<cflocation url="#application.lanshock.oApplication.getMyFusebox().getMyself()#c_general.error_access_denied&#session.urltoken#" addtoken="false">
+			</cfif>
+		</cfif> --->
+		
+		<cfset updateSessions()>		
+	</cffunction>
+	
+	<cffunction name="updateSessions" output="false" returntype="void">
+		<cfset var sKey = ''>
 
-			if(NOT listFind('CFSCHEDULE,ColdFusion,LANshock Cron Service',cgi.http_user_agent)){
-				if(ListLen(cgi.query_string,'=') GTE 2 AND ListLen(ListDeleteAt(cgi.query_string,1,'='),'.') GTE 2){
-					sKey = request.session.urltoken;
-					stSessions[sKey] = StructNew();
-					stSessions[sKey].query_string = cgi.query_string;
-					stSessions[sKey].http_user_agent = cgi.http_user_agent;
-					stSessions[sKey].session = request.session;
-					stSessions[sKey].fusebox = StructNew();
-					stSessions[sKey].fusebox.urlvalue = ListFirst(ListDeleteAt(cgi.query_string,1,'='),'&');
-					stSessions[sKey].fusebox.circuit = ListFirst(stSessions[sKey].fusebox.urlvalue,'.');
-					stSessions[sKey].fusebox.action = ListLast(stSessions[sKey].fusebox.urlvalue,'.');
-				}
-			}
-			
-			// remove users with timeout
-			for(idx in stSessions){
-				if(NOT StructKeyExists(stSessions[idx].session,'timestamp') OR DateDiff('s', stSessions[idx].session.timestamp, now()) GT arguments.timeout) StructDelete(stSessions, idx);
-				else{
-					if(len(sKey)){
-						stCache.lUserIDs = ListAppend(stCache.lUserIDs,stSessions[sKey].session.userid);
-					
-						if(StructKeyExists(stSessions[idx].session, 'userloggedin') AND stSessions[idx].session.userloggedin) stCache.iOnlineUser = stCache.iOnlineUser + 1;
-						else stCache.iOnlineGuest = stCache.iOnlineGuest + 1;
-					}
-				}
-			}
-			
-			stCache.iActiveSessions = StructCount(stSessions);
-			stCache.stSessions = stSessions;
-		</cfscript>
-		
-		<cfreturn stCache>
+		<cfset sKey = session.urltoken>
+		<cfset variables.stSessions[sKey] = StructNew()>
+		<cfset variables.stSessions[sKey].query_string = cgi.query_string>
+		<cfset variables.stSessions[sKey].http_user_agent = cgi.http_user_agent>
+		<cfset variables.stSessions[sKey].session = session>
+		<cfset variables.stSessions[sKey].fusebox = StructNew()>
+		<cfset variables.stSessions[sKey].fusebox.circuit = application.lanshock.oApplication.getMyFusebox().originalCircuit>
+		<cfset variables.stSessions[sKey].fusebox.action = application.lanshock.oApplication.getMyFusebox().originalFuseaction>
+	</cffunction>
+	
+	<cffunction name="cleanSessions" output="false" returntype="void">
+
+		<cfset var idx = 0>
+
+		<cfloop collection="#variables.stSessions#" item="idx">
+			<cfif DateDiff('s',variables.stSessions[idx].session.timestamp, now()) GT variables.iTimeout>
+				<cfset StructDelete(variables.stSessions,idx)>
+			</cfif>
+		</cfloop>
+	</cffunction>
+	
+	<cffunction name="getSessions" output="false" returntype="struct">
+
+		<cfreturn variables.stSessions>
+
+	</cffunction>
+	
+	<cffunction name="getSessionCount" output="false" returntype="numeric">
+
+		<cfreturn StructCount(variables.stSessions)>
+
 	</cffunction>
 
 </cfcomponent>

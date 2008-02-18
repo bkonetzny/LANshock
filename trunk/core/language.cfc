@@ -20,6 +20,8 @@ $LastChangedRevision$
 		<cfset var languageKey = ''>
 		<cfset var content_new = ''>
 		<cfset var sLastLoadedLanguaged = ''>
+
+		<cfparam name="Application.lanshock.Cache.Language" default="#StructNew()#">
 		
 		<cfif StructKeyExists(Application.lanshock.Cache.Language,key1) AND 
 				StructKeyExists(Application.lanshock.Cache.Language[key1],key2) AND 
@@ -62,6 +64,45 @@ $LastChangedRevision$
 		</cfif>
 		
 		<cfreturn arguments.base>
+	</cffunction>
+
+	<cffunction name="loadProperties" output="false" returntype="struct">
+		<cfargument name="base" type="struct" required="false" default="#StructNew()#">
+		<cfargument name="lang" type="string" required="true">
+		<cfargument name="file" type="string" required="true">
+		
+		<cfset var stReturn = arguments.base>
+		<cfset var sFileDirectory = getDirectoryFromPath(arguments.file)>
+		<cfset var sFileLangDefault = LCase(getFileFromPath(arguments.file))>
+		<cfset var sFileLangUser = LCase(replace(sFileLangDefault,'.properties','_#arguments.lang#.properties'))>
+		<cfset var qLangFiles = 0>
+		<cfset var stRb = StructNew()>
+		
+		<cfif NOT application.lanshock.oCache.exists("language:#sFileDirectory#")>
+		
+			<cfdirectory action="list" name="qLangFiles" directory="#application.lanshock.environment.abspath##sFileDirectory#" filter="*.properties">
+			
+			<cfloop query="qLangFiles">
+		
+				<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core._utils.i18n.javaRB')#" method="getResourceBundle" returnvariable="stRb">
+					<cfinvokeargument name="rbFile" value="#application.lanshock.environment.abspath##sFileDirectory##qLangFiles.name#">
+				</cfinvoke>
+				
+				<cfset application.lanshock.oCache.set("language:#sFileDirectory##qLangFiles.name#",stRb)>
+			
+			</cfloop>
+			
+			<cfset application.lanshock.oCache.set("language:#sFileDirectory#",now())>
+			
+		</cfif>
+		
+		<cfif application.lanshock.oCache.exists("language:#sFileDirectory##sFileLangUser#")>
+			<cfset StructAppend(stReturn,application.lanshock.oCache.get("language:#sFileDirectory##sFileLangUser#"),true)>
+		<cfelseif application.lanshock.oCache.exists("language:#sFileDirectory##sFileLangDefault#")>
+			<cfset StructAppend(stReturn,application.lanshock.oCache.get("language:#sFileDirectory##sFileLangDefault#"),true)>
+		</cfif>
+		
+		<cfreturn stReturn>
 	</cffunction>
 
 </cfcomponent>

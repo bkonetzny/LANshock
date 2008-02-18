@@ -31,7 +31,7 @@ $LastChangedRevision$
 				<cfif application.module[idx].general.loadLanguageFile>
 					<cfinvoke component="#application.lanshock.environment.componentpath#core.language" method="getLanguageStrings" returnvariable="langNavigation">
 						<cfinvokeargument name="base" value="#langNavigation#">
-						<cfinvokeargument name="lang" value="#request.session.lang#">
+						<cfinvokeargument name="lang" value="#session.lang#">
 						<cfinvokeargument name="path" value="#application.module[idx].module_path_rel#">
 					</cfinvoke>
 				</cfif>
@@ -62,9 +62,9 @@ $LastChangedRevision$
 					<cfloop list="#lNavItems#" index="idx2">
 						<cfscript>
 							// Check if Item should show
-							if(Application.Module[idx].navigation[idx2].reqstatus EQ 'admin' AND request.session.isAdmin
-								 OR Application.Module[idx].navigation[idx2].reqstatus EQ 'notloggedin' AND NOT request.session.userloggedin
-								 OR Application.Module[idx].navigation[idx2].reqstatus EQ 'loggedin' AND request.session.userloggedin
+							if(Application.Module[idx].navigation[idx2].reqstatus EQ 'admin' AND session.isAdmin
+								 OR Application.Module[idx].navigation[idx2].reqstatus EQ 'notloggedin' AND NOT session.userloggedin
+								 OR Application.Module[idx].navigation[idx2].reqstatus EQ 'loggedin' AND session.userloggedin
 								 OR NOT len(Application.Module[idx].navigation[idx2].reqstatus)){
 								stNav[idx].sub[idx2] = StructNew();
 								stNav[idx].sub[idx2].action = Application.Module[idx].navigation[idx2].action;
@@ -92,9 +92,7 @@ $LastChangedRevision$
 	<cfargument name="allow_url" type="boolean" required="false" default="true">
 	<cfargument name="allow_html" type="boolean" required="false" default="false">
 	
-	<cfscript>
-		var sConvertedText = arguments.text;
-	</cfscript>
+	<cfset var sConvertedText = arguments.text>
 	
 	<cfinclude template="_utils/converttext.cfm">
 	
@@ -250,20 +248,20 @@ $LastChangedRevision$
 	
 		if(NOT len(trim(arguments.module))) arguments.module = myfusebox.thiscircuit;
 
-		if(request.session.isAdmin AND NOT StructKeyExists(request.session, 'rights')){
+		if(session.isAdmin AND NOT StructKeyExists(session, 'rights')){
 			oAdmin = CreateObject('component','#request.lanshock.environment.componentpath#core.admin.admin');
-			oAdmin.setAdminSessionRights(request.session.userid);
+			oAdmin.setAdminSessionRights(session.userid);
 		}
 		
-		if(NOT request.session.isAdmin) bResult = false;
+		if(NOT session.isAdmin) bResult = false;
 
-		if(NOT StructKeyExists(request.session, 'rights') OR 
-			NOT isStruct(request.session.rights) OR
-			NOT StructKeyExists(request.session.rights,arguments.module) OR  
-			NOT StructKeyExists(request.session.rights[arguments.module], 'areas') OR 
-			NOT StructKeyExists(request.session.rights[arguments.module].areas, arguments.area))
+		if(NOT StructKeyExists(session, 'rights') OR 
+			NOT isStruct(session.rights) OR
+			NOT StructKeyExists(session.rights,arguments.module) OR  
+			NOT StructKeyExists(session.rights[arguments.module], 'areas') OR 
+			NOT StructKeyExists(session.rights[arguments.module].areas, arguments.area))
 			 bResult = false;
-		else bResult = request.session.rights[arguments.module].areas[arguments.area];
+		else bResult = session.rights[arguments.module].areas[arguments.area];
 	</cfscript>
 	
 	<cfif arguments.returntype EQ 'boolean'>
@@ -271,7 +269,7 @@ $LastChangedRevision$
 	<cfelse>
 		<!--- default: relocate --->
 		<cfif NOT bResult> 
-			<cflocation url="#myself##request.lanshock.settings.modulePrefix.core#general.noright&right_module=#arguments.module#&right_area=#arguments.area#&#request.session.urltoken#" addtoken="false"> 
+			<cflocation url="#myself##request.lanshock.settings.modulePrefix.core#general.noright&right_module=#arguments.module#&right_area=#arguments.area#&#session.urltoken#" addtoken="false"> 
 		</cfif>
 	</cfif>
 

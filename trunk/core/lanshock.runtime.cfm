@@ -46,26 +46,26 @@ $LastChangedRevision$
 
 <!--- default locale --->
 <cfif left(Server.ColdFusion.ProductVersion,1) EQ 7>
-	<cfset SetLocale(request.session.lang)>
+	<cfset SetLocale(session.lang)>
 <cfelse>
 	<cfset SetLocale("German (Standard)")>
 </cfif>
 
 <cfinvoke component="#application.lanshock.environment.componentpath#core.language" method="getLanguageStrings" returnvariable="request.content">
 	<cfinvokeargument name="base" value="#request.content#">
-	<cfinvokeargument name="lang" value="#request.session.lang#">
+	<cfinvokeargument name="lang" value="#session.lang#">
 	<cfinvokeargument name="path" value="core/_utils/">
 </cfinvoke>
 
 <cfinvoke component="#application.lanshock.environment.componentpath#core.language" method="getLanguageStrings" returnvariable="request.content">
 	<cfinvokeargument name="base" value="#request.content#">
-	<cfinvokeargument name="lang" value="#request.session.lang#">
-	<cfinvokeargument name="path" value="core/comments/">
+	<cfinvokeargument name="lang" value="#session.lang#">
+	<cfinvokeargument name="path" value="modules/comments/">
 </cfinvoke>
 
 <cfinvoke component="#application.lanshock.environment.componentpath#core.language" method="getLanguageStrings" returnvariable="request.content">
 	<cfinvokeargument name="base" value="#request.content#">
-	<cfinvokeargument name="lang" value="#request.session.lang#">
+	<cfinvokeargument name="lang" value="#session.lang#">
 	<cfinvokeargument name="path" value="templates/#application.lanshock.settings.layout.template#/">
 </cfinvoke>
 
