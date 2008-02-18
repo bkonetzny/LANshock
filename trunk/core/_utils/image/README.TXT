@@ -43,3 +43,20 @@ software emulation mode" when calling certain parts of this
 component under Coldfusion MX, you should refer to Technote
 ID #18747:  http://www.macromedia.com/go/tn_18747
 
+SPECIAL NOTE FOR ADDTEXT() METHOD
+---------------------------------
+When you use the addText() method with a truetype font file, you 
+will find that java creates temp files somewhere on your system.
+In the Linux world, it seems to be /tmp and the files are named
+JF*.tmp
+
+These don't get cleaned up!!! You'll need to write some kind
+of script to clean them up manually.  For example, I use
+this as a cron job:
+
+* * * * * /usr/bin/find /tmp -cmin +2 -name \*JF\*.tmp | /usr/bin/xargs /bin/rm
+
+For further discussion, see this thread in the imageCFC forums:
+
+http://www.opensourcecf.com/forums/messages.cfm?threadid=C5E1D7AC-F742-E671-16AD1BD0A8BF4C87
+
