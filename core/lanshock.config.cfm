@@ -46,7 +46,7 @@ $LastChangedRevision$
 		
 		// config info
 		application.lanshock.config.dtCreated = now();
-		application.lanshock.config.file = '#application.lanshock.environment.abspath#config/config.ini.cfm';
+		application.lanshock.config.file = '#application.lanshock.environment.abspath#config/lanshock/config.ini.cfm';
 		application.lanshock.config.avaible = FileExists(application.lanshock.config.file);
 		application.lanshock.config.configinitialized = true;
 		application.lanshock.config.complete = false;
@@ -86,7 +86,7 @@ $LastChangedRevision$
 		
 		application.lanshock.settings.modulePrefix = StructNew();
 		application.lanshock.settings.modulePrefix.core = "c_"; // LANshock Core Alias
-		application.lanshock.settings.modulePrefix.module = "m_"; // LANshock Module Alias
+		application.lanshock.settings.modulePrefix.module = "c_"; // LANshock Module Alias
 		
 		application.lanshock.environment.componentpath = 'lanshock.';
 
@@ -109,6 +109,7 @@ $LastChangedRevision$
 				StructDelete(application.lanshock.environment,'componentpath');
 			}
 		}
+		application.lanshock.environment.mapping = '/' & replace(application.lanshock.environment.componentpath,'.','/');
 		if(application.lanshock.config.avaible)	application.lanshock.config.runable = true;
 		else application.lanshock.config.runable = false;
 	</cfscript>
@@ -124,10 +125,10 @@ $LastChangedRevision$
 		<cfthrow message="Invalid Component Path" detail="Auto-Detection of the LANshock Mapping hasn't been successfull. Please add a Mapping, pointing to the LANshock Root, in 'ColdFusion Administrator -> Mappings'.">
 	</cfif>
 	
-	<cfif len(application.lanshock.environment.datasource) AND len(application.lanshock.environment.datasource_type)>
+	<!--- <cfif len(application.lanshock.environment.datasource) AND len(application.lanshock.environment.datasource_type)>
 		<cfset application.objectBreeze = createObject("component", "#application.lanshock.environment.componentpath#core._utils.objectbreeze.objectBreeze").init(application.lanshock.environment.datasource_type, application.lanshock.environment.datasource) />
 		<cfset variables.objectBreeze = application.objectBreeze />
-	</cfif>
+	</cfif> --->
 
 </cfif>
 
