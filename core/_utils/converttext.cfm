@@ -17,7 +17,7 @@ $LastChangedRevision$
 	<cfset sConvertedText = replaceList(sConvertedText, '<,>', '&lt;,&gt;')>
 </cfif>
 <cfif len(application.lanshock.settings.layout.smileyset)>
-	<cfinclude template="_smileys.cfm">
+	<!--- <cfinclude template="_smileys.cfm"> --->
 </cfif>
 <cfif application.lanshock.settings.layout.converttext.pseudocode>
 	<cfinclude template="_pseudocode.cfm">
