@@ -58,7 +58,7 @@
 		<cfargument name="Config" hint="I am the Config object." required="yes" type="any" _type="reactor.config.config" />
 		<cfargument name="Convention" hint="I am the Convention object to use when rendering the query." required="yes" type="any" _type="reactor.data.abstractConvention" />
 		<cfargument name="type" hint="I am the type of query (select or delete)." required="yes" type="any" _type="string" />
-		<cfset var queryFileName = "/reactor/project/#arguments.Config.getProject()#/Queries/" & arguments.Config.getType() & "_" & getHash() & ".cfm" />
+		<cfset var queryFileName = "/reactor/project/#arguments.Config.getProject()#/Queries/" & arguments.Config.getType() & "_" & arguments.type & "_" & getHash() & ".cfm" />
 		<cfset var queryDirectory = 0 />
 		<cfset var whereCommands = 0 />
 		<cfset var Query = 0 />
