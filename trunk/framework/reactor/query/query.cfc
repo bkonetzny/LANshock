@@ -114,7 +114,7 @@
 
 			<!--- write the file to disk --->
 			<cflock type="exclusive" timeout="30">
-  			<cffile action="write" file="#expandPath(queryFileName)#" output="#Query#" nameconflict="overwrite" />
+  				<cffile action="write" file="#expandPath(queryFileName)#" output="#Query#" nameconflict="overwrite" mode="777" />
 			</cflock>
 
 		</cfif>
