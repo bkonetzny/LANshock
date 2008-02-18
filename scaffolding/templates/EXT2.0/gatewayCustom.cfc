@@ -54,9 +54,11 @@ limitations under the License.
 	</cffunction>
 
 	<cffunction name="getNWithJoin" output="false" returntype="query" hint="I get the selected N records, with an outer join to any parent tables.">
-		<cfargument name="sortByFieldList" default="" type="string" required="No" Hint="I am a list of attributes by which to sort the result, In the format table|column|ASC/DESC,table|column|ASC/DESC..."/>
-		<cfargument name="startrow" default="1" type="numeric" required="No" />
-		<cfargument name="maxrows" default="0" type="numeric" required="No" />
+		<cfargument name="sortByFieldList" type="string" required="false" default="" hint="I am a list of attributes by which to sort the result, In the format table|column|ASC/DESC,table|column|ASC/DESC..."/>
+		<cfargument name="startrow" type="numeric" required="false" default="1" />
+		<cfargument name="maxrows" type="numeric" required="false" default="0" />
+		<cfargument name="filter" type="struct" required="false" default="#StructNew()#" />
+		
 		<cfset var QuerySkip = createQuery() />
 		<cfset var OrderSkip = QuerySkip.getOrder() />
 		<cfset var QueryRecordset = createQuery() />
@@ -64,6 +66,7 @@ limitations under the License.
 		<cfset var where = QueryRecordset.getWhere() />
 		<cfset var qSkip = ""/>
 		<cfset var thisOrder = "" />
+		<cfset var idxFilter = "" />
 		
 		<cfif arguments.startrow GT 1>
 			<!--- Set up the sort order for the skipped records --->
@@ -87,6 +90,12 @@ limitations under the License.
 		<cfset QueryRecordset.leftJoin("$$objectName$$", "$$aJoinedObjects[i].name$$", "$$aJoinedObjects[i].alias$$")/>
 		<cfset QueryRecordset.setFieldPrefix("$$aJoinedObjects[i].name$$","$$aJoinedObjects[i].alias$$_")/>
 	  <</cfloop>>
+	  
+		<cfloop collection="#arguments.filter#" item="idxFilter">
+			<cfif ListLast(idxFilter,'.') EQ 'field'>
+				<cfset QueryRecordset.getWhere().isLike("$$objectName$$", arguments.filter[idxFilter], arguments.filter['filter.'&ListGetAt(idxFilter,2,'.')&'.data.value'])>
+			</cfif>
+		</cfloop>
 		
 		<!--- Set up the sort order for the required records --->
 		<cfloop list="#arguments.sortByFieldList#" index="thisOrder">
@@ -116,11 +125,12 @@ limitations under the License.
 	</cffunction>
 
 	<cffunction name="getRecordsForGrid" access="remote" output="false" returntype="string" hint="I return the N records in json-format.">
-		<cfargument name="sortByFieldList" default="" type="string" required="No" hint="I am a list of attributes by which to sort the result, In the format table|column|ASC/DESC,table|column|ASC/DESC..."/>
-		<cfargument name="startrow" default="1" type="numeric" required="No" />
-		<cfargument name="maxrows" default="0" type="numeric" required="No" />
+		<cfargument name="sortByFieldList" type="string" required="false" default="" hint="I am a list of attributes by which to sort the result, In the format table|column|ASC/DESC,table|column|ASC/DESC..."/>
+		<cfargument name="startrow" type="numeric" required="false" default="1" />
+		<cfargument name="maxrows" type="numeric" required="false" default="0" />
+		<cfargument name="filter" type="struct" required="false" default="#StructNew()#" />
 		
-		<cfset var qResult = getNWithJoin(arguments.sortByFieldList,arguments.startrow,arguments.maxrows)>
+		<cfset var qResult = getNWithJoin(arguments.sortByFieldList,arguments.startrow,arguments.maxrows,arguments.filter)>
 		<cfset var oJSON = application.lanshock.oFactory.load('lanshock.core._utils.json.json')>
 		<cfset var sResult = oJSON.encode(data=qResult,queryFormat='array')>
 		

@@ -45,7 +45,7 @@ $LastChangedRevision: 56 $
 		</tr> --->
 		<tr>
 			<th>#request.content.coldfusion#</th>
-			<td>#Server.ColdFusion.ProductName#</td>
+			<td>#Server.ColdFusion.ProductName#<cfif StructKeyExists(server,'railo')> (#server.railo.version#)</cfif></td>
 		</tr>
 		<tr>
 			<th>#request.content.coldfusion_version#</th>

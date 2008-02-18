@@ -43,22 +43,21 @@ $LastChangedRevision: 96 $
 
 <!--- set avaible actionstrings --->
 <cfset lActionStrings = "fuseaction,method,do">
+<cfset qNavigation = application.lanshock.oModules.getNavigation(lang=session.lang)>
 
 <cfsavecontent variable="sSelectList">
 <cfoutput>
 	<option value=""></option>
-	<cfloop collection="#application.module#" item="idx">
-		<optgroup label="#application.module[idx].name#">
-			<cfif attributes.startpage EQ '#idx#.main'><cfset attributes.startpage_type = 'selected'></cfif>
-			<option value="#idx#.main"<cfif attributes.startpage EQ '#idx#.main'> selected</cfif>>#application.module[idx].name#</option>
-			<cfif NOT StructIsEmpty(application.module[idx].navigation)>
-				<cfloop collection="#application.module[idx].navigation#" item="idx2">
-					<cfif attributes.startpage EQ '#idx#.#application.module[idx].navigation[idx2].action#'><cfset attributes.startpage_type = 'selected'></cfif>
-					<option value="#idx#.#application.module[idx].navigation[idx2].action#"<cfif attributes.startpage EQ '#idx#.#application.module[idx].navigation[idx2].action#'> selected</cfif>>#idx#.#application.module[idx].navigation[idx2].action#<cfif len(application.module[idx].navigation[idx2].reqstatus)> --- (#application.module[idx].navigation[idx2].reqstatus#)</cfif></option>
-				</cfloop>
+	<cfoutput query="qNavigation" group="module">
+		<optgroup label="#qNavigation.module#">
+			<cfoutput>
+			<cfif attributes.startpage EQ qNavigation.action>
+				<cfset attributes.startpage_type = 'selected'>
 			</cfif>
+			<option value="#qNavigation.action#"<cfif attributes.startpage EQ qNavigation.action> selected="selected"</cfif>>#qNavigation.label#</option>
+			</cfoutput>
 		</optgroup>
-	</cfloop>
+	</cfoutput>
 </cfoutput>
 </cfsavecontent>
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="blog Module" version="1.1.1.0" date="2007-07-08" author="LANshock" url="http://www.lanshock.com">
+<module name="blog Module" version="2.0.0.0" date="2008-02-18" author="LANshock" url="http://www.lanshock.com">
 	
 	<general requiresLogin="false"/>
 	
@@ -10,12 +10,11 @@
 	<navigation>
 		<item action="archive"/>
 		<item action="categories"/>
-		<item action="rss_feeds"/>
-		<item action="news_entry_Listing" reqstatus="admin"/>
+		<item action="news_entry_Listing" permissions="news_entry"/>
 		<!-- <item action="news_trackback_Listing" reqstatus="admin"/> -->
-		<item action="news_category_Listing" reqstatus="admin"/>
+		<item action="news_category_Listing" permissions="news_category"/>
 		<!-- <item action="news_entry_category_Listing" reqstatus="admin"/> -->
-		<item action="news_ping_url_Listing" reqstatus="admin"/>
+		<item action="news_ping_url_Listing" permissions="news_ping_url"/>
 	</navigation>
 	
 	<panels>
@@ -23,11 +22,9 @@
 	</panels>
 	
 	<security>
-		<area name="news_entry"/>
-		<!-- <area name="news_trackback"/> -->
-		<area name="news_category"/>
-		<!-- <area name="news_entry_category"/> -->
-		<area name="news_ping_url"/>
+		<!-- news_trackback, news_entry_category -->
+		<permissions list="news_entry,news_category,news_ping_url"/>
+		<role name="Blog Admin" permissions="news_entry,news_category,news_ping_url"/>
 	</security>
 	
 	<database>

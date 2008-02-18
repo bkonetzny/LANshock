@@ -58,18 +58,6 @@ It assumes that all the tables have a field defined as integer, identity as prim
 	stFileData.suffix = "cfm";
 	stFileData.perObject = "false";
 	ArrayAppend(aTemplateFiles,stFileData);
-	
-//Reactor XML
-	stFileData = structNew();
-	stFileData.templateFile = "reactor";
-	stFileData.outputFile = "config/reactor/reactor";
-	stFileData.MVCpath = "#destinationFilePath#";
-	stFileData.inPlace = "false";
-	stFileData.overwrite = "true";
-	stFileData.useAliasInName = "false";
-	stFileData.suffix = "xml";
-	stFileData.perObject = "false";
-	ArrayAppend(aTemplateFiles,stFileData);
 
 //View: dsp_list_, disp_display_, dsp_form_
 	stFileData = structNew();
@@ -209,7 +197,7 @@ It assumes that all the tables have a field defined as integer, identity as prim
 	stFileData = structNew();
 	stFileData.templateFile = "gateway";
 	stFileData.outputFile = "Gateway";
-	stFileData.MVCpath = "#destinationFilePath#model/gateway/";
+	stFileData.MVCpath = "#destinationFilePath#model/Gateway/";
 	stFileData.inPlace = "false";
 	stFileData.overwrite = "false";
 	stFileData.useAliasInName = "true";
@@ -220,7 +208,7 @@ It assumes that all the tables have a field defined as integer, identity as prim
 	stFileData = structNew();
 	stFileData.templateFile = "gatewayCustom";
 	stFileData.outputFile = "Gateway";
-	stFileData.MVCpath = "#destinationFilePath#model/gateway/";
+	stFileData.MVCpath = "#destinationFilePath#model/Gateway/";
 	stFileData.inPlace = "true";
 	stFileData.overwrite = "true";
 	stFileData.useAliasInName = "true";

@@ -39,11 +39,14 @@ $LastChangedRevision: 56 $
 			</select></td>
 	</tr>
 	<tr>
-		<th rowspan="2"><!--- TODO: $$$ ---> Startpage</th>
+		<th rowspan="3"><!--- TODO: $$$ ---> Startpage</th>
 		<td><input type="radio" name="startpage_type" value="selected"<cfif attributes.startpage_type EQ 'selected'> checked</cfif>> <select name="startpage">#sSelectList#</select></td>
 	</tr>
 	<tr>
-		<td><input type="radio" name="startpage_type" value="custom"<cfif attributes.startpage_type EQ 'custom'> checked</cfif>> <!--- TODO: $$$ ---> Custom <input type="text" name="startpage_custom" value="#attributes.startpage_custom#"></td>
+		<td><input type="radio" name="startpage_type" value="custom"<cfif attributes.startpage_type EQ 'custom' AND len(attributes.startpage_custom)> checked</cfif>> <!--- TODO: $$$ ---> Custom <input type="text" name="startpage_custom" value="#attributes.startpage_custom#"></td>
+	</tr>
+	<tr>
+		<td><input type="radio" name="startpage_type" value="custom"<cfif attributes.startpage_type EQ 'custom' AND NOT len(attributes.startpage_custom)> checked</cfif>> <!--- TODO: $$$ ---> Default: general.welcome</td>
 	</tr>
 </table>
 <input type="submit" value="#request.content.form_save#">
