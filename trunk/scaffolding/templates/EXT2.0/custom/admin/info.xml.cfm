@@ -8,24 +8,23 @@
 	</license>
 	
 	<navigation>
-		<item action="start" reqstatus="admin"/>
-		<item action="core_config" reqstatus="admin"/>
-		<item action="modules" reqstatus="admin"/>
-		<item action="cron" reqstatus="admin"/>
-		<item action="admin" reqstatus="admin"/>
-		<item action="userlist" reqstatus="admin"/>
-		<item action="roleslist" reqstatus="admin"/>
-		<item action="import" reqstatus="admin"/>
-		<item action="maintenance" reqstatus="admin"/>
-		<!-- <item action="mailing" reqstatus="admin"/> -->
-		<!-- <item action="core_configmanager_Listing" reqstatus="admin"/> -->
-		<!-- <item action="core_modules_Listing" reqstatus="admin"/> -->
-		<item action="core_navigation_Listing" reqstatus="admin"/>
-		<!-- <item action="core_security_permissions_Listing" reqstatus="admin"/> -->
-		<item action="core_security_roles_Listing" reqstatus="admin"/>
-		<!-- <item action="core_security_roles_permissions_rel_Listing" reqstatus="admin"/> -->
-		<item action="core_security_users_roles_rel_Listing" reqstatus="admin"/>
-		<item action="user_Listing" reqstatus="admin"/>
+		<item action="start"/>
+		<item action="core_config" permissions="core_configmanager"/>
+		<item action="modules" permissions="core_modules"/>
+		<!-- <item action="cron" permissions="core_configmanager"/> -->
+		<!-- <item action="admin" permissions="admin"/> -->
+		<!-- <item action="userlist" permissions="admin"/> -->
+		<!-- <item action="import" permissions="core_configmanager"/> -->
+		<!-- <item action="maintenance" permissions="core_configmanager"/> -->
+		<!-- <item action="mailing" permissions="admin"/> -->
+		<!-- <item action="core_configmanager_Listing" permissions="admin"/> -->
+		<!-- <item action="core_modules_Listing" permissions="admin"/> -->
+		<item action="core_navigation_Listing" permissions="core_navigation"/>
+		<!-- <item action="core_security_permissions_Listing" permissions="admin"/> -->
+		<item action="core_security_roles_Listing" permissions="core_security_roles"/>
+		<!-- <item action="core_security_roles_permissions_rel_Listing" permissions="admin"/> -->
+		<!-- <item action="core_security_users_roles_rel_Listing" permissions="admin"/> -->
+		<item action="user_Listing" permissions="user"/>
 	</navigation>
 	
 	<dependencies>
@@ -33,16 +32,16 @@
 	</dependencies>
 	
 	<security>
-		<area name="setrights"/>
 		<area name="guest"/>
 		<area name="mailing"/>
+		<area name="core_user"/>
 		<area name="core_configmanager"/>
 		<area name="core_modules"/>
 		<area name="core_navigation"/>
 		<area name="core_security_permissions"/>
 		<area name="core_security_roles"/>
 		<area name="core_security_roles_permissions_rel"/>
-		<permissions list="setrights,guest,mailing,core_configmanager,core_modules,core_navigation,core_security_permissions,core_security_roles,core_security_roles_permissions_rel"/>
+		<permissions list="guest,mailing,user,core_configmanager,core_modules,core_navigation,core_security_permissions,core_security_roles,core_security_roles_permissions_rel"/>
 		<role name="LANshock Admin" permissions="setrights,guest,mailing,core_configmanager,core_modules,core_navigation,core_security_permissions,core_security_roles,core_security_roles_permissions_rel"/>
 	</security>
 	
@@ -51,14 +50,6 @@
 	</cron>
 	
 	<database>
-		<table name="admin">
-			<field name="id" type="integer" len="11" null="false" special="auto_increment"/>
-			<field name="user" type="integer" len="11" null="false" default="0"/>
-			<field name="lastchange_userid" type="integer" len="11" null="false" default="0"/>
-			<field name="lastchange_dt" type="datetime" null="true" default="NULL"/>
-			<field name="security" type="text" null="false" default=""/>
-			<pk fields="id"/>
-		</table>
 		<table name="core_configmanager">
 			<field name="module" type="varchar" len="255" null="false" default=""/>
 			<field name="version" type="varchar" len="255" null="false" default=""/>
@@ -115,10 +106,10 @@
 			<table name="core_security_roles_permissions_rel" loadFields="false">
 				<![CDATA[
 					<field alias="id" name="id"/>
-					<hasOne name="core_security_permissions" alias="Permissions">
+					<hasOne name="core_security_permissions">
 				        <relate from="permission_id" to="id"/>
 				    </hasOne>
-				    <hasOne name="core_security_roles" alias="Roles">
+				    <hasOne name="core_security_roles">
 				        <relate from="role_id" to="id"/>
 				    </hasOne>
 				]]>
@@ -136,7 +127,10 @@
 			<table name="core_security_roles">
 				<![CDATA[
 					<hasMany name="core_security_permissions">
-						<link name="core_security_roles_permissions_rel" from="Roles" to="Permissions" />
+						<link name="core_security_roles_permissions_rel" from="core_security_roles" to="core_security_permissions" />
+					</hasMany>
+					<hasMany name="user">
+						<link name="core_security_users_roles_rel" from="core_security_roles" to="user" />
 					</hasMany>
 				]]>
 			</table>

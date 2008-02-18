@@ -9,14 +9,34 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 63 $
 --->
 
-<cfparam name="attributes.mode" default="short">
+<cfset stMetadata = structNew()>
+<cfset stMetadata.title = application.lanshock.settings.appname & ' RSS 1.0'>
+<cfset stMetadata.link = application.lanshock.environment.webpathfull>
+<cfset stMetadata.description = application.lanshock.settings.appname>
+<!--- <cfset stMetadata.image = structNew()>
+<cfset stMetadata.image.url = "http://www.foo.com/site.gif">
+<cfset stMetadata.image.title = "Foo">
+<cfset stMetadata.image.link = "http://www.foo.com"> --->
 
-<cfif NOT ListFind('short,full', attributes.mode)>
-	<cfset attributes.mode = 'short'>
-</cfif>
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.blog.model.cfc.news')#" method="getNews" returnvariable="qNews">
+	<cfinvokeargument name="records" value="25">
+</cfinvoke>
 
-<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.blog.model.cfc.news')#" method="generateRSS" returnvariable="sRSS">
-	<cfinvokeargument name="mode" value="#attributes.mode#">
+<cfset qRssEntries = queryNew("title,body,link,subject,date")>
+
+<cfloop query="qNews">
+	<cfset queryAddRow(qRssEntries,1)>
+	<cfset querySetCell(qRssEntries,"title",qNews.title)>
+	<cfset querySetCell(qRssEntries,"body",qNews.text)>
+	<cfset querySetCell(qRssEntries,"link",application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news_details&news_id=#qNews.id#&title=#UrlEncodedFormat(qNews.title)#',true))>
+	<cfset querySetCell(qRssEntries,"subject",qNews.title)>
+	<cfset querySetCell(qRssEntries,"date",qNews.date)>
+</cfloop>
+
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core._utils.rss.rss')#" method="generateRSS" returnvariable="sRSS">
+	<cfinvokeargument name="type" value="RSS1">
+	<cfinvokeargument name="data" value="#qRssEntries#">
+	<cfinvokeargument name="metadata" value="#stMetadata#">
 </cfinvoke>
 
 <cfsetting enablecfoutputonly="No">

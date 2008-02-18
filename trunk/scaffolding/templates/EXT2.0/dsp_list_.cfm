@@ -50,6 +50,24 @@ limitations under the License.
 	<</cfif>>
 <</cfloop>>
 
+<<cfset sCodeFilterModel = ''>>
+<<cfset bFirstColumn = true>>
+<<cfloop from="1" to="$$ArrayLen(aFields)$$" index="idx">>
+	<<cfif aFields[idx].showOnList>>
+		<<cfif NOT bFirstColumn>>
+			<<cfset sCodeFilterModel = sCodeFilterModel & "," & chr(13)>>
+		<</cfif>>
+		<<cfset sCodeFilterModel = sCodeFilterModel & "{type: 'string', dataIndex: '$$aFields[idx].alias$$'">>
+		<<!--- <<cfswitch expression="$$aFields[idx].type$$">>
+			<<cfcase value="date">>
+				<<cfset sCodeDataReaderModel = sCodeDataReaderModel & ",type:'date',dateFormat:'Y-m-d g:i'">>
+			<</cfcase>>
+		<</cfswitch>> --->>
+		<<cfset sCodeFilterModel = sCodeFilterModel & "}">>
+		<<cfset bFirstColumn = false>>
+	<</cfif>>
+<</cfloop>>
+
 <<cfset sCodeColumnModel = ''>>
 <<cfset bFirstColumn = true>>
 <<cfloop from="1" to="$$ArrayLen(aFields)$$" index="idx">>
@@ -60,7 +78,7 @@ limitations under the License.
 		<<cfelse>>
 			<<cfset sCodeColumnModel = sCodeColumnModel & "," & chr(13) & "{">>
 		<</cfif>>
-		<<cfset sCodeColumnModel = sCodeColumnModel & "header:'$$aFields[idx].label$$',width:30,sortable:true,dataIndex:'$$aFields[idx].alias$$'">>
+		<<cfset sCodeColumnModel = sCodeColumnModel & "header:'#jsStringFormat(request.content.$$objectName$$_grid_header_$$aFields[idx].label$$)#',width:30,sortable:true,dataIndex:'$$aFields[idx].alias$$'">>
 		<<!--- <<cfswitch expression="$$aFields[idx].type$$">>
 			<<cfcase value="date">>
 				<<cfset sCodeColumnModel = sCodeColumnModel & ",renderer:Ext.util.Format.dateRenderer('d.m.Y - H:i')">>
@@ -143,6 +161,14 @@ limitations under the License.
 <cfoutput>
 <script type="text/javascript">
 	Ext.onReady(function(){
+		
+		Ext.ux.menu.RangeMenu.prototype.icons = {
+          gt: '#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0-ux/img/greater_then.png', 
+          lt: '#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0-ux/img/less_then.png',
+          eq: '#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0-ux/img/equals.png'
+		};
+		
+		Ext.ux.grid.filter.StringFilter.prototype.icon = '#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0-ux/img/find.png';
 	
 		Ext.QuickTips.init();
 	    var xg = Ext.grid;
@@ -153,7 +179,7 @@ limitations under the License.
         	id:'cm_btn_edit',
         	text:'#jsStringFormat(request.content.$$objectName$$_grid_row_edit)#',
         	action:'edit',
-        	handler:function(e){window.location.href='#myself##xfa.update#&id=' + grid.getSelectionModel().getSelected().id;},
+        	handler:function(e){window.location.href='#myself##xfa.update#&$$lPKFields$$=' + grid.getSelectionModel().getSelected().id;},
         	iconCls:'edit'
         });
         cmenu.addSeparator();
@@ -165,22 +191,27 @@ limitations under the License.
         	iconCls:'remove'
         });
 	    	    
-	    // create the Data Store
-	    var ds = new Ext.data.Store({
-	    	autoLoad: true,
-	        // load using HTTP
-	        url: '#myself##xfa.grid_json#',
-	        // sorting of data is done remote
-			remoteSort: true,
-	        // the return will be JSON, so lets set up a reader
-	        reader: new Ext.data.JsonReader({
+	    var ds = new Ext.data.GroupingStore({
+			proxy: new Ext.data.HttpProxy({
+				url:'#myself##xfa.grid_json#'
+			}),
+			
+			reader: new Ext.data.JsonReader({
 	        	totalProperty: "totalRecords",
 	        	root: 'data',
 				id: '$$lPKFields$$'
 	           },[
 				$$sCodeDataReaderModel$$
-			])
-	    });
+			]),
+			
+			sortInfo: {field: '$$lPKFields$$', direction: 'ASC'},
+			remoteSort: true,
+			autoLoad: false
+		});
+
+		var filters = new Ext.ux.grid.GridFilters({filters:[
+			$$sCodeFilterModel$$
+		]});
 	    
 	    var grid = new xg.GridPanel({
 	        id:'button-grid',
@@ -190,10 +221,6 @@ limitations under the License.
 	        	$$sCodeColumnModel$$
 	        ]),
 	        sm: sm,
-	
-	        viewConfig: {
-	            forceFit:true
-	        },
 	
 	        // inline toolbars
 	        tbar:[{
@@ -214,12 +241,22 @@ limitations under the License.
 	        title:'#jsStringFormat(request.content['__globalmodule__navigation__$$objectName$$_Listing'])#',
 	        iconCls:'icon-grid',
 	        renderTo: Ext.get('grid_$$objectName$$'),
+	        plugins: filters,
+	        
+	        view: new Ext.grid.GroupingView({
+	        	forceFit:true,
+	        	enableGrouping:false,
+	        	startCollapsed:false
+	        }),
 	        
 	        bbar: new Ext.PagingToolbar({
 	            pageSize: 20,
-	            store: ds
+	            store: ds,
+	            plugins: filters
 	        })
 	    });
+		
+		ds.load({params:{start: 0, limit: 20}});
 	    
 	    grid.doRowContextMenu = function (grid, rowIndex, e) {
           e.stopEvent();
@@ -241,7 +278,7 @@ limitations under the License.
 				var m = grid.getSelections();
 				var jsonData = "[";
 		        for(var i = 0, len = m.length; i < len; i++){        		
-					var ss = "{\"id\":\"" + m[i].get("$$lPKFields$$") + "\"}";
+					var ss = "{\"$$lPKFields$$\":\"" + m[i].get("$$lPKFields$$") + "\"}";
 					if(i==0) jsonData = jsonData + ss ;
 				   	else jsonData = jsonData + "," + ss;	
 					ds.remove(m[i]);								

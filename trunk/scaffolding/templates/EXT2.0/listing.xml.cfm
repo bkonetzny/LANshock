@@ -66,11 +66,21 @@ limitations under the License.
 		<set name="attributes.dir" value="ASC" overwrite="false" />
 		<set name="attributes.start" value="1" overwrite="false" />
 		<set name="attributes.limit" value="20" overwrite="false" />
+		<set name="stFilters" value="#StructNew()#" />
+		
+		<loop collection="#attributes#" item="idxFilters">
+			<if condition="left(idxFilters,7) EQ 'filter['">
+				<true>
+					<set name="stFilters['#replace(replace(idxFilters,'[','.','ALL'),']','','ALL')#']" value="#attributes[idxFilters]#" />
+				</true>
+			</if>
+		</loop>
 		
 		<invoke object="application.lanshock.oFactory.load('$$objectName$$','reactorGateway')" method="getRecordsForGrid" returnvariable="request.page.pageContent">
 			<argument name="sortByFieldList" value="$$objectName$$|#attributes.sort#|#attributes.dir#" />
 			<argument name="startrow" value="#attributes.start#" />
 			<argument name="maxrows" value="#attributes.limit#" />
+			<argument name="filter" value="#stFilters#" />
 		</invoke>
 	</fuseaction>
 	

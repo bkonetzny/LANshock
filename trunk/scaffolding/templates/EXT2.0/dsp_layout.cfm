@@ -48,6 +48,16 @@ limitations under the License.
 		<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0/adapter/jquery/ext-jquery-adapter.js"></script>
 		<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0/ext-all.js"></script>
 		<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0/source/locale/ext-lang-#LCase(ListFirst(session.lang,'_'))#.js"></script>
+		<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0-ux/menu/EditableItem.js"></script>
+		<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0-ux/menu/RangeMenu.js"></script>
+		<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0-ux/grid/GridFilters.js"></script>
+		<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0-ux/grid/filter/Filter.js"></script>
+		<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0-ux/grid/filter/StringFilter.js"></script>
+		<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0-ux/grid/filter/DateFilter.js"></script>
+		<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0-ux/grid/filter/ListFilter.js"></script>
+		<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0-ux/grid/filter/NumericFilter.js"></script>
+		<script type="text/javascript" src="#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0-ux/grid/filter/BooleanFilter.js"></script>
+		<script type="text/javascript">Ext.BLANK_IMAGE_URL = '#request.lanshock.environment.webpath#templates/_shared/js/ext-2.0/resources/images/default/s.gif';</script>
 	</cfoutput>
 </cfsavecontent>
 

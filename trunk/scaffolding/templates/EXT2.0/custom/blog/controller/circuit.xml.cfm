@@ -39,10 +39,6 @@
 		<include circuit="c_#sModule#" template="act_news_comment_del"/>
 	</fuseaction>
 	
-	<fuseaction access="public" name="rss_feeds">
-		<include circuit="v_#sModule#" template="dsp_rss_feeds"/>
-	</fuseaction>
-	
 	<fuseaction access="public" name="rss" lanshock:showlayout="none">
 		<include circuit="c_#sModule#" template="act_rss"/>
 		<include circuit="v_#sModule#" template="dsp_rss"/>
