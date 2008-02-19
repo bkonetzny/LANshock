@@ -18,13 +18,99 @@ $LastChangedRevision: 80 $
 	<cfset this.setClientCookies = true>
 	<cfset this.setDomainCookies = false>
 	<cfset this.scriptProtect = false>
-	<!--- optionally set FUSEBOX_* variables --->
+	
+	<cffunction name="onApplicationStart">
+		<cfif NOT fileExists(expandPath('fusebox.xml.cfm'))>
+			<cffile action="copy" source="#expandPath('storage/secure/config/lanshock/default/fusebox.xml.cfm')#" destination="#expandPath('.')#">
+		</cfif>
+		<cfset super.onApplicationStart()>
+	</cffunction>
+	
+	<cffunction name="onFuseboxApplicationStart">
+		<cfset application.lanshock = StructNew()>
+		<cfset application.lanshock.dtAppStart = now()>
+		<cfset application.lanshock.sStoragePath = ExpandPath('./storage/')>
+		<cfset application.lanshock.oFactory = CreateObject('component','lanshock.core.factory')>
+		<cfset application.lanshock.oCache = application.lanshock.oFactory.load('lanshock.core.cache')>
+		<cfset application.lanshock.oCache.init()>
+		<cfset application.lanshock.oConfigmanager = application.lanshock.oFactory.load('lanshock.core.configmanager')>
+		<cfset application.lanshock.oApplication = application.lanshock.oFactory.load('lanshock.application')>
+		<cfset application.lanshock.oLanguage = application.lanshock.oFactory.load('lanshock.core.language')>
+		<cfset application.lanshock.oHelper = application.lanshock.oFactory.load('lanshock.core.helper')>
+		<cfset application.lanshock.oRuntime = application.lanshock.oFactory.load('lanshock.core.runtime')>
+		<cfset application.lanshock.oRuntime.init()>
+		<cfset application.lanshock.oSessionmanager = application.lanshock.oFactory.load('lanshock.core.sessionmanager')>
+		<cfset application.lanshock.oSessionmanager.init()>
+		<cfset application.lanshock.oModules = application.lanshock.oFactory.load('lanshock.core.modules')>
+		<cfset application.lanshock.oModules.init()>
+	</cffunction>
 	
 	<cffunction name="onRequestStart">
-		<cfargument name="targetPage" />
+		<cfargument name="targetPage">
+
+		<cfprocessingdirective pageencoding="utf-8"/>
+		<cfcontent type="text/html; charset=utf-8">
 		
-		<cfinclude template="core/lanshock.runtime.cfm">
+		<cfset setEncoding("url", "utf-8")>
+		<cfset setEncoding("form", "utf-8")>
+		
+		<cfif StructKeyExists(attributes,'reinitapp') AND attributes.reinitapp>
+			<cfset session = StructNew()>
+			<cfset reloadApplication()>
+			<cfoutput>LANshock init done! (#now()#)</cfoutput>
+			<cfabort>
+		</cfif>
+		
 		<cfset super.onRequestStart(arguments.targetPage)>
+		
+		<cfset self = myFusebox.getSelf()>
+		<cfset myself = myFusebox.getMyself()>
+		<cfset setMyFusebox(myFusebox)>
+		
+		<cfset application.lanshock.oRuntime.prepareRequest()>
+		
+		<cfset stImageDir = StructNew()>
+		<cfif DirectoryExists(request.lanshock.environment.abspath & 'templates/' & request.lanshock.settings.layout.template & '/images/_general')>
+			<cfset stImageDir.general = request.lanshock.environment.webpath & 'templates/' & request.lanshock.settings.layout.template & '/images/_general'>
+		<cfelse>
+			<cfset stImageDir.general = request.lanshock.environment.webpath & 'core/general/images/_general'>
+		</cfif>
+		<cfset stImageDir.template = request.lanshock.environment.webpath & 'templates/' & request.lanshock.settings.layout.template & '/images'>
+	</cffunction>
+	
+	<cffunction name="reloadApplication">
+		<cfset StructDelete(application,'lanshock')>
+		<cfset StructDelete(application,variables.FUSEBOX_APPLICATION_KEY)>
+		<cfset onApplicationStart()>
+	</cffunction>
+	
+	<cffunction name="getMyFusebox" returntype="struct">
+		<cfif NOT StructKeyExists(request,'myFusebox')>
+			<cfset request.myFusebox = createObject("component","fusebox5.myFusebox").init(variables.FUSEBOX_APPLICATION_KEY,variables.attributes,variables) />
+		</cfif>
+		<cfreturn request.myFusebox>
+	</cffunction>
+	
+	<cffunction name="setMyFusebox" returntype="struct">
+		<cfargument name="myfusebox" type="struct" required="true">
+		<cfset request.myFusebox = arguments.myfusebox>
+	</cffunction>
+	
+	<cffunction name="onError" returntype="struct">
+		<cfargument name="exception">
+
+		<cfswitch expression="#arguments.exception.type#">
+			<cfcase value="fusebox.undefinedCircuit">
+				<cflocation url="#application.lanshock.oHelper.buildUrl('c_general.error&type=#UrlEncodedFormat(arguments.exception.type)#&message=#UrlEncodedFormat(arguments.exception.message)#')#" addtoken="false">
+			</cfcase>
+			<cfcase value="fusebox.undefinedFuseaction">
+				<cflocation url="#application.lanshock.oHelper.buildUrl('c_general.error&type=#UrlEncodedFormat(arguments.exception.type)#&message=#UrlEncodedFormat(arguments.exception.message)#')#" addtoken="false">
+			</cfcase>
+			<cfdefaultcase>
+				<cfinclude template="core/_errorhandler.cfm">
+			</cfdefaultcase>
+		</cfswitch>
+		
 	</cffunction>
 
 </cfcomponent>
