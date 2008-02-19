@@ -8,3 +8,5 @@ body .x-panel {margin-bottom:20px;}
 .option {background-image:url(../js/ext-2.0/examples/shared/icons/fam/plugin.gif) !important;}
 .remove {background-image:url(../js/ext-2.0/examples/shared/icons/fam/delete.gif) !important;}
 .save {background-image:url(../js/ext-2.0/examples/shared/icons/save.gif) !important;}
+
+.x-grid3-hd-row td.ux-filtered-column {font-style: italic;font-weight: bold;}
