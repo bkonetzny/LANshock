@@ -17,15 +17,19 @@ $LastChangedRevision$
 		
 		<cfset var stReturn = StructNew()>
 		<cfset var sCacheKey = 'config:#arguments.module#'>
+		
+		<cfset application.lanshock.oLogger.writeLog('core.configmanager','Loading config for "#arguments.module#"')>
 
 		<cftry>
 			<cfset stReturn = getConfig(arguments.module,arguments.version)>
 			<cfif getConfigVersion(arguments.module) NEQ arguments.version
 				OR NOT application.lanshock.oCache.exists(sCacheKey)>
+				<cfset application.lanshock.oLogger.writeLog('core.configmanager','Reset config for "#arguments.module#": "#getConfigVersion(arguments.module)#" NEQ "#arguments.version#"','warn')>
 				<cfset setConfig(arguments.module,arguments.version,arguments.data)>
 				<cfset stReturn = getConfig(arguments.module,arguments.version)>
 			</cfif>
 			<cfcatch>
+				<cfset application.lanshock.oLogger.writeLog('core.configmanager','Failed to load config for "#arguments.module#": #cfcatch.message# (#cfcatch.detail#)','error')>
 				<cfset stReturn = arguments.data>
 			</cfcatch>
 		</cftry>

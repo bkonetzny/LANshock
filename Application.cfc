@@ -33,6 +33,7 @@ $LastChangedRevision: 80 $
 		<cfset application.lanshock.oFactory = CreateObject('component','lanshock.core.factory')>
 		<cfset application.lanshock.oCache = application.lanshock.oFactory.load('lanshock.core.cache')>
 		<cfset application.lanshock.oCache.init()>
+		<cfset application.lanshock.oLogger = application.lanshock.oFactory.load('lanshock.core.logger')>
 		<cfset application.lanshock.oConfigmanager = application.lanshock.oFactory.load('lanshock.core.configmanager')>
 		<cfset application.lanshock.oApplication = application.lanshock.oFactory.load('lanshock.application')>
 		<cfset application.lanshock.oLanguage = application.lanshock.oFactory.load('lanshock.core.language')>
@@ -43,6 +44,8 @@ $LastChangedRevision: 80 $
 		<cfset application.lanshock.oSessionmanager.init()>
 		<cfset application.lanshock.oModules = application.lanshock.oFactory.load('lanshock.core.modules')>
 		<cfset application.lanshock.oModules.init()>
+		
+		<cfset application.lanshock.oLogger.writeLog('core.application','Running "onFuseboxApplicationStart"')>
 	</cffunction>
 	
 	<cffunction name="onRequestStart">
@@ -55,6 +58,7 @@ $LastChangedRevision: 80 $
 		<cfset setEncoding("form", "utf-8")>
 		
 		<cfif StructKeyExists(attributes,'reinitapp') AND attributes.reinitapp>
+			<cfset application.lanshock.oLogger.writeLog('core.application','Running "reloadApplication" manually')>
 			<cfset session = StructNew()>
 			<cfset reloadApplication()>
 			<cfoutput>LANshock init done! (#now()#)</cfoutput>
@@ -98,6 +102,11 @@ $LastChangedRevision: 80 $
 	
 	<cffunction name="onError" returntype="struct">
 		<cfargument name="exception">
+		
+		<cftry>
+			<cfset application.lanshock.oLogger.writeLog('core.error','Type: "#arguments.exception.type#" | Message: "#arguments.exception.message#" | Detail: "#arguments.exception.detail#"','error')>
+			<cfcatch></cfcatch>
+		</cftry>
 
 		<cfswitch expression="#arguments.exception.type#">
 			<cfcase value="fusebox.undefinedCircuit">
