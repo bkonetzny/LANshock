@@ -35,12 +35,12 @@ $LastChangedRevision: 56 $
 		<cfloop from="1" to="#ArrayLen(stLocal.aSqlCode)#" index="stLocal.idx">
 			<cfset stLocal.sSqlCode = stLocal.aSqlCode[stLocal.idx]>
 			<cftry>
-				<cffile action="append" file="#application.lanshock.environment.abspath#storage/secure/logs/core_setup_datasource.log" output="#cgi.remote_addr# - [#DateFormat(now(),"yyyy-mm-dd")# #TimeFormat(now(),"hh:mm:ss")#] #stLocal.mode#, #application.lanshock.environment.datasource#.#arguments.sTable# | SQL: #stLocal.sSqlCode#">
+				<cfset application.lanshock.oLogger.writeLog('core.datasource','Deploying table "#application.lanshock.environment.datasource#.#arguments.sTable#" | Mode: "#stLocal.mode#" | SQL: #stLocal.sSqlCode#')>
 				<cfquery datasource="#application.lanshock.environment.datasource#">
 					#PreserveSingleQuotes(stLocal.sSqlCode)#
 				</cfquery>
-				<cfcatch type="any">
-					<cffile action="append" file="#application.lanshock.environment.abspath#storage/secure/logs/core_setup_datasource.log" output="#cgi.remote_addr# - [#DateFormat(now(),"yyyy-mm-dd")# #TimeFormat(now(),"hh:mm:ss")#] #stLocal.mode#, #application.lanshock.environment.datasource#.#arguments.sTable#, #cfcatch.message#: #cfcatch.Detail#">
+				<cfcatch>
+					<cfset application.lanshock.oLogger.writeLog('core.datasource','SQL Error for table "#application.lanshock.environment.datasource#.#arguments.sTable#" | Message: "#cfcatch.message#" | Detail: "#cfcatch.detail#"','error')>
 				</cfcatch>
 			</cftry>
 		</cfloop>

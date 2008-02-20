@@ -12,7 +12,7 @@ $LastChangedRevision: 103 $
 	
 	<cffunction name="init" output="false" returntype="void">
 	
-		<cfset variables.qNavigation = QueryNew("module,action,level,label,permissions")>
+		<cfset variables.qNavigation = QueryNew("module,action,level,label,permissions,sortorder")>
 		<cfset variables.stDatasource = StructNew()>
 		<cfset variables.lCoreModules = 'admin,comments,cron,general,installer,mail,team,user'>
 		
@@ -88,6 +88,7 @@ $LastChangedRevision: 103 $
 		<cfset var iNavCounter = 0>
 		<cfset var qRoleLookup = 0>
 		<cfset var qPermissionLookup = 0>
+		<cfset var qPermissionsLookup = 0>
 		
 		<cfif stModuleConfig.status>
 			
@@ -173,79 +174,80 @@ $LastChangedRevision: 103 $
 					</cfquery>
 				</cfif>
 			</cfloop>
-
-			<!--- 
-			<cfquery datasource="#application.lanshock.environment.datasource#">
-				DELETE FROM core_security_roles_permissions_rel
-				WHERE permission_id IN (
-					SELECT id FROM core_security_permissions
-					WHERE module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
-				)
-			</cfquery>
-
-			<cfquery datasource="#application.lanshock.environment.datasource#">
-				DELETE FROM core_security_permissions
-				WHERE module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
-			</cfquery>
 			
-			<cfloop list="#stModuleConfig.data.security_permissions#" index="idxPermissions">
-				<cfquery datasource="#application.lanshock.environment.datasource#">
-					INSERT INTO core_security_permissions (name, module)
-					VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#idxPermissions#">,
-							<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">)
-				</cfquery>
-			</cfloop>
-
-			<cfquery datasource="#application.lanshock.environment.datasource#">
-				DELETE FROM core_security_users_roles_rel
-				WHERE role_id IN (
-					SELECT id FROM core_security_roles
-					WHERE module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
-				)
-			</cfquery>
-
-			<cfquery datasource="#application.lanshock.environment.datasource#">
-				DELETE FROM core_security_roles
-				WHERE module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
-			</cfquery>
-			
-			<cfloop from="1" to="#ArrayLen(stModuleConfig.data.security_roles)#" index="idxRoles">
-				<cfquery datasource="#application.lanshock.environment.datasource#">
-					INSERT INTO core_security_roles (name, module)
-					VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.security_roles[idxRoles].name#">,
-							<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">)
-				</cfquery>
-				
-				<cfquery name="qRoleLookup" datasource="#application.lanshock.environment.datasource#">
+			<cfloop collection="#stModuleConfig.data.security_roles#" item="idxRoles">
+				<cfquery datasource="#application.lanshock.environment.datasource#" name="qRoleLookup">
 					SELECT id
 					FROM core_security_roles
-					WHERE name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.security_roles[idxRoles].name#">
-					AND module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
+					WHERE module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
+					AND name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.security_roles[idxRoles].name#">
 				</cfquery>
+				<cfif NOT qRoleLookup.recordcount>
+					<cfquery datasource="#application.lanshock.environment.datasource#">
+						INSERT INTO core_security_roles (name, module)
+						VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.security_roles[idxRoles].name#">,
+								<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">)
+					</cfquery>
 				
-				<cfif qRoleLookup.recordcount>
-				
-					<cfquery name="qPermissionsLookup" datasource="#application.lanshock.environment.datasource#">
+					<cfquery name="qRoleLookup" datasource="#application.lanshock.environment.datasource#">
 						SELECT id
-						FROM core_security_permissions
-						WHERE name IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.security_roles[idxRoles].permissions#" list="true">)
+						FROM core_security_roles
+						WHERE name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.security_roles[idxRoles].name#">
 						AND module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
 					</cfquery>
 					
-					<cfif qPermissionsLookup.recordcount>
+					<cfif qRoleLookup.recordcount>
 					
-						<cfloop list="#ValueList(qPermissionsLookup.id)#" index="idxPermission">
-							<cfquery datasource="#application.lanshock.environment.datasource#">
-								INSERT INTO core_security_roles_permissions_rel (permission_id, role_id)
-								VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#idxPermission#">,
-										<cfqueryparam cfsqltype="cf_sql_varchar" value="#qRoleLookup.id#">)
-							</cfquery>
-						</cfloop>
-				
+						<cfquery name="qPermissionsLookup" datasource="#application.lanshock.environment.datasource#">
+							SELECT id
+							FROM core_security_permissions
+							WHERE name IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.security_roles[idxRoles].permissions#" list="true">)
+							AND module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
+						</cfquery>
+						
+						<cfif qPermissionsLookup.recordcount>
+						
+							<cfloop list="#ValueList(qPermissionsLookup.id)#" index="idxPermission">
+								<cfquery datasource="#application.lanshock.environment.datasource#">
+									INSERT INTO core_security_roles_permissions_rel (permission_id, role_id)
+									VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#idxPermission#">,
+											<cfqueryparam cfsqltype="cf_sql_varchar" value="#qRoleLookup.id#">)
+								</cfquery>
+							</cfloop>
+					
+						</cfif>
 					</cfif>
 				</cfif>
 			</cfloop>
-			--->
+			
+			<!--- 
+				<cfif isStruct(stModules[idx].cron) AND NOT StructIsEmpty(stModules[idx].cron)>
+					<cfloop collection="#stModules[idx].cron#" item="idx2">
+						<cfscript>
+							qCron = application.objectBreeze.getByWhere('core_cron','module = "#idx#" AND action = "#idx2#"').getQuery();
+							if(qCron.recordcount) iCronID = qCron.id;
+							else iCronID = 0; 
+							
+							oObCron = application.objectBreeze.objectCreate("core_cron");
+							oObCron.read(iCronID);
+							oObCron.setProperty('run',stModules[idx].cron[idx2]);
+							oObCron.setProperty('module',idx);
+							oObCron.setProperty('action',idx2);
+							oObCron.commit();
+						</cfscript>
+					</cfloop>
+	
+					<cfset qCrons4Module = application.objectBreeze.getByWhere('core_cron','module = "#idx#"').getQuery()>
+					<cfloop query="qCrons4Module">
+						<cfscript>
+							if(NOT listFindNoCase(StructKeyList(stModules[idx].cron),action)){
+								oObCron = application.objectBreeze.objectCreate("core_cron");
+								oObCron.read(id);
+								oObCron.delete();
+							}
+						</cfscript>
+					</cfloop>
+				</cfif> --->
 				
 		<cfelse>
 		
@@ -439,176 +441,6 @@ $LastChangedRevision: 103 $
 		
 		<cfreturn variables.lCoreModules>
 		
-	</cffunction>
-
-	<!---<cffunction name="initModules" output="false" returntype="boolean">
-		<cfargument name="stModules" type="struct" required="true">
-		
-		<cfset var stLocal = StructNew()>
-		
-		<cfif FileExists(expandPath('config/lanshock/modules.xml.cfm'))>
-			<cffile action="delete" file="#expandPath('config/lanshock/modules.xml.cfm')#">
-		</cfif>
-
-		<cffile action="append" file="#application.lanshock.environment.abspath#storage/secure/logs/core_setup_datasource.log" output="#cgi.remote_addr# - [#DateFormat(now(),"yyyy-mm-dd")# #TimeFormat(now(),"hh:mm:ss")#] *** START DB UPDATE">
-
-		<cfloop collection="#stModules#" item="idx">
-		
-			<cfparam name="stModules['#idx#'].db" default="">
-			
-			<!--- Create Datasource Tables --->
-			<cfif isStruct(stModules[idx].db) AND NOT StructIsEmpty(stModules[idx].db)>
-				<cfloop collection="#stModules[idx].db#" item="idx2">
-					<cfset stLocal.stTableStructure = StructNew()>
-					<cfset stLocal.stTableStructure[idx2] = stModules[idx].db[idx2]>
-					<cfif NOT isArray(stLocal.stTableStructure[idx2])>
-						<cfdump var="#stLocal.stTableStructure[idx2]#"><cfabort>
-					</cfif>
-					<cfinvoke component="datasource" method="deployTable" returnvariable="stTableData">
-						<cfinvokeargument name="stTableStructure" value="#stLocal.stTableStructure#">
-					</cfinvoke>
-					<cfset variables.stDatasource[idx2] = stTableData>
-				</cfloop>
-			</cfif>
-
-			<cfset StructDelete(stModules[idx], 'db')>
-			
-		</cfloop>
-		
-		<!---
-		<cfloop collection="#stModules#" item="idx">
-		
-			<cfparam name="stModules['#idx#'].cron" default="">
-			
-				<!--- Create Datasource Tables --->
-				<cfif isStruct(stModules[idx].cron) AND NOT StructIsEmpty(stModules[idx].cron)>
-					<cfloop collection="#stModules[idx].cron#" item="idx2">
-						<cfscript>
-							qCron = application.objectBreeze.getByWhere('core_cron','module = "#idx#" AND action = "#idx2#"').getQuery();
-							if(qCron.recordcount) iCronID = qCron.id;
-							else iCronID = 0; 
-							
-							oObCron = application.objectBreeze.objectCreate("core_cron");
-							oObCron.read(iCronID);
-							oObCron.setProperty('run',stModules[idx].cron[idx2]);
-							oObCron.setProperty('module',idx);
-							oObCron.setProperty('action',idx2);
-							oObCron.commit();
-						</cfscript>
-					</cfloop>
-	
-					<cfset qCrons4Module = application.objectBreeze.getByWhere('core_cron','module = "#idx#"').getQuery()>
-					<cfloop query="qCrons4Module">
-						<cfscript>
-							if(NOT listFindNoCase(StructKeyList(stModules[idx].cron),action)){
-								oObCron = application.objectBreeze.objectCreate("core_cron");
-								oObCron.read(id);
-								oObCron.delete();
-							}
-						</cfscript>
-					</cfloop>
-				</cfif>
-			
-		</cfloop>
-		--->
-		
-		<cfwddx action="CFML2WDDX" input="#variables.stDatasource#" output="DatasourceWDDX" usetimezoneinfo="false">
-		
-		<cfif NOT directoryExists(expandPath('config/'))>
-			<cfdirectory action="create" directory="#expandPath('config/')#" mode="777">		
-		</cfif>
-		
-		<cffile action="WRITE" file="#expandPath('config/lanshock/datasource.xml.cfm')#" output="#DatasourceWDDX#" mode="777">
-		
-		<cffile action="append" file="#application.lanshock.environment.abspath#storage/secure/logs/core_setup_datasource.log" output="#cgi.remote_addr# - [#DateFormat(now(),"yyyy-mm-dd")# #TimeFormat(now(),"hh:mm:ss")#] *** END DB UPDATE">
-		
-		<cfset variables.stModules = stModules>
-		
-		<cfwddx action="CFML2WDDX" input="#stModules#" output="ModuleWDDX" usetimezoneinfo="false">
-		
-		<cffile action="WRITE" file="#expandPath('config/lanshock/modules.xml.cfm')#" output="#ModuleWDDX#" mode="777">
-		
-		<cfset sCircuits = ''>
-		<cfloop list="#listSort(StructKeyList(stModules),'textnocase')#" index="item">
-			<cfif stModules[item].general.createCircuit>
-				<cfset item = lCase(item)>
-				<cfset sModulePrefix = application.lanshock.settings.modulePrefix[stModules[item].type]>
-				<cfset sCircuits = sCircuits & chr(13) & chr(9) & chr(9) & '<circuit alias="#sModulePrefix##replaceNoCase(item,sModulePrefix,"","ONE")#" path="modules/#replaceNoCase(item,sModulePrefix,"","ONE")#/"/>'>
-			</cfif>
-		</cfloop>
-		<cfset sCircuits = trim(sCircuits)>
-		
-		<cfif NOT StructKeyExists(application,'fusebox') OR NOT StructKeyExists(application.fusebox,'password') OR NOT len(application.fusebox.password)>
-			<cfset sOldFuseboxPassword = ''>
-			<cfset sNewFuseboxPassword = CreateUUID()>
-		<cfelse>	
-			<cfset sOldFuseboxPassword = application.fusebox.password>
-			<cfset sNewFuseboxPassword = sOldFuseboxPassword>	
-		</cfif>
-		
-		<cfsavecontent variable="sFuseboxXml">
-			<cfoutput>
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE fusebox>
-<!--
-	generated by LANshock at #now()#
--->
-<fusebox>
-	<circuits>
-		<circuit alias="core_runtime" path="core/runtime/"/>
-		<circuit alias="udfs" path="core/_utils/udf/" parent="" />
-		#sCircuits#
-	</circuits>
-
-	<parameters>		
-		<parameter name="fuseactionVariable" value="fuseaction"/>
-		<parameter name="defaultFuseaction" value="#application.lanshock.settings.modulePrefix.core#general.welcome"/>
-		<parameter name="mode" value="production"/>
-		<parameter name="strictMode" value="true"/>
-		<parameter name="password" value="#sNewFuseboxPassword#"/>
-		<parameter name="characterEncoding" value="utf-8"/>
-		<parameter name="debug" value="false"/>
-		<parameter name="allowImplicitCircuits" value="true"/>
-		<parameter name="queryStringStart" value="/" />
-		<parameter name="queryStringSeparator" value="/" />
-		<parameter name="queryStringEqual" value="/" />
-	</parameters>
-
-	<globalfuseactions>
-		<appinit>
-			<fuseaction action="core_runtime.initFrameworks"/>
-		</appinit>
-		<preprocess/>
-		<postprocess/>
-	</globalfuseactions>
-	
-	<plugins>
-		<phase name="preProcess">
-			<plugin name="AttributesFilter" template="AttributesFilter.cfm"/>
-			<plugin name="Security" template="Security.cfm"/>
-			<plugin name="LanguageLoader" template="LanguageLoader.cfm"/>
-			<plugin name="NestedSettings" template="NestedSettings.cfm"/>
-			<plugin name="LayoutHeader" template="LayoutHeader.cfm"/>
-		</phase>
-		<phase name="preFuseaction"/>
-		<phase name="postFuseaction"/>
-		<phase name="fuseactionException"/>
-		<phase name="postProcess">
-			<plugin name="LayoutFooter" template="LayoutFooter.cfm"/>
-		</phase>
-		<phase name="processError"/>
-	</plugins>
-
-</fusebox>
-			</cfoutput>
-		</cfsavecontent>
-		
-		<cffile action="write" file="#application.lanshock.environment.abspath#fusebox.xml.cfm" output="#trim(sFuseboxXml)#" mode="777" addnewline="false">
-
-		<cfset application.lanshock.oApplication.reloadApplication()>
-		
-		<cfreturn true>
-				
 	</cffunction>
 
 	<cffunction name="initCoreModules" output="false" returntype="void">
@@ -839,7 +671,6 @@ $LastChangedRevision: 103 $
 		<cfreturn true>
 
 	</cffunction>
-	--->
 	
 	<cffunction name="getNavigation" output="false" returntype="query">
 		<cfargument name="lang" type="string" required="true">
