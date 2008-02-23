@@ -102,20 +102,20 @@ $LastChangedRevision: 80 $
 	
 	<cffunction name="onError" returntype="struct">
 		<cfargument name="exception">
-		
-		<cftry>
-			<cfset application.lanshock.oLogger.writeLog('core.error','Type: "#arguments.exception.type#" | Message: "#arguments.exception.message#" | Detail: "#arguments.exception.detail#"','error')>
-			<cfcatch></cfcatch>
-		</cftry>
 
 		<cfswitch expression="#arguments.exception.type#">
-			<cfcase value="fusebox.undefinedCircuit">
-				<cflocation url="#application.lanshock.oHelper.buildUrl('c_general.error&type=#UrlEncodedFormat(arguments.exception.type)#&message=#UrlEncodedFormat(arguments.exception.message)#')#" addtoken="false">
-			</cfcase>
-			<cfcase value="fusebox.undefinedFuseaction">
+			<cfcase value="fusebox.undefinedCircuit,fusebox.undefinedFuseaction">
+				<cftry>
+					<cfset application.lanshock.oLogger.writeLog('core.error','Type: "#arguments.exception.type#" | Message: "#arguments.exception.message#" | Fuseaction: "#attributes.fuseaction#" | Referer: "#cgi.http_referer#" | UserAgent: "#cgi.http_user_agent#"','error')>
+					<cfcatch></cfcatch>
+				</cftry>
 				<cflocation url="#application.lanshock.oHelper.buildUrl('c_general.error&type=#UrlEncodedFormat(arguments.exception.type)#&message=#UrlEncodedFormat(arguments.exception.message)#')#" addtoken="false">
 			</cfcase>
 			<cfdefaultcase>
+				<cftry>
+					<cfset application.lanshock.oLogger.writeLog('core.error','Type: "#arguments.exception.type#" | Message: "#arguments.exception.message#" | Detail: "#arguments.exception.detail#"','error')>
+					<cfcatch></cfcatch>
+				</cftry>
 				<cfinclude template="core/_errorhandler.cfm">
 			</cfdefaultcase>
 		</cfswitch>
