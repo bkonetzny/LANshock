@@ -1,0 +1,4 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule index.cfm/(.*) /index.cfm?$1 [PT,L]
+</IfModule>
