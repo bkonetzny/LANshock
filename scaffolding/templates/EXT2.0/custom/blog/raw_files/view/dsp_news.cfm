@@ -38,7 +38,7 @@ $LastChangedRevision: 63 $
 	<cfoutput>
 	<div class="blogpost">
 		<h4><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news_details&news_id=#id#&title=#UrlEncodedFormat(qNews.title)#')#">#qNews.title#</a></h4>
-		<div class="postinfo">Posted by <a class="author" href="#application.lanshock.oHelper.buildUrl('c_user.userdetails&id=#author#')#">#application.lanshock.oHelper.GetUsernameByID(author)#</a> <a class="authorposts" href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news&user_id=#author#')#">(all)</a> on #session.oUser.dateTimeFormat(date,'datetime')#</div>
+		<div class="postinfo">Posted by <a class="author" href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#author#')#">#application.lanshock.oHelper.GetUsernameByID(author)#</a> <a class="authorposts" href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news&user_id=#author#')#">(all)</a> on #session.oUser.dateTimeFormat(date,'datetime')#</div>
 		<cfif len(category_ids)>
 			<div class="categories">#request.content.categories# <cfloop list="#category_ids#" index="idx"><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news&category_id=#idx#')#">#stCategories[idx].name#</a><cfif idx NEQ listLast(category_ids)>, </cfif></cfloop></div>
 		</cfif>
