@@ -9,7 +9,10 @@ $LastChangedBy$
 $LastChangedRevision$
 --->
 
-<cfset sCurrentModule = right(myfusebox.thiscircuit,len(myfusebox.thiscircuit)-2)>
+<cfset sCurrentModule = myfusebox.thiscircuit>
+<cfif ListFirst(myfusebox.thiscircuit,'_') EQ 'c'>
+	<cfset sCurrentModule = right(myfusebox.thiscircuit,len(myfusebox.thiscircuit)-2)>
+</cfif>
 
 <cfif application.lanshock.oModules.isLoaded(sCurrentModule)>
 
