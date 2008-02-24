@@ -27,6 +27,7 @@ $LastChangedRevision$
 
 	<!--- Show Only Generated Content --->
 	<cfcase value="none">
+		<cfset request.layout = 'none'>
 		<!--- Do Nothing --->
 	</cfcase>
 
