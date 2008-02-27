@@ -77,7 +77,7 @@ $LastChangedRevision: 103 $
 		<dsn value="#stRuntimeConfig.lanshock.datasource#"/>
 		<type value="#stRuntimeConfig.lanshock.datasource_type#"/>
 		<mapping value="/lanshock/model"/>
-		<mode value="development"/>
+		<mode value="production"/>
 		<username value=""/>
 		<password value=""/>
 	</config>
