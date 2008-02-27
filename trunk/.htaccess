@@ -5,5 +5,5 @@ DirectoryIndex index.cfm
 <IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteRule ^index.cfm/(.*) ^index.cfm?$1 [PT,L]
-RewriteRule ^([a-z_-]*\.[a-z_-]*)/(.*) ^index.cfm?fuseaction=$1&$2 [PT,L]
+RewriteRule ^([a-z_-]*\.[a-z_-]*)(/(.*))? ^index.cfm?fuseaction=$1&$2 [PT,L]
 </IfModule>
