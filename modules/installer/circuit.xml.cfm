@@ -20,7 +20,10 @@ $LastChangedRevision: 75 $
 		<include template="layoutFooter.cfm"/>
 	</postfuseaction>
 	
-	<fuseaction name="main"/>
+	<fuseaction name="main" lanshock:showlayout="none">
+		<include template="act_main.cfm"/>
+		<include template="dsp_main.cfm"/>
+	</fuseaction>
 	
 	<fuseaction name="login" lanshock:showlayout="none">
 		<include template="act_login.cfm"/>
@@ -34,20 +37,6 @@ $LastChangedRevision: 75 $
 	<fuseaction name="setpassword" lanshock:showlayout="none">
 		<include template="act_setpassword.cfm"/>
 		<include template="dsp_setpassword.cfm"/>
-	</fuseaction>
-	
-	<fuseaction name="config" lanshock:showlayout="none">
-		<include template="act_config.cfm"/>
-		<include template="dsp_config.cfm"/>
-	</fuseaction>
-
-	<fuseaction name="rootuser" lanshock:showlayout="none">
-		<include template="act_rootuser.cfm"/>
-		<include template="dsp_rootuser.cfm"/>
-	</fuseaction>
-
-	<fuseaction name="viewapp" lanshock:showlayout="none">
-		<include template="dsp_viewapp.cfm"/>
 	</fuseaction>
 
 </circuit>

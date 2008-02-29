@@ -9,8 +9,8 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 51 $
 --->
 
-<cfset StructDelete(request.session,'lanshock_installer')>
+<cfset session.oUser.setCustomDataValue('lanshockInstallerTimestamp','')>
 
-<cflocation url="#myself##myfusebox.thiscircuit#.main&#request.session.UrlToken#" addtoken="No">
+<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.main')#" addtoken="false">
 
 <cfsetting enablecfoutputonly="No">
