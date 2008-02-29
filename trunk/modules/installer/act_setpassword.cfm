@@ -12,15 +12,12 @@ $LastChangedRevision: 51 $
 <cfparam name="attributes.form_submitted" default="false">
 <cfparam name="attributes.password" default="false">
 
-<cfif attributes.form_submitted>
-	
-	<cfif NOT FileExists(application.lanshock.config.file)>
-		<cffile action="write" file="#application.lanshock.config.file#" output="" mode="777">
-	</cfif>
+<cfif attributes.form_submitted AND len(attributes.password)>
+	<cffile action="write" file="#sConfigFile#" output="" mode="777">
 
-	<cfset SetProfileString(application.lanshock.config.file,'lanshock','password',attributes.password)>
+	<cfset SetProfileString(sConfigFile,'lanshock','password',attributes.password)>
 
-	<cflocation url="#myself##myfusebox.thiscircuit#.login&#request.session.UrlToken#" addtoken="false">
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.login')#" addtoken="false">
 </cfif>
 
 <cfsetting enablecfoutputonly="No">

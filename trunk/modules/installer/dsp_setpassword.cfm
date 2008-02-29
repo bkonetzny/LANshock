@@ -12,11 +12,11 @@ $LastChangedRevision: 51 $
 <cfoutput>
 	<div align="center">
 		<table align="center">
-			<form action="#myself##myfusebox.thiscircuit#.setpassword&#request.session.UrlToken#" method="post" name="password">
-			<input type="hidden" name="form_submitted" value="true">
+			<form action="#myself##myfusebox.thiscircuit#.setpassword&#session.UrlToken#" method="post" name="password">
+			<input type="hidden" name="form_submitted" value="true"/>
 			<tr>
 				<th>#request.content.setpassword_newpassword#</th>
-				<td><input type="Password" name="password" size="28">&nbsp;&nbsp;<input type="Submit" name="form_submit" value="#request.content.form_save#"></td>
+				<td><input type="password" name="password" size="28">&nbsp;&nbsp;<input type="Submit" name="form_submit" value="#request.content.form_save#"></td>
 			</tr>
 			</form>
 		</table>

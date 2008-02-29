@@ -11,26 +11,26 @@ $LastChangedRevision: 51 $
 
 <cfoutput>
 	<table>
-		<form action="#myself##myfusebox.thiscircuit#.login&#request.session.UrlToken#" method="post" name="login">
-		<input type="hidden" name="form_submitted" value="true">
+		<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.login')#" method="post" name="login">
+		<input type="hidden" name="form_submitted" value="true"/>
 		<tr>
 			<th>#request.content.password#</th>
-			<td><input type="Password" name="password"></td>
+			<td><input type="password" name="password"/></td>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="Submit" name="form_submit" value="#request.content.login#"></td>
+			<td><input type="submit" value="#request.content.login#"/></td>
 		</tr>
 		</form>
 	</table>
 	
 	#request.content.password_set_in_config#
 
-	<SCRIPT LANGUAGE="JavaScript">
+	<script type="text/javascript">
 	<!--
 		document.login.password.focus();
 	//-->
-	</SCRIPT>
+	</script>
 </cfoutput>
 
 <cfsetting enablecfoutputonly="No">
