@@ -23,6 +23,7 @@ $LastChangedRevision: 103 $
 		<cfset var idxReactorTables = ''>
 		<cfset var stRuntimeConfig = application.lanshock.oRuntime.getRuntimeConfig()>
 		<cfset var bLoadFields = true>
+		<cfset var qProjectFiles = 0>
 		
 		<cfinvoke component="#application.lanshock.oModules#" method="getDatasourceStructure" returnvariable="stDatasource"/>
 
@@ -89,6 +90,18 @@ $LastChangedRevision: 103 $
 		</cfsavecontent>
 		
 		<cffile action="write" file="#application.lanshock.sStoragePath#secure/config/reactor/reactor.xml" output="#trim(sConfig)#" mode="777">
+		
+		<cfdirectory action="list" name="qProjectFiles" directory="#expandPath('framework/reactor/project/lanshock/')#" recurse="true" filter="*.cfm">
+		
+		<cfloop query="qProjectFiles">
+			<cffile action="delete" file="#qProjectFiles.directory#/#qProjectFiles.name#">
+		</cfloop>
+		
+		<cfdirectory action="list" name="qProjectFiles" directory="#expandPath('framework/reactor/project/lanshock/')#" recurse="true" filter="*.cfc">
+		
+		<cfloop query="qProjectFiles">
+			<cffile action="delete" file="#qProjectFiles.directory#/#qProjectFiles.name#">
+		</cfloop>
 		
 	</cffunction>
 

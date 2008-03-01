@@ -547,22 +547,6 @@ $LastChangedRevision: 103 $
 					stModules[idx].navigation = StructNew();
 				</cfscript>
 				
-				<cfif isDefined("infoXML.Module.Panels")>
-					<cfloop from="1" to="#ArrayLen(infoXML.Module.Panels.XmlChildren)#" index="item">
-						<cfparam name="infoXML.Module.Panels.XmlChildren[item].xmlattributes.bUser" default="true">
-						<cfparam name="infoXML.Module.Panels.XmlChildren[item].xmlattributes.bAdmin" default="false">
-						<cfscript>
-							uuidPanel = stModules[idx].type & '_' & idx & '_' & infoXML.Module.Panels.XmlChildren[item].xmlattributes.name;
-							stModules[idx].Panels[uuidPanel] = StructNew();
-							stModules[idx].Panels[uuidPanel].name = infoXML.Module.Panels.XmlChildren[item].xmlattributes.name;
-							stModules[idx].Panels[uuidPanel].action = infoXML.Module.Panels.XmlChildren[item].xmlattributes.action;
-							stModules[idx].Panels[uuidPanel].height = infoXML.Module.Panels.XmlChildren[item].xmlattributes.height;
-							stModules[idx].Panels[uuidPanel].bUser = infoXML.Module.Panels.XmlChildren[item].xmlattributes.bUser;
-							stModules[idx].Panels[uuidPanel].bAdmin = infoXML.Module.Panels.XmlChildren[item].xmlattributes.bAdmin;
-						</cfscript>
-					</cfloop>
-				</cfif>
-				
 				<cfif isDefined("infoXML.Module.Navigation")>
 					<cfset iNavCount = 0>
 					<cfloop from="1" to="#ArrayLen(infoXML.Module.Navigation.XmlChildren)#" index="item">

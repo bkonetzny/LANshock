@@ -31,9 +31,9 @@ $LastChangedRevision: 103 $
 					<cfset bMvcModule = true>
 				</cfif>
 				<cfif NOT bMvcModule>
-					<cfset sCircuits = sCircuits & chr(13) & chr(9) & chr(9) & '<circuit alias="c_#idxModule#" path="modules/#idxModule#/"/>'>
+					<cfset sCircuits = sCircuits & chr(13) & chr(9) & chr(9) & '<circuit alias="#idxModule#" path="modules/#idxModule#/"/>'>
 				<cfelse>
-					<cfset sCircuits = sCircuits & chr(13) & chr(9) & chr(9) & '<circuit alias="c_#idxModule#" path="modules/#idxModule#/controller/"/>'>
+					<cfset sCircuits = sCircuits & chr(13) & chr(9) & chr(9) & '<circuit alias="#idxModule#" path="modules/#idxModule#/controller/"/>'>
 					<cfset sCircuits = sCircuits & chr(13) & chr(9) & chr(9) & '<circuit alias="m_#idxModule#" path="modules/#idxModule#/model/"/>'>
 					<cfset sCircuits = sCircuits & chr(13) & chr(9) & chr(9) & '<circuit alias="v_#idxModule#" path="modules/#idxModule#/view/"/>'>
 				</cfif>
@@ -54,24 +54,22 @@ $LastChangedRevision: 103 $
 	</circuits>
 	<parameters>		
 		<parameter name="fuseactionVariable" value="fuseaction"/>
-		<parameter name="defaultFuseaction" value="c_general.welcome"/>
+		<parameter name="defaultFuseaction" value="general.welcome"/>
 		<parameter name="mode" value="production"/>
 		<parameter name="strictMode" value="true"/>
 		<parameter name="password" value="#CreateUUID()#"/>
 		<parameter name="characterEncoding" value="utf-8"/>
 		<parameter name="debug" value="false"/>
 		<parameter name="allowImplicitCircuits" value="true"/>
-		<!-- <parameter name="queryStringStart" value="/" />
+		<parameter name="queryStringStart" value="/" />
 		<parameter name="queryStringSeparator" value="/" />
-		<parameter name="queryStringEqual" value="/" /> -->
+		<parameter name="queryStringEqual" value="/" />
 		<parameter name="parsePath" value="storage/secure/parsed/fusebox/" />
 		<parameter name="pluginsPath" value="fusebox5/plugins/" />
 		<parameter name="lexiconPath" value="fusebox5/lexicon/" />
 	</parameters>
 	<globalfuseactions>
-		<appinit>
-			<fuseaction action="core_runtime.initFrameworks"/>
-		</appinit>
+		<appinit/>
 		<preprocess/>
 		<postprocess/>
 	</globalfuseactions>
@@ -100,7 +98,7 @@ $LastChangedRevision: 103 $
 		<cfdirectory action="list" name="qParsedFiles" directory="#application.lanshock.sStoragePath#secure/parsed/fusebox/" filter="*.cfm">
 		
 		<cfloop query="qParsedFiles">
-			<cffile action="delete" file="#application.lanshock.sStoragePath#secure/parsed/fusebox/#qParsedFiles.name#">
+			<cffile action="delete" file="#qParsedFiles.directory#/#qParsedFiles.name#">
 		</cfloop>
 	
 	</cffunction>

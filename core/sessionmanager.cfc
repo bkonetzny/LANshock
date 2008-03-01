@@ -24,7 +24,7 @@ $LastChangedRevision$
 		<cfset var sSessionIP = ''>
 		
 		<cfif NOT StructKeyExists(session,'oUser')>
-			<cfset application.lanshock.oLogger.writeLog('core.sessionmanager','Started new session')>
+			<cfset application.lanshock.oLogger.writeLog('core.sessionmanager','Started new session | QueryString: "#cgi.query_string#" | Referer: "#cgi.http_referer#" | UserAgent: "#cgi.http_user_agent#"')>
 			<cfset session.dtSessionCreated = now()>
 			<cfset session.oUser = application.lanshock.oFactory.load('lanshock.core.session')>
 			<cfset session.oUser.init()>
