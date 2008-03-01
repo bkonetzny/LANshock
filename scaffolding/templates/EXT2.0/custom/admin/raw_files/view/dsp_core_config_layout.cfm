@@ -47,7 +47,7 @@ $LastChangedRevision: 87 $
 		<td><select name="template" onChange="setPreviewImage(escape(getSelectedValue(document.formTemplate.template)))">
 				<cfset sActiveTemplate = attributes.template>
 				<cfloop query="qTemplates">
-					<cfif type EQ "dir" AND name NEQ "_scripts">
+					<cfif type EQ "dir">
 						<option value="#qTemplates.name#"<cfif sActiveTemplate EQ qTemplates.name> selected</cfif>>#qTemplates.name#</option>
 					</cfif>
 				</cfloop>
