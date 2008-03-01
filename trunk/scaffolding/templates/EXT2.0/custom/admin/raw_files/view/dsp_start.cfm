@@ -79,7 +79,7 @@ $LastChangedRevision: 56 $
 		</tr>
 		<tr>
 			<th><!--- TODO: $$$ ---> JVM Heap</th>
-			<td>#oAdmin.byteConvert(oRuntime.getRuntime().freeMemory(),'MB')# <!--- TODO: $$$ --->of #oAdmin.byteConvert(oRuntime.getRuntime().maxMemory(),'MB')#</td>
+			<td>#byteConvert(oRuntime.getRuntime().freeMemory(),'MB')# <!--- TODO: $$$ --->free of #byteConvert(oRuntime.getRuntime().maxMemory(),'MB')# maximum</td>
 		</tr>
 		<!--- <tr>
 			<th><!--- TODO: $$$ ---> JVM System Encoding</th>

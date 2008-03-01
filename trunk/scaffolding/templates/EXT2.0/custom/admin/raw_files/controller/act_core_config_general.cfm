@@ -51,10 +51,7 @@ $LastChangedRevision: 96 $
 	<cfoutput query="qNavigation" group="module">
 		<optgroup label="#qNavigation.module#">
 			<cfoutput>
-			<cfif attributes.startpage EQ qNavigation.action>
-				<cfset attributes.startpage_type = 'selected'>
-			</cfif>
-			<option value="#qNavigation.action#"<cfif attributes.startpage EQ qNavigation.action> selected="selected"</cfif>>#qNavigation.label#</option>
+			<option value="#qNavigation.module#.#qNavigation.action#"<cfif attributes.startpage EQ "#qNavigation.module#.#qNavigation.action#"> selected="selected"<cfset attributes.startpage_type = 'selected'></cfif>>#qNavigation.module#: #qNavigation.label#</option>
 			</cfoutput>
 		</optgroup>
 	</cfoutput>
