@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="LANshock Administration" version="2.0.0.0" date="2008-01-19" author="LANshock" url="http://www.lanshock.com">
+<module name="LANshock Administration" version="2.0.0.0 beta" date="2008-03-02" author="LANshock" url="http://www.lanshock.com">
 	
 	<general requiresLogin="false"/>
 	
@@ -8,7 +8,7 @@
 	</license>
 	
 	<navigation>
-		<item action="start"/>
+		<item action="start" permissions="core_configmanager"/>
 		<item action="core_config" permissions="core_configmanager"/>
 		<item action="modules" permissions="core_modules"/>
 		<!-- <item action="cron" permissions="core_configmanager"/> -->
