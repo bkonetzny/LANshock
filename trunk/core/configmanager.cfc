@@ -18,7 +18,7 @@ $LastChangedRevision$
 		<cfset var stReturn = StructNew()>
 		<cfset var sCacheKey = 'config:#arguments.module#'>
 		
-		<cfset application.lanshock.oLogger.writeLog('core.configmanager','Loading config for "#arguments.module#"')>
+		<cfset application.lanshock.oLogger.writeLog('core.configmanager','Loading config for "#arguments.module#"','debug')>
 
 		<cftry>
 			<cfset stReturn = getConfig(arguments.module,arguments.version)>

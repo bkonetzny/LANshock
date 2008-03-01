@@ -118,14 +118,16 @@ $LastChangedRevision: 143 $
 			<cfset arguments.module = application.lanshock.oApplication.getMyFusebox().thiscircuit>
 		</cfif>
 		
-		<cfset arguments.module = right(arguments.module,len(arguments.module)-2)>
+		<cfif ListFirst(arguments.module,'_') EQ 'c'>
+			<cfset arguments.module = right(arguments.module,len(arguments.module)-2)>
+		</cfif>
 		
 		<cfquery dbtype="query" name="qPermissionLookup" maxrows="1">
 			SELECT *
 			FROM session.stVariablesScope.qPermissions
 			WHERE module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.module#">
 			<cfif arguments.area NEQ '*'>
-				AND name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.area#">
+				AND name IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.area#" list="true">)
 			</cfif>
 		</cfquery>
 		

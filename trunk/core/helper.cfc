@@ -114,12 +114,8 @@ $LastChangedRevision: 143 $
 					<cfset stLocal.sResult = '<img src="http://www.gravatar.com/avatar.php?gravatar_id=#Hash(stLocal.userdata.email)#&amp;rating=R&amp;" title="#getUsernameById(arguments.userid)#''s Gravatar" alt="#getUsernameById(arguments.userid)#''s Gravatar" />'>
 				</cfcase>
 				<cfdefaultcase> <!--- value="lanshock" --->
-					<cfif isNumeric(arguments.userid)>
-						<cfif FileExists("#request.lanshock.environment.abspath#core/user/avatar/#arguments.userid#.png")>
-							<cfset stLocal.sResult = '<img src="#request.lanshock.environment.webpath#core/user/avatar/#arguments.userid#.png" title="#getUsernameById(arguments.userid)#" alt="#getUsernameById(arguments.userid)#" />'>
-						<cfelseif FileExists("#request.lanshock.environment.abspath#core/user/avatar/#arguments.userid#")>
-							<cfset stLocal.sResult = '<img src="#request.lanshock.environment.webpath#core/user/avatar/#arguments.userid#" title="#getUsernameById(arguments.userid)#" alt="#getUsernameById(arguments.userid)#" />'>
-						</cfif>
+					<cfif isNumeric(arguments.userid) AND FileExists("#application.lanshock.sStoragePath#public/modules/user/avatars/#arguments.userid#.png")>
+						<cfset stLocal.sResult = '<img src="#application.lanshock.environment.webpath#storage/public/modules/user/avatars/#arguments.userid#.png" title="#getUsernameById(arguments.userid)#" alt="#getUsernameById(arguments.userid)#" />'>
 					</cfif>
 				</cfdefaultcase>
 			</cfswitch>
@@ -147,13 +143,16 @@ $LastChangedRevision: 143 $
 		<cfargument name="curr_module" type="string" required="false" default="">
 
 		<cfset var myFusebox = application.lanshock.oApplication.getMyFusebox()>
-		<cfset sModule = ''>
+		<cfset var sModule = ''>
 		
 		<cfif NOT len(arguments.curr_module)>
 			<cfset arguments.curr_module = myfusebox.thiscircuit>
 		</cfif>
 
-		<cfset sModule = right(arguments.curr_module,len(arguments.curr_module)-2)>
+		<cfset sModule = arguments.curr_module>
+		<cfif ListFirst(sModule,'_') EQ 'c'>
+			<cfset sModule = right(sModule,len(sModule)-2)>
+		</cfif>
 	
 		<cfswitch expression="#arguments.info#">
 			<cfcase value="webPath">
@@ -184,6 +183,7 @@ $LastChangedRevision: 143 $
 		
 		<cfset var myFusebox = application.lanshock.oApplication.getMyFusebox()>
 		<cfset var sReturn = myFusebox.getMyself()>
+		<cfset var bEnableSES = true>
 		
 		<cfif find('?',myFusebox.getMyself())>
 			<cfset sReturn = myFusebox.getMyself() & urlSessionFormat(arguments.sParameters)>
@@ -196,6 +196,10 @@ $LastChangedRevision: 143 $
 		
 		<cfif arguments.bFullUrl>
 			<cfset sReturn = application.lanshock.environment.serveraddress & sReturn>
+		</cfif>
+		
+		<cfif bEnableSES>
+			<cfset sReturn = replaceNoCase(sReturn,'index.cfm/fuseaction/','','ONE')>
 		</cfif>
 		
 		<cfreturn sReturn>
