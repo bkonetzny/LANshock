@@ -20,17 +20,21 @@ $LastChangedRevision: 46 $
 <cfparam name="attributes.type" default="">
 <cfparam name="attributes.appendsignature" default="false">
 
-<cfscript>
-	bDoPost = false;
+<cfset bDoPost = false>
 	
-	// check for parent_id or module and identifier
-	if((isNumeric(attributes.topic_id) AND attributes.topic_id NEQ 0) OR (len(attributes.module) AND len(attributes.identifier))) bDoPost = true;
+<!--- check for parent_id or module and identifier --->
+<cfif (isNumeric(attributes.topic_id) AND attributes.topic_id NEQ 0) OR (len(attributes.module) AND len(attributes.identifier))>
+	<cfset bDoPost = true>
+</cfif>
 	
-	// check for title or text
-	if(bDoPost AND NOT (len(attributes.title) AND len(attributes.text))) bDoPost = false;
-	
-	bDoPost = request.session.userloggedin;
-</cfscript>
+<!--- check for title or text --->
+<cfif bDoPost AND NOT (len(attributes.title) AND len(attributes.text))>
+	<cfset bDoPost = false>
+</cfif>
+
+<cfif bDoPost>
+	<cfset bDoPost = session.oUser.isLoggedIn()>
+</cfif>
 
 <cfif bDoPost>
 	<cfset iTopicID = attributes.topic_id>
@@ -49,13 +53,13 @@ $LastChangedRevision: 46 $
 		<cfinvokeargument name="parent_id" value="#attributes.parent_id#">
 		<cfinvokeargument name="title" value="#attributes.title#">
 		<cfinvokeargument name="text" value="#attributes.text#">
-		<cfinvokeargument name="user_id" value="#request.session.userid#">
+		<cfinvokeargument name="user_id" value="#session.oUser.getDataValue('userid')#">
 		<cfinvokeargument name="appendsignature" value="#attributes.appendsignature#">
 	</cfinvoke>
 </cfif>
 
 <cfif bDoPost AND attributes.topic_id EQ 0>
-	<cflocation url="#myself##attributes.module#.#attributes.linktosource#&#request.session.urltoken#" addtoken="false">
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#attributes.module#.#attributes.linktosource#')#" addtoken="false">
 <cfelse>
 	<cflocation url="#cgi.http_referer#" addtoken="false">
 </cfif>

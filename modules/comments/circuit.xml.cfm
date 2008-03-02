@@ -10,18 +10,18 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 75 $
 -->
 
-<circuit access="public">
+<circuit access="public" xmlns:cf="cf/" xmlns:reactor="reactor/" xmlns:cs="coldspring/" xmlns:lanshock="lanshock/">
 	
 	<fuseaction name="comment_edit">
 		<include template="act_comment_edit.cfm"/>
 	</fuseaction>
 	
-	<fuseaction name="comment_delete">
+	<fuseaction  name="comment_delete">
 		<include template="act_comment_delete.cfm"/>
 	</fuseaction>
 	
 	<fuseaction name="comments_enable_disable">
-		<set name="check" value="#UDF_SecurityCheck(area='disablecomments')#"/>
+		<lanshock:security area="comments-manage"/>
 		<include template="act_comments_enable_disable.cfm"/>
 	</fuseaction>
 

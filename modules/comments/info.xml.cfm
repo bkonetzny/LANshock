@@ -9,16 +9,17 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 75 $
 -->
 
-<module name="LANshock Comment-System" version="0.3.0.5" date="2006-01-24" author="LANshock" url="http://www.lanshock.com">
-	
+<module name="LANshock Comment-System" version="2.0.0.0 beta" date="2008-02-19" author="LANshock" url="http://www.lanshock.com">
+
 	<general requiresLogin="true"/>
-	
+
 	<license>
 		<license type="gpl"/>
 	</license>
 	
 	<security>
-		<area name="disablecomments"/>
+		<permissions list="comments-manage"/>
+		<role name="Comments Admin" permissions="comments-manage"/>
 	</security>
 
 	<database>

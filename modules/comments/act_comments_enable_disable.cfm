@@ -12,7 +12,7 @@ $LastChangedRevision: 46 $
 <cfparam name="attributes.topic_id" default="0">
 <cfparam name="attributes.mode" default="0">
 
-<cfif request.session.userloggedin>
+<cfif session.oUser.isLoggedIn()>
 
 	<cfinvoke component="comments" method="setTopicEnableDisable">		
 		<cfinvokeargument name="topic_id" value="#attributes.topic_id#">

@@ -10,8 +10,6 @@ $LastChangedRevision: 46 $
 
 <cfcomponent>
 
-	<cfinclude template="../../core/lanshock.udf.lib.cfm">
-
 	<cffunction name="getCommentsPanel" access="public" returntype="struct" output="false">
 		<cfargument name="module" required="true" type="string">
 		<cfargument name="identifier" required="true" type="string">
@@ -19,30 +17,36 @@ $LastChangedRevision: 46 $
 		<cfargument name="type" required="false" type="string" default="***unknown_type***">
 		<cfargument name="topic_title" required="false" type="string" default="">
 		
-		<cfset uuidFormName = 'form#replacenocase(CreateUUID(),'-','','ALL')#'>
+		<cfset var uuidFormName = 'form#replacenocase(CreateUUID(),'-','','ALL')#'>
+		<cfset var qGetTopicID = 0>
+		<cfset var qComments = 0>
+		<cfset var enableDisableComments = ''>
+		<cfset var addComment = ''>
+		<cfset var htmlComments = ''>
+		<cfset var stComments = StructNew()>
 	
-		<cfquery datasource="#request.lanshock.environment.datasource#" name="qGetTopicID">
+		<cfquery name="qGetTopicID" datasource="#request.lanshock.environment.datasource#">
 			SELECT id, isclosed
 			FROM core_comments_topics
 			WHERE module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.module#">
 			AND identifier = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.identifier#">
 		</cfquery>
 		
-		<cfhtmlhead text="<style>@import url('#request.lanshock.environment.webpath#core/comments/style.css');</style>">
+		<cfhtmlhead text="<style>@import url('#request.lanshock.environment.webpath#modules/comments/style.css');</style>">
 		
-		<cfif request.session.isAdmin>
+		<cfif session.oUser.checkPermissions('comments-manage','comments')>
 			<cfsavecontent variable="enableDisableComments">
 				<cfif qGetTopicID.recordcount>
 					<cfoutput>
 						<div align="center">
-							<form action="#request.varScope.myself##request.lanshock.settings.modulePrefix.core#comments.comments_enable_disable&#request.session.UrlToken#" method="post">
-							<input type="hidden" name="topic_id" value="#qGetTopicID.id#">
-							<input type="hidden" name="mode" value="#abs(qGetTopicID.isclosed-1)#">
-							<cfif qGetTopicID.isclosed>
-								<input type="submit" value="#request.content._core__comments__enablecomments#">
-							<cfelse>
-								<input type="submit" value="#request.content._core__comments__disablecomments#">
-							</cfif>
+							<form action="#application.lanshock.oHelper.buildUrl('comments.comments_enable_disable')#" method="post">
+								<input type="hidden" name="topic_id" value="#qGetTopicID.id#"/>
+								<input type="hidden" name="mode" value="#abs(qGetTopicID.isclosed-1)#"/>
+								<cfif qGetTopicID.isclosed>
+									<input type="submit" value="#request.content._core__comments__enablecomments#"/>
+								<cfelse>
+									<input type="submit" value="#request.content._core__comments__disablecomments#"/>
+								</cfif>
 							</form>
 						</div>
 					</cfoutput>
@@ -52,11 +56,11 @@ $LastChangedRevision: 46 $
 		
 		<cfif NOT (qGetTopicID.recordcount AND qGetTopicID.isclosed)>
 			<cfsavecontent variable="addComment">
-				<cfif request.session.UserLoggedIn>
+				<cfif session.oUser.isLoggedIn()>
 					<cfoutput>
 						<h4>#request.content._core__comments__addcomment#</h4>
 						
-						<form action="#request.varScope.myself##request.lanshock.settings.modulePrefix.core#comments.comment_edit&#request.session.UrlToken#" method="post" onSubmit="return validateCommentsForm('#uuidFormName#','#jsStringFormat(request.content._core__comments__required_hint)#');">
+						<form action="#application.lanshock.oHelper.buildUrl('comments.comment_edit')#" method="post" onSubmit="return validateCommentsForm('#uuidFormName#','#jsStringFormat(request.content._core__comments__required_hint)#');">
 							<input type="hidden" name="form_submitted" value="true"/>
 							<input type="hidden" name="id" value="0"/>
 							<cfif qGetTopicID.recordcount>
@@ -91,14 +95,15 @@ $LastChangedRevision: 46 $
 										<!--
 											var sBasePath = "#request.lanshock.environment.webpath#templates/_shared/js/fckeditor/";
 											
-											var oFCKeditor#uuidFormName# = new FCKeditor( 'text' ) ;
-											oFCKeditor#uuidFormName#.BasePath	= sBasePath ;
+											var oFCKeditor#uuidFormName# = new FCKeditor('text');
+											oFCKeditor#uuidFormName#.BasePath = sBasePath;
 											
 											// Set the custom configurations file path (in this way the original file is mantained).
-											oFCKeditor#uuidFormName#.Config['CustomConfigurationsPath'] = sBasePath + 'editor/plugins/lanshock/config.js' ;
+											oFCKeditor#uuidFormName#.Config['CustomConfigurationsPath'] = sBasePath + 'editor/plugins/lanshock/config.js';
 											
-											oFCKeditor#uuidFormName#.Value = '' ;
-											oFCKeditor#uuidFormName#.ReplaceTextarea() ;
+											oFCKeditor#uuidFormName#.ToolbarSet = 'Default';
+											oFCKeditor#uuidFormName#.Value = '';
+											oFCKeditor#uuidFormName#.ReplaceTextarea();
 										//-->
 										</script>
 									</div>
@@ -106,7 +111,7 @@ $LastChangedRevision: 46 $
 								<div class="formrow">
 									<div class="formrow_input formrow_nolabel">
 										<fieldset>
-											<input type="checkbox" name="appendsignature" id="appendsignature" value="true" checked="checked">
+											<input type="checkbox" name="appendsignature" id="appendsignature" value="true" checked="checked"/>
 											<label for="appendsignature">#request.content._core__comments__appendsignature#</label>
 										</fieldset>
 									</div>
@@ -123,7 +128,7 @@ $LastChangedRevision: 46 $
 				<cfelse>
 					<cfoutput>
 						<h4>#request.content._core__comments__addcomment#</h4>
-						<a href="#request.varScope.myself##request.lanshock.settings.modulePrefix.core#user.login&relocationusereferer=true&#request.session.UrlToken#">#request.content._core__comments__login_hint#</a>
+						<a href="#application.lanshock.oHelper.buildUrl('user.login&relocationusereferer=true')#">#request.content._core__comments__login_hint#</a>
 					</cfoutput>
 				</cfif>
 			</cfsavecontent>
@@ -141,38 +146,30 @@ $LastChangedRevision: 46 $
 			<cfsavecontent variable="htmlComments">
 				<cfoutput>				
 				<h4>#request.content._core__comments__comments#</h4>
-				
-				<cfif request.session.isAdmin>
-					#enableDisableComments#
-				</cfif>
-				
+				#enableDisableComments#
 				<cfif qComments.recordcount>
 					<cfloop query="qComments">
 						<div class="commententry">
-							<div class="commententrycount">#currentrow#</div>
-							<div class="commententrydatetime">#UDF_DateTimeFormat(dt_created)#</div>
-							<div class="commententryauthor"><a href="#request.varScope.myself##request.lanshock.settings.modulePrefix.core#user.userdetails&amp;id=#user_id#&amp;#request.session.UrlToken#">#getUsernameById(user_id)#</a></div>
-							<cfif request.session.userid EQ user_id>
+							<div class="commententrycount">#qComments.currentrow#</div>
+							<div class="commententrydatetime">#session.oUser.DateTimeFormat(qComments.dt_created)#</div>
+							<div class="commententryauthor"><a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#qComments.user_id#')#">#application.lanshock.oHelper.getUsernameById(qComments.user_id)#</a></div>
+							<cfif session.oUser.getDataValue('userid') EQ qComments.user_id OR session.oUser.checkPermissions('comments-manage','comments')>
 								<div class="commententryoptions">
-									<a href="#request.varScope.myself##request.lanshock.settings.modulePrefix.core#comments.comment_delete&amp;id=#id#&amp;#request.session.UrlToken#">
-										<img src="#request.varScope.stImageDir.general#/btn_delete.gif"/>
+									<a href="#application.lanshock.oHelper.buildUrl('comments.comment_delete&id=#qComments.id#')#">
+										<img src="#request.lanshock.environment.webpath#templates/_shared/images/famfamfam/icons/delete.png"/>
 									</a>
 								</div>
 							</cfif>
-							<div class="commententryauthorimg"><a href="#request.varScope.myself##request.lanshock.settings.modulePrefix.core#user.userdetails&amp;id=#user_id#&amp;#request.session.UrlToken#">#UserShowAvatar(user_id)#</a></div>
-							<div class="commententrytitle">#title#</div>
-							<div class="commententrytext">#ConvertText(text)#</div>
+							<div class="commententryauthorimg"><a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#qComments.user_id#')#">#application.lanshock.oHelper.UserShowAvatar(qComments.user_id)#</a></div>
+							<div class="commententrytitle">#qComments.title#</div>
+							<div class="commententrytext">#qComments.text#<!--- #application.lanshock.oHelper.ConvertText(qComments.text)#<br><br> ---></div>
 							<div class="clearer"></div>
 						</div>
 					</cfloop>
 				<cfelse>
 					#request.content._core__comments__nocommentsavaible#
 				</cfif>
-				
-				<cfif request.session.isAdmin>
-					#enableDisableComments#
-				</cfif>
-				
+				#enableDisableComments#
 				<cfif NOT qGetTopicID.isclosed>
 					#addComment#
 				</cfif>
@@ -186,24 +183,20 @@ $LastChangedRevision: 46 $
 
 		</cfif>
 		
-		<cfscript>
-			stComments = StructNew();
-			stComments.recordcount = qComments.recordcount;
-			stComments.query = qComments;
-			stComments.html = htmlComments;
-		</cfscript>
+		<cfset stComments.recordcount = qComments.recordcount>
+		<cfset stComments.query = qComments>
+		<cfset stComments.html = htmlComments>
 		
 		<cfreturn stComments>
 		
 	</cffunction>
 
-
-
-
 	<cffunction name="getCommentsCount" access="public" returntype="numeric" output="false">
 		<cfargument name="id" required="false" type="numeric" default="0">
 		<cfargument name="module" required="false" type="string" default="">
 		<cfargument name="identifier" required="false" type="string" default="">
+		
+		<cfset var qPostCount = 0>
 	
 		<cfquery datasource="#request.lanshock.environment.datasource#" name="qPostCount">
 			SELECT COUNT(p.id) AS postcount
@@ -219,22 +212,17 @@ $LastChangedRevision: 46 $
 		</cfquery>
 		
 		<cfif qPostCount.recordcount>
-		
 			<cfreturn qPostCount.postcount>
-
 		<cfelse>
-		
 			<cfreturn 0>
-
 		</cfif>
 		
 	</cffunction>
 
-
-
-
 	<cffunction name="getCommentCountStruct" access="public" returntype="query" output="false">
 		<cfargument name="module" required="true" type="string">
+		
+		<cfset var qCommentsCount = 0>
 	
 		<cfquery datasource="#request.lanshock.environment.datasource#" name="qCommentsCount">
 			SELECT t.*, COUNT(p.id) AS postcount
@@ -248,11 +236,10 @@ $LastChangedRevision: 46 $
 		
 	</cffunction>
 
-
-
-
 	<cffunction name="getLatestComments" access="public" returntype="query" output="false">
 		<cfargument name="records" required="false" type="numeric" default="10">
+		
+		<cfset var qLatestComments = 0>
 	
 		<cfquery datasource="#request.lanshock.environment.datasource#" name="qLatestComments">
 			SELECT p.*, t.module, t.identifier, t.linktosource, t.type
@@ -267,13 +254,12 @@ $LastChangedRevision: 46 $
 		
 	</cffunction>
 
-
-
-
 	<cffunction name="getTopic" access="public" returntype="query" output="false">
 		<cfargument name="id" required="false" type="numeric" default="0">
 		<cfargument name="module" required="false" type="string" default="">
 		<cfargument name="identifier" required="false" type="string" default="">
+		
+		<cfset var qTopic = 0>
 	
 		<cfquery datasource="#request.lanshock.environment.datasource#" name="qTopic">
 			SELECT t.*, p.title, p.text, COUNT(p.id) AS postcount, MAX(p.dt_created) AS dt_lastpost
@@ -292,12 +278,11 @@ $LastChangedRevision: 46 $
 		
 	</cffunction>
 
-
-
-
 	<cffunction name="getTopics" access="public" returntype="query" output="true">
 		<cfargument name="type" required="false" type="string" default="">
 		<cfargument name="search" required="false" type="string" default="">
+		
+		<cfset var qGetTopics = 0>
 	
 		<cfquery datasource="#request.lanshock.environment.datasource#" name="qGetTopics">
 			SELECT t.*, p.title, p.text, p.user_id, COUNT(p.id) AS postcount, MAX(p.dt_created) AS dt_lastpost
@@ -323,14 +308,13 @@ $LastChangedRevision: 46 $
 		
 	</cffunction>
 
-
-
-
 	<cffunction name="setTopic" access="public" returntype="numeric" output="false">
 		<cfargument name="module" required="true" type="string">
 		<cfargument name="identifier" required="true" type="string">
 		<cfargument name="linktosource" required="false" type="string">
 		<cfargument name="type" required="true" type="string">
+		
+		<cfset var qGetTopicID = 0>
 	
 		<cfquery datasource="#request.lanshock.environment.datasource#" name="qGetTopicID">
 			SELECT id
@@ -363,13 +347,10 @@ $LastChangedRevision: 46 $
 		
 	</cffunction>
 
-
-
-
 	<cffunction name="setTopicEnableDisable" access="public" returntype="boolean" output="false">
 		<cfargument name="topic_id" required="true" type="numeric">
 		<cfargument name="mode" required="true" type="numeric">
-	
+		
 		<cfquery datasource="#request.lanshock.environment.datasource#">
 			UPDATE core_comments_topics
 			SET isclosed = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.mode#">
@@ -379,9 +360,6 @@ $LastChangedRevision: 46 $
 		<cfreturn true>
 		
 	</cffunction>
-
-
-
 
 	<cffunction name="deleteTopic" access="public" returntype="boolean" output="false">
 		<cfargument name="id" required="false" type="numeric" default="0">
@@ -418,9 +396,6 @@ $LastChangedRevision: 46 $
 		
 	</cffunction>
 
-
-
-
 	<cffunction name="setPost" access="public" returntype="boolean" output="false">
 		<cfargument name="id" required="false" type="numeric" default="0">
 		<cfargument name="topic_id" required="true" type="numeric">
@@ -430,6 +405,8 @@ $LastChangedRevision: 46 $
 		<cfargument name="user_id" required="true" type="numeric">
 		<cfargument name="appendsignature" required="false" type="boolean" default="true">
 		
+		<cfset var qGetPostData = 0>
+		<cfset var qUserdata = 0>
 		<cfset var newtext = trim(arguments.text)>
 	
 		<cfif arguments.id NEQ 0>
@@ -454,7 +431,7 @@ $LastChangedRevision: 46 $
 		
 			<cfif arguments.appendsignature>
 			
-				<cfset qUserdata = GetUserDataByID(arguments.user_id)>
+				<cfset qUserdata = application.lanshock.oHelper.GetUserDataByID(arguments.user_id)>
 				<cfset newtext = newtext & chr(13) & chr(10) & chr(13) & chr(10) & trim(qUserdata.signature)>
 			
 			</cfif>
@@ -475,12 +452,12 @@ $LastChangedRevision: 46 $
 		
 	</cffunction>
 
-
-
-
 	<cffunction name="deletePost" access="public" returntype="boolean" output="false">
 		<cfargument name="id" required="false" type="numeric" default="0">
 		<cfargument name="user_id" required="true" type="numeric">
+		
+		<cfset var getPostData = 0>
+		<cfset var qTopic = 0>
 		
 		<cfquery datasource="#request.lanshock.environment.datasource#" name="getPostData">
 			SELECT topic_id
@@ -512,13 +489,11 @@ $LastChangedRevision: 46 $
 		
 	</cffunction>
 
-
-
-
 	<cffunction name="getModuleTypes" access="public" returntype="struct" output="false">
 	
+		<cfset var qGetModule = 0>
+		<cfset var qGetTypes = 0>
 		<cfset var stModules = StructNew()>
-		<cfset var sModule = ''>
 		
 		<cfquery datasource="#request.lanshock.environment.datasource#" name="qGetModule">
 			SELECT module
@@ -531,17 +506,14 @@ $LastChangedRevision: 46 $
 			<cfquery datasource="#request.lanshock.environment.datasource#" name="qGetTypes">
 				SELECT type, COUNT(id) AS posts
 				FROM core_comments_topics
-				WHERE module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#module#">
+				WHERE module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetModule.module#">
 				GROUP BY type
 			</cfquery>
 			
-			<cfset sModule = module>
-			<cfset stModules[sModule] = StructNew()>
+			<cfset stModules[qGetModule.module] = StructNew()>
 			
 			<cfloop query="qGetTypes">
-			
-				<cfset stModules[sModule][type] = posts>
-			
+				<cfset stModules[qGetModule.module][qGetTypes.type] = qGetModule.posts>
 			</cfloop>
 			
 		</cfloop>
@@ -549,8 +521,5 @@ $LastChangedRevision: 46 $
 		<cfreturn stModules>
 		
 	</cffunction>
-
-
-
 
 </cfcomponent>
