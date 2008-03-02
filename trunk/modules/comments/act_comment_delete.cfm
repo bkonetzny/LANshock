@@ -11,11 +11,11 @@ $LastChangedRevision: 46 $
 
 <cfparam name="attributes.id" default="0">
 
-<cfif request.session.userloggedin>
+<cfif session.oUser.isLoggedIn()>
 
 	<cfinvoke component="comments" method="deletePost">		
 		<cfinvokeargument name="id" value="#attributes.id#">
-		<cfinvokeargument name="user_id" value="#request.session.userid#">
+		<cfinvokeargument name="user_id" value="#session.oUser.getDataValue('userid')#">
 	</cfinvoke>
 
 </cfif>
