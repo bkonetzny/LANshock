@@ -57,7 +57,6 @@ limitations under the License.
 	<cfset __fuseboxAppCfc.onRequest(CGI.SCRIPT_NAME) />
 	<cfset __fuseboxAppCfc.onRequestEnd(CGI.SCRIPT_NAME) />
 <cfcatch type="any">
-	<cfdump var="#cfcatch#"><cfabort>
 	<cfset __fuseboxAppCfc.onError(cfcatch)>
 </cfcatch>
 </cftry>

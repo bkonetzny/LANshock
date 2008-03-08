@@ -173,7 +173,7 @@ limitations under the License.
 
 		</cfif>
 		
-		<!--- TODO: we don't know what fuseactions an implicit circuit has --->
+		<!--- we don't know what fuseactions an implicit circuit has --->
 		<cfset this.fuseactions = structNew() />
 		<cfset this.parent = "" />
 		<cfset this.permissions = "" />
@@ -193,10 +193,15 @@ limitations under the License.
 					hint="I specify whether or not this is a top-level (public) request." />
 
 		<cfset var f = arguments.writer.setFuseaction(arguments.fuseaction) />
+		
+		<cfif arguments.fuseaction is "prefuseaction" or arguments.fuseaction is "postfuseaction">
+			<cfthrow type="fusebox.undefinedFuseaction" 
+					message="undefined Fuseaction" 
+					detail="You specified a Fuseaction of #arguments.fuseaction# which is uncallable in Circuit #getAlias()#." />
+		</cfif>
 
 		<!--- prefuseaction is handled internally to the circuit mechanism --->
 
-		<!--- TODO: check accessibility --->		
 		<cfif not structKeyExists(this.fuseactions,arguments.fuseaction)>
 			<cfif variables.fuseactionIsMethod>
 				<cfset this.fuseactions[arguments.fuseaction] = 
@@ -233,6 +238,15 @@ limitations under the License.
 				</cfif>
 			</cfif>
 		</cfif>
+
+		<cfif arguments.topLevel>
+			<cfif this.access is not "public">
+				<cfthrow type="fusebox.invalidAccessModifier" 
+						message="Invalid Access Modifier" 
+						detail="You tried to access #getAlias()#.#arguments.fuseaction# which does not have access modifier of public. A Fuseaction which is to be accessed from anywhere outside the application (such as called via an URL, or a FORM, or as a web service) must have an access modifier of public or if unspecified at least inherit such a modifier from its circuit." />
+			</cfif>
+		</cfif>	
+
 		<cfset this.fuseactions[arguments.fuseaction].compile(arguments.writer) />
 		
 		<!--- postfuseaction is handled internally to the circuit mechanism --->

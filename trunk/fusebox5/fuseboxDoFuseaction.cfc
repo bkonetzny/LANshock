@@ -213,13 +213,9 @@ limitations under the License.
 						</cfif>
 
 					</cfif>
-
-				<cfelse>
-
-					<cfthrow type="fusebox.undefinedFuseaction" 
-							message="undefined Fuseaction" 
-							detail="You specified a Fuseaction of #f# which is not defined in Circuit #c#." />
-
+					
+				<!--- ticket 309 - remove fuseaction check prior to compile so that implicit circuits work --->
+				
 				</cfif>
 
 			<cfelseif not variables.action.getCircuit().getApplication().allowImplicitCircuits>

@@ -78,7 +78,6 @@ limitations under the License.
 		// FB5: official support for this undocumented feature of FB4.x
 		if (structKeyExists(fb_.verbInfo.attributes,"circuit")) {
 			fb_.nAttrs = fb_.nAttrs + 1;	// we don't default this into the attributes struct
-			// TODO: we need to figure out what to do here if the circuit is implicit and has not yet been deduced!
 			if (structKeyExists(fb_.app.circuits,fb_.verbInfo.attributes.circuit)) {
 				fb_.targetCircuit = fb_.app.circuits[fb_.verbInfo.attributes.circuit];
 			} else if (fb_.app.allowImplicitCircuits) {
