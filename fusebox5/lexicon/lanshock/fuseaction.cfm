@@ -12,8 +12,7 @@ $LastChangedRevision: 72 $
 	if (fb_.verbInfo.executionMode is "start") {
 
 		fb_appendLine('<!--- lanshock:fuseaction --->');
-		fb_appendLine("<cfset _tmpCustomAttributes = myfusebox.getCurrentFuseaction().getCustomAttributes('lanshock')>");
-		fb_appendLine("<cfif NOT StructKeyExists(_tmpCustomAttributes,'includedCircuit') OR (isBoolean(_tmpCustomAttributes.includedCircuit) AND NOT _tmpCustomAttributes.includedCircuit)>");
+		fb_appendLine("<cfif NOT StructKeyExists(myfusebox.getCurrentFuseaction().getCustomAttributes('lanshock'),'includedCircuit') OR (isBoolean(myfusebox.getCurrentFuseaction().getCustomAttributes('lanshock').includedCircuit) AND NOT myfusebox.getCurrentFuseaction().getCustomAttributes('lanshock').includedCircuit)>");
 
 	} else {
 		

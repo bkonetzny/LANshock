@@ -214,7 +214,7 @@ limitations under the License.
 	<cffunction name="onRequest"><cfargument 
 				name="targetPage" type="string" required="true" /><cfsetting 
 							enablecfoutputonly="true">
-
+		
 		<cfif variables.myFusebox.parameters.execute>
 			<cfif _fba.debug>
 				<cfset myFusebox.trace("Fusebox","Including parsed file for '#variables.attributes.fuseaction#'") />

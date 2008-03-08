@@ -45,7 +45,7 @@ limitations under the License.
 		<cfargument name="writer" type="any" required="false" 
 					hint="I am the writer object to which the compiled code should be written. I am required but it's faster to specify that I am not required." />
 	
-		<cfset var uniqueName = "__fuseboxCircuitCfc_" & replace(variables.dottedPath,".","_","all") /> --->
+		<cfset var uniqueName = "__fuseboxCircuitCfc_" & replace(replace(variables.dottedPath,"-","$","all"),".","_","all") />
 		
 		<cfset arguments.writer.println('<cfparam name="#uniqueName#" default="##createObject(''component'',''#variables.dottedPath#'')##" />') />
 

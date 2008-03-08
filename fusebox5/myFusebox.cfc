@@ -15,8 +15,8 @@ limitations under the License.
 --->
 <cfcomponent hint="I provide the per-request myFusebox data structure and some convenience methods.">
 	<cfscript>
-	this.version.runtime     = "5.5.0";
-	// this.version.runtime     = "5.5.0.#REReplace('$LastChangedRevision$','[^0-9]','','all')#";
+	this.version.runtime     = "5.5.1";
+	//this.version.runtime     = "5.5.0.#REReplace('$LastChangedRevision:683 $','[^0-9]','','all')#";
 	  
 	this.version.loader      = "unknown";
 	this.version.transformer = "unknown";
@@ -63,6 +63,7 @@ limitations under the License.
 		<cfset var urlParam = "" />
 		<cfset var urlLastArg = "" />
 		<cfset var urlIsArg = true />
+		<cfset var pathInfo = CGI.PATH_INFO />
 		
 		<cfset variables.variablesScope = arguments.topLevelVariablesScope />
 		
@@ -127,7 +128,12 @@ limitations under the License.
 		<!--- handle SES URLs if appropriate --->
 		<cfif structKeyExists(theFusebox,"queryStringStart") and theFusebox.queryStringStart is not "?">
 			<!--- looks like SES URL generation is enabled, process CGI.PATH_INFO (we add &= to catch improperly formed URLs) --->
-			<cfloop list="#CGI.PATH_INFO#" index="urlParam" 
+			<!--- ticket 313 - canonicalize pathInfo for IIS 5 --->
+			<!--- <cfif len(pathInfo) gt len(CGI.SCRIPT_NAME) and left(pathInfo,len(CGI.SCRIPT_NAME)) is CGI.SCRIPT_NAME>
+				<cfset pathInfo = right(pathInfo,len(pathInfo)-len(CGI.SCRIPT_NAME)) />
+			</cfif> --->
+			<cfset pathInfo = CGI.QUERY_STRING />
+			<cfloop list="#pathInfo#" index="urlParam" 
 					delimiters="#theFusebox.queryStringStart##theFusebox.queryStringSeparator##theFusebox.queryStringEqual#&=">
 			   <cfif urlIsArg>
 			      <cfset urlLastArg = urlParam />

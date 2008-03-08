@@ -67,8 +67,8 @@ limitations under the License.
 		<cfargument name="appParameters" type="struct" required="true" 
 					hint="I am FUSEBOX_PARAMETERS." />
 		
-		<cfset var myVersion = "5.5.0" />
-		<!--- <cfset var myVersion = "5.5.0.#REReplace('$LastChangedRevision$','[^0-9]','','all')#" /> --->
+		<cfset var myVersion = "5.5.1" />
+		<!--- <cfset var myVersion = "5.5.0.#REReplace('$LastChangedRevision:683 $','[^0-9]','','all')#" /> --->
 
 		<cfset variables.factory = createObject("component","fuseboxFactory").init() />
 		<cfset variables.fuseboxLexicon = variables.factory.getBuiltinLexicon() />
@@ -582,6 +582,8 @@ limitations under the License.
 
 		<cfset var parsedFileInfo = 0 />
 		<cfset var output = "" />
+		<cfset var circuit = "" />
+		<cfset var fuseaction = "" />
 
 		<!--- ticket 293 - prevent dynamic do() from executing until prerequisites complete --->
 		<cfif not structKeyExists(request,"__fusebox") or 
@@ -599,8 +601,20 @@ limitations under the License.
 		<!--- allow for abbreviated circuitFuseaction form: --->
 		<cfif listLen(arguments.circuitFuseaction,".") lt 2>
 			<cfset arguments.circuitFuseaction = arguments.myFusebox.thisCircuit & "." & arguments.circuitFuseaction />
+		<cfelse>
+			<cfset circuit = listFirst(arguments.circuitFuseaction,".") />
+			<cfif circuit is not arguments.myFusebox.thisCircuit>
+				<!--- different circuit, check access is not private (implicit fuseactions cannot be private) --->			
+				<cfset fuseaction = listRest(arguments.circuitFuseaction,".") />
+				<cfif structKeyExists(this.circuits,circuit) and 
+						structKeyExists(this.circuits[circuit].fuseactions,fuseaction) and
+						this.circuits[circuit].fuseactions[fuseaction].getAccess() is "private">
+					<cfthrow type="fusebox.invalidAccessModifier" 
+							message="invalid access modifier" 
+							detail="The fuseaction '#circuit#.#fuseaction#' has an access modifier of private and can only be called from within its own circuit. Use an access modifier of internal or public to make it available outside its immediate circuit." />
+				</cfif>
+			</cfif>
 		</cfif>
-		<!--- TODO: check for accessibility --->
 		
 		<cfset parsedFileInfo = compileDynamicDo(arguments.circuitFuseaction,arguments.myFusebox) />
 		
@@ -713,6 +727,14 @@ limitations under the License.
 				<cfset this.circuits[arguments.circuit] = 
 						createObject("component","fuseboxImplicitCircuit")
 							.init(this,arguments.circuit,arguments.writer.getMyFusebox()) />
+				<!--- still need to check access here! --->
+				<cfif arguments.writer.getMyFusebox().thisCircuit is not arguments.circuit and
+						structKeyExists(this.circuits[circuit].fuseactions,arguments.fuseaction) and
+						this.circuits[circuit].fuseactions[fuseaction].getAccess() is "private">
+					<cfthrow type="fusebox.invalidAccessModifier" 
+							message="invalid access modifier" 
+							detail="The fuseaction '#arguments.circuit#.#arguments.fuseaction#' has an access modifier of private and can only be called from within its own circuit. Use an access modifier of internal or public to make it available outside its immediate circuit." />
+				</cfif>
 			<cfelse>
 				<cfthrow type="fusebox.undefinedCircuit" 
 						message="undefined Circuit" 

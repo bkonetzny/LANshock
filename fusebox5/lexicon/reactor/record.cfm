@@ -22,7 +22,7 @@
 						"The attribute 'returnvariable' is required, for a 'record' verb in fuseaction #fb_.verbInfo.circuit#.#fb_.verbInfo.fuseaction#.");
 		}
 
-		fb_appendLine('<cfset #fb_.verbInfo.attributes.returnvariable# = myFusebox.getApplication().getApplicationData().reactor.createRecord("#fb_.verbInfo.attributes.alias#") />');
+		fb_appendLine('<cfset #fb_.verbInfo.attributes.returnvariable# = application.lanshock.oFactory.load("#fb_.verbInfo.attributes.alias#","reactorRecord") />');
 
 		//
 	} else {

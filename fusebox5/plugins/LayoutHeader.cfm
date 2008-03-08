@@ -34,12 +34,12 @@ $LastChangedRevision$
 	<!--- Show Full HTML Layout --->
 	<cfdefaultcase>
 		<!--- Cookie-Detection only if Sites with Layout are requested to exclude Sites like Stylesheets --->
-		<cfif NOT session.UserLoggedIn>
+		<!--- <cfif NOT session.UserLoggedIn>
 			<!--- if Cookie exists relocate to Login --->
 			<cfif isDefined("cookie.email") AND len(cookie.email) AND isDefined("cookie.password") AND len(cookie.password) AND myfusebox.thiscircuit NEQ "c_user" AND myfusebox.thisfuseaction NEQ "login">
 				<cflocation url="#myself#c_user.login&#session.UrlToken#" addtoken="false">
 			</cfif>
-		</cfif>
+		</cfif> --->
 		<cfinclude template="#plugin.layoutFile#">
 	</cfdefaultcase>
 </cfswitch>

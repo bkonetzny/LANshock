@@ -16,7 +16,7 @@ $LastChangedRevision$
 
 <cfif application.lanshock.oModules.isLoaded(sCurrentModule)>
 
-	<cfset stImageDir.module = 'modules/#sCurrentModule#/images'>
+	<cfset stImageDir.module = application.lanshock.oRuntime.getEnvironment().sWebPath & 'modules/#sCurrentModule#/images'>
 	
 	<cfif application.lanshock.oModules.getModuleConfig(sCurrentModule).general.loadLanguageFile>
 	
