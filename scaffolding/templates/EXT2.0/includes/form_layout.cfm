@@ -2,9 +2,11 @@
 
 <cfloop from="1" to="#ArrayLen(aFormTabs)#" index="idxTabs">
 
-	<cfoutput>	
-		<div style="width: 200px; border: 1px solid blue;">#aFormTabs[idxTabs].name#</div>
-	</cfoutput>
+	<cfif ArrayLen(aFormTabs) GT 1>
+		<cfoutput>	
+			<div style="width: 200px; border: 1px solid blue;">#aFormTabs[idxTabs].name#</div>
+		</cfoutput>
+	</cfif>
 
 	<cfloop from="1" to="#ArrayLen(aFormTabs[idxTabs].aFieldGroups)#" index="idxFieldGroups">
 	

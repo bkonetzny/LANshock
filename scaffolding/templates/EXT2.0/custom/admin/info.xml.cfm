@@ -12,11 +12,7 @@
 		<item action="core_config" permissions="core_configmanager"/>
 		<item action="modules" permissions="core_modules"/>
 		<!-- <item action="cron" permissions="core_configmanager"/> -->
-		<!-- <item action="admin" permissions="admin"/> -->
-		<!-- <item action="userlist" permissions="admin"/> -->
 		<!-- <item action="import" permissions="core_configmanager"/> -->
-		<!-- <item action="maintenance" permissions="core_configmanager"/> -->
-		<!-- <item action="mailing" permissions="admin"/> -->
 		<!-- <item action="core_configmanager_Listing" permissions="admin"/> -->
 		<!-- <item action="core_modules_Listing" permissions="admin"/> -->
 		<item action="core_navigation_Listing" permissions="core_navigation"/>
@@ -25,24 +21,12 @@
 		<!-- <item action="core_security_roles_permissions_rel_Listing" permissions="admin"/> -->
 		<!-- <item action="core_security_users_roles_rel_Listing" permissions="admin"/> -->
 		<item action="user_Listing" permissions="user"/>
+		<item action="logviewer" permissions="logs"/>
 	</navigation>
 	
-	<dependencies>
-		<filesystem folder="/config"/>
-	</dependencies>
-	
 	<security>
-		<area name="guest"/>
-		<area name="mailing"/>
-		<area name="core_user"/>
-		<area name="core_configmanager"/>
-		<area name="core_modules"/>
-		<area name="core_navigation"/>
-		<area name="core_security_permissions"/>
-		<area name="core_security_roles"/>
-		<area name="core_security_roles_permissions_rel"/>
-		<permissions list="guest,mailing,user,core_configmanager,core_modules,core_navigation,core_security_permissions,core_security_roles,core_security_roles_permissions_rel"/>
-		<role name="LANshock Admin" permissions="setrights,guest,mailing,core_configmanager,core_modules,core_navigation,core_security_permissions,core_security_roles,core_security_roles_permissions_rel"/>
+		<permissions list="logs,user,core_configmanager,core_modules,core_navigation,core_security_permissions,core_security_roles,core_security_roles_permissions_rel"/>
+		<role name="LANshock Admin" permissions="logs,user,core_configmanager,core_modules,core_navigation,core_security_permissions,core_security_roles,core_security_roles_permissions_rel"/>
 	</security>
 	
 	<cron>

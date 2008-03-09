@@ -1,18 +1,13 @@
 <<!---
-Copyright 2006-07 Objective Internet Ltd - http://www.objectiveinternet.com
+Copyright (C) by LANshock.com
+Released under the GNU General Public License (v2)
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+$HeadURL: https://lanshock.svn.sourceforge.net/svnroot/lanshock/trunk/index.cfm $
+$LastChangedDate: 2007-12-09 10:05:43 +0100 (So, 09 Dez 2007) $
+$LastChangedBy: majestixs $
+$LastChangedRevision: 127 $
 --->>
+
 <<!--- Set the name of the object (table) being updated --->>
 <<cfset objectName = oMetaData.getSelectedTableAlias()>>
 <<cfoutput>>

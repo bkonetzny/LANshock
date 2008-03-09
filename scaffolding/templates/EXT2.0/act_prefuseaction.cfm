@@ -1,0 +1,1 @@
+<cfset request.page = structNew()>

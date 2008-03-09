@@ -1,3 +1,13 @@
+<<!---
+Copyright (C) by LANshock.com
+Released under the GNU General Public License (v2)
+
+$HeadURL: https://lanshock.svn.sourceforge.net/svnroot/lanshock/trunk/index.cfm $
+$LastChangedDate: 2007-12-09 10:05:43 +0100 (So, 09 Dez 2007) $
+$LastChangedBy: majestixs $
+$LastChangedRevision: 127 $
+--->>
+
 <<cfset objectName = oMetaData.getSelectedTableAlias()>>
 <<cfset lPKFields = oMetaData.getPKListFromXML(objectName)>>
 <<cfset stFields.aTable = oMetaData.getFieldsFromXML(objectName)>>
@@ -23,14 +33,9 @@
 <cfoutput>
 <script type="text/javascript">
 <!--
-	function reset(myform){
-		myform.reset();
-	};
-
-	function save(myform, XFA){
-		document.getElementById("btnSave").disabled=true;
-		myform.fuseaction.value = XFA;
-		myform.submit();
+	function validate(myform, XFA){
+		$('##btnSave').disabled = true;
+		return true;
 	};
 //-->
 </script>
@@ -54,11 +59,13 @@
 </cfif>
 
 <!--- Start of the form --->
-<form name="frmAddEdit" action="#self#" method="post" class="uniForm">		
-	<input type="hidden" name="_listSortByFieldList" value="#attributes._listSortByFieldList#" />
-	<input type="hidden" name="_Maxrows" value="#attributes._Maxrows#" />
-	<input type="hidden" name="_StartRow" value="#attributes._StartRow#" />
-	<input type="hidden" name="fuseaction" value="#XFA.save#" />
+<form id="frmAddEdit" action="#self#" method="post" class="uniForm" onsubmit="javascript: return validate();">
+	<div class="hidden">
+		<input type="hidden" name="fuseaction" value="#XFA.save#" />
+		<input type="hidden" name="_listSortByFieldList" value="#attributes._listSortByFieldList#" />
+		<input type="hidden" name="_Maxrows" value="#attributes._Maxrows#" />
+		<input type="hidden" name="_StartRow" value="#attributes._StartRow#" />
+	</div>
 	
 	<<cfinclude template="../templates/EXT2.0/includes/form_structure.cfm">>
 	
@@ -76,8 +83,8 @@
 		<cfset sortParams = appendParam(sortParams,"_Maxrows",attributes._Maxrows)>
 		<cfset sortParams = appendParam(sortParams,"_StartRow",attributes._Startrow)>
 		<cfset sortParams = appendParam(sortParams,"fuseaction",XFA.cancel)>
-		<button type="submit" class="submitButton" id="btnSave" onclick="javascript:save(this.form,'#XFA.Save#');">#request.content.form_save#</button>
-		<button type="reset" class="resetButton" id="btnReset" onclick="javascript:reset(this.form);">#request.content.form_reset#</button>
+		<button type="submit" class="submitButton" id="btnSave">#request.content.form_save#</button>
+		<button type="reset" class="resetButton" id="btnReset">#request.content.form_reset#</button>
 		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self##sortParams#';">#request.content.form_cancel#</button>
 	</div>
 </form>

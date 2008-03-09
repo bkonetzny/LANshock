@@ -12,7 +12,7 @@
 <!--- Work out where the scaffolding.xml file might be found. --->
 <cfparam name="url.scaffolding_filename" default="scaffolding.xml">
 <cfparam name="url.scaffolding_configFilePath" default="#baseDirectory##url.scaffolding_filename#">
-<cfset configFileURL = "http://#cgi.SERVER_NAME#:#cgi.SERVER_PORT##baseURL##getFileFromPath(url.scaffolding_configFilePath)#">
+<cfset configFileURL = "http://#cgi.SERVER_NAME#:#cgi.SERVER_PORT##baseURL##getFileFromPath(url.scaffolding_configFilePath)#?r=#CreateUUID()#">
 
 <!--- Work out the path for the call to the metadata cfc  --->
 <!--- <cfset metadataURL = "http://#cgi.SERVER_NAME#:#cgi.SERVER_PORT#/Scaffolder/scaffolder/xmlProxy.cfm"> --->

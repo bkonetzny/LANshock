@@ -1,32 +1,82 @@
 <<!---
-Copyright 2006-07 Objective Internet Ltd - http://www.objectiveinternet.com
+Copyright (C) by LANshock.com
+Released under the GNU General Public License (v2)
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+$HeadURL: https://lanshock.svn.sourceforge.net/svnroot/lanshock/trunk/index.cfm $
+$LastChangedDate: 2007-12-09 10:05:43 +0100 (So, 09 Dez 2007) $
+$LastChangedBy: majestixs $
+$LastChangedRevision: 127 $
 --->>
-<<!--- Set the name of the object (table) being updated --->>
+
 <<cfset objectName = oMetaData.getSelectedTableAlias()>>
-<<!--- Get an array of fields --->>
 <<cfset aFields = oMetaData.getFieldsFromXML(objectName)>>
-<<!--- Create a list of the many to one joined objects --->>
+<<cfset lFields = oMetaData.getFieldListFromXML(objectName)>>
 <<cfset aJoinedObjects = oMetaData.getRelationshipsFromXML(objectName,"manyToOne")>>
-<<!--- Get the primary key fields for the object --->>
 <<cfset lPrimaryKeys = oMetaData.getPKListFromXML(objectName)>>
-<<!--- Get the first primary key field for the object to use as name of count. --->>
 <<cfset FieldName = ListFirst(oMetaData.getPKListFromXML(objectName))>>
 <<cfoutput>>
 	<<cfif fileExists("../templates/EXT2.0/custom/_gateway/$$objectName$$/gateway.settings.cfm")>>
 		<<cfinclude template="../templates/EXT2.0/custom/_gateway/$$objectName$$/gateway.settings.cfm">>
 	<</cfif>>
+	<cffunction name="getRecords" access="public" hint="I return all matching rows from the table." output="false" returntype="query">
+		<cfargument name="stFilter" type="struct" required="false" default="#StructNew()#">
+		
+		<cfset var Query = createQuery()>
+		<cfset var Where = Query.getWhere()>
+		<cfset var idx = 0 />
+		<cfset var sCurrentField = ''>
+		<cfset var sSortField = ''>
+		<cfset var sSortDirection = 'ASC'>
+	
+		<cfif NOT StructIsEmpty(arguments.stFilter)>
+	
+			<cfif StructKeyExists(arguments.stFilter,'stJoins')>
+				<cfset Query.returnObjectFields("news_entry","$$lFields$$")>
+				
+				<cfloop collection="#arguments.stFilter.stJoins#" item="idx">
+					<cfset Query.leftJoin("news_entry",idx,idx)/>
+					<cfset Query.setFieldPrefix(idx,"#idx#_")/>
+					<cfset Query.returnObjectFields(idx,arguments.stFilter.stJoins[idx])>
+				</cfloop>
+			</cfif>
+		
+			<cfif StructKeyExists(arguments.stFilter,'stFields')>
+				<cfloop collection="#arguments.stFilter.stFields#" item="idx">
+					<cfset sCurrentField = idx>
+					<cfswitch expression="#arguments.stFilter.stFields[sCurrentField].mode#">
+						<cfcase value="isEqual">
+							<cfset Where.isEqual(_getAlias(),sCurrentField,arguments.stFilter.stFields[sCurrentField].value)>
+						</cfcase>
+						<cfcase value="isLike">
+							<cfset Where.isLike(_getAlias(),sCurrentField,arguments.stFilter.stFields[sCurrentField].value)>
+						</cfcase>
+					</cfswitch>
+				</cfloop>
+			</cfif>
+			
+			<cfif StructKeyExists(arguments.stFilter,'lSortFields')>
+				<cfloop list="#arguments.stFilter.lSortFields#" index="idx">
+					<cfset sSortDirection = 'ASC'>
+					<cfset sSortField = idx>
+					<cfif ListLen(idx,'|') EQ 2 AND ListFindNoCase('ASC,DESC',ListLast(idx,'|'))>
+						<cfset sSortDirection = UCase(ListLast(idx,'|'))>
+						<cfset sSortField = ListFirst(idx,'|')>
+					</cfif>
+					<cfif sSortDirection EQ 'DESC'>
+						<cfset Query.getOrder().setDesc("$$objectName$$",sSortField)>
+					<cfelse>
+						<cfset Query.getOrder().setAsc("$$objectName$$",sSortField)>
+					</cfif>
+				</cfloop>
+			</cfif>
+			
+			<cfif StructKeyExists(arguments.stFilter,'iRecords')>
+				<cfset Query.setMaxrows(arguments.stFilter.iRecords)>
+			</cfif>
+		</cfif>
+		
+		<cfreturn getByQuery(Query,true)>
+	</cffunction>
 	
 	<cffunction name="getAllWithJoin" output="false" returntype="query" hint="I get ALL the records, with an outer join to any parent tables.">
 		<cfargument name="sortByFieldList" default="" type="string" required="No" Hint="I am a list of attributes by which to sort the result, In the format table|column|ASC/DESC,table|column|ASC/DESC...">
@@ -144,7 +194,9 @@ limitations under the License.
 		<cfset var QueryRecordset = createQuery()>
 		
 		<!--- only select option fields --->
-		<cfset QueryRecordset.setFieldExpression("$$objectName$$",variables.sOptionNameField,variables.sOptionNameCode)>
+		<cfif StructKeyExists(variables,'sOptionNameCode')>
+			<cfset QueryRecordset.setFieldExpression("$$objectName$$",variables.sOptionNameField,variables.sOptionNameCode)>
+		</cfif>
 		<cfset QueryRecordset.setFieldAlias("$$objectName$$","$$lPrimaryKeys$$","optionvalue")>
 		<cfset QueryRecordset.setFieldAlias("$$objectName$$",variables.sOptionNameField,"optionname")>
 		<cfset QueryRecordset.returnObjectFields("$$objectName$$","optionvalue,optionname")>
@@ -164,7 +216,7 @@ limitations under the License.
 	<cffunction name="deleteByIDlist" access="remote" output="false" returntype="void" hint="I delete the selected N records">
 		<cfargument name="jsonData" default="" type="string" required="No" Hint="I am the json data to delete"/>
 		
-		<cfset var oJSON = CreateObject('component','#application.lanshock.environment.componentpath#core._utils.json.json')>
+		<cfset var oJSON = CreateObject('component','#application.lanshock.oRuntime.getEnvironment().sComponentPath#core._utils.json.json')>
 		<cfset var aResult = oJSON.decode(data=arguments.jsonData)>
 		<cfset var idx = ''>
 

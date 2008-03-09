@@ -1,0 +1,73 @@
+<<!---
+Copyright (C) by LANshock.com
+Released under the GNU General Public License (v2)
+
+$HeadURL: https://lanshock.svn.sourceforge.net/svnroot/lanshock/trunk/index.cfm $
+$LastChangedDate: 2007-12-09 10:05:43 +0100 (So, 09 Dez 2007) $
+$LastChangedBy: majestixs $
+$LastChangedRevision: 127 $
+--->>
+
+<<cfset objectName = oMetaData.getSelectedTableAlias()>>
+<<cfset lFields = oMetaData.getFieldListFromXML(objectName)>>
+<<cfset stFields.aTable = oMetaData.getFieldsFromXML(objectName)>>
+<<cfset lPKFields = oMetaData.getPKListFromXML(objectName)>>
+<<cfset aManyToMany = oMetaData.getRelationshipsFromXML(objectName,"manyToMany")>>
+<<cfset sModule = oMetaData.getModule()>>
+
+<<cfoutput>>
+	<cfparam name="attributes.$$objectName$$_id" default="0">
+	<cfset o$$objectName$$ = application.lanshock.oFactory.load('$$objectName$$','reactorRecord')>
+
+	<cfif variables.mode EQ 'insert'>
+		<<cfloop list="$$lFields$$" index="thisField">><<cfif NOT ListFindNoCase(lPKFields,thisField)>>
+		<cfset o$$objectName$$.set$$thisField$$(attributes.$$thisField$$)><</cfif>><</cfloop>>
+	<cfelse>
+		<<cfloop list="$$lFields$$" index="thisField">>
+		<cfset o$$objectName$$.set$$thisField$$(attributes.$$thisField$$)><</cfloop>>
+	</cfif>
+	
+	<cfif bHasErrors>
+		<cfset o$$objectName$$.validate()>
+		<cfif o$$objectName$$.hasErrors()>
+			<cfset bHasErrors = true>
+		</cfif>
+	</cfif>
+	
+	<<cfloop from="1" to="$$ArrayLen(aManyToMany)$$" index="i">>
+	<cfif NOT bHasErrors>
+		<cfset o$$aManyToMany[i].name$$iterator = o$$objectName$$.get$$aManyToMany[i].name$$iterator()>
+		<cfset o$$aManyToMany[i].name$$iterator.deleteAll()>
+		<cfif StructKeyExists(attributes,'$$aManyToMany[i].name$$')>
+			<cfloop list="#attributes.$$aManyToMany[i].name$$#" index="idx">
+				<cfset o$$aManyToMany[i].name$$iterator.add($$aManyToMany[i].links[1].to$$ = o$$objectName$$.get$$lPKFields$$(), $$aManyToMany[i].links[1].name$$ = idx)>
+			</cfloop>
+		</cfif>
+		<cfset o$$aManyToMany[i].name$$iterator.validate()>
+		<cfif o$$aManyToMany[i].name$$iterator.hasErrors()>
+			<cfset bHasErrors = true>
+		</cfif>
+	</cfif>
+	<</cfloop>>
+
+	<cfif NOT bHasErrors>
+		<cfset o$$objectName$$.save()>
+		<cflocation url="#application.lanshock.oHelper.buildUrl('#XFA.Continue#&_listSortByFieldList=#URLEncodedFormat(attributes._listSortByFieldList)#&_startrow=#attributes._Startrow#&_maxrows=#attributes._Maxrows#')#" addtoken="false">
+	<cfelse>
+		<cfset request.layout = "admin">
+		
+		<cfinclude template="act_form_loadrelated_$$objectName$$.cfm">
+		<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/raw_files/controller/form/act_form_loadrelated_custom_$$objectName$$.cfm")>>
+			<cfinclude template="act_form_loadrelated_custom_$$objectName$$">
+		<</cfif>>
+
+		<cfset aErrors = o$$objectName$$._getErrorCollection().getErrors()>
+		<cfset aTranslatedErrors = o$$objectName$$._getErrorCollection().getTranslatedErrors()>
+		
+		<cfparam name="request.page.pageContent" default="">
+		<cfsavecontent variable="request.page.pageContent">
+			<cfoutput>#request.page.pageContent#</cfoutput>
+			<cfinclude template="../view/form/dsp_form_$$objectName$$">
+		</cfsavecontent>
+	</cfif>
+<</cfoutput>>

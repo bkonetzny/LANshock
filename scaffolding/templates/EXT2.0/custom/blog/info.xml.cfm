@@ -17,10 +17,6 @@
 		<item action="news_ping_url_Listing" permissions="news_ping_url"/>
 	</navigation>
 	
-	<panels>
-		<panel name="news" action="panel_news" height="100"/>
-	</panels>
-	
 	<security>
 		<!-- news_trackback, news_entry_category -->
 		<permissions list="news_entry,news_category,news_ping_url"/>
@@ -34,7 +30,7 @@
 			<field name="title" type="varchar" len="255" null="false" default=""/>
 			<field name="text" type="text" default=""/>
 			<field name="date" type="datetime" null="true" default="NULL"/>
-			<field name="mp3url" type="varchar" len="255" null="false" default=""/>
+			<field name="mp3url" type="varchar" len="255" null="true" default="NULL"/>
 			<field name="ishtml" type="boolean" null="false" default="0"/>
 			<pk fields="id"/>
 			<fk field="author" mapping="user.id"/>
@@ -56,6 +52,7 @@
 			<pk fields="id"/>
 		</table>
 		<table name="news_entry_category">
+			<field name="id" type="integer" len="11" null="false" special="auto_increment"/>
 			<field name="entry_id" type="integer" len="11" null="false" default="0"/>
 			<field name="category_id" type="integer" len="11" null="false" default="0"/>
 			<pk fields="entry_id,category_id"/>
@@ -69,5 +66,30 @@
 			<pk fields="id"/>
 		</table>
 	</database>
-
+	
+	<special>
+		<reactor>
+			<table name="news_entry_category" loadFields="false">
+				<![CDATA[
+					<field alias="id" name="id"/>
+					<hasOne name="news_entry">
+				        <relate from="entry_id" to="id"/>
+				    </hasOne>
+				    <hasOne name="news_category">
+				        <relate from="category_id" to="id"/>
+				    </hasOne>
+				]]>
+			</table>
+			<table name="news_entry">
+				<![CDATA[
+					<hasMany name="news_category">
+						<link name="news_entry_category" from="news_entry" to="news_category" />
+					</hasMany>
+				    <hasOne name="user">
+				        <relate from="author" to="id"/>
+				    </hasOne>
+				]]>
+			</table>
+		</reactor>
+	</special>
 </module>

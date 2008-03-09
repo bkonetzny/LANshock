@@ -1,16 +1,80 @@
-<circuit xmlns:cf="cf/" xmlns:reactor="reactor/" >
-	<fuseaction name="Initialise" access="internal">
-		<!-- Initialise: I Initialise all of the required gateway objects. -->
-		<!-- Create the reactorFactory. -->
-		<reactor:initialize configuration="#expandPath('config/reactor/reactor.xml')#"/>
+<<!---
+Copyright (C) by LANshock.com
+Released under the GNU General Public License (v2)
+
+$HeadURL: https://lanshock.svn.sourceforge.net/svnroot/lanshock/trunk/index.cfm $
+$LastChangedDate: 2007-12-09 10:05:43 +0100 (So, 09 Dez 2007) $
+$LastChangedBy: majestixs $
+$LastChangedRevision: 127 $
+--->>
+
+<<!--- Set the name of the datasource, This is used to create the names of directories and circuits --->>
+<<cfset datasourceName = oMetaData.getDatasource()>>
+<<cfset sModule = oMetaData.getModule()>>
+
+<<cfoutput>>
+<circuit xmlns:cf="cf/" xmlns:reactor="reactor/" xmlns:lanshock="lanshock/">
+
+	<prefuseaction>
+		<lanshock:fuseaction>
+			<set name="request.page" value="#structNew()#"/>
+			<lanshock:i18n load="modules/$$sModule$$/i18n/lang.properties" returnvariable="request.content"/>
+			<include circuit="$$sModule$$" template="settings" />
+		</lanshock:fuseaction>
+	</prefuseaction>
+	
+	<postfuseaction>
+		<lanshock:fuseaction>
+			<if condition="isDefined('request.layout')">
+				<true>
+					<if condition="request.layout EQ 'json'">
+						<true>
+							<set name="_fba.debug" value="false"/>
+							<include circuit="v_$$sModule$$" template="dsp_layout_json" />
+						</true>
+						<false>
+							<if condition="request.layout EQ 'none'">
+								<true>
+									<set name="_fba.debug" value="false"/>
+								</true>
+								<false>
+									<if condition="request.layout EQ 'admin'">
+										<true>
+											<include circuit="v_$$sModule$$" template="dsp_layout" />
+											<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/raw_files/view/styles.css")>>
+											<lanshock:htmlhead type="style" content="@import url('#application.lanshock.oRuntime.getEnvironment().sWebPath#modules/$$sModule$$/view/styles.css');"/>
+											<</cfif>>
+										</true>
+									</if>
+								</false>
+							</if>
+						</false>
+					</if>
+				</true>
+				<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/raw_files/view/styles.css")>>
+				<false>
+					<lanshock:htmlhead type="style" content="@import url('#application.lanshock.oRuntime.getEnvironment().sWebPath#modules/$$sModule$$/view/styles.css');"/>
+				</false>
+				<</cfif>>
+			</if>
+		</lanshock:fuseaction>
+	</postfuseaction>
+
+	<fuseaction name="main" access="public">
+		<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/controller/circuit_main.xml.cfm")>>
+			<<cfoutput>>
+			<<cfinclude template="../templates/EXT2.0/custom/$$sModule$$/controller/circuit_main.xml.cfm">>
+			<</cfoutput>>
+		<<cfelse>>
+			<include circuit="$$sModule$$" template="main" />
+		<</cfif>>
 	</fuseaction>
 	
-	<fuseaction name="ReInitialise" access="internal">
-		<!-- I check the URL parameters for the init variable, if present all the cached objects are recreated --->
-		<if condition="isDefined('attributes.init')">
-			<true>
-				<do action="Initialise" />
-			</true>
-		</if>
-	</fuseaction>
+	<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/controller/circuit.xml.cfm")>>
+		<<cfoutput>>
+		<<cfinclude template="../templates/EXT2.0/custom/$$sModule$$/controller/circuit.xml.cfm">>
+		<</cfoutput>>
+	<</cfif>>
+
 </circuit>
+<</cfoutput>>

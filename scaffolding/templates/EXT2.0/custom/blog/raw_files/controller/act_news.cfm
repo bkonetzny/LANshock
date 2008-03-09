@@ -12,24 +12,25 @@ $LastChangedRevision: 63 $
 <cfparam name="attributes.category_id" default="">
 <cfparam name="attributes.user_id" default="">
 
-<cfif NOT isNumeric(attributes.category_id)>
-	<cfset attributes.category_id = ''>
+<cfset stFilter = StructNew()>
+<cfset stFilter.lSortFields = "date|DESC">
+<cfset stFilter.stJoins = StructNew()>
+<cfset stFilter.stJoins.user = "name,firstname,lastname">
+<cfif len(attributes.user_id)>
+	<cfset stFilter.stFields.author = StructNew()>
+	<cfset stFilter.stFields.author.mode = 'isEqual'>
+	<cfset stFilter.stFields.author.value = attributes.user_id>
+</cfif>
+<cfif len(attributes.category_id)>
+	<cfset stFilter.stFields.category_id = StructNew()>
+	<cfset stFilter.stFields.category_id.mode = 'isEqual'>
+	<cfset stFilter.stFields.category_id.value = attributes.category_id>
+<cfelse>
+	<cfset stFilter.iRecords = 10>
 </cfif>
 
-<cfif NOT isNumeric(attributes.user_id)>
-	<cfset attributes.user_id = ''>
-</cfif>
-
-<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.blog.model.cfc.news')#" method="getNews" returnvariable="qNews">
-	<cfif NOT len(attributes.category_id)>
-		<cfinvokeargument name="records" value="10">
-	</cfif>
-	<cfif len(attributes.user_id)>
-		<cfinvokeargument name="user_id" value="#attributes.user_id#">
-	</cfif>
-	<cfif len(attributes.category_id)>
-		<cfinvokeargument name="category_id" value="#attributes.category_id#">
-	</cfif>
+<cfinvoke component="#application.lanshock.oFactory.load('news_entry','reactorGateway',false)#" method="getRecords" returnvariable="qNews">
+	<cfinvokeargument name="stFilter" value="#stFilter#">
 </cfinvoke>
 
 <cfsetting enablecfoutputonly="No">

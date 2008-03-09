@@ -1,118 +1,58 @@
 <cfoutput>
 	<fuseaction access="public" name="start">
-		<include circuit="#sModule#" template="act_start"/>
-		<include circuit="v_#sModule#" template="dsp_start"/>
-	</fuseaction>
-
-	<fuseaction access="public" name="userlist">
-		<include circuit="#sModule#" template="act_userlist"/>
-		<include circuit="v_#sModule#" template="dsp_userlist"/>
-	</fuseaction>
-
-	<fuseaction access="public" name="userlist_export" lanshock:showlayout="none">
-		<include circuit="#sModule#" template="act_userlist_export"/>
-	</fuseaction>
-
-	<fuseaction access="public" name="user_del">
-		<lanshock:security area="guest"/>
-		<include circuit="#sModule#" template="act_user_del"/>
-		<include circuit="v_#sModule#" template="dsp_user_del"/>
-	</fuseaction>
-
-	<fuseaction access="public" name="user_del_history">
-		<include circuit="#sModule#" template="act_user_del_history"/>
-		<include circuit="v_#sModule#" template="dsp_user_del_history"/>
-	</fuseaction>
-
-	<fuseaction access="public" name="usernotice_save">
-		<lanshock:security area="guest"/>
-		<include circuit="#sModule#" template="qry_usernotice_save"/>
-	</fuseaction>
-
-	<fuseaction access="public" name="userpassword_change">
-		<lanshock:security area="guest"/>
-		<include circuit="#sModule#" template="qry_userpassword_change"/>
-	</fuseaction>
-
-	<fuseaction access="public" name="userstatus_change" lanshock:showlayout="none">
-		<lanshock:security area="guest"/>
-		<include circuit="#sModule#" template="act_userstatus_change"/>
-	</fuseaction>
-
-	<fuseaction access="public" name="mailing">
-		<lanshock:security area="mailing"/>
-		<include circuit="#sModule#" template="act_mailing"/>
-		<include circuit="v_#sModule#" template="dsp_mailing"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="maintenance">
-		<include circuit="v_#sModule#" template="dsp_maintenance"/>
+		<lanshock:security area="core_configmanager"/>
+		<include circuit="#sModule#" template="custom/act_start"/>
+		<include circuit="v_#sModule#" template="custom/dsp_start"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="core_config">
-		<include circuit="v_#sModule#" template="dsp_core_config"/>
+		<lanshock:security area="core_configmanager"/>
+		<include circuit="v_#sModule#" template="custom/dsp_core_config"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="core_config_general">
-		<include circuit="#sModule#" template="act_core_config_general"/>
-		<include circuit="v_#sModule#" template="dsp_core_config_general"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_config_security">
-		<include circuit="#sModule#" template="act_core_config_security"/>
-		<include circuit="v_#sModule#" template="dsp_core_config_security"/>
+		<lanshock:security area="core_configmanager"/>
+		<include circuit="#sModule#" template="custom/act_core_config_general"/>
+		<include circuit="v_#sModule#" template="custom/dsp_core_config_general"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="core_config_layout">
-		<include circuit="#sModule#" template="act_core_config_layout"/>
-		<include circuit="v_#sModule#" template="dsp_core_config_layout"/>
+		<lanshock:security area="core_configmanager"/>
+		<include circuit="#sModule#" template="custom/act_core_config_layout"/>
+		<include circuit="v_#sModule#" template="custom/dsp_core_config_layout"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="core_config_mailserver">
-		<include circuit="#sModule#" template="act_core_config_mailserver"/>
-		<include circuit="v_#sModule#" template="dsp_core_config_mailserver"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_config_debugging">
-		<include circuit="#sModule#" template="act_core_config_debugging"/>
-		<include circuit="v_#sModule#" template="dsp_core_config_debugging"/>
+		<lanshock:security area="core_configmanager"/>
+		<include circuit="#sModule#" template="custom/act_core_config_mailserver"/>
+		<include circuit="v_#sModule#" template="custom/dsp_core_config_mailserver"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="core_config_profilesettings">
-		<include circuit="#sModule#" template="act_core_config_profilesettings"/>
-		<include circuit="v_#sModule#" template="dsp_core_config_profilesettings"/>
+		<lanshock:security area="core_configmanager"/>
+		<include circuit="#sModule#" template="custom/act_core_config_profilesettings"/>
+		<include circuit="v_#sModule#" template="custom/dsp_core_config_profilesettings"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="modules">
-		<include circuit="#sModule#" template="act_modules"/>
-		<include circuit="v_#sModule#" template="dsp_modules"/>
+		<lanshock:security area="core_modules"/>
+		<include circuit="#sModule#" template="custom/act_modules"/>
+		<include circuit="v_#sModule#" template="custom/dsp_modules"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="cron">
-		<include circuit="#sModule#" template="act_cron"/>
-		<include circuit="v_#sModule#" template="dsp_cron"/>
-	</fuseaction>
-
-	<fuseaction access="public" name="import">
-		<include circuit="#sModule#" template="act_import"/>
-		<include circuit="v_#sModule#" template="dsp_import"/>
+		<lanshock:security area="core_configmanager"/>
+		<include circuit="#sModule#" template="custom/act_cron"/>
+		<include circuit="v_#sModule#" template="custom/dsp_cron"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="logviewer">
-		<include circuit="#sModule#" template="act_logviewer"/>
-		<include circuit="v_#sModule#" template="dsp_logviewer"/>
-	</fuseaction>
-
-	<fuseaction access="public" name="datadump">
-		<include circuit="v_#sModule#" template="dsp_datadump"/>
-	</fuseaction>
-
-	<fuseaction access="public" name="system_check">
-		<include circuit="#sModule#" template="act_system_check"/>
-		<include circuit="v_#sModule#" template="dsp_system_check"/>
+		<lanshock:security area="core_configmanager"/>
+		<include circuit="#sModule#" template="custom/act_logviewer"/>
+		<include circuit="v_#sModule#" template="custom/dsp_logviewer"/>
 	</fuseaction>
 
 	<fuseaction access="public" name="cron_dbbackup" lanshock:showlayout="none">
-		<include circuit="#sModule#" template="act_cron_dbbackup"/>
+		<include circuit="#sModule#" template="custom/act_cron_dbbackup"/>
 	</fuseaction>
 </cfoutput>

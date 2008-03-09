@@ -11,15 +11,19 @@ $LastChangedRevision: 63 $
 
 <cfset stMetadata = structNew()>
 <cfset stMetadata.title = application.lanshock.settings.appname & ' RSS 1.0'>
-<cfset stMetadata.link = application.lanshock.environment.webpathfull>
+<cfset stMetadata.link = application.lanshock.oRuntime.getEnvironment().sWebPathfull>
 <cfset stMetadata.description = application.lanshock.settings.appname>
 <!--- <cfset stMetadata.image = structNew()>
 <cfset stMetadata.image.url = "http://www.foo.com/site.gif">
 <cfset stMetadata.image.title = "Foo">
 <cfset stMetadata.image.link = "http://www.foo.com"> --->
 
-<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.blog.model.cfc.news')#" method="getNews" returnvariable="qNews">
-	<cfinvokeargument name="records" value="25">
+<cfset stFilter = StructNew()>
+<cfset stFilter.lSortFields = "date|DESC">
+<cfset stFilter.iRecords = 25>
+
+<cfinvoke component="#application.lanshock.oFactory.load('news_entry','reactorGateway')#" method="getRecords" returnvariable="qNews">
+	<cfinvokeargument name="stFilter" value="#stFilter#">
 </cfinvoke>
 
 <cfset qRssEntries = queryNew("title,body,link,subject,date")>
