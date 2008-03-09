@@ -22,12 +22,13 @@
 		<parameter name="queryStringStart" value="/" />
 		<parameter name="queryStringSeparator" value="/" />
 		<parameter name="queryStringEqual" value="/" />
+		<parameter name="parsePath" value="storage/secure/parsed/fusebox/" />
+		<parameter name="pluginsPath" value="fusebox5/plugins/" />
+		<parameter name="lexiconPath" value="fusebox5/lexicon/" />
 	</parameters>
 
 	<globalfuseactions>
-		<appinit>
-			<fuseaction action="core_runtime.initFrameworks"/>
-		</appinit>
+		<appinit/>
 		<preprocess/>
 		<postprocess/>
 	</globalfuseactions>
