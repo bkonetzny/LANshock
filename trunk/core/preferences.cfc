@@ -31,7 +31,7 @@ $LastChangedRevision$
 
 		<cfif application.lanshock.config.complete>
 		
-			<cfquery datasource="#application.lanshock.environment.datasource#" name="stLocal.qPreferences">
+			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="stLocal.qPreferences">
 				SELECT preferences
 				FROM user
 				WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.user_id#">
@@ -90,7 +90,7 @@ $LastChangedRevision$
 		
 		<cfwddx action="cfml2wddx" input="#arguments.data#" output="stLocal.wddxData">
 
-		<cfquery datasource="#application.lanshock.environment.datasource#">
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 			UPDATE user
 			SET preferences = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#stLocal.wddxData#">
 			WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.user_id#">

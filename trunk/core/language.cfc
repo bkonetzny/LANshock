@@ -80,12 +80,12 @@ $LastChangedRevision$
 		
 		<cfif NOT application.lanshock.oCache.exists("language:#sFileDirectory#")>
 		
-			<cfdirectory action="list" name="qLangFiles" directory="#application.lanshock.environment.abspath##sFileDirectory#" filter="*.properties">
+			<cfdirectory action="list" name="qLangFiles" directory="#application.lanshock.oRuntime.getEnvironment().sBasePath##sFileDirectory#" filter="*.properties">
 			
 			<cfloop query="qLangFiles">
 		
 				<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core._utils.i18n.javaRB')#" method="getResourceBundle" returnvariable="stRb">
-					<cfinvokeargument name="rbFile" value="#application.lanshock.environment.abspath##sFileDirectory##qLangFiles.name#">
+					<cfinvokeargument name="rbFile" value="#application.lanshock.oRuntime.getEnvironment().sBasePath##sFileDirectory##qLangFiles.name#">
 				</cfinvoke>
 				
 				<cfset application.lanshock.oCache.set("language:#sFileDirectory##qLangFiles.name#",stRb)>

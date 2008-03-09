@@ -95,7 +95,7 @@ $LastChangedRevision: 103 $
 		
 		<cffile action="write" file="#expandPath('fusebox.xml.cfm')#" output="#trim(sConfig)#" mode="777">
 		
-		<cfdirectory action="list" name="qParsedFiles" directory="#application.lanshock.sStoragePath#secure/parsed/fusebox/" filter="*.cfm">
+		<cfdirectory action="list" name="qParsedFiles" directory="#application.lanshock.oRuntime.getEnvironment().sStoragePath#secure/parsed/fusebox/" filter="*.cfm">
 		
 		<cfloop query="qParsedFiles">
 			<cffile action="delete" file="#qParsedFiles.directory#/#qParsedFiles.name#">

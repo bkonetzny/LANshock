@@ -1,7 +1,7 @@
 <!--- 
 
 USAGE:
-<cfset o = createObject("component", "#request.lanshock.environment.componentpath#core._utils.image.barcode")>
+<cfset o = createObject("component", "#application.lanshock.oRuntime.getEnvironment().sComponentPath#core._utils.image.barcode")>
 
 <cfset o.saveBarcode(code='USER:ID:177256',saveToFile='C:/Server/barbecue.jpg')>
 
@@ -45,8 +45,8 @@ USAGE:
 		
 		<cfsetting showdebugoutput="false">
 		
-		<cfset aJarPath[1] = expandPath("#request.lanshock.environment.abspath#core/_utils/java/barbecue/barbecue-1.5-beta1.jar")>
-		<cfset oJavaLoader = createObject("component", "#request.lanshock.environment.componentpath#core._utils.javaloader.JavaLoader").init(aJarPath)>
+		<cfset aJarPath[1] = expandPath("#application.lanshock.oRuntime.getEnvironment().sBasePath#core/_utils/java/barbecue/barbecue-1.5-beta1.jar")>
+		<cfset oJavaLoader = createObject("component", "#application.lanshock.oRuntime.getEnvironment().sComponentPath#core._utils.javaloader.JavaLoader").init(aJarPath)>
 		
 		<cfset oBarcodeFactory = oJavaLoader.create("net.sourceforge.barbecue.BarcodeFactory")>
 		<cfset oBarcodeImageHandler = oJavaLoader.create("net.sourceforge.barbecue.BarcodeImageHandler")>

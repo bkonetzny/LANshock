@@ -28,8 +28,8 @@ $LastChangedRevision$
 			var idxSmiley = '';
 			var idxSmiley2 = '';
 
-			stSmileySet.path_abs = '#application.lanshock.environment.abspath#core/_utils/smileys/#sSmileyDir#/';
-			stSmileySet.path_web = '#application.lanshock.environment.webpath#core/_utils/smileys/#sSmileyDir#/';
+			stSmileySet.path_abs = '#application.lanshock.oRuntime.getEnvironment().sBasePath#core/_utils/smileys/#sSmileyDir#/';
+			stSmileySet.path_web = '#application.lanshock.oRuntime.getEnvironment().sWebPath#core/_utils/smileys/#sSmileyDir#/';
 			stSmileySet.name = '';
 			stSmileySet.author = '';
 			stSmileySet.date = '';
@@ -141,7 +141,7 @@ $LastChangedRevision$
 
 		<cfscript>
 			var stLocal = StructNew();
-			stLocal.path_abs = '#application.lanshock.environment.abspath#core/_utils/smileys/';
+			stLocal.path_abs = '#application.lanshock.oRuntime.getEnvironment().sBasePath#core/_utils/smileys/';
 		</cfscript>
 		
 		<cfdirectory name="stLocal.qSmileySets" directory="#stLocal.path_abs#">

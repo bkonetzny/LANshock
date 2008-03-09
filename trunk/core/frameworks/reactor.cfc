@@ -89,7 +89,7 @@ $LastChangedRevision: 103 $
 			</cfoutput>
 		</cfsavecontent>
 		
-		<cffile action="write" file="#application.lanshock.sStoragePath#secure/config/reactor/reactor.xml" output="#trim(sConfig)#" mode="777">
+		<cffile action="write" file="#application.lanshock.oRuntime.getEnvironment().sStoragePath#secure/config/reactor/reactor.xml" output="#trim(sConfig)#" mode="777">
 		
 		<cfdirectory action="list" name="qProjectFiles" directory="#expandPath('framework/reactor/project/lanshock/')#" recurse="true" filter="*.cfm">
 		

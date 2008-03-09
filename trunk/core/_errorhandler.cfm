@@ -12,7 +12,7 @@ $LastChangedRevision$
 <cfset stGlobalCfcatch = arguments.exception>
 
 <cftry>
-	<cfset logfile = "#application.lanshock.sStoragePath#secure/logs/error.log">
+	<cfset logfile = "#application.lanshock.oRuntime.getEnvironment().sStoragePath#secure/logs/error.log">
 
 	<cfif FileExists(logfile)>
 		<cffile action="READ" file="#logfile#" variable="errorWDDX">

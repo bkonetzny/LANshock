@@ -35,12 +35,12 @@ $LastChangedRevision: 56 $
 		<cfloop from="1" to="#ArrayLen(stLocal.aSqlCode)#" index="stLocal.idx">
 			<cfset stLocal.sSqlCode = stLocal.aSqlCode[stLocal.idx]>
 			<cftry>
-				<cfset application.lanshock.oLogger.writeLog('core.datasource','Deploying table "#application.lanshock.environment.datasource#.#arguments.sTable#" | Mode: "#stLocal.mode#" | SQL: #stLocal.sSqlCode#')>
-				<cfquery datasource="#application.lanshock.environment.datasource#">
+				<cfset application.lanshock.oLogger.writeLog('core.datasource','Deploying table "#application.lanshock.oRuntime.getEnvironment().sDatasource#.#arguments.sTable#" | Mode: "#stLocal.mode#" | SQL: #stLocal.sSqlCode#')>
+				<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 					#PreserveSingleQuotes(stLocal.sSqlCode)#
 				</cfquery>
 				<cfcatch>
-					<cfset application.lanshock.oLogger.writeLog('core.datasource','SQL Error for table "#application.lanshock.environment.datasource#.#arguments.sTable#" | Message: "#cfcatch.message#" | Detail: "#cfcatch.detail#"','error')>
+					<cfset application.lanshock.oLogger.writeLog('core.datasource','SQL Error for table "#application.lanshock.oRuntime.getEnvironment().sDatasource#.#arguments.sTable#" | Message: "#cfcatch.message#" | Detail: "#cfcatch.detail#"','error')>
 				</cfcatch>
 			</cftry>
 		</cfloop>
@@ -61,7 +61,7 @@ $LastChangedRevision: 56 $
 		</cfscript>
 		
 		<cftry>
-			<cfquery datasource="#application.lanshock.environment.datasource#" name="stLocal.qTableCheck" maxrows="0">
+			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="stLocal.qTableCheck" maxrows="0">
 				SELECT * FROM #arguments.tablename#
 			</cfquery>
 			<cfset stLocal.aMetaData = GetMetaData(stLocal.qTableCheck)>

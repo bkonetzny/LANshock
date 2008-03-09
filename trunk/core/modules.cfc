@@ -14,7 +14,7 @@ $LastChangedRevision: 103 $
 	
 		<cfset variables.qNavigation = QueryNew("module,action,level,label,permissions,sortorder")>
 		<cfset variables.stDatasource = StructNew()>
-		<cfset variables.lCoreModules = 'admin,comments,cron,general,installer,mail,team,user'>
+		<cfset variables.lCoreModules = 'admin,comments,cron,general,installer,mail,user'>
 		
 		<cfset resetModules()>
 		<cfset loadInstalledModules()>
@@ -31,7 +31,7 @@ $LastChangedRevision: 103 $
 		<cfset var idxModule = ''>
 	
 		<cftry>
-			<cfquery name="qModules" datasource="#application.lanshock.environment.datasource#">
+			<cfquery name="qModules" datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 				SELECT folder
 				FROM core_modules
 			</cfquery>
@@ -89,6 +89,9 @@ $LastChangedRevision: 103 $
 		<cfset var qRoleLookup = 0>
 		<cfset var qPermissionLookup = 0>
 		<cfset var qPermissionsLookup = 0>
+		<cfset var sModelDirectory = ''>
+		<cfset var sModelTarget = ''>
+		<cfset var qModelFiles = 0>
 		
 		<cfif stModuleConfig.status>
 			
@@ -107,6 +110,23 @@ $LastChangedRevision: 103 $
 				</cfloop>
 				
 			</cfif>
+			
+			<cfset sModelDirectory = expandPath('modules/#stModuleConfig.data.info.folder#/model/')>
+			
+			<cfif directoryExists(sModelDirectory)>
+				<cfdirectory action="list" directory="#sModelDirectory#" recurse="true" name="qModelFiles">
+				
+				<cfloop query="qModelFiles">
+					<cfif qModelFiles.type EQ 'file'>
+						<cfset sModelTarget = expandPath('model/#right(qModelFiles.directory,len(qModelFiles.directory)-len(sModelDirectory))#/#qModelFiles.name#')>
+					
+						<cfif NOT directoryExists(getDirectoryFromPath(sModelTarget))>
+							<cfdirectory action="create" directory="#getDirectoryFromPath(sModelTarget)#" mode="777">
+						</cfif>
+						<cffile action="copy" source="#qModelFiles.directory#/#qModelFiles.name#" destination="#sModelTarget#" mode="777">
+					</cfif>
+				</cfloop>
+			</cfif>
 		
 			<cfset variables.stModules[arguments.folder] = stModuleConfig.data>
 
@@ -116,12 +136,12 @@ $LastChangedRevision: 103 $
 	
 			<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.frameworks.fusebox')#" method="createConfig"/>
 			
-			<cfquery datasource="#application.lanshock.environment.datasource#">
+			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 				DELETE FROM core_modules
 				WHERE folder = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
 			</cfquery>
 			
-			<cfquery datasource="#application.lanshock.environment.datasource#">
+			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 				INSERT INTO core_modules (name, folder, version, date)
 				VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.name#">,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">,
@@ -129,14 +149,14 @@ $LastChangedRevision: 103 $
 						<cfqueryparam cfsqltype="cf_sql_timestamp" value="#stModuleConfig.data.info.date#">)
 			</cfquery>
 			
-			<cfquery datasource="#application.lanshock.environment.datasource#">
+			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 				DELETE FROM core_navigation
 				WHERE module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
 			</cfquery>
 			
 			<cfif stModuleConfig.data.general.createCircuit>
 			
-				<cfquery datasource="#application.lanshock.environment.datasource#">
+				<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 					INSERT INTO core_navigation (module, action, level, sortorder, permissions)
 					VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">,
 							<cfqueryparam cfsqltype="cf_sql_varchar" value="main">,
@@ -147,7 +167,7 @@ $LastChangedRevision: 103 $
 				
 				<cfloop collection="#stModuleConfig.data.navigation#" item="idxNavigation">
 					<cfset iNavCounter = iNavCounter + 1>
-					<cfquery datasource="#application.lanshock.environment.datasource#">
+					<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 						INSERT INTO core_navigation (module, action, level, sortorder, permissions)
 						VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">,
 								<cfqueryparam cfsqltype="cf_sql_varchar" value="#LCase(idxNavigation)#">,
@@ -160,14 +180,14 @@ $LastChangedRevision: 103 $
 			</cfif>
 			
 			<cfloop list="#stModuleConfig.data.security_permissions#" index="idxPermissions">
-				<cfquery datasource="#application.lanshock.environment.datasource#" name="qPermissionLookup">
+				<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qPermissionLookup">
 					SELECT id
 					FROM core_security_permissions
 					WHERE module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
 					AND name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#idxPermissions#">
 				</cfquery>
 				<cfif NOT qPermissionLookup.recordcount>
-					<cfquery datasource="#application.lanshock.environment.datasource#">
+					<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 						INSERT INTO core_security_permissions (name, module)
 						VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#idxPermissions#">,
 								<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">)
@@ -176,20 +196,20 @@ $LastChangedRevision: 103 $
 			</cfloop>
 			
 			<cfloop collection="#stModuleConfig.data.security_roles#" item="idxRoles">
-				<cfquery datasource="#application.lanshock.environment.datasource#" name="qRoleLookup">
+				<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qRoleLookup">
 					SELECT id
 					FROM core_security_roles
 					WHERE module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
 					AND name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.security_roles[idxRoles].name#">
 				</cfquery>
 				<cfif NOT qRoleLookup.recordcount>
-					<cfquery datasource="#application.lanshock.environment.datasource#">
+					<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 						INSERT INTO core_security_roles (name, module)
 						VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.security_roles[idxRoles].name#">,
 								<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">)
 					</cfquery>
 				
-					<cfquery name="qRoleLookup" datasource="#application.lanshock.environment.datasource#">
+					<cfquery name="qRoleLookup" datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 						SELECT id
 						FROM core_security_roles
 						WHERE name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.security_roles[idxRoles].name#">
@@ -198,7 +218,7 @@ $LastChangedRevision: 103 $
 					
 					<cfif qRoleLookup.recordcount>
 					
-						<cfquery name="qPermissionsLookup" datasource="#application.lanshock.environment.datasource#">
+						<cfquery name="qPermissionsLookup" datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 							SELECT id
 							FROM core_security_permissions
 							WHERE name IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.security_roles[idxRoles].permissions#" list="true">)
@@ -208,7 +228,7 @@ $LastChangedRevision: 103 $
 						<cfif qPermissionsLookup.recordcount>
 						
 							<cfloop list="#ValueList(qPermissionsLookup.id)#" index="idxPermission">
-								<cfquery datasource="#application.lanshock.environment.datasource#">
+								<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 									INSERT INTO core_security_roles_permissions_rel (permission_id, role_id)
 									VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#idxPermission#">,
 											<cfqueryparam cfsqltype="cf_sql_varchar" value="#qRoleLookup.id#">)
@@ -251,7 +271,7 @@ $LastChangedRevision: 103 $
 				
 		<cfelse>
 		
-			<cffile action="append" file="#application.lanshock.sStoragePath#secure/logs/core_modules.log" output="#cgi.remote_addr# - [#DateFormat(now(),"yyyy-mm-dd")# #TimeFormat(now(),"hh:mm:ss")#] invalid info.xml.cfm found: #arguments.folder#">
+			<cfset application.lanshock.oLogger.writeLog('core.modules','Invalid info.xml.cfm: #arguments.folder#','error')>
 		
 		</cfif>
 		
@@ -270,12 +290,12 @@ $LastChangedRevision: 103 $
 
 		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.frameworks.fusebox')#" method="createConfig"/>
 	
-		<cfquery datasource="#application.lanshock.environment.datasource#">
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 			DELETE FROM core_modules
 			WHERE folder = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.folder#">
 		</cfquery>
 		
-		<cfquery datasource="#application.lanshock.environment.datasource#">
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 			DELETE FROM core_navigation
 			WHERE module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.folder#">
 		</cfquery>
@@ -341,12 +361,6 @@ $LastChangedRevision: 103 $
 				</cfif>
 			</cfloop>
 			
-			<cfset stData.permissions = ''>
-			<cfset aXmlSearch = XmlSearch(stXML,'/module/security/area/')>
-			<cfloop from="1" to="#ArrayLen(aXmlSearch)#" index="idx">
-				<cfset stData.permissions = ListAppend(stData.permissions,aXmlSearch[idx].XmlAttributes.name)>
-			</cfloop>
-			
 			<cfset stData.security_permissions = ''>
 			<cfset aXmlSearch = XmlSearch(stXML,'/module/security/permissions/')>
 			<cfif ArrayLen(aXmlSearch)>
@@ -373,7 +387,7 @@ $LastChangedRevision: 103 $
 			
 			<cfset stReturn.data = stData>
 
-			<cfcatch><cfrethrow>
+			<cfcatch>
 				<cfset stReturn.status = false>
 				<cfset stReturn.data = cfcatch>
 			</cfcatch>
@@ -443,219 +457,6 @@ $LastChangedRevision: 103 $
 		
 	</cffunction>
 
-	<cffunction name="initCoreModules" output="false" returntype="void">
-		
-		<cfset var stCore = getModulesByType(type='core')>
-		<cfset stCore = getModuleSettings(stModules=stCore)>
-		<cfset initModules(stModules=stCore)>
-		
-	</cffunction>
-
-	<cffunction name="getModulesByType" output="false" returntype="struct">
-		<cfargument name="type" type="string" default="module" required="false">
-
-		<cfset var stModules = StructNew()>
-		<cfset var sName = ''>
-		<cfset var lCoreModules = 'admin,comments,cron,general,installer,mail,team,user'>
-		
-		<cfif arguments.type EQ "core">
-		
-			<!--- read configurations from core directory --->
-			<cfdirectory action="LIST" directory="#application.lanshock.environment.abspath#modules/" name="dirCore" sort="name ASC">
-			<cfloop query="dirCore">
-				<cfscript>
-					if(dirCore.type EQ "dir"
-						AND ListFind(lCoreModules,dirCore.name)
-						AND fileExists(application.lanshock.environment.abspath & "modules/" & dirCore.name & "/info.xml.cfm")){
-						sName = lCase(name);
-						stModules[application.lanshock.settings.modulePrefix.core & sName] = StructNew();
-						stModules[application.lanshock.settings.modulePrefix.core & sName].dir = sName;
-						stModules[application.lanshock.settings.modulePrefix.core & sName].module_path_abs = application.lanshock.environment.abspath & "modules/" & sName & "/";
-						stModules[application.lanshock.settings.modulePrefix.core & sName].module_path_rel = "modules/" & sName & "/";
-						stModules[application.lanshock.settings.modulePrefix.core & sName].module_path_web = application.lanshock.environment.webpath & "modules/" & sName & "/";
-						stModules[application.lanshock.settings.modulePrefix.core & sName].type = "core";
-					}
-				</cfscript>
-			</cfloop>
-			
-		<cfelse>
-		
-			<!--- read configurations from module directory --->
-			<cfdirectory action="LIST" directory="#application.lanshock.environment.abspath#modules/" name="dirModules" sort="name ASC">
-			<cfloop query="dirModules">
-				<cfscript>
-					if(dirModules.type EQ "dir"
-						AND NOT ListFind(lCoreModules,dirModules.name)
-						AND fileExists(application.lanshock.environment.abspath & "modules/" & name & "/info.xml.cfm")){
-						sName = lCase(name);
-						stModules[application.lanshock.settings.modulePrefix.module & sName] = StructNew();
-						stModules[application.lanshock.settings.modulePrefix.module & sName].dir = sName;
-						stModules[application.lanshock.settings.modulePrefix.module & sName].module_path_abs = application.lanshock.environment.abspath & "modules/" & sName & "/";
-						stModules[application.lanshock.settings.modulePrefix.module & sName].module_path_rel = "modules/" & sName & "/";
-						stModules[application.lanshock.settings.modulePrefix.module & sName].module_path_web = application.lanshock.environment.webpath & "modules/" & sName & "/";
-						stModules[application.lanshock.settings.modulePrefix.module & sName].type = "module";
-					}
-				</cfscript>
-			</cfloop>
-			
-		</cfif>
-		
-		<cfreturn stModules>
-
-	</cffunction>
-
-	<cffunction name="getModuleSettings" output="false" returntype="struct">
-		<cfargument name="stModules" type="struct" required="true">
-
-		<cfloop collection="#stModules#" item="idx">
-
-			<cftry>
-			
-				<cffile action="read" file="#stModules[idx].module_path_abs#info.xml.cfm" variable="infoXML">
-				
-				<cftry>
-					<cfset infoXML = XMLParse(infoXML)>
-					<cfcatch>
-						<cfthrow message="#cfcatch.message#" detail="Error whileparsing XML-File: #stModules[idx].module_path_abs#info.xml.cfm">
-					</cfcatch>
-				</cftry>
-		
-				<cfparam name="infoXML.Module.XmlAttributes.Name" default="">
-				<cfparam name="infoXML.Module.XmlAttributes.Author" default="">
-				<cfparam name="infoXML.Module.XmlAttributes.Url" default="">
-				<cfparam name="infoXML.Module.XmlAttributes.Date" default="">
-				<cfparam name="infoXML.Module.XmlAttributes.Version" default="">
-				<cfparam name="infoXML.Module.XmlAttributes.Hint" default="">
-				<cfparam name="infoXML.Module.General.XmlAttributes.requiresLogin" default="false">
-				<cfparam name="infoXML.Module.General.XmlAttributes.loadLanguageFile" default="true">
-				<cfparam name="infoXML.Module.General.XmlAttributes.createCircuit" default="true">
-				<cfparam name="infoXML.Module.General.XmlAttributes.type" default="application">
-		
-				<cfscript>
-					stModules[idx].name = infoXML.Module.XmlAttributes.Name;
-					stModules[idx].author = infoXML.Module.XmlAttributes.Author;
-					stModules[idx].url = infoXML.Module.XmlAttributes.Url;
-					stModules[idx].date = infoXML.Module.XmlAttributes.Date;
-					stModules[idx].version = infoXML.Module.XmlAttributes.Version;
-					stModules[idx].hint = infoXML.Module.XmlAttributes.Hint;
-					stModules[idx].general.reqLogin = infoXML.Module.General.XmlAttributes.requiresLogin;
-					stModules[idx].general.loadLanguageFile = infoXML.Module.General.XmlAttributes.loadLanguageFile;
-					stModules[idx].general.createCircuit = infoXML.Module.General.XmlAttributes.createCircuit;
-					stModules[idx].general.type = infoXML.Module.General.XmlAttributes.type;
-					stModules[idx].securityareas = StructNew();
-					stModules[idx].db = StructNew();
-					stModules[idx].navigation = StructNew();
-				</cfscript>
-				
-				<cfif isDefined("infoXML.Module.Navigation")>
-					<cfset iNavCount = 0>
-					<cfloop from="1" to="#ArrayLen(infoXML.Module.Navigation.XmlChildren)#" index="item">
-						<cfparam name="infoXML.Module.Navigation.XmlChildren[item].xmlname" default="">
-						<cfparam name="infoXML.Module.Navigation.XmlChildren[item].xmlattributes.action" default="">
-						<cfparam name="infoXML.Module.Navigation.XmlChildren[item].xmlattributes.reqstatus" default=""> <!--- '' | 'loggedin' | 'notloggedin' | 'admin' --->
-						<cfscript>
-							if(len(infoXML.Module.Navigation.XmlChildren[item].xmlname) AND len(infoXML.Module.Navigation.XmlChildren[item].xmlattributes.action)){
-								iNavCount = iNavCount + 1;
-								stModules[idx].Navigation[iNavCount] = StructNew();
-								stModules[idx].Navigation[iNavCount].action = infoXML.Module.Navigation.XmlChildren[item].xmlattributes.action;
-								stModules[idx].Navigation[iNavCount].reqstatus = infoXML.Module.Navigation.XmlChildren[item].xmlattributes.reqstatus;
-							}
-						</cfscript>
-
-					</cfloop>
-				</cfif>
-				
-				<cfset stModules[idx].license = ArrayNew(1)>
-				<cfif isDefined("infoXML.Module.License")>
-					<cfloop from="1" to="#ArrayLen(infoXML.Module.License.XmlChildren)#" index="item">
-						<cfset stModules[idx].license[item] = StructNew()>
-						<cfset stModules[idx].license[item].type = infoXML.Module.License.XmlChildren[item].xmlattributes.type>
-						<cfparam name="infoXML.Module.License.XmlChildren[#item#].xmlattributes.file" default="">
-						<cfset stModules[idx].license[item].file = infoXML.Module.License.XmlChildren[item].xmlattributes.file>
-						<cfparam name="infoXML.Module.License.XmlChildren[#item#].xmlattributes.name" default="">
-						<cfset stModules[idx].license[item].name = infoXML.Module.License.XmlChildren[item].xmlattributes.name>
-						<cfparam name="infoXML.Module.License.XmlChildren[#item#].xmlattributes.url" default="">
-						<cfset stModules[idx].license[item].url = infoXML.Module.License.XmlChildren[item].xmlattributes.url>
-					</cfloop>
-				</cfif>
-				
-				<cfset stModules[idx].dependencies = StructNew()>
-				<cfif isDefined("infoXML.Module.dependencies")>
-					<cfloop from="1" to="#ArrayLen(infoXML.Module.dependencies.XmlChildren)#" index="item">
-						<cfswitch expression="#infoXML.Module.dependencies.XmlChildren[item].xmlname#">
-							<cfcase value="filesystem">
-								<cfset stModules[idx].dependencies.filesystem[item] = StructNew()>
-								<cfparam name="infoXML.Module.dependencies.XmlChildren[#item#].xmlattributes.file" default="">
-								<cfset stModules[idx].dependencies.filesystem[item].file = infoXML.Module.dependencies.XmlChildren[item].xmlattributes.file>
-								<cfparam name="infoXML.Module.dependencies.XmlChildren[#item#].xmlattributes.folder" default="">
-								<cfset stModules[idx].dependencies.filesystem[item].folder = infoXML.Module.dependencies.XmlChildren[item].xmlattributes.folder>
-							</cfcase>
-						</cfswitch>
-					</cfloop>
-				</cfif>
-				
-				<cfif isDefined("infoXML.Module.Security")>
-					<cfloop from="1" to="#ArrayLen(infoXML.Module.Security.XmlChildren)#" index="item">
-						<cfset stModules[idx].securityareas[infoXML.Module.Security.XmlChildren[item].xmlattributes.name] = infoXML.Module.Security.XmlChildren[item].xmlattributes.name>
-					</cfloop>
-				</cfif>
-				
-				<cfif isDefined("infoXML.Module.Cron")>
-					<cfloop from="1" to="#ArrayLen(infoXML.Module.Cron.XmlChildren)#" index="item">
-						<cfset stModules[idx].cron[infoXML.Module.Cron.XmlChildren[item].xmlattributes.action] = infoXML.Module.Cron.XmlChildren[item].xmlattributes.run>
-					</cfloop>
-				</cfif>
-				
-				<cfif isDefined("infoXML.Module.Database")>
-					<cfloop from="1" to="#ArrayLen(infoXML.Module.Database.XmlChildren)#" index="item">
-						<cfif infoXML.Module.Database.XmlChildren[item].xmlname EQ "table">
-							<cfset stModules[idx].db[infoXML.Module.Database.XmlChildren[item].xmlattributes.name] = infoXML.Module.Database.XmlChildren[item].XmlChildren>
-						</cfif>
-					</cfloop>
-				</cfif>
-			
-				<cfscript>
-					if(NOT (len(stModules[idx].name)
-						AND len(stModules[idx].author)
-						AND len(stModules[idx].url)
-						AND len(stModules[idx].date)
-						AND len(stModules[idx].version)
-						AND len(stModules[idx].general.reqLogin))) StructDelete(stModules, idx);
-				</cfscript>
-			
-				<cfcatch><cfrethrow><cfset StructDelete(stModules,idx)></cfcatch>
-		
-			</cftry>
-			
-		</cfloop>
-		
-		<cfreturn stModules>
-
-	</cffunction>
-
-	<cffunction name="activateModules" output="false" returntype="boolean">
-		<cfargument name="lActiveModules" type="string" required="true">
-
-		<cfset var stModules = getModulesByType('module')>
-		<cfset var stCoreModules = getModulesByType('core')>
-		<cfset var idx = 0>
-		
-		<cfset StructAppend(stModules, stCoreModules, "true")>
-		
-		<!--- Delete Unselected Modules --->
-		<cfloop collection="#stModules#" item="idx">
-			<cfscript>
-				if(NOT ListFindNoCase(arguments.lActiveModules,idx)) StructDelete(stModules,idx);
-			</cfscript>
-		</cfloop>
-		
-		<cfset stModules = getModuleSettings(stModules)>
-		<cfset initModules(stModules)>
-		
-		<cfreturn true>
-
-	</cffunction>
-	
 	<cffunction name="getNavigation" output="false" returntype="query">
 		<cfargument name="lang" type="string" required="true">
 		
@@ -663,10 +464,11 @@ $LastChangedRevision: 103 $
 		<cfset var qNavigation = QueryNew('no_column')>
 		
 		<cfif NOT application.lanshock.oCache.exists("navigation:#arguments.lang#")>
-			<cfset qNavigation = variables.qNavigation>
+			<cfset qNavigation = duplicate(variables.qNavigation)>
 		
 			<cfloop query="qNavigation">
-				<cfif getModuleConfig(qNavigation.module).general.loadlanguagefile>
+				<cfset stProperties = StructNew()>
+				<cfif isLoaded(qNavigation.module) AND getModuleConfig(qNavigation.module).general.loadlanguagefile>
 					<cftry>
 						<cfinvoke component="#application.lanshock.oLanguage#" method="loadProperties" returnvariable="stProperties">
 							<cfinvokeargument name="lang" value="#arguments.lang#">
@@ -675,6 +477,8 @@ $LastChangedRevision: 103 $
 						
 						<cfif StructKeyExists(stProperties,'__globalmodule__navigation__'&qNavigation.action)>
 							<cfset QuerySetCell(qNavigation,'label',stProperties['__globalmodule__navigation__'&qNavigation.action],qNavigation.currentrow)>
+						<cfelseif qNavigation.action EQ 'main' AND qNavigation.level EQ 1>
+							<cfset QuerySetCell(qNavigation,'label',stProperties['__globalmodule__name'],qNavigation.currentrow)>
 						</cfif>
 						<cfcatch></cfcatch>
 					</cftry>
@@ -695,7 +499,7 @@ $LastChangedRevision: 103 $
 	<cffunction name="buildNavigation" output="false" returntype="void">
 		<cfset var qNavigation = QueryNew("module,action,level,label,permissions")>
 			
-		<cfquery name="qNavigation" datasource="#application.lanshock.environment.datasource#">
+		<cfquery name="qNavigation" datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 			SELECT *, action AS label
 			FROM core_navigation
 			ORDER BY module ASC, level ASC, sortorder ASC

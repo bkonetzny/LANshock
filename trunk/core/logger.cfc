@@ -19,7 +19,7 @@ $LastChangedRevision: 34 $
 		<cfset var lLogLevels = "info,warn,error">
 		
 		<cfif ListFindNoCase(lLogLevels,arguments.level)>
-			<cffile action="append" file="#application.lanshock.sStoragePath#secure/logs/#arguments.type#.log" output="#now()# - #cgi.remote_addr# - #arguments.level# - #arguments.message#" mode="777" addnewline="true">
+			<cffile action="append" file="#application.lanshock.oRuntime.getEnvironment().sStoragePath#secure/logs/#arguments.type#.log" output="#now()# - #cgi.remote_addr# - #arguments.level# - #arguments.message#" mode="777" addnewline="true">
 		</cfif>
 		
 	</cffunction>

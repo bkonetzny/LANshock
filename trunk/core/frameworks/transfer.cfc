@@ -125,7 +125,7 @@ $LastChangedRevision: 103 $
 			</cfoutput>
 		</cfsavecontent>
 		
-		<cffile action="write" file="#application.lanshock.sStoragePath#secure/config/transfer/transfer.xml.cfm" output="#trim(sTransferXml)#" mode="777">
+		<cffile action="write" file="#application.lanshock.oRuntime.getEnvironment().sStoragePath#secure/config/transfer/transfer.xml.cfm" output="#trim(sTransferXml)#" mode="777">
 
 		<cfsavecontent variable="sTransferDbXml">
 			<cfoutput>
@@ -139,7 +139,7 @@ $LastChangedRevision: 103 $
 			</cfoutput>
 		</cfsavecontent>
 		
-		<cffile action="write" file="#application.lanshock.sStoragePath#secure/config/transfer/datasource.xml.cfm" output="#trim(sTransferDbXml)#" mode="777">
+		<cffile action="write" file="#application.lanshock.oRuntime.getEnvironment().sStoragePath#secure/config/transfer/datasource.xml.cfm" output="#trim(sTransferDbXml)#" mode="777">
 		
 	</cffunction>
 	
