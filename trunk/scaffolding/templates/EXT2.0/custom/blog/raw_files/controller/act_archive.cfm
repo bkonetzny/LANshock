@@ -9,7 +9,12 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 63 $
 --->
 
-<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.blog.model.cfc.news')#" method="getNews" returnvariable="qNews">
+<cfset stFilter = StructNew()>
+<cfset stFilter.lSortFields = "date|DESC">
+
+<cfinvoke component="#application.lanshock.oFactory.load('news_entry','reactorGateway')#" method="getRecords" returnvariable="qNews">
+	<cfinvokeargument name="stFilter" value="#stFilter#">
+</cfinvoke>
 
 <cfset iMonth = ''>
 <cfset iYear = ''>

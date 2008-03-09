@@ -1057,6 +1057,7 @@ limitations under the License.
 		<cfset stType["char"] = "string">
 		<cfset stType["datetime"] = "date">
 		<cfset stType["decimal"] = "numeric">
+		<cfset stType["double"] = "numeric">
 		<cfset stType["float"] = "numeric">
 		<cfset stType["image"] = "numeric">
 		<cfset stType["int"] = "numeric">
@@ -1085,6 +1086,7 @@ limitations under the License.
  		<cfset stFuseDocType["char"] = "string">
 		<cfset stFuseDocType["datetime"] = "datetime">
 		<cfset stFuseDocType["decimal"] = "number">
+		<cfset stFuseDocType["double"] = "number">
 		<cfset stFuseDocType["float"] = "number">
 		<cfset stFuseDocType["image"] = "binary">
 		<cfset stFuseDocType["int"] = "integer">
@@ -1113,6 +1115,7 @@ limitations under the License.
 		<cfset stSQLType["char"] = "CF_SQL_CHAR">
 		<cfset stSQLType["datetime"] = "CF_SQL_TIMESTAMP">
 		<cfset stSQLType["decimal"] = "CF_SQL_DECIMAL">
+		<cfset stSQLType["double"] = "CF_SQL_DOUBLE">
 		<cfset stSQLType["float"] = "CF_SQL_FLOAT">
 		<cfset stSQLType["image"] = "CF_SQL_BINARY">
 		<cfset stSQLType["int"] = "CF_SQL_INTEGER">
@@ -1656,8 +1659,7 @@ limitations under the License.
 			<cfloop index="j" from="1" to="#arrayLen(xRelationships[i].XmlChildren)#">
 				<cfset stData.Links[j] = xRelationships[i].XmlChildren[j].XmlAttributes>
 				<cfset stData.Links[j]["type"] = xRelationships[i].XmlChildren[j].XmlName>
-			</cfloop>
-			
+			</cfloop>			
 			<cfset arrayAppend(aRelationships,stData)>
 		</cfloop>
 		

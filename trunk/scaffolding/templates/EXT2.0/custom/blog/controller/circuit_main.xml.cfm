@@ -1,2 +1,2 @@
 <xfa name="relocate" value="news"/>
-<relocate xfa="relocate"/>
+<lanshock:relocate xfa="relocate"/>

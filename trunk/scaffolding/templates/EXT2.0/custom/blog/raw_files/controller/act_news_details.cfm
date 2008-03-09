@@ -9,14 +9,19 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 63 $
 --->
 
-<cfparam name="attributes.news_id" default="0">
+<cfset stFilter = StructNew()>
+<cfset stFilter.stJoins = StructNew()>
+<cfset stFilter.stJoins.user = "name,firstname,lastname">
+<cfset stFilter.stFields.id = StructNew()>
+<cfset stFilter.stFields.id.mode = 'isEqual'>
+<cfset stFilter.stFields.id.value = attributes.news_id>
 
-<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.blog.model.cfc.news')#" method="getNewsEntry" returnvariable="qNewsEntry">
-	<cfinvokeargument name="id" value="#attributes.news_id#">
+<cfinvoke component="#application.lanshock.oFactory.load('news_entry','reactorGateway',false)#" method="getRecords" returnvariable="qNewsEntry">
+	<cfinvokeargument name="stFilter" value="#stFilter#">
 </cfinvoke>
 
 <cfif NOT qNewsEntry.recordcount>
-	<cflocation url="#myself##myfusebox.thiscircuit#.main&#session.UrlToken#" addtoken="false">
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.main')#" addtoken="false">
 </cfif>
 	
 <cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.comments.comments')#" method="getCommentsPanel" returnvariable="stComments">
@@ -27,9 +32,24 @@ $LastChangedRevision: 63 $
 	<cfinvokeargument name="topic_title" value="#qNewsEntry.title#">
 </cfinvoke>
 
-<cfinvoke component="#application.lanshock.oFactory.load('news_trackback','reactorGateway')#" method="getByFields" returnvariable="qTrackbacks">
-	<cfinvokeargument name="sortByFieldList" value="date"/>
-	<cfinvokeargument name="entry_id" value="#attributes.news_id#"/>
+<cfset stFilter = StructNew()>
+<cfset stFilter.lSortFields = "date|DESC">
+<cfset stFilter.stFields.entry_id = StructNew()>
+<cfset stFilter.stFields.entry_id.mode = 'isEqual'>
+<cfset stFilter.stFields.entry_id.value = attributes.news_id>
+
+<cfinvoke component="#application.lanshock.oFactory.load('news_trackback','reactorGateway')#" method="getRecords" returnvariable="qTrackbacks">
+	<cfinvokeargument name="stFilter" value="#stFilter#">
+</cfinvoke>
+
+<cfset stFilter = StructNew()>
+<cfset stFilter.lSortFields = "name|DESC">
+<!--- <cfset stFilter.stFields.entry_id = StructNew()>
+<cfset stFilter.stFields.entry_id.mode = 'isEqual'>
+<cfset stFilter.stFields.entry_id.value = qNews.id> --->
+
+<cfinvoke component="#application.lanshock.oFactory.load('news_category','reactorGateway')#" method="getRecords" returnvariable="qCategories">
+	<cfinvokeargument name="stFilter" value="#stFilter#">
 </cfinvoke>
 
 <cfsetting enablecfoutputonly="No">

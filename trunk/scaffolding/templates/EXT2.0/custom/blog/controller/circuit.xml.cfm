@@ -18,11 +18,6 @@
 		<include circuit="v_#sModule#" template="dsp_trackback"/>
 	</fuseaction>
 	
-	<fuseaction access="public" name="panel_news" lanshock:showlayout="basic">
-		<include circuit="#sModule#" template="act_panel_news"/>
-		<include circuit="v_#sModule#" template="dsp_panel_news"/>
-	</fuseaction>
-	
 	<fuseaction access="public" name="news_details">
 		<include circuit="#sModule#" template="act_news_details"/>
 		<include circuit="v_#sModule#" template="dsp_news_details"/>
