@@ -17,7 +17,7 @@ $LastChangedRevision$
 	<cfinvokeargument name="gallery_id" value="#attributes.id#">
 </cfinvoke>
 	
-<cfinvoke component="#request.lanshock.environment.componentpath#core.comments.comments" method="getCommentCountStruct" returnvariable="qCommentCount">
+<cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#modules.comments.comments" method="getCommentCountStruct" returnvariable="qCommentCount">
 	<cfinvokeargument name="module" value="#myfusebox.thiscircuit#">
 </cfinvoke>
 

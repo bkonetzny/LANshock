@@ -25,10 +25,10 @@ $LastChangedRevision$
 </cfinvoke>
 
 <cfif NOT qGallery.recordcount OR NOT qItem.recordcount>
-	<cflocation url="#myself##myfusebox.thiscircuit#.main&#request.session.URLToken#" addtoken="false">
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.main')#" addtoken="false">
 </cfif>
 	
-<cfinvoke component="#request.lanshock.environment.componentpath#core.comments.comments" method="getCommentsPanel" returnvariable="stComments">
+<cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#modules.comments.comments" method="getCommentsPanel" returnvariable="stComments">
 	<cfinvokeargument name="module" value="#myfusebox.thiscircuit#">
 	<cfinvokeargument name="identifier" value="gallery_item_#attributes.id#">
 	<cfinvokeargument name="linktosource" value="item&id=#attributes.id#&gallery_id=#attributes.gallery_id#">

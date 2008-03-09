@@ -10,12 +10,12 @@ $LastChangedRevision$
 --->
 
 <cfinvoke component="gallery" method="getGallerylist" returnvariable="qGallerylist">
-	<cfif request.session.isAdmin>
+	<cfif session.isAdmin>
 		<cfinvokeargument name="showVisibleOnly" value="false">
 	</cfif>
 </cfinvoke>
 	
-<cfinvoke component="#request.lanshock.environment.componentpath#core.comments.comments" method="getCommentCountStruct" returnvariable="qCommentCount">
+<cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#modules.comments.comments" method="getCommentCountStruct" returnvariable="qCommentCount">
 	<cfinvokeargument name="module" value="#myfusebox.thiscircuit#">
 </cfinvoke>
 

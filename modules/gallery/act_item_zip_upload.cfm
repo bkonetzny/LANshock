@@ -17,8 +17,8 @@ $LastChangedRevision$
 	<cfinvokeargument name="id" value="#attributes.gallery_id#">
 </cfinvoke>
 
-<cfif NOT qGallery.recordcount OR request.session.userid NEQ qGallery.user_id>
-	<cflocation url="#myself##myfusebox.thiscircuit#.main&#request.session.URLToken#" addtoken="false">
+<cfif NOT qGallery.recordcount OR session.userid NEQ qGallery.user_id>
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.main')#" addtoken="false">
 </cfif>
 
 <cfif attributes.form_submitted>
@@ -46,7 +46,7 @@ $LastChangedRevision$
 		<cftry>
 			<cfscript>
 				/* Create an instance of a component object */
-				zip = CreateObject("component","#application.lanshock.environment.componentpath#core._utils.zip");
+				zip = CreateObject("component","#application.lanshock.oRuntime.getEnvironment().sComponentPath#core._utils.zip");
 				/* Extract Zip file */ 
 				status = zip.Extract('#stModuleConfig.files.tmp##uuidZip#','#stModuleConfig.files.tmp##uuid#/');
 			</cfscript>
@@ -85,7 +85,7 @@ $LastChangedRevision$
 	
 	</cfif>
 	
-	<cflocation url="#myself##myfusebox.thiscircuit#.gallery&id=#attributes.gallery_id#&#request.session.URLToken#" addtoken="no">
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.gallery&id=#attributes.gallery_id#')#" addtoken="false">
 
 </cfif>
 

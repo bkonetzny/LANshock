@@ -26,16 +26,16 @@ $LastChangedRevision$
 <div class="headline2">#request.content.item_delete#</div>
 
 <table>
-	<form action="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#request.session.URLToken#" method="post">
-	<input type="hidden" name="form_submitted" value="true">
-	<input type="hidden" name="gallery_id" value="#attributes.gallery_id#">
-	<input type="hidden" name="id" value="#attributes.id#">
+	<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post">
+	<input type="hidden" name="form_submitted" value="true"/>
+	<input type="hidden" name="gallery_id" value="#attributes.gallery_id#"/>
+	<input type="hidden" name="id" value="#attributes.id#"/>
 	<tr>
-		<td><input type="checkbox" name="delete_accepted" id="delete_accepted" value="true"></td>
+		<td><input type="checkbox" name="delete_accepted" id="delete_accepted" value="true"/></td>
 		<td><label for="delete_accepted">#request.content.item_delete_confirm#</label></td>
 	</tr>
 	<tr>
-		<td colspan="2" align="center"><input type="submit" value="#request.content.form_delete#"></td>
+		<td colspan="2" align="center"><input type="submit" value="#request.content.form_delete#"/></td>
 	</tr>
 	</form>
 </table>

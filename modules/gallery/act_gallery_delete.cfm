@@ -19,8 +19,8 @@ $LastChangedRevision$
 	<cfinvokeargument name="id" value="#attributes.id#">
 </cfinvoke>
 
-<cfif NOT qGallery.recordcount AND NOT ((request.session.userid NEQ qGallery.user_id) OR (request.session.isAdmin AND UDF_SecurityCheck(area='delete',returntype='boolean')))>
-	<cflocation url="#myself##myfusebox.thiscircuit#.main&#request.session.URLToken#" addtoken="false">
+<cfif NOT qGallery.recordcount AND NOT ((session.userid NEQ qGallery.user_id) OR (session.isAdmin AND UDF_SecurityCheck(area='delete',returntype='boolean')))>
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.main')#" addtoken="false">
 </cfif>
 
 <cfif attributes.form_submitted>
@@ -37,7 +37,7 @@ $LastChangedRevision$
 			<cfinvokeargument name="settings" value="#stModuleConfig#">
 		</cfinvoke>
 		
-		<cflocation url="#myself##myfusebox.thiscircuit#.main&#request.session.URLToken#" addtoken="no">
+		<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.main')#" addtoken="no">
 		
 	</cfif>
 	

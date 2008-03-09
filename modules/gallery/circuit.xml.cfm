@@ -10,7 +10,7 @@ $LastChangedBy$
 $LastChangedRevision$
 -->
 
-<circuit access="public">
+<circuit access="public" xmlns:lanshock="lanshock/">
 	
 	<!-- Copy of Gallerylist -->
 	<fuseaction name="main">
@@ -19,7 +19,7 @@ $LastChangedRevision$
 	
 	<!-- Show General-Settings -->
 	<fuseaction name="general_settings">
-		<set name="check" value="#UDF_SecurityCheck(area='configure')#"/>
+		<lanshock:security area="config"/>
 		<include template="act_general_settings.cfm"/>
 		<include template="dsp_general_settings.cfm"/>
 	</fuseaction>
@@ -44,13 +44,9 @@ $LastChangedRevision$
 
 	<!-- Edit Gallery -->
 	<fuseaction name="gallery_edit">
+		<lanshock:security area="edit-self,edit-all"/>
 		<include template="act_gallery_edit.cfm"/>
 		<include template="dsp_gallery_edit.cfm"/>
-	</fuseaction>
-
-	<!-- ZIP Gallery -->
-	<fuseaction name="gallery_zip">
-		<include template="act_gallery_zip.cfm"/>
 	</fuseaction>
 	
 	<!-- Delete Gallery -->
