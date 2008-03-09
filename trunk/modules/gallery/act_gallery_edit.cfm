@@ -9,10 +9,6 @@ $LastChangedBy$
 $LastChangedRevision$
 --->
 
-<cfif NOT stModuleConfig.user_create AND NOT request.session.isAdmin>
-	<cflocation url="#myself##myfusebox.thiscircuit#.main&#request.session.URLToken#" addtoken="false">
-</cfif>
-
 <cfparam name="attributes.form_submitted" default="false">
 <cfparam name="aError" default="#ArrayNew(1)#">
 
@@ -23,8 +19,8 @@ $LastChangedRevision$
 		<cfinvokeargument name="id" value="#attributes.id#">
 	</cfinvoke>
 	
-	<cfif NOT qGallery.recordcount AND NOT ((request.session.userid NEQ qGallery.user_id) OR (request.session.isAdmin AND UDF_SecurityCheck(area='delete',returntype='boolean')))>
-		<cflocation url="#myself##myfusebox.thiscircuit#.gallery&id=#attributes.id#&#request.session.URLToken#" addtoken="false">
+	<cfif NOT qGallery.recordcount AND NOT ((session.userid NEQ qGallery.user_id) OR (session.isAdmin AND UDF_SecurityCheck(area='delete',returntype='boolean')))>
+		<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.gallery&id=#attributes.id#')#" addtoken="false">
 	</cfif>
 
 	<cfparam name="attributes.title" default="#qGallery.title#">
@@ -56,11 +52,11 @@ $LastChangedRevision$
 			<cfinvokeargument name="date" value="#attributes.date#">
 			<cfinvokeargument name="text" value="#attributes.text#">
 			<cfinvokeargument name="visible" value="#attributes.visible#">
-			<cfinvokeargument name="user_id" value="#request.session.userid#">
+			<cfinvokeargument name="user_id" value="#session.userid#">
 			<cfinvokeargument name="tn" value="#attributes.tn#">
 		</cfinvoke>
 		
-		<cflocation url="#myself##myfusebox.thiscircuit#.gallery&id=#gallery_id#&#request.session.URLToken#" addtoken="false">
+		<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.gallery&id=#gallery_id#')#" addtoken="false">
 	
 	</cfif>
 

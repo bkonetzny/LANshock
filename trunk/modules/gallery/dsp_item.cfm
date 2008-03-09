@@ -10,42 +10,54 @@ $LastChangedRevision$
 --->
 
 <cfoutput>
-<a name="gallery_image"><div class="headline">#request.content.item_details#</div>
+<h3><a name="gallery_image"></a>#request.content.item_details#</h3>
 
 <div align="center">
 	<cfif isNumeric(iPrevItemID)>
-		<a href="#myself##myfusebox.thiscircuit#.item&gallery_id=#qGallery.id#&id=#iPrevItemID#&#request.session.UrlToken###gallery_image">#request.content.item_nav_prev#</a>
+		<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.item&gallery_id=#qGallery.id#&id=#iPrevItemID#')###gallery_image">#request.content.item_nav_prev#</a>
 	<cfelse>
 		#request.content.item_nav_prev#
 	</cfif>
-	 | <a href="#myself##myfusebox.thiscircuit#.gallery&id=#qGallery.id#&#request.session.UrlToken#">#qGallery.title#</a> | 
+	 | <a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.gallery&id=#qGallery.id#')#">#qGallery.title#</a> | 
 	<cfif isNumeric(iNextItemID)>
-		<a href="#myself##myfusebox.thiscircuit#.item&gallery_id=#qGallery.id#&id=#iNextItemID#&#request.session.UrlToken###gallery_image">#request.content.item_nav_next#</a>
+		<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.item&gallery_id=#qGallery.id#&id=#iNextItemID#')###gallery_image">#request.content.item_nav_next#</a>
 	<cfelse>
 		#request.content.item_nav_next#
 	</cfif>
 </div>
 
-<div class="headline2">#qItem.title#</div> <span class="text_small text_light">#LSDateFormat(qItem.dt_created)#</span>
+<h4>#qItem.title#</h4> <span class="text_small text_light">#LSDateFormat(qItem.dt_created)#</span>
 
 <div align="center">
-	<img src="#UDF_Module('webPath')#galleries/#qGallery.id#/#qItem.filename#">
+	<cfif fileExists(application.lanshock.oHelper.UDF_Module('absStoragePathPublic') & 'galleries/#qGallery.id#/#qItem.filename#')>
+		<img src="#application.lanshock.oHelper.UDF_Module('webStoragePathPublic')#galleries/#qGallery.id#/#qItem.filename#">
+	<cfelseif fileExists(application.lanshock.oHelper.UDF_Module('absStoragePathPublic') & 'galleries/#qGallery.id#/#stDefaultModuleConfig.item.max_width#x#stDefaultModuleConfig.item.max_height#/#qItem.filename#')>
+		<img src="#application.lanshock.oHelper.UDF_Module('webStoragePathPublic')#galleries/#qGallery.id#/#stDefaultModuleConfig.item.max_width#x#stDefaultModuleConfig.item.max_height#/#qItem.filename#">
+	</cfif>
 </div>
 
-<div class="headline2">#request.content.description#</div>
-
-#ConvertText(qItem.text)#
+<cfif len(qItem.text)>
+	<h4>#request.content.description#</h4>
+	
+	#ConvertText(qItem.text)#
+</cfif>
 
 <cfif isWDDX(qItem.metadata)>
-	<cfwddx action="wddx2cfml" input="#qItem.metadata#" output="aMetadata">
-	<div class="headline2">$$$ EXIF-Data</div>
+	<cfwddx action="wddx2cfml" input="#qItem.metadata#" output="oMetadata">
+	<h4 onclick="$('##exif').toggle();">$$$ EXIF-Data</h4>
 	
-	<div class="expandable">
+	<div id="exif" style="display: none;">
 		<div>
 			<ul>
-				<cfloop from="1" to="#ArrayLen(aMetadata)#" index="idx">
-					<li>#aMetadata[idx]#</li>
-				</cfloop>
+				<cfif isArray(oMetadata)>
+					<cfloop from="1" to="#ArrayLen(oMetadata)#" index="idx">
+						<li>#oMetadata[idx]#</li>
+					</cfloop>
+				<cfelseif isQuery(oMetadata)>
+					<cfloop query="oMetadata">
+						<li>#oMetadata.dirname#/#oMetadata.tagname#: #oMetadata.tagvalue#</li>
+					</cfloop>
+				</cfif>
 			</ul>
 		</div>
 	</div>

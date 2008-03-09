@@ -18,8 +18,8 @@ $LastChangedRevision$
 	<cfinvokeargument name="id" value="#attributes.gallery_id#">
 </cfinvoke>
 
-<cfif NOT qGallery.recordcount AND NOT ((request.session.userid EQ qGallery.user_id) OR (request.session.isAdmin AND UDF_SecurityCheck(area='edit',returntype='boolean')))>
-	<cflocation url="#myself##myfusebox.thiscircuit#.main&#request.session.URLToken#" addtoken="false">
+<cfif NOT qGallery.recordcount AND NOT ((session.userid EQ qGallery.user_id) OR (session.isAdmin AND UDF_SecurityCheck(area='edit',returntype='boolean')))>
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.main')#" addtoken="false">
 </cfif>
 
 <cfif attributes.id NEQ 0>
@@ -45,8 +45,12 @@ $LastChangedRevision$
 	<cfif NOT DirectoryExists(stModuleConfig.files.tmp)>
 		<cfdirectory action="create" directory="#stModuleConfig.files.tmp#" mode="777">
 	</cfif>
+		
+	<cfif NOT DirectoryExists("#stModuleConfig.files.storage##attributes.gallery_id#/original/")>
+		<cfdirectory action="create" directory="#stModuleConfig.files.storage##attributes.gallery_id#/original/" mode="777">
+	</cfif>
 
-	<cfset uuidFile = '#stModuleConfig.files.tmp##CreateUUID()#.jpg'>
+	<cfset uuidFile = '#stModuleConfig.files.storage##attributes.gallery_id#/original/#CreateUUID()#.jpg'>
 	<cfif len(attributes.file)>
 		<cffile action="upload" filefield="file" destination="#uuidFile#" mode="777" nameconflict="overwrite">
 	</cfif>
@@ -62,11 +66,11 @@ $LastChangedRevision$
 		<cfinvokeargument name="settings" value="#stModuleConfig#">
 	</cfinvoke>
 	
-	<cfif len(attributes.file) AND FileExists(uuidFile)>
+	<!--- <cfif len(attributes.file) AND FileExists(uuidFile)>
 		<cffile action="delete" file="#uuidFile#">
-	</cfif>
+	</cfif> --->
 	
-	<cflocation url="#myself##myfusebox.thiscircuit#.gallery&id=#attributes.gallery_id#&#request.session.URLToken#" addtoken="no">
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.gallery&id=#attributes.gallery_id#')#" addtoken="false">
 
 </cfif>
 
