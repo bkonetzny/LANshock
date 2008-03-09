@@ -2,10 +2,10 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL: https://lanshock.svn.sourceforge.net/svnroot/lanshock/trunk/index.cfm $
-$LastChangedDate: 2007-12-09 10:05:43 +0100 (So, 09 Dez 2007) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 127 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 --->>
 
 <<cfsilent>>
@@ -95,9 +95,9 @@ $LastChangedRevision: 127 $
 		<history author="Kevin Roche" email="kevin@objectiveinternet.com" date="$$dateFormat(now(),'dd-mmm-yyyy')$$" role="Architect" type="Create" />
 		<property name="copyright" value="(c)$$year(now())$$ Objective Internet Limited." />
 		<property name="licence" value="See licence.txt" />
-		<property name="version" value="$Revision: 1.0 $" />
-		<property name="lastupdated" value="$Date: $$DateFormat(now(),'yyyy/mm/dd')$$ $$ TimeFormat(now(),'HH:mm:ss')$$ $" />
-		<property name="updatedby" value="$Author: kevin $" />
+		<property name="version" value="$Revision$" />
+		<property name="lastupdated" value="$Date$$DateFormat(now(),'yyyy/mm/dd')$$ $$ TimeFormat(now(),'HH:mm:ss')$$ $" />
+		<property name="updatedby" value="$Author$" />
 	</properties>
 	<io>
 		<in>

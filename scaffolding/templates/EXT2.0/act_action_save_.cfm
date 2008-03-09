@@ -2,10 +2,10 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL: https://lanshock.svn.sourceforge.net/svnroot/lanshock/trunk/index.cfm $
-$LastChangedDate: 2007-12-09 10:05:43 +0100 (So, 09 Dez 2007) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 127 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 --->>
 
 <<cfset objectName = oMetaData.getSelectedTableAlias()>>
@@ -16,6 +16,10 @@ $LastChangedRevision: 127 $
 <<cfset sModule = oMetaData.getModule()>>
 
 <<cfoutput>>
+	<<cfloop from="1" to="$$ArrayLen(stFields['aTable'])$$" index="i">>
+		<<cfmodule template="../templates/EXT2.0/rowtypes/rowtype.cfm" rowtype="$$stFields['aTable'][i].formType$$" method="validation_pre">>
+	<</cfloop>>
+
 	<cfparam name="attributes.$$objectName$$_id" default="0">
 	<cfset o$$objectName$$ = application.lanshock.oFactory.load('$$objectName$$','reactorRecord')>
 
