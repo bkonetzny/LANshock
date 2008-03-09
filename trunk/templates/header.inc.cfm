@@ -18,8 +18,15 @@ $LastChangedRevision$
 	AND level = 1
 </cfquery>
 
+<cfquery name="qPageTitleSub" dbtype="query">
+	SELECT label
+	FROM qNavigation
+	WHERE module = '#myfusebox.thiscircuit#'
+	AND action = '#myfusebox.thisfuseaction#'
+</cfquery>
+
 <cfoutput>
-	<title><cfif len(request.lanshock.settings.appname)>#request.lanshock.settings.appname# -- </cfif><cfif qPageTitle.recordcount>#qPageTitle.label#</cfif></title>
+	<title><cfif len(request.lanshock.settings.appname)>#request.lanshock.settings.appname#</cfif><cfif qPageTitle.recordcount> -- #qPageTitle.label#</cfif><cfif qPageTitleSub.recordcount> -- #qPageTitleSub.label#</cfif></title>
 </cfoutput>
 
 <cfinclude template="basic.header.inc.cfm">
