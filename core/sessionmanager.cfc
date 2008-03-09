@@ -32,28 +32,15 @@ $LastChangedRevision$
 		</cfif>
 		
 		<!--- check session hijacking --->
-		<cfif application.lanshock.settings.security.check_sessionhijack>
-			<cfif session.ip_address NEQ cgi.remote_addr AND application.lanshock.oApplication.getMyFusebox().originalCircuit NEQ 'c_general'>
-				<cfset sSessionIP = session.ip_address>
-				<cfset session = StructNew()>
-				<cfloop collection="#cookie#" item="idx">
-					<cfcookie name="#idx#" expires="now">
-				</cfloop>
-				<cflocation url="#application.lanshock.oApplication.getMyFusebox().getMyself()#c_general.error_session_hijack&ip_session=#UrlEncodedFormat(ip_session)#" addtoken="false">
-			</cfif>
+		<cfif session.ip_address NEQ cgi.remote_addr AND application.lanshock.oApplication.getMyFusebox().originalCircuit NEQ 'general'>
+			<cfset application.lanshock.oLogger.writeLog('core.sessionmanager','Session hijacking detected | Session-IP: "#session.ip_address#" | CGI-IP: "#cgi.remote_addr#" | UserAgent: "#cgi.http_user_agent#"','error')>
+			<cfset sSessionIP = session.ip_address>
+			<cfset session = StructNew()>
+			<cfloop collection="#cookie#" item="idx">
+				<cfcookie name="#idx#" expires="now">
+			</cfloop>
+			<cflocation url="#application.lanshock.oApplication.getMyFusebox().getMyself()#general.error_session_hijack&ip_session=#UrlEncodedFormat(ip_session)#" addtoken="false">
 		</cfif>
-		
-		<!--- TODO: check in circuit code?
-				check if user may access the module --->
-		<!--- <cfif application.lanshock.settings.security.check_useraccess_module AND NOT session.userloggedin>
-			<cfif StructKeyExists(application.module,application.lanshock.oApplication.getMyFusebox().originalCircuit) AND 
-					StructKeyExists(application.module[application.lanshock.oApplication.getMyFusebox().originalCircuit], 'general') AND 
-					StructKeyExists(application.module[application.lanshock.oApplication.getMyFusebox().originalCircuit].general, 'reqlogin') AND 
-					application.module[application.lanshock.oApplication.getMyFusebox().originalCircuit].general.reqlogin AND 
-					application.lanshock.oApplication.getMyFusebox().originalCircuit NEQ 'c_user'>
-				<cflocation url="#application.lanshock.oApplication.getMyFusebox().getMyself()#c_general.error_access_denied&#session.urltoken#" addtoken="false">
-			</cfif>
-		</cfif> --->
 		
 		<cfset updateSessions()>		
 	</cffunction>

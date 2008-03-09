@@ -171,7 +171,7 @@
 	<cfscript>
 		paths = arrayNew(1);
 		paths[1] = expandPath("core/_utils/image/metadata-extractor-2.3.1.jar");
-		loader = createObject("component", "#request.lanshock.environment.componentpath#core._utils.javaloader.JavaLoader").init(paths);
+		loader = createObject("component", "#application.lanshock.oRuntime.getEnvironment().sComponentPath#core._utils.javaloader.JavaLoader").init(paths);
 		
 		//at this stage we only have access to the class, but we don't have an instance
 		JpegMetadataReader = loader.create("com.drew.imaging.jpeg.JpegMetadataReader");

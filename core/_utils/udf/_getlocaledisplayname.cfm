@@ -14,7 +14,7 @@ $LastChangedRevision$
 	
 	<cfset var stLocal = StructNew()>
 
-	<cfinvoke component="#request.lanshock.environment.componentpath#core._utils.i18n.i18nUtil" method="getLocalesStruct" returnvariable="stLocal.stLocales">
+	<cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#core._utils.i18n.i18nUtil" method="getLocalesStruct" returnvariable="stLocal.stLocales">
 	
 	<cfparam name="stLocal.stLocales[arguments.locale]" default="">
 	

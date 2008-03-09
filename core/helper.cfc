@@ -54,9 +54,9 @@ $LastChangedRevision: 143 $
 			<cfset stLocal.sReturn = "#request.content.__core_utils_user_guest#">
 		<cfelse>
 	
-			<cfif len(request.lanshock.environment.datasource)>
+			<cfif len(application.lanshock.oRuntime.getEnvironment().sDatasource)>
 				<!--- Cache Query for 10 minutes --->
-				<cfquery datasource="#request.lanshock.environment.datasource#" name="stLocal.qUsernames" cachedwithin="#CreateTimeSpan(0,0,10,0)#">
+				<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="stLocal.qUsernames" cachedwithin="#CreateTimeSpan(0,0,10,0)#">
 					SELECT id, name
 					FROM user
 				</cfquery>
@@ -86,7 +86,7 @@ $LastChangedRevision: 143 $
 		<cfargument name="userid" type="numeric" required="true">
 	
 		<!--- Cache Query for 2 minutes --->
-		<cfquery datasource="#request.lanshock.environment.datasource#" name="qUserdatas" cachedwithin="#CreateTimeSpan(0,0,2,0)#">
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qUserdatas" cachedwithin="#CreateTimeSpan(0,0,2,0)#">
 			SELECT *
 			FROM user
 		</cfquery>
@@ -114,8 +114,8 @@ $LastChangedRevision: 143 $
 					<cfset stLocal.sResult = '<img src="http://www.gravatar.com/avatar.php?gravatar_id=#Hash(stLocal.userdata.email)#&amp;rating=R&amp;" title="#getUsernameById(arguments.userid)#''s Gravatar" alt="#getUsernameById(arguments.userid)#''s Gravatar" />'>
 				</cfcase>
 				<cfdefaultcase> <!--- value="lanshock" --->
-					<cfif isNumeric(arguments.userid) AND FileExists("#application.lanshock.sStoragePath#public/modules/user/avatars/#arguments.userid#.png")>
-						<cfset stLocal.sResult = '<img src="#application.lanshock.environment.webpath#storage/public/modules/user/avatars/#arguments.userid#.png" title="#getUsernameById(arguments.userid)#" alt="#getUsernameById(arguments.userid)#" />'>
+					<cfif isNumeric(arguments.userid) AND FileExists("#application.lanshock.oRuntime.getEnvironment().sStoragePath#public/modules/user/avatars/#arguments.userid#.png")>
+						<cfset stLocal.sResult = '<img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#storage/public/modules/user/avatars/#arguments.userid#.png" title="#getUsernameById(arguments.userid)#" alt="#getUsernameById(arguments.userid)#" />'>
 					</cfif>
 				</cfdefaultcase>
 			</cfswitch>
@@ -156,22 +156,22 @@ $LastChangedRevision: 143 $
 	
 		<cfswitch expression="#arguments.info#">
 			<cfcase value="webPath">
-				<cfreturn application.lanshock.environment.webpath & 'modules/#sModule#/'>
+				<cfreturn application.lanshock.oRuntime.getEnvironment().sWebPath & 'modules/#sModule#/'>
 			</cfcase>
 			<cfcase value="webPathFull">
-				<cfreturn application.lanshock.environment.webpathfull & 'modules/#sModule#/'>
+				<cfreturn application.lanshock.oRuntime.getEnvironment().sServerPath & 'modules/#sModule#/'>
 			</cfcase>
 			<cfcase value="absPath">
-				<cfreturn application.lanshock.environment.abspath & 'modules/#sModule#/'>
+				<cfreturn application.lanshock.oRuntime.getEnvironment().sBasePath & 'modules/#sModule#/'>
 			</cfcase>
 			<cfcase value="storagePathSecure">
-				<cfreturn application.lanshock.sStoragePath & 'secure/modules/#sModule#/'>
+				<cfreturn application.lanshock.oRuntime.getEnvironment().sStoragePath & 'secure/modules/#sModule#/'>
 			</cfcase>
 			<cfcase value="absStoragePathPublic">
-				<cfreturn application.lanshock.sStoragePath & 'public/modules/#sModule#/'>
+				<cfreturn application.lanshock.oRuntime.getEnvironment().sStoragePath & 'public/modules/#sModule#/'>
 			</cfcase>
 			<cfcase value="webStoragePathPublic">
-				<cfreturn application.lanshock.environment.webpath & 'storage/public/modules/#sModule#/'>
+				<cfreturn application.lanshock.oRuntime.getEnvironment().sWebPath & 'storage/public/modules/#sModule#/'>
 			</cfcase>
 		</cfswitch>
 	
@@ -195,7 +195,7 @@ $LastChangedRevision: 143 $
 		</cfif>
 		
 		<cfif arguments.bFullUrl>
-			<cfset sReturn = application.lanshock.environment.serveraddress & sReturn>
+			<cfset sReturn = application.lanshock.oRuntime.getEnvironment().sServerAddress & sReturn>
 		</cfif>
 		
 		<cfif bEnableSES>

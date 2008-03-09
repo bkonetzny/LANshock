@@ -64,7 +64,7 @@ $LastChangedRevision: 34 $
 			<cfswitch expression="#arguments.sName#">
 				<cfcase value="reactor">
 					<cfset oFramework = application.lanshock.oFactory.load('reactor.reactorFactory')>
-					<cfset oFramework.init('#application.lanshock.sStoragePath#secure/config/reactor/reactor.xml')>
+					<cfset oFramework.init('#application.lanshock.oRuntime.getEnvironment().sStoragePath#secure/config/reactor/reactor.xml')>
 				</cfcase>
 				<cfcase value="transfer">
 				</cfcase>

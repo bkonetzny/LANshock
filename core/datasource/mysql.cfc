@@ -14,7 +14,7 @@ $LastChangedRevision: 78 $
 
 		<cfset var stLocal = StructNew()>
 		
-		<cfquery datasource="#application.lanshock.environment.datasource#" name="stLocal.qInfo">
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="stLocal.qInfo">
 			SHOW VARIABLES
 		</cfquery>
 		
