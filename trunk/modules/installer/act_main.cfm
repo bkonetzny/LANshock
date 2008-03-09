@@ -49,7 +49,7 @@ $LastChangedRevision: 89 $
 			
 			<cfset application.lanshock.oRuntime.setRuntimeConfig(stRuntimeConfig)>
 			
-			<cfinvoke component="#application.lanshock.oModules#" method="initCoreModules"/>
+			<cfinvoke component="#application.lanshock.oModules#" method="loadInstalledModules"/>
 			
 			<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&bConfigSaved=1')#" addtoken="false">
 	
@@ -59,7 +59,7 @@ $LastChangedRevision: 89 $
 	
 		<cfif len(attributes.root_email) AND len(attributes.root_password)>
 
-			<cfquery name="qCheckEmail" datasource="#application.lanshock.environment.datasource#">
+			<cfquery name="qCheckEmail" datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 				SELECT id
 				FROM user
 				WHERE email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#attributes.root_email#">

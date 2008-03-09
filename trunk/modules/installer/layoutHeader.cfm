@@ -11,8 +11,8 @@ $LastChangedRevision: 51 $
 
 <cfset stRuntimeConfig = application.lanshock.oRuntime.getRuntimeConfig()>
 
-<cfif StructKeyExists(attributes,'newlang')>
-	<cfset session.oUser.setDataValue('lang',attributes.newlang)>
+<cfif StructKeyExists(attributes,'language')>
+	<cfset session.oUser.setDataValue('lang',attributes.language)>
 	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" addtoken="false">
 </cfif>
 
@@ -42,7 +42,7 @@ $LastChangedRevision: 51 $
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<title>#request.content.__globalmodule__name#</title>
 	<cfinclude template="../../templates/basic.header.inc.cfm">
-	<link rel="stylesheet" href="#request.lanshock.environment.webpath#modules/installer/styles.css" type="text/css"/>
+	<link rel="stylesheet" href="#application.lanshock.oRuntime.getEnvironment().sWebPath#modules/installer/styles.css" type="text/css"/>
 </head>
 <body>
 <div id="wrap">
@@ -55,8 +55,8 @@ $LastChangedRevision: 51 $
 		 | <a href="#application.lanshock.oHelper.buildUrl()#">#request.content.leave#</a>
 	</div>
 	<div id="languages">
-		<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&newlang=de_DE')#"><img src="#request.lanshock.environment.webpath#templates/_shared/images/famfamfam/flags/png/de.png" alt="de"/></a> 
-		<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&newlang=en_US')#"><img src="#request.lanshock.environment.webpath#templates/_shared/images/famfamfam/flags/png/gb.png" alt="en"/></a>
+		<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&language=de_DE')#"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/flags/png/de.png" alt="de"/></a> 
+		<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&language=en_US')#"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/flags/png/gb.png" alt="en"/></a>
 	</div>
 	<div id="logo"></div>
 	<div id="content">
