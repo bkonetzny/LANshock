@@ -29,8 +29,9 @@ $LastChangedRevision: 80 $
 	<cffunction name="onFuseboxApplicationStart">
 		<cfset application.lanshock = StructNew()>
 		<cfset application.lanshock.dtAppStart = now()>
-		<cfset application.lanshock.sStoragePath = ExpandPath('./storage/')>
 		<cfset application.lanshock.oFactory = CreateObject('component','lanshock.core.factory')>
+		<cfset application.lanshock.oRuntime = application.lanshock.oFactory.load('lanshock.core.runtime')>
+		<cfset application.lanshock.oRuntime.init()>
 		<cfset application.lanshock.oCache = application.lanshock.oFactory.load('lanshock.core.cache')>
 		<cfset application.lanshock.oCache.init()>
 		<cfset application.lanshock.oLogger = application.lanshock.oFactory.load('lanshock.core.logger')>
@@ -38,8 +39,7 @@ $LastChangedRevision: 80 $
 		<cfset application.lanshock.oApplication = application.lanshock.oFactory.load('lanshock.application')>
 		<cfset application.lanshock.oLanguage = application.lanshock.oFactory.load('lanshock.core.language')>
 		<cfset application.lanshock.oHelper = application.lanshock.oFactory.load('lanshock.core.helper')>
-		<cfset application.lanshock.oRuntime = application.lanshock.oFactory.load('lanshock.core.runtime')>
-		<cfset application.lanshock.oRuntime.init()>
+		<cfset application.lanshock.oRuntime.getConfig()>
 		<cfset application.lanshock.oSessionmanager = application.lanshock.oFactory.load('lanshock.core.sessionmanager')>
 		<cfset application.lanshock.oSessionmanager.init()>
 		<cfset application.lanshock.oModules = application.lanshock.oFactory.load('lanshock.core.modules')>
@@ -58,7 +58,12 @@ $LastChangedRevision: 80 $
 		<cfset setEncoding("form", "utf-8")>
 		
 		<cfif StructKeyExists(attributes,'reinitapp') AND attributes.reinitapp>
-			<cfset application.lanshock.oLogger.writeLog('core.application','Running "reloadApplication" manually')>
+			<cfif StructKeyExists(application.lanshock,'oLogger')>
+				<cftry>
+					<cfset application.lanshock.oLogger.writeLog('core.application','Running "reloadApplication" manually')>
+					<cfcatch></cfcatch>
+				</cftry>
+			</cfif>
 			<cfset session = StructNew()>
 			<cfset reloadApplication()>
 			<cfoutput>LANshock init done! (#now()#)</cfoutput>
@@ -74,12 +79,12 @@ $LastChangedRevision: 80 $
 		<cfset application.lanshock.oRuntime.prepareRequest()>
 		
 		<cfset stImageDir = StructNew()>
-		<cfif DirectoryExists(request.lanshock.environment.abspath & 'templates/' & request.lanshock.settings.layout.template & '/images/_general')>
-			<cfset stImageDir.general = request.lanshock.environment.webpath & 'templates/' & request.lanshock.settings.layout.template & '/images/_general'>
+		<cfif DirectoryExists(application.lanshock.oRuntime.getEnvironment().sBasePath & 'templates/' & request.lanshock.settings.layout.template & '/images/_general')>
+			<cfset stImageDir.general = application.lanshock.oRuntime.getEnvironment().sWebPath & 'templates/' & request.lanshock.settings.layout.template & '/images/_general'>
 		<cfelse>
-			<cfset stImageDir.general = request.lanshock.environment.webpath & 'core/general/images/_general'>
+			<cfset stImageDir.general = application.lanshock.oRuntime.getEnvironment().sWebPath & 'core/general/images/_general'>
 		</cfif>
-		<cfset stImageDir.template = request.lanshock.environment.webpath & 'templates/' & request.lanshock.settings.layout.template & '/images'>
+		<cfset stImageDir.template = application.lanshock.oRuntime.getEnvironment().sWebPath & 'templates/' & request.lanshock.settings.layout.template & '/images'>
 	</cffunction>
 	
 	<cffunction name="reloadApplication">
@@ -95,12 +100,12 @@ $LastChangedRevision: 80 $
 		<cfreturn request.myFusebox>
 	</cffunction>
 	
-	<cffunction name="setMyFusebox" returntype="struct">
+	<cffunction name="setMyFusebox">
 		<cfargument name="myfusebox" type="struct" required="true">
 		<cfset request.myFusebox = arguments.myfusebox>
 	</cffunction>
 	
-	<cffunction name="onError" returntype="struct">
+	<cffunction name="onError">
 		<cfargument name="exception">
 
 		<cfswitch expression="#arguments.exception.type#">
@@ -109,7 +114,7 @@ $LastChangedRevision: 80 $
 					<cfset application.lanshock.oLogger.writeLog('core.error','Type: "#arguments.exception.type#" | Message: "#arguments.exception.message#" | Fuseaction: "#attributes.fuseaction#" | Referer: "#cgi.http_referer#" | UserAgent: "#cgi.http_user_agent#"','error')>
 					<cfcatch></cfcatch>
 				</cftry>
-				<cflocation url="#application.lanshock.oHelper.buildUrl('c_general.error&type=#UrlEncodedFormat(arguments.exception.type)#&message=#UrlEncodedFormat(arguments.exception.message)#')#" addtoken="false">
+				<cflocation url="#application.lanshock.oHelper.buildUrl('general.error&type=#UrlEncodedFormat(arguments.exception.type)#&message=#UrlEncodedFormat(arguments.exception.message)#')#" addtoken="false">
 			</cfcase>
 			<cfdefaultcase>
 				<cftry>
