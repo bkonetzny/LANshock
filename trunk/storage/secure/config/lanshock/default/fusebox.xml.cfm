@@ -7,7 +7,7 @@
 	<circuits>
 		<circuit alias="core_runtime" path="core/runtime/"/>
 		<circuit alias="udfs" path="core/_utils/udf/" parent="" />
-		<circuit alias="c_admin" path="modules/admin/"/>		<circuit alias="c_comments" path="modules/comments/"/>		<circuit alias="c_cron" path="modules/cron/"/>		<circuit alias="c_general" path="modules/general/"/>		<circuit alias="c_installer" path="modules/installer/"/>		<circuit alias="c_mail" path="modules/mail/"/>		<circuit alias="c_team" path="modules/team/"/>		<circuit alias="c_user" path="modules/user/"/>
+		<circuit alias="c_admin" path="modules/admin/"/>		<circuit alias="c_comments" path="modules/comments/"/>		<circuit alias="c_cron" path="modules/cron/"/>		<circuit alias="c_general" path="modules/general/"/>		<circuit alias="c_installer" path="modules/installer/"/>		<circuit alias="c_mail" path="modules/mail/"/>		<circuit alias="c_user" path="modules/user/"/>
 	</circuits>
 
 	<parameters>		
