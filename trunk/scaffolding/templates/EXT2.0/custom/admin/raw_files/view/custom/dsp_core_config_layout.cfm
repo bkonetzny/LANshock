@@ -3,10 +3,10 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL: https://svn.sourceforge.net/svnroot/lanshock/trunk/core/admin/dsp_core_config_layout.cfm $
-$LastChangedDate: 2007-06-10 16:50:09 +0200 (So, 10 Jun 2007) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 87 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 --->
 
 <cfoutput>

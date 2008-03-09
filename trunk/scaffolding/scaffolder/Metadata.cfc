@@ -136,14 +136,18 @@ limitations under the License.
 		<!--- Create object tags for each table --->
 		<cfset createObjectTags(lValidTables)>
 		
-		<!--- Loop over the tables and update the XML for each one to match the database --->
+		<!--- Loop over the tables and update the metadata XML for each one to match the database --->
+		<!--- Do the basic properties first --->
 		<cfloop list="#lValidTables#" index="thisTable">
 			<cfset qFields = getFields(thisTable)>
-			<cfset updateAllFieldPropertiesFromQuery(thisTable,qFields)>
-			
+			<cfset updateBaseFieldPropertiesFromQuery(thisTable,qFields)>
+		</cfloop>
+		<!--- Then add links to parent tables and finalise the display formats --->
+		<cfloop list="#lValidTables#" index="thisTable">
 			<cfset qParents = getParentRelationships(thisTable)>
 			<cfset updateAllParentRelationshipsFromQuery(thisTable,qParents)>
-			
+			<cfset qFields = getFields(thisTable)>
+			<cfset updateAdditionalFieldPropertiesFromQuery(thisTable,qFields)>
 		</cfloop>
 		
 		<!--- Save the updated metadata --->
@@ -197,6 +201,7 @@ limitations under the License.
 				<cfset thisOutputPath = replaceNoCase(thisOutputPath,'$tablename$',arguments.sModule,'ALL')>
 				<cfset cftemplate.generateScript("#arguments.template#/#aTemplateFiles[i].templateFile#.#aTemplateFiles[i].suffix#",this,thisOutputPath,aTemplateFiles[i].inPlace,aTemplateFiles[i].overwrite)>
 			</cfif>
+			<cfflush>
 		</cfloop>
 		
 		<cfset cftemplate.incrementProgress()>
@@ -224,6 +229,7 @@ limitations under the License.
 				</cfif>
 			</cfloop>
 			<cfset cftemplate.incrementProgress()>
+			<cfflush>
 		</cfloop>
 		<cfset cftemplate.progressReport(message="Completed Code Generation.",progress=(ListLen(arguments.lTables)+2),complete=true)>
 		
@@ -520,12 +526,17 @@ limitations under the License.
 	</cffunction>
 
 	<cffunction name="getTablesMySQL" returntype="query" output="No" hint="I get a recordset of tables available from the selected datasource">
+		<cfargument name="datasource" required="No" default="#getDatasource()#">
+		<cfargument name="username" required="No" default="#getUsername()#">
+		<cfargument name="password" required="No" default="#getPassword()#">
+		
 		<cfset var qTables = 0>
 		
-		<cfquery name="qTables" datasource="#getDatasource()#" username="#getUsername()#" password="#getPassword()#">
+		<cfquery name="qTables" datasource="#arguments.datasource#" 
+				username="#arguments.username#" password="#arguments.password#">
 			SELECT table_name AS tableName, engine AS tableType
 			FROM information_schema.tables
-			WHERE table_schema = '#getDatasource()#'
+			WHERE table_schema = '#arguments.datasource#'
 		</cfquery>
 		
 		<cfreturn qTables>
@@ -610,7 +621,7 @@ limitations under the License.
 		</cfquery>
 		<cfreturn qFields>
 	</cffunction>
-
+	
 	<cffunction name="getFieldsMySQL" returntype="query" output="No" 
 				hint="I return a query containing the fields of the selected MySQL table.">
 		<cfargument name="tableName" type="string" required="Yes">
@@ -797,7 +808,7 @@ limitations under the License.
 			<cfthrow type="Fusebox_Scaffolding_Config" message="Undefined configuration file path." detail="The configuration file path is empty.">
 		</cfif>
 		
-		<!--- Format the XML nicely --->
+		<!--- Format the XML nicely - This is a bit of a hack but puts the right number of line breaks and spaces in front of each tag. --->
 		<cfset outstring = REReplace(outstring,">[[:space:]]*</scaffolding",">#chr(13)#</scaffolding","all") >
 		<cfset outstring = REReplace(outstring,">[[:space:]]*<config",">#chr(13)##chr(9)#<config","all") >
 		<cfset outstring = REReplace(outstring,">[[:space:]]*</config>",">#chr(13)##chr(9)#</config>","all") >
@@ -1015,8 +1026,8 @@ limitations under the License.
 		<cfreturn arguments.stProperties[arguments.attribute]>
 	</cffunction>
 	
-	<cffunction name="updateAllFieldPropertiesFromQuery" returntype="void" output="No" 
-				hint="I add or update the additional metadata properties for all fields in a table required by the scaffolding.">
+	<cffunction name="updateBaseFieldPropertiesFromQuery" returntype="void" output="No" 
+				hint="I add or update the basic metadata properties for all fields in a table required by the scaffolding.">
 		<cfargument name="tableName" required="Yes" type="string" hint="Name of the table.">
 		<cfargument name="qTableData" required="Yes" type="query" hint="A Query containing the data for each field.">
 		
@@ -1159,6 +1170,25 @@ limitations under the License.
 			
 			<cfset setAttributeValue(stProperties,"primaryKeySeq",arguments.qTableData.key_seq,"overwrite")>
 			
+		</cfloop>
+	</cffunction>	
+	
+	<cffunction name="updateAdditionalFieldPropertiesFromQuery" returntype="void" output="No" 
+				hint="I add or update the additional metadata properties for all fields in a table required by the scaffolding.">
+		<cfargument name="tableName" required="Yes" type="string" hint="Name of the table.">
+		<cfargument name="qTableData" required="Yes" type="query" hint="A Query containing the data for each field.">
+		
+		<cfset var thisFieldIndex = 0>
+		<cfset var stProperties = structNew()>
+		<cfset var objectIndex = getObjectPosition(name=arguments.tableName)>
+		
+		<cfloop query="arguments.qTableData">
+			<!--- Find the field tag position or create a new one --->
+			<cfset thisFieldIndex = createFieldTag(objectIndex=objectIndex,name=arguments.qTableData.column_name)>
+			
+			<!--- Set up a pointer to the structure containing the attributes of the field tag in the XML --->
+			<cfset stProperties = variables.xScaffoldingConfig.scaffolding.objects.object[objectIndex].XmlChildren[thisFieldIndex].XmlAttributes >
+			
 			<!--- The values of other XML attribute values never get overwritten --->
 			<cfset setAttributeValue(stProperties,"sort",arguments.qTableData.key_seq)>
 			<cfset setAttributeValue(stProperties,"showOnList","true")>
@@ -1168,6 +1198,7 @@ limitations under the License.
 			<cfelse>
 				<cfset setAttributeValue(stProperties,"required","true")>
 			</cfif>
+			
 			<!--- The values of formType, format, size, maxlength depend on various rules but existing values never get overwritten --->
 			<cfif stProperties.type IS "date" AND arguments.qTableData.column_name CONTAINS "time">
 				<cfset setAttributeValue(stProperties,"formType","Time")>
@@ -1219,7 +1250,6 @@ limitations under the License.
 			</cfif>
 			
 		</cfloop>
-		
 	</cffunction>
 	
 	<!--- *** Find and create the relationships in the XML within an object *** --->
@@ -1370,6 +1400,12 @@ limitations under the License.
 		
 		<!--- Find the object tag position --->
 		<cfset var objectIndex = getObjectPosition(name=arguments.tableName)>
+		<cfset var manyToOneIndex = 0>
+		<cfset var relateIndex = 0>
+		<cfset var fieldIndex = 0>
+		<cfset var stProperties = structNew()>
+		<cfset var parentIndex = 0>
+		<cfset var thisField = 0>
 		
 		<!--- Find the manyToOne tag position or create a new one and its associated relate tags --->
 		<cfloop query="arguments.qRelationshipData">
@@ -1381,8 +1417,20 @@ limitations under the License.
 			
 			<!--- Set up a pointer to the structure containing the attributes of the field tag --->
 			<cfset stProperties = variables.xScaffoldingConfig.scaffolding.objects.object[objectIndex].XmlChildren[FieldIndex].XmlAttributes >	
-			<!--- Add the parent and display attributes --->
+			<!--- Add the parent attribute --->
 			<cfset setAttributeValue(stProperties,"parent",arguments.qRelationshipData.pktable_name) >
+			
+			<!--- find the parent object in the XML --->
+			<cfset parentIndex = getObjectPosition(name=arguments.qRelationshipData.pktable_name)>
+			<!--- loop over the fields to find the first string column to display in a dropdown list --->
+			<cfloop from="1" to="#ArrayLen(variables.xScaffoldingConfig.scaffolding.objects.object[parentIndex].XmlChildren)#" index="thisField">
+				<cfif variables.xScaffoldingConfig.scaffolding.objects.object[parentIndex].XmlChildren[thisField].XmlName IS "field"
+					AND variables.xScaffoldingConfig.scaffolding.objects.object[parentIndex].XmlChildren[thisField].XmlAttributes.type IS "string">
+					<cfset setAttributeValue(stProperties,"display",variables.xScaffoldingConfig.scaffolding.objects.object[parentIndex].XmlChildren[thisField].XmlAttributes.alias) >
+					<cfbreak>
+				</cfif>
+			</cfloop>
+			<!--- In case we didn't find a suitable string --->
 			<cfset setAttributeValue(stProperties,"display",arguments.qRelationshipData.pkColumn_Name) >
 		</cfloop>
 		
@@ -1423,7 +1471,7 @@ limitations under the License.
 	<cffunction name="getLTables" returntype="string">
 		<cfreturn variables.lTables>
 	</cffunction>
-
+	
 	<!--- *** Get and set the module to generate code for *** --->
 	<cffunction name="setModule" returntype="void" output="No" >
 		<cfargument name="sModule" type="string" required="Yes" />
@@ -1659,7 +1707,8 @@ limitations under the License.
 			<cfloop index="j" from="1" to="#arrayLen(xRelationships[i].XmlChildren)#">
 				<cfset stData.Links[j] = xRelationships[i].XmlChildren[j].XmlAttributes>
 				<cfset stData.Links[j]["type"] = xRelationships[i].XmlChildren[j].XmlName>
-			</cfloop>			
+			</cfloop>
+			
 			<cfset arrayAppend(aRelationships,stData)>
 		</cfloop>
 		

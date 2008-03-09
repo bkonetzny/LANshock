@@ -10,9 +10,9 @@
 <cfparam name="thisCFCPath" />		<!--- The CFC path to the scaffolder	Eg: [scaffolder.] --->
 
 <!--- Work out where the scaffolding.xml file might be found. --->
-<cfparam name="url.scaffolding_filename" default="scaffolding.xml">
-<cfparam name="url.scaffolding_configFilePath" default="#baseDirectory##url.scaffolding_filename#">
-<cfset configFileURL = "http://#cgi.SERVER_NAME#:#cgi.SERVER_PORT##baseURL##getFileFromPath(url.scaffolding_configFilePath)#?r=#CreateUUID()#">
+<cfparam name="url.scaffolding.filename" default="scaffolding.xml">
+<cfparam name="url.scaffolding.configFilePath" default="#baseDirectory##url.scaffolding.filename#">
+<cfset configFileURL = "http://#cgi.SERVER_NAME#:#cgi.SERVER_PORT##baseURL##getFileFromPath(url.scaffolding.configFilePath)#">
 
 <!--- Work out the path for the call to the metadata cfc  --->
 <!--- <cfset metadataURL = "http://#cgi.SERVER_NAME#:#cgi.SERVER_PORT#/Scaffolder/scaffolder/xmlProxy.cfm"> --->
@@ -35,7 +35,7 @@
 
 <!--- If there is already a scaffolding XML file we can read the configuration from it --->
 <!--- Otherwise we get the configuration from a call to the metadata.cfc --->
-<cfif fileExists(url.scaffolding_configFilePath)>
+<cfif fileExists(url.scaffolding.configFilePath)>
 	<script type="text/javascript">
 	<!--
 		var dsTables = new Spry.Data.XMLDataSet("#configFileURL#", "scaffolding/objects/object",{sortOnLoad:"@name",sortOrderOnLoad:"ascending",useCache:false});
@@ -119,7 +119,7 @@
 	// Table selection, if user selects All it selects all boxes 
 	function copyAll(theForm){
 		for (var i=0;i<theForm.length;i++){
-			if (theForm[i].name == 'scaffolding_lTables'){
+			if (theForm[i].name == 'scaffolding.lTables'){
 				theForm[i].checked = theForm.all.checked;
 			}
 		}
@@ -129,7 +129,7 @@
 	function setAll(theForm){
 		theForm.all.checked = 1;
 		for (var i=0;i<theForm.length;i++){
-			if (theForm[i].name == 'scaffolding_lTables'){
+			if (theForm[i].name == 'scaffolding.lTables'){
 				if (!theForm[i].checked){
 					theForm.all.checked = 0;
 					return;
@@ -192,7 +192,7 @@
 		var tableChecked = 0;
 		var theForm = document.getElementById("theForm");
 		for (var i=0;i<theForm.length;i++){
-			if (theForm[i].name == 'scaffolding_lTables'){
+			if (theForm[i].name == 'scaffolding.lTables'){
 				// alert ("checking " + theForm[i].value + ' ' + theForm[i].checked);
 				if (theForm[i].checked){
 					tableChecked = true;
@@ -245,7 +245,7 @@
 		<tr>
 			<td>Scaffolding Configuration: </td>
 			<td>
-				<input type="text" name="scaffolding_configFilePath" tabindex="2" id="configFilePath" onChange="changeFile(this.value);" value="#url.scaffolding_configFilePath#" size="50" tabindex="1" >
+				<input type="text" name="scaffolding.configFilePath" tabindex="2" id="configFilePath" onChange="changeFile(this.value);" value="#url.scaffolding.configFilePath#" size="50" tabindex="1" >
 			</td>
 		</tr>
 		<tr>
@@ -273,7 +273,7 @@
 		<tr>
             <td>Datasource: </td>
             <td>
-            <select name="scaffolding_datasource" id="datasource" onChange="datasourceChange(this);checkGenerate();" tabindex="6">
+            <select name="scaffolding.datasource" id="datasource" onChange="datasourceChange(this);checkGenerate();" tabindex="6">
                 <option value="" selected="selected">Please select a datasource</option>
                 <cfloop query="qDatasources">
                 <option value="#qDatasources.Datasourcename#" >#qDatasources.Datasourcename#</option>
@@ -284,7 +284,7 @@
         <tr>
             <td>Username: </td>
             <td>
-                <input type="text" name="scaffolding_username" id="username" size="30" value="" tabindex="7">
+                <input type="text" name="scaffolding.username" id="username" size="30" value="" tabindex="7">
             </td>
             <td rowspan="2">
                 Only enter a username and password if you wish to generate code with these fields.
@@ -293,13 +293,13 @@
         <tr>
             <td>Password: </td>
             <td>
-                <input type="text" name="scaffolding_password" id="password" size="30" value="" tabindex="8">
+                <input type="text" name="scaffolding.password" id="password" size="30" value="" tabindex="8">
             </td>
         </tr>
 		<tr>
             <td>Project: </td>
             <td>
-                <input type="text" name="scaffolding_project" id="project" size="30" value="" tabindex="9">
+                <input type="text" name="scaffolding.project" id="project" size="30" value="" tabindex="9">
             </td>
 			<td>
 				Used to name the circuits and directories.
@@ -309,7 +309,7 @@
         <tr>
             <td>Template: </td>
             <td>
-            <select name="scaffolding_template" id="template" onChange="checkGenerate();" tabindex="10">
+            <select name="scaffolding.template" id="template" onChange="checkGenerate();" tabindex="10">
                 <option value="" selected="selected">Please select a template</option>
                 <cfloop query="qTemplates">
                 <option value="#qTemplates.name#" >#qTemplates.name#</option>
@@ -324,7 +324,7 @@
                	  <div spry:region="dsTables" id="tablesListRegion">
                   	<table style="font-family:Verdana, Arial, Helvetica, sans-serif; font-size:small">
                	    <tr spry:repeat="dsTables">
-                    	<td><input type="checkbox" name="scaffolding_lTables" checked="checked" value="{@name}" onClick="setAll(this.form);checkGenerate();" onKeyPress="setAll(this.form);checkGenerate();" tabindex="12">&nbsp;{@name}</td>
+                    	<td><input type="checkbox" name="scaffolding.lTables" checked="checked" value="{@name}" onClick="setAll(this.form);checkGenerate();" onKeyPress="setAll(this.form);checkGenerate();" tabindex="12">&nbsp;{@name}</td>
                     </tr>
                     </table>
                	  </div>
@@ -353,7 +353,7 @@
 		<tr>
             <td>Author: </td>
             <td>
-                <input type="text" name="scaffolding_author" id="author" size="30" tabindex="18">
+                <input type="text" name="scaffolding.author" id="author" size="30" tabindex="18">
             </td>
             <td rowspan="5">
                 These fields are used to add comments containing this information to the generated code.<br /><br />You may leave them blank if you want.
@@ -362,25 +362,25 @@
         <tr>
             <td>Email: </td>
             <td>
-                <input type="text" name="scaffolding_authorEmail" id="authorEmail" size="30" tabindex="19">
+                <input type="text" name="scaffolding.authorEmail" id="authorEmail" size="30" tabindex="19">
             </td>
         </tr>
         <tr>
             <td>Copyright: </td>
             <td>
-                <input type="text" name="scaffolding_copyright" id="copyright"  size="30" tabindex="20">
+                <input type="text" name="scaffolding.copyright" id="copyright"  size="30" tabindex="20">
             </td>
         </tr>
         <tr>
             <td>Licence Text: </td>
             <td>
-                <input type="text" name="scaffolding_licence" id="licence" size="30" tabindex="21">
+                <input type="text" name="scaffolding.licence" id="licence" size="30" tabindex="21">
             </td>
         </tr>
         <tr>
             <td>Version: </td>
             <td>
-                <input type="text" name="scaffolding_version" id="version" size="30" tabindex="22">
+                <input type="text" name="scaffolding.version" id="version" size="30" tabindex="22">
             </td>
         </tr>
 		<tr>
@@ -415,12 +415,12 @@
 		<tr>
 			<td valign="top">Functions to Run:</td>
 			<td>
-				<input type="checkbox" name="scaffolding_go" id="chkGoIntrospect" value="introspectDB" tabindex="28" 
-					<cfif NOT fileExists(url.scaffolding_configFilePath)>
+				<input type="checkbox" name="scaffolding.go" id="chkGoIntrospect" value="introspectDB" tabindex="28" 
+					<cfif NOT fileExists(url.scaffolding.configFilePath)>
 						checked="checked"
 					</cfif>
 					>Introspect DB<br />
-				<input type="checkbox" name="scaffolding_go" id="chkGoBuild" value="build" checked="checked" tabindex="29">Build Scaffolding<br />
+				<input type="checkbox" name="scaffolding.go" id="chkGoBuild" value="build" checked="checked" tabindex="29">Build Scaffolding<br />
 			</td>
 			<td>&nbsp;</td>
 		</tr>

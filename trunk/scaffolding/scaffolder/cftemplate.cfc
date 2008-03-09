@@ -224,7 +224,7 @@ TODO: Move the work done by the Format method into a template.
 				</cfif>
 			</script>
 		
-		</cfoutput>
+		</cfoutput><cfflush>
 	</cffunction>
 	
 	<cffunction name="updateCircuit" access="private" returntype="void" output="yes" hint="I update an existing circuit with a new fuseaction">
