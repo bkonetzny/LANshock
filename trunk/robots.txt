@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /storage/
+Disallow: /.project
+Disallow: /INSTALL.txt
+Disallow: /LICENSE.txt
