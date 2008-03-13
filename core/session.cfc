@@ -76,6 +76,12 @@ $LastChangedRevision: 143 $
 		
 		<cfset session.stVariablesScope.stCustomData[arguments.key] = arguments.value>
 	</cffunction>
+
+	<cffunction name="existsCustomDataValue" output="false" returntype="boolean">
+		<cfargument name="key" type="string" required="true">
+		
+		<cfreturn StructKeyExists(session.stVariablesScope.stCustomData,arguments.key)>
+	</cffunction>
 	
 	<cffunction name="isLoggedIn" output="false" returntype="boolean">
 		
