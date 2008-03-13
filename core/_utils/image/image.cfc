@@ -720,7 +720,7 @@
 	<cfset var encoder = "">
 	<cfset var param = "">
 	<cfset var quality = javacast("float", jpegCompression/100)>	
-	<cfset var tempOutputFile = "#variables.tempDirectory#\#createUUID()#.#extension#">
+	<cfset var tempOutputFile = "#variables.tempDirectory#/#createUUID()#.#extension#">
 	
 	<cfset retVal.errorCode = 0>
 	<cfset retVal.errorMessage = "">
@@ -737,7 +737,6 @@
 		<cfset outFile.init(tempOutputFile)>
 		<cfset imageIO.write(img, extension, outFile)>
 	<cfelse>
-		<cftry>
 		<cfscript>
 			/*
 				JPEG output method handles compression
@@ -754,8 +753,6 @@
 		    encoder.encode(img);
 		    out.close(); 
 		</cfscript>
-		<cfcatch><cfdump var="#variables#"><cfabort></cfcatch>
-		</cftry>
 	</cfif>
 	<!--- move file to its final destination --->
 	<cffile action="MOVE" source="#tempOutputFile#" destination="#arguments.outputFile#">
