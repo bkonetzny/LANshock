@@ -57,7 +57,8 @@ $LastChangedRevision: 80 $
 		<cfset setEncoding("url", "utf-8")>
 		<cfset setEncoding("form", "utf-8")>
 		
-		<cfif StructKeyExists(attributes,'reinitapp') AND attributes.reinitapp>
+		<cfif StructKeyExists(attributes,'reinitapp') AND isBoolean(attributes.reinitapp) AND attributes.reinitapp>
+			<cfset dtRequestStarted = now()>
 			<cfif StructKeyExists(application.lanshock,'oLogger')>
 				<cftry>
 					<cfset application.lanshock.oLogger.writeLog('core.application','Running "reloadApplication" manually')>
@@ -66,7 +67,7 @@ $LastChangedRevision: 80 $
 			</cfif>
 			<cfset session = StructNew()>
 			<cfset reloadApplication()>
-			<cfoutput>LANshock init done! (#now()#)</cfoutput>
+			<cfoutput>LANshock reloaded on #LSDateFormat(now())# #LSTimeFormat(now())# in #DateDiff('s',dtRequestStarted,now())# seconds.</cfoutput>
 			<cfabort>
 		</cfif>
 		
@@ -107,10 +108,19 @@ $LastChangedRevision: 80 $
 	
 	<cffunction name="onError">
 		<cfargument name="exception">
+		
+		<cfset var sRelocation = ''>
 
 		<cfswitch expression="#arguments.exception.type#">
 			<cfcase value="fusebox.undefinedCircuit,fusebox.undefinedFuseaction">
 				<cftry>
+					<cfif ListFind("m_,c_",left(attributes.fuseaction,2))>
+						<cfset application.lanshock.oLogger.writeLog('core.error','Type: "#arguments.exception.type#" - relocation | Message: "#arguments.exception.message#" | Fuseaction: "#attributes.fuseaction#" | Referer: "#cgi.http_referer#" | UserAgent: "#cgi.http_user_agent#"','warn')>
+						<cfset sRelocation = cgi.query_string>
+						<cfset sRelocation = replaceNoCase(sRelocation,'fuseaction=m_','','ONE')>
+						<cfset sRelocation = replaceNoCase(sRelocation,'fuseaction=c_','','ONE')>
+						<cflocation url="#application.lanshock.oHelper.buildUrl('#sRelocation#')#" addtoken="false">
+					</cfif>
 					<cfset application.lanshock.oLogger.writeLog('core.error','Type: "#arguments.exception.type#" | Message: "#arguments.exception.message#" | Fuseaction: "#attributes.fuseaction#" | Referer: "#cgi.http_referer#" | UserAgent: "#cgi.http_user_agent#"','error')>
 					<cfcatch></cfcatch>
 				</cftry>
