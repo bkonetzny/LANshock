@@ -35,14 +35,15 @@ $LastChangedRevision$
 		<cfif session.ip_address NEQ cgi.remote_addr AND application.lanshock.oApplication.getMyFusebox().originalCircuit NEQ 'general'>
 			<cfset application.lanshock.oLogger.writeLog('core.sessionmanager','Session hijacking detected | Session-IP: "#session.ip_address#" | CGI-IP: "#cgi.remote_addr#" | UserAgent: "#cgi.http_user_agent#"','error')>
 			<cfset sSessionIP = session.ip_address>
-			<cfset session = StructNew()>
+			<cfset structClear(session)>
 			<cfloop collection="#cookie#" item="idx">
 				<cfcookie name="#idx#" expires="now">
 			</cfloop>
-			<cflocation url="#application.lanshock.oApplication.getMyFusebox().getMyself()#general.error_session_hijack&ip_session=#UrlEncodedFormat(ip_session)#" addtoken="false">
+			<cflocation url="#application.lanshock.oHelper.buildUrl('general.error_session_hijack&ip_session=#sSessionIP#')#" addtoken="false">
 		</cfif>
 		
-		<cfset updateSessions()>		
+		<cfset updateSessions()>
+		<cfset cleanSessions()>
 	</cffunction>
 	
 	<cffunction name="updateSessions" output="false" returntype="void">
@@ -63,20 +64,22 @@ $LastChangedRevision$
 		<cfset var idx = 0>
 
 		<cfloop collection="#variables.stSessions#" item="idx">
-			<cfif DateDiff('s',variables.stSessions[idx].session.timestamp, now()) GT variables.iTimeout>
+			<cfif StructIsEmpty(variables.stSessions[idx].session)>
 				<cfset StructDelete(variables.stSessions,idx)>
 			</cfif>
 		</cfloop>
 	</cffunction>
 	
 	<cffunction name="getSessions" output="false" returntype="struct">
-
+		
+		<cfset cleanSessions()>
 		<cfreturn variables.stSessions>
 
 	</cffunction>
 	
 	<cffunction name="getSessionCount" output="false" returntype="numeric">
 
+		<cfset cleanSessions()>
 		<cfreturn StructCount(variables.stSessions)>
 
 	</cffunction>
