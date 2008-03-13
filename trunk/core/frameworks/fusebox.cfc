@@ -48,7 +48,6 @@ $LastChangedRevision: 103 $
 <!DOCTYPE fusebox>
 <fusebox>
 	<circuits>
-		<circuit alias="core_runtime" path="core/runtime/"/>
 		<circuit alias="udfs" path="core/_utils/udf/" parent="" />
 		#sCircuits#
 	</circuits>
