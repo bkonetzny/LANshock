@@ -1,12 +1,12 @@
 @import url('../js/ext-2.0/resources/css/ext-all.css');
 
 body .x-panel {margin-bottom:20px;}
-.icon-grid {background-image:url(../js/ext-2.0/examples/shared/icons/fam/grid.png) !important;}
+.icon-grid {background-image:url(../images/famfamfam/icons/application_view_list.png) !important;}
 #button-grid .x-panel-body {border:1px solid #99bbe8;border-top:0 none;}
-.add {background-image:url(../js/ext-2.0/examples/shared/icons/fam/add.gif) !important;}
-.edit {background-image:url(../js/ext-2.0/examples/shared/icons/fam/cog_edit.png) !important;}
-.option {background-image:url(../js/ext-2.0/examples/shared/icons/fam/plugin.gif) !important;}
-.remove {background-image:url(../js/ext-2.0/examples/shared/icons/fam/delete.gif) !important;}
-.save {background-image:url(../js/ext-2.0/examples/shared/icons/save.gif) !important;}
+.add {background-image:url(../images/famfamfam/icons/add.png) !important;}
+.edit {background-image:url(../images/famfamfam/icons/cog_edit.png) !important;}
+.option {background-image:url(../images/famfamfam/icons/plugin.png) !important;}
+.remove {background-image:url(../images/famfamfam/icons/delete.png) !important;}
+.save {background-image:url(../images/famfamfam/icons/save.png) !important;}
 
 .x-grid3-hd-row td.ux-filtered-column {font-style: italic;font-weight: bold;}
