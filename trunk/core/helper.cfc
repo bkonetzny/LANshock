@@ -164,6 +164,9 @@ $LastChangedRevision: 143 $
 			<cfcase value="absPath">
 				<cfreturn application.lanshock.oRuntime.getEnvironment().sBasePath & 'modules/#sModule#/'>
 			</cfcase>
+			<cfcase value="storagePathTemp">
+				<cfreturn application.lanshock.oRuntime.getEnvironment().sStoragePath & 'tmp/'>
+			</cfcase>
 			<cfcase value="storagePathSecure">
 				<cfreturn application.lanshock.oRuntime.getEnvironment().sStoragePath & 'secure/modules/#sModule#/'>
 			</cfcase>
@@ -180,13 +183,23 @@ $LastChangedRevision: 143 $
 	<cffunction name="buildUrl" output="false" returntype="string">
 		<cfargument name="sParameters" type="string" required="false" default="">
 		<cfargument name="bFullUrl" type="boolean" required="false" default="false">
+		<cfargument name="bForceMode" type="string" required="false" default="">
 		
 		<cfset var myFusebox = application.lanshock.oApplication.getMyFusebox()>
 		<cfset var sReturn = myFusebox.getMyself()>
 		<cfset var bEnableSES = true>
+		<cfset var sMode = 'ses'>
 		
-		<cfif find('?',myFusebox.getMyself())>
-			<cfset sReturn = myFusebox.getMyself() & urlSessionFormat(arguments.sParameters)>
+		<cfif (NOT len(arguments.bForceMode) AND find('?',myFusebox.getMyself())) OR (len(arguments.bForceMode) AND arguments.bForceMode EQ 'classic')>
+			<cfset sMode = 'classic'>
+		</cfif>
+		
+		<cfif sMode EQ 'classic'>
+			<cfif NOT find('?',myFusebox.getMyself())>
+				<cfset sReturn = urlSessionFormat(application.lanshock.oRuntime.getEnvironment().sWebPath & 'index.cfm?fuseaction=' & arguments.sParameters)>
+			<cfelse>
+				<cfset sReturn = myFusebox.getMyself() & urlSessionFormat(arguments.sParameters)>
+			</cfif>
 		<cfelse>
 			<cfset sReturn = myFusebox.getMyself() & replaceList(urlSessionFormat(arguments.sParameters),'?,&,=','/,/,/')>
 			<cfif right(sReturn,1) NEQ '/'>
