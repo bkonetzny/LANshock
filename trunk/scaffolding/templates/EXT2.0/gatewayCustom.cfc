@@ -23,32 +23,40 @@ $LastChangedRevision$
 		
 		<cfset var Query = createQuery()>
 		<cfset var Where = Query.getWhere()>
-		<cfset var idx = 0 />
+		<cfset var idx = 0>
 		<cfset var sCurrentField = ''>
+		<cfset var sCurrentTable = ''>
+		<cfset var sSortTable = ''>
 		<cfset var sSortField = ''>
 		<cfset var sSortDirection = 'ASC'>
 	
 		<cfif NOT StructIsEmpty(arguments.stFilter)>
 	
 			<cfif StructKeyExists(arguments.stFilter,'stJoins')>
-				<cfset Query.returnObjectFields("news_entry","$$lFields$$")>
+				<cfset Query.returnObjectFields("$$objectName$$","$$lFields$$")>
 				
 				<cfloop collection="#arguments.stFilter.stJoins#" item="idx">
-					<cfset Query.leftJoin("news_entry",idx,idx)/>
-					<cfset Query.setFieldPrefix(idx,"#idx#_")/>
+					<cfset Query.leftJoin("$$objectName$$",idx,idx)>
+					<cfset Query.setFieldPrefix(idx,"#idx#_")>
 					<cfset Query.returnObjectFields(idx,arguments.stFilter.stJoins[idx])>
 				</cfloop>
 			</cfif>
 		
 			<cfif StructKeyExists(arguments.stFilter,'stFields')>
 				<cfloop collection="#arguments.stFilter.stFields#" item="idx">
-					<cfset sCurrentField = idx>
-					<cfswitch expression="#arguments.stFilter.stFields[sCurrentField].mode#">
+					<cfif ListLen(idx,'|') EQ 2>
+						<cfset sCurrentTable = ListFirst(idx,'|')>
+						<cfset sCurrentField = ListLast(idx,'|')>
+					<cfelse>
+						<cfset sCurrentTable = "$$objectName$$">
+						<cfset sCurrentField = idx>
+					</cfif>
+					<cfswitch expression="#arguments.stFilter.stFields[idx].mode#">
 						<cfcase value="isEqual">
-							<cfset Where.isEqual(_getAlias(),sCurrentField,arguments.stFilter.stFields[sCurrentField].value)>
+							<cfset Where.isEqual(sCurrentTable,sCurrentField,arguments.stFilter.stFields[idx].value)>
 						</cfcase>
 						<cfcase value="isLike">
-							<cfset Where.isLike(_getAlias(),sCurrentField,arguments.stFilter.stFields[sCurrentField].value)>
+							<cfset Where.isLike(sCurrentTable,sCurrentField,arguments.stFilter.stFields[idx].value)>
 						</cfcase>
 					</cfswitch>
 				</cfloop>
@@ -58,14 +66,18 @@ $LastChangedRevision$
 				<cfloop list="#arguments.stFilter.lSortFields#" index="idx">
 					<cfset sSortDirection = 'ASC'>
 					<cfset sSortField = idx>
-					<cfif ListLen(idx,'|') EQ 2 AND ListFindNoCase('ASC,DESC',ListLast(idx,'|'))>
+					<cfif ListLen(idx,'|') EQ 2>
+						<cfset idx = ListPrepend(idx,"$$objectName$$",'|')>
+					</cfif>
+					<cfif ListLen(idx,'|') EQ 3 AND ListFindNoCase('ASC,DESC',ListLast(idx,'|'))>
 						<cfset sSortDirection = UCase(ListLast(idx,'|'))>
-						<cfset sSortField = ListFirst(idx,'|')>
+						<cfset sSortTable = ListFirst(idx,'|')>
+						<cfset sSortField = ListGetAt(idx,2,'|')>
 					</cfif>
 					<cfif sSortDirection EQ 'DESC'>
-						<cfset Query.getOrder().setDesc("$$objectName$$",sSortField)>
+						<cfset Query.getOrder().setDesc(sSortTable,sSortField)>
 					<cfelse>
-						<cfset Query.getOrder().setAsc("$$objectName$$",sSortField)>
+						<cfset Query.getOrder().setAsc(sSortTable,sSortField)>
 					</cfif>
 				</cfloop>
 			</cfif>
