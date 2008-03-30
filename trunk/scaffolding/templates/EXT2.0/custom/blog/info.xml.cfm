@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="blog Module" version="2.0.0.0" date="2008-02-18" author="LANshock" url="http://www.lanshock.com">
+<module name="blog Module" version="2.0.0.0" date="2008-03-31" author="LANshock" url="http://www.lanshock.com">
 	
 	<general requiresLogin="false"/>
 	
@@ -31,7 +31,6 @@
 			<field name="text" type="text" default=""/>
 			<field name="date" type="datetime" null="true" default="NULL"/>
 			<field name="mp3url" type="varchar" len="255" null="true" default="NULL"/>
-			<field name="ishtml" type="boolean" null="false" default="0"/>
 			<pk fields="id"/>
 			<fk field="author" mapping="user.id"/>
 		</table>
@@ -88,6 +87,13 @@
 				    <hasOne name="user">
 				        <relate from="author" to="id"/>
 				    </hasOne>
+				]]>
+			</table>
+			<table name="news_category">
+				<![CDATA[
+					<hasMany name="news_entry">
+						<link name="news_entry_category" from="news_category" to="news_entry" />
+					</hasMany>
 				]]>
 			</table>
 		</reactor>
