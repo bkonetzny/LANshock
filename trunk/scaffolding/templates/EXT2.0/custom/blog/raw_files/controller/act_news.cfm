@@ -22,14 +22,15 @@ $LastChangedRevision$
 	<cfset stFilter.stFields.author.value = attributes.user_id>
 </cfif>
 <cfif len(attributes.category_id)>
-	<cfset stFilter.stFields.category_id = StructNew()>
-	<cfset stFilter.stFields.category_id.mode = 'isEqual'>
-	<cfset stFilter.stFields.category_id.value = attributes.category_id>
+	<cfset stFilter.stJoins.news_entry_category = "category_id">
+	<cfset stFilter.stFields['news_entry_category|category_id'] = StructNew()>
+	<cfset stFilter.stFields['news_entry_category|category_id'].mode = 'isEqual'>
+	<cfset stFilter.stFields['news_entry_category|category_id'].value = attributes.category_id>
 <cfelse>
 	<cfset stFilter.iRecords = 10>
 </cfif>
 
-<cfinvoke component="#application.lanshock.oFactory.load('news_entry','reactorGateway',false)#" method="getRecords" returnvariable="qNews">
+<cfinvoke component="#application.lanshock.oFactory.load('news_entry','reactorGateway')#" method="getRecords" returnvariable="qNews">
 	<cfinvokeargument name="stFilter" value="#stFilter#">
 </cfinvoke>
 

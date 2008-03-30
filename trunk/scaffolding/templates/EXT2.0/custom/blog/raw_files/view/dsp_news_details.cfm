@@ -17,7 +17,7 @@ $LastChangedRevision$
 		<h4><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news_details&news_id=#qNewsEntry.id#')#">#qNewsEntry.title#</a></h4>
 		<div class="postinfo"><!--- TODO: $$$ --->Posted by <a class="author" href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#qNewsEntry.author#')#">#application.lanshock.oHelper.GetUsernameByID(author)#</a> <a class="authorposts" href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news&user_id=#qNewsEntry.author#')#">(all)</a> on #session.oUser.DateTimeFormat(qNewsEntry.date)#</div>
 		<cfif qCategories.recordcount>
-			<div class="categories">#request.content.categories# <cfloop query="qCategories"><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news&category_id=#qCategories.id#')#">#qCategories.name#</a><cfif qCategories.currentrow NEQ qCategories.recordcount>, </cfif></cfloop></div>
+			<div class="categories">#request.content.categories# <cfloop query="qCategories"><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news&category_id=#qCategories.category_id#')#">#qCategories.news_category_name#</a><cfif qCategories.currentrow NEQ qCategories.recordcount>, </cfif></cfloop></div>
 		</cfif>
 		<cfif len(qNewsEntry.mp3url)>
 			<div class="mediaplayer">
@@ -39,7 +39,7 @@ $LastChangedRevision$
 				</div>
 			</div>
 		</cfif>
-		<div class="text">#application.lanshock.oHelper.ConvertText(text=qNewsEntry.text,allow_html=qNewsEntry.ishtml)#</div>
+		<div class="text">#application.lanshock.oHelper.ConvertText(qNewsEntry.text)#</div>
 	</div>
 </cfloop>
 
