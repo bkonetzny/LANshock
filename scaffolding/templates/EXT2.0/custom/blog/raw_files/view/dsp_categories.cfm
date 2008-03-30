@@ -9,12 +9,19 @@ $LastChangedBy$
 $LastChangedRevision$
 --->
 
+<cfset stFilter = StructNew()>
+<cfset stFilter.lSortFields = "name|DESC">
+
+<cfinvoke component="#application.lanshock.oFactory.load('news_category','reactorGateway')#" method="getRecords" returnvariable="qCategories">
+	<cfinvokeargument name="stFilter" value="#stFilter#">
+</cfinvoke>
+
 <cfoutput>
 <h3>#request.content.headline_categories#</h3>
 
 <ul>
-<cfloop list="#ArrayToList(StructSort(stCategories,'textnocase','asc','name'))#" index="idx">
-	<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news&category_id=#idx#')#">#stCategories[idx].name# (#stCategories[idx].entrys#)</a></li>
+<cfloop query="qCategories">
+	<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news&category_id=#qCategories.id#')#">#qCategories.name#</a></li>
 </cfloop>
 </ul>
 </cfoutput>

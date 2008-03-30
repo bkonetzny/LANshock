@@ -9,15 +9,6 @@ $LastChangedBy$
 $LastChangedRevision$
 --->
 
-<cfset stMetadata = structNew()>
-<cfset stMetadata.title = application.lanshock.settings.appname & ' RSS 1.0'>
-<cfset stMetadata.link = application.lanshock.oRuntime.getEnvironment().sWebPathfull>
-<cfset stMetadata.description = application.lanshock.settings.appname>
-<!--- <cfset stMetadata.image = structNew()>
-<cfset stMetadata.image.url = "http://www.foo.com/site.gif">
-<cfset stMetadata.image.title = "Foo">
-<cfset stMetadata.image.link = "http://www.foo.com"> --->
-
 <cfset stFilter = StructNew()>
 <cfset stFilter.lSortFields = "date|DESC">
 <cfset stFilter.iRecords = 25>
@@ -26,21 +17,26 @@ $LastChangedRevision$
 	<cfinvokeargument name="stFilter" value="#stFilter#">
 </cfinvoke>
 
-<cfset qRssEntries = queryNew("title,body,link,subject,date")>
+<cfset syndFeed = application.lanshock.oFactory.load('lanshock.core._utils.rss.rssville.feed').init()>
+<cfset syndFeed.setTitle(application.lanshock.settings.appname & ' RSS 2.0')>
+<cfset syndFeed.setDescription(application.lanshock.settings.appname)>
+<cfset syndFeed.setAuthor(application.lanshock.settings.appname)>
+<cfset syndFeed.setLink(application.lanshock.oRuntime.getEnvironment().sServerPath)>
+<cfset syndFeed.setCopyright('Copyright ' & year(now()) & ' by ' & application.lanshock.settings.appname)>
+<!--- <cfset syndFeed.setLanguage("en-us")>
+<cfset syndFeed.addCategorySimple("News")>
+<cfset syndFeed.setWebmaster("webmaster@yourcompany.com")> --->
 
 <cfloop query="qNews">
-	<cfset queryAddRow(qRssEntries,1)>
-	<cfset querySetCell(qRssEntries,"title",qNews.title)>
-	<cfset querySetCell(qRssEntries,"body",qNews.text)>
-	<cfset querySetCell(qRssEntries,"link",application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news_details&news_id=#qNews.id#&title=#UrlEncodedFormat(qNews.title)#',true))>
-	<cfset querySetCell(qRssEntries,"subject",qNews.title)>
-	<cfset querySetCell(qRssEntries,"date",qNews.date)>
+	<cfset entry = application.lanshock.oFactory.load(sObject='lanshock.core._utils.rss.rssville.entry',bCache=false).init()>
+	<cfset entry.setTitle(qNews.title)>
+	<!--- <cfset entry.addCategorySimple("News")> --->
+	<cfset entry.setDescriptionSimple(qNews.text)>
+	<cfset entry.setLink(application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.news_details&news_id=#qNews.id#&title=#UrlEncodedFormat(qNews.title)#',true))>
+	<cfset entry.setPubDate(qNews.date)>
+	<cfset syndFeed.addEntry(entry)>
 </cfloop>
 
-<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core._utils.rss.rss')#" method="generateRSS" returnvariable="sRSS">
-	<cfinvokeargument name="type" value="RSS1">
-	<cfinvokeargument name="data" value="#qRssEntries#">
-	<cfinvokeargument name="metadata" value="#stMetadata#">
-</cfinvoke>
+<cfset sRSS = syndFeed.generate(syndFeed.FEED_TYPE_RSS20)>
 
 <cfsetting enablecfoutputonly="No">

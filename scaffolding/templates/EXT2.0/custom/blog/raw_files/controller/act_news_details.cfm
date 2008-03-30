@@ -43,12 +43,14 @@ $LastChangedRevision$
 </cfinvoke>
 
 <cfset stFilter = StructNew()>
-<cfset stFilter.lSortFields = "name|DESC">
-<!--- <cfset stFilter.stFields.entry_id = StructNew()>
+<cfset stFilter.lSortFields = "news_category|name|ASC">
+<cfset stFilter.stJoins = StructNew()>
+<cfset stFilter.stJoins.news_category = "name">
+<cfset stFilter.stFields.entry_id = StructNew()>
 <cfset stFilter.stFields.entry_id.mode = 'isEqual'>
-<cfset stFilter.stFields.entry_id.value = qNews.id> --->
+<cfset stFilter.stFields.entry_id.value = attributes.news_id>
 
-<cfinvoke component="#application.lanshock.oFactory.load('news_category','reactorGateway')#" method="getRecords" returnvariable="qCategories">
+<cfinvoke component="#application.lanshock.oFactory.load('news_entry_category','reactorGateway')#" method="getRecords" returnvariable="qCategories">
 	<cfinvokeargument name="stFilter" value="#stFilter#">
 </cfinvoke>
 
