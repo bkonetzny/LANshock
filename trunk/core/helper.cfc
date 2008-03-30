@@ -176,6 +176,9 @@ $LastChangedRevision: 143 $
 			<cfcase value="webStoragePathPublic">
 				<cfreturn application.lanshock.oRuntime.getEnvironment().sWebPath & 'storage/public/modules/#sModule#/'>
 			</cfcase>
+			<cfcase value="webStoragePathPublicFull">
+				<cfreturn application.lanshock.oRuntime.getEnvironment().sServerPath & 'storage/public/modules/#sModule#/'>
+			</cfcase>
 		</cfswitch>
 	
 	</cffunction>
