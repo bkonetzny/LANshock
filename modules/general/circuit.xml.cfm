@@ -24,6 +24,10 @@ $LastChangedRevision: 75 $
 		<include template="dsp_welcome.cfm"/>
 	</fuseaction>
 	
+	<fuseaction name="http404">
+		<include template="dsp_http404.cfm"/>
+	</fuseaction>
+	
 	<fuseaction name="error">
 		<include template="dsp_error.cfm"/>
 	</fuseaction>
@@ -39,11 +43,6 @@ $LastChangedRevision: 75 $
 	<fuseaction name="noright">
 		<include template="dsp_error_noright.cfm"/>
 	</fuseaction>
-
-	<fuseaction name="panel" lanshock:showlayout="basic">
-		<include template="act_panel.cfm"/>
-		<include template="dsp_panel.cfm"/>
-	</fuseaction>
 	
 	<fuseaction name="online">
 		<include template="act_online.cfm"/>
@@ -52,6 +51,10 @@ $LastChangedRevision: 75 $
 	
 	<fuseaction name="language">
 		<include template="dsp_language.cfm"/>
+	</fuseaction>
+	
+	<fuseaction name="session_language">
+		<include template="act_session_language.cfm"/>
 	</fuseaction>
 	
 	<fuseaction name="lanshock_code">

@@ -119,12 +119,19 @@ $LastChangedRevision: 80 $
 						<cfset sRelocation = cgi.query_string>
 						<cfset sRelocation = replaceNoCase(sRelocation,'fuseaction=m_','','ONE')>
 						<cfset sRelocation = replaceNoCase(sRelocation,'fuseaction=c_','','ONE')>
-						<cflocation url="#application.lanshock.oHelper.buildUrl('#sRelocation#')#" addtoken="false">
+						
+						<cfheader statuscode="301" statustext="Moved Permanently">
+						<cfheader name="Location" value="#application.lanshock.oHelper.buildUrl('#sRelocation#')#">
+						<cfabort>
+
 					</cfif>
 					<cfset application.lanshock.oLogger.writeLog('core.error','Type: "#arguments.exception.type#" | Message: "#arguments.exception.message#" | Fuseaction: "#attributes.fuseaction#" | Referer: "#cgi.http_referer#" | UserAgent: "#cgi.http_user_agent#"','error')>
 					<cfcatch></cfcatch>
 				</cftry>
-				<cflocation url="#application.lanshock.oHelper.buildUrl('general.error&type=#UrlEncodedFormat(arguments.exception.type)#&message=#UrlEncodedFormat(arguments.exception.message)#')#" addtoken="false">
+				
+				<cfheader statuscode="301">
+				<cfheader name="Location" value="#application.lanshock.oHelper.buildUrl('general.http404')#">
+				<cfabort>
 			</cfcase>
 			<cfdefaultcase>
 				<cftry>
