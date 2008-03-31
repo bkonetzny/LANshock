@@ -1,5 +1,6 @@
 <IfModule dir_module>
 DirectoryIndex index.cfm
+ErrorDocument 404 /lanshock/index.cfm?fuseaction=general.http404
 </IfModule>
 
 <IfModule mod_rewrite.c>
@@ -7,6 +8,7 @@ RewriteEngine On
 
 RewriteRule ^index.cfm/(.*)$ ?$1 [PT,L]
 
-RewriteCond %{REQUEST_FILENAME} !robots.txt$ 
-RewriteRule ^([a-z_-]*\.[a-z_-]*)(/(.*))? index.cfm?fuseaction=$1&$2 [PT,L]
+RewriteCond %{REQUEST_FILENAME} !robots.txt$
+RewriteCond %{REQUEST_FILENAME} !favicon.ico$
+RewriteRule ^([a-z0-9_-]*\.[a-z0-9_-]*)(/(.*))? index.cfm?fuseaction=$1&$2 [PT,L]
 </IfModule>
