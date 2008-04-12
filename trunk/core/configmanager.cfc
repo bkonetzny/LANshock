@@ -66,7 +66,9 @@ $LastChangedRevision$
 			<cfset oConfig.setModule(arguments.module)>
 			<cfset oConfig.load()>
 
-			<cfwddx action="wddx2cfml" input="#oConfig.getData()#" output="stReturn">
+			<cfif oConfig.exists()>
+				<cfwddx action="wddx2cfml" input="#oConfig.getData()#" output="stReturn">
+			</cfif>
 			
 			<cfset application.lanshock.oCache.set(sCacheKey,stReturn)>
 		</cfif>
