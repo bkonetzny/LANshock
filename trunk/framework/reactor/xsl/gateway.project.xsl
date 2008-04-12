@@ -15,7 +15,7 @@
 	&lt;/cffunction&gt;
 	
 	&lt;cffunction name="getByFields" access="public" hint="I return all matching rows from the <xsl:value-of select="object/@name" /> table." output="false" returntype="any" _returntype="query"&gt;
-		<xsl:for-each select="//field">
+		<xsl:for-each select="object/fields/field">
 			&lt;cfargument name="<xsl:value-of select="@alias" />" hint="If provided, I match the provided value to the <xsl:value-of select="@alias" /> field in the <xsl:value-of select="/object/@alias" /> object." required="no" type="any" _type="string" /&gt;
 		</xsl:for-each>
 		<xsl:for-each select="//externalField">
@@ -26,7 +26,7 @@
 		&lt;cfset var Where = Query.getWhere() /&gt;
 		&lt;cfset var x = 0 /&gt;
 		
-		<xsl:for-each select="//field">
+		<xsl:for-each select="object/fields/field">
 			&lt;cfif structKeyExists(arguments, '<xsl:value-of select="@alias" />')&gt;
 				&lt;cfset Where.isEqual(_getAlias(), "<xsl:value-of select="@alias" />", arguments.<xsl:value-of select="@alias" />) /&gt;
 			&lt;/cfif&gt;
@@ -46,13 +46,13 @@
 	
 	&lt;!--- deleteByFields --->
 	&lt;cffunction name="deleteByFields" access="public" hint="I delete all matching rows from the object." output="false" returntype="void">
-		<xsl:for-each select="//field">
+		<xsl:for-each select="object/fields/field">
 			&lt;cfargument name="<xsl:value-of select="@alias" />" hint="If provided, I match the provided value to the <xsl:value-of select="@alias" /> field in the <xsl:value-of select="/object/@alias" /> object." required="no" type="any" _type="string" /&gt;
 		</xsl:for-each>
 		&lt;cfset var Query = createQuery() />
 		&lt;cfset var Where = Query.getWhere() />
 		
-		<xsl:for-each select="//field">
+		<xsl:for-each select="object/fields/field">
 			&lt;cfif structKeyExists(arguments, '<xsl:value-of select="@alias" />')&gt;
 				&lt;cfset Where.isEqual(_getAlias(), "<xsl:value-of select="@alias" />", arguments.<xsl:value-of select="@alias" />) /&gt;
 			&lt;/cfif&gt;
