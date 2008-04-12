@@ -117,7 +117,7 @@ $LastChangedRevision: 103 $
 				<cfdirectory action="list" directory="#sModelDirectory#" recurse="true" name="qModelFiles">
 				
 				<cfloop query="qModelFiles">
-					<cfif qModelFiles.type EQ 'file'>
+					<cfif qModelFiles.type EQ 'file' AND len(qModelFiles.directory)-len(sModelDirectory) GT 0>
 						<cfset sModelTarget = expandPath('model/#right(qModelFiles.directory,len(qModelFiles.directory)-len(sModelDirectory))#/#qModelFiles.name#')>
 					
 						<cfif NOT directoryExists(getDirectoryFromPath(sModelTarget))>
