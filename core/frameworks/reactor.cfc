@@ -58,6 +58,7 @@ $LastChangedRevision: 103 $
 			<cfset sObjectsXML = sObjectsXML & chr(13) & chr(9) & chr(9) & '<object name="#idxTables#" alias="#idxTables#">'>
 			<cfif bLoadFields>
 				<cfloop collection="#stDatasource[idxTables].field#" item="idxFields">
+					<cfset idxFields = LCase(idxFields)>
 					<cfset sObjectsXML = sObjectsXML & chr(13) & chr(9) & chr(9) & chr(9) & '<field alias="#idxFields#" name="#idxFields#"/>'>
 				</cfloop>
 			</cfif>
