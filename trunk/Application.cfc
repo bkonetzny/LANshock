@@ -110,12 +110,20 @@ $LastChangedRevision: 80 $
 		<cfargument name="exception">
 		
 		<cfset var sRelocation = ''>
+		<cfset var sLogMessage = ''>
 
 		<cfswitch expression="#arguments.exception.type#">
 			<cfcase value="fusebox.undefinedCircuit,fusebox.undefinedFuseaction">
 				<cftry>
+					<cfset sLogMessage = 'Message: "#arguments.exception.message#" | Fuseaction: "#attributes.fuseaction#"'>
+					<cfif len(cgi.http_referer)>
+						<cfset sLogMessage = sLogMessage & ' | Referer: "#cgi.http_referer#"'>
+					</cfif>
+					<cfset sLogMessage = sLogMessage & ' | UserAgent: "#cgi.http_user_agent#"'>
+					
 					<cfif ListFind("m_,c_",left(attributes.fuseaction,2))>
-						<cfset application.lanshock.oLogger.writeLog('core.error','Type: "#arguments.exception.type#" - relocation | Message: "#arguments.exception.message#" | Fuseaction: "#attributes.fuseaction#" | Referer: "#cgi.http_referer#" | UserAgent: "#cgi.http_user_agent#"','warn')>
+						<cfset sLogMessage = 'Type: "#arguments.exception.type#" - relocation | ' & sLogMessage>
+						<cfset application.lanshock.oLogger.writeLog('core.error',sLogMessage,'warn')>
 						<cfset sRelocation = cgi.query_string>
 						<cfset sRelocation = replaceNoCase(sRelocation,'fuseaction=m_','','ONE')>
 						<cfset sRelocation = replaceNoCase(sRelocation,'fuseaction=c_','','ONE')>
@@ -123,9 +131,9 @@ $LastChangedRevision: 80 $
 						<cfheader statuscode="301" statustext="Moved Permanently">
 						<cfheader name="Location" value="#application.lanshock.oHelper.buildUrl('#sRelocation#')#">
 						<cfabort>
-
 					</cfif>
-					<cfset application.lanshock.oLogger.writeLog('core.error','Type: "#arguments.exception.type#" | Message: "#arguments.exception.message#" | Fuseaction: "#attributes.fuseaction#" | Referer: "#cgi.http_referer#" | UserAgent: "#cgi.http_user_agent#"','error')>
+					<cfset sLogMessage = 'Type: "#arguments.exception.type#" | ' & sLogMessage>
+					<cfset application.lanshock.oLogger.writeLog('core.error',sLogMessage,'error')>
 					<cfcatch></cfcatch>
 				</cftry>
 				
@@ -135,7 +143,19 @@ $LastChangedRevision: 80 $
 			</cfcase>
 			<cfdefaultcase>
 				<cftry>
-					<cfset application.lanshock.oLogger.writeLog('core.error','Type: "#arguments.exception.type#" | Message: "#arguments.exception.message#" | Detail: "#arguments.exception.detail#"','error')>
+					<cfset sLogMessage = 'Type: "#arguments.exception.type#" | Message: "#arguments.exception.message#" | Detail: "#arguments.exception.detail#"'>
+					<cfif isDefined(attributes.fuseaction)>
+						<cfset sLogMessage = sLogMessage & ' | Fuseaction: "#attributes.fuseaction#"'>
+					</cfif>
+					<cfif len(cgi.query_string)>
+						<cfset sLogMessage = sLogMessage & ' | QueryString: "#cgi.query_string#"'>
+					</cfif>
+					<cfif len(cgi.http_referer)>
+						<cfset sLogMessage = sLogMessage & ' | Referer: "#cgi.http_referer#"'>
+					</cfif>
+					<cfset sLogMessage = sLogMessage & ' | UserAgent: "#cgi.http_user_agent#"'>
+					
+					<cfset application.lanshock.oLogger.writeLog('core.error',sLogMessage,'error')>
 					<cfcatch></cfcatch>
 				</cftry>
 				<cfinclude template="core/_errorhandler.cfm">
