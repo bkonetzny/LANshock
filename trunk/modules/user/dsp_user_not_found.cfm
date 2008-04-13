@@ -10,7 +10,7 @@ $LastChangedRevision: 33 $
 --->
 
 <cfoutput>
-	<div class="headline">#request.content.error_user_notfound#</div>
+	<h3>#request.content.error_user_notfound#</h3>
 	#request.content.error_user_notfound#
 </cfoutput>
 

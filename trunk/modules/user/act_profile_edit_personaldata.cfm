@@ -11,25 +11,25 @@ $LastChangedRevision: 96 $
 
 <cfparam name="attributes.form_submitted" default="false">
 <cfparam name="aError" default="#ArrayNew(1)#">
-<cfparam name="attributes.id" default="#request.session.userid#">
+<cfparam name="attributes.id" default="#session.userid#">
 
 <cfif NOT isNumeric(attributes.id)>
-	<cflocation url="#myself##request.lanshock.settings.modulePrefix.core#user.user_not_found&1&#request.session.urltoken#" addtoken="false">
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.user_not_found')#" addtoken="false">
 </cfif>
 
-<cfif request.session.isAdmin AND NOT attributes.id EQ request.session.userid>
+<cfif session.isAdmin AND NOT attributes.id EQ session.userid>
 	<cfset check = UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin')>
 </cfif>
 	
 <cfscript>
-	if(request.session.isAdmin) UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin');
-	else attributes.id = request.session.userid;
+	if(session.isAdmin) UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin');
+	else attributes.id = session.userid;
 
 	oObUser = objectBreeze.objectCreate("user");
 	oObUser.read(attributes.id);
 </cfscript>
 
-<cfinvoke component="#request.lanshock.environment.componentpath#core._utils.i18n.i18nUtil" method="getLocalesStruct" returnvariable="stLocales">
+<cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#core._utils.i18n.i18nUtil" method="getLocalesStruct" returnvariable="stLocales">
 
 <cfparam name="attributes.firstname" default="#oObUser.getProperty('firstname')#">
 <cfparam name="attributes.lastname" default="#oObUser.getProperty('lastname')#">
@@ -57,10 +57,10 @@ $LastChangedRevision: 96 $
 	<cfparam name="attributes.profile_verified" default="0">
 
 	<cfscript>
-		if(request.session.isAdmin OR stModuleConfig.userprofile.edit_personal_data OR NOT isNumeric(attributes.id)){
+		if(session.isAdmin OR stModuleConfig.userprofile.edit_personal_data OR NOT isNumeric(attributes.id)){
 			if(NOT len(attributes.firstname)) ArrayAppend(aError, request.content.firstname);
 			if(NOT len(attributes.lastname)) ArrayAppend(aError, request.content.lastname);
-			if(request.session.isAdmin OR NOT attributes.profile_verified) attributes.dt_birthdate = LSParseDateTime(attributes.dt_birthdate);
+			if(session.isAdmin OR NOT attributes.profile_verified) attributes.dt_birthdate = LSParseDateTime(attributes.dt_birthdate);
 			if(NOT isDate(attributes.dt_birthdate)) ArrayAppend(aError, request.content.dt_birthdate);
 		}
 	</cfscript>
@@ -77,11 +77,11 @@ $LastChangedRevision: 96 $
 			oObUser.setProperty("city",attributes.city);
 			oObUser.setProperty("street",attributes.street);
 			oObUser.setProperty("zip",attributes.zip);
-			if(request.session.isAdmin) oObUser.setProperty("profile_verified",attributes.profile_verified);
+			if(session.isAdmin) oObUser.setProperty("profile_verified",attributes.profile_verified);
 			oObUser.commit();
 		</cfscript>
 
-		<cflocation url="#myself##myfusebox.thiscircuit#.userdetails&id=#attributes.id#&#request.session.UrlToken#" addtoken="false">
+		<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.userdetails&id=#attributes.id#')#" addtoken="false">
 	
 	</cfif>
 

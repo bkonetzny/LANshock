@@ -18,7 +18,7 @@ $LastChangedRevision: 33 $
 	stDefaultModuleConfig.userprofile.edit_nickname = true;
 </cfscript>
 
-<cfinvoke component="#application.lanshock.environment.componentpath#core.configmanager" method="createConfig" returnvariable="stModuleConfig">
+<cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#core.configmanager" method="createConfig" returnvariable="stModuleConfig">
 	<cfinvokeargument name="module" value="#myfusebox.thiscircuit#">
 	<cfinvokeargument name="data" value="#stDefaultModuleConfig#">
 	<cfinvokeargument name="version" value="1">

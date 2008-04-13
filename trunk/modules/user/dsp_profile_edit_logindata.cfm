@@ -99,10 +99,10 @@ function checkInput() {
 </cfif>
 
 <cfif isNumeric(attributes.id)>
-	<a href="#myself##myfusebox.thiscircuit#.userdetails<cfif request.session.isAdmin>&id=#attributes.id#</cfif>&#request.session.UrlToken#" class="link_extended">#request.content.show_profile#</a>
+	<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.userdetails<cfif session.isAdmin>&id=#attributes.id#</cfif>')#" class="link_extended">#request.content.show_profile#</a>
 </cfif>
 
-<form action="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#request.session.UrlToken#" method="post" name="form">
+<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post" name="form">
 <input type="hidden" name="form_submitted" value="true">
 <input type="hidden" name="id" value="#attributes.id#">
 <input type="hidden" name="password_level" value="#attributes.password_level#">
@@ -131,7 +131,7 @@ function checkInput() {
 			<span class="required">*</span>
 		</div>
 		<div class="formrow_input">
-			<input type="text" name="name" id="profile_name" value="#attributes.name#"<cfif NOT request.session.isAdmin AND NOT stModuleConfig.userprofile.edit_nickname> disabled="disabled"</cfif>/><cfif NOT stModuleConfig.userprofile.edit_nickname> <img src="#stImageDir.general#/locked.gif" alt="" border="0"></cfif>
+			<input type="text" name="name" id="profile_name" value="#attributes.name#"<cfif NOT session.isAdmin AND NOT stModuleConfig.userprofile.edit_nickname> disabled="disabled"</cfif>/><cfif NOT stModuleConfig.userprofile.edit_nickname> <img src="#stImageDir.general#/locked.gif" alt="" border="0"></cfif>
 		</div>
 	</div>
 	<div class="formrow">

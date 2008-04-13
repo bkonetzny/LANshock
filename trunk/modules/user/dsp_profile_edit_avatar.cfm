@@ -31,23 +31,23 @@ function updatePicture(imagename) {
 </cfif>
 
 <cfif isNumeric(attributes.id)>
-	<a href="#myself##myfusebox.thiscircuit#.userdetails<cfif request.session.isAdmin>&id=#attributes.id#</cfif>&#request.session.UrlToken#" class="link_extended">#request.content.show_profile#</a>
+	<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.userdetails<cfif session.isAdmin>&id=#attributes.id#</cfif>')#" class="link_extended">#request.content.show_profile#</a>
 </cfif>
 
-<form action="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#request.session.UrlToken#" method="post" enctype="multipart/form-data" name="form">
-<input type="hidden" name="form_submitted" value="true">
-<input type="hidden" name="id" value="#attributes.id#">
+<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post" enctype="multipart/form-data" name="form">
+<input type="hidden" name="form_submitted" value="true"/>
+<input type="hidden" name="id" value="#attributes.id#"/>
 
 <h4>#request.content.avatar#</h4>
 
 <div class="form">
-	<cfif len(UserShowAvatar(attributes.id))>
+	<cfif len(application.lanshock.oHelper.UserShowAvatar(attributes.id))>
 		<div class="formrow">
 			<div class="formrow_label">
 				#request.content.current_avatar#
 			</div>
 			<div class="formrow_input">
-				#UserShowAvatar(attributes.id)#
+				#application.lanshock.oHelper.UserShowAvatar(attributes.id)#
 			</div>
 		</div>
 		<div class="formrow">
@@ -63,19 +63,6 @@ function updatePicture(imagename) {
 		</div>
 		<div class="formrow_input">
 			<input type="file" name="avatar" id="profile_avatar_upload" onChange="updatePicture(this.value);">
-		</div>
-	</div>
-	<div class="formrow">
-		<div class="formrow_label">
-			<label for="profile_avatar_samples">#request.content.avatar_samples#</label>
-		</div>
-		<div class="formrow_input">
-			<select name="avatar_sample" id="profile_avatar_samples" onChange="updatePicture('#stImageDir.module#/../avatar/samples/' + this.value);">
-				<option value=""></option>
-				<cfloop list="#ListSort(lSamples,'textnocase')#" index="idx">
-					<option value="#idx#">#idx#</option>
-				</cfloop>
-			</select>
 		</div>
 	</div>
 	<div class="formrow">

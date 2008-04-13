@@ -39,7 +39,7 @@ $LastChangedRevision: 33 $
 #request.content.password_reset_mail_new_password_txt# #sNewPassword#
 		</cfmail>
 		
-		<cflocation url="#myself##myfusebox.thiscircuit#.reset_password_done&#request.session.urltoken#" addtoken="false">
+		<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.reset_password_done')#" addtoken="false">
 	</cfif>
 
 </cfif>
@@ -61,12 +61,12 @@ $LastChangedRevision: 33 $
 	
 		<cfmail to="#attributes.email#" subject="#request.content.password_reset_mail_reset_password#" server="#application.lanshock.settings.mailserver.server#" port="#application.lanshock.settings.mailserver.port#" username="#application.lanshock.settings.mailserver.username#" password="#application.lanshock.settings.mailserver.password#" from="#application.lanshock.settings.mailserver.from#">
 #request.content.password_reset_mail_reset_password_txt#
-#application.lanshock.environment.serveraddress##application.lanshock.environment.webpath##myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&email=#attributes.email#&key=#key#
+#application.lanshock.oRuntime.getEnvironment().sServerPath##myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&email=#attributes.email#&key=#key#
 		</cfmail>
 		
-		<cffile action="append" file="#application.lanshock.environment.abspath#storage/secure/logs/core_user_resetpassword.log" output="#cgi.remote_addr# - [#DateFormat(now(),"yyyy-mm-dd")# #TimeFormat(now(),"hh:mm:ss")#] userid_#oObUser.getProperty('id')#, #oObUser.getProperty('email')#, #oObUser.getProperty('name')#">
+		<cffile action="append" file="#application.lanshock.oRuntime.getEnvironment().sBasePath#storage/secure/logs/core_user_resetpassword.log" output="#cgi.remote_addr# - [#DateFormat(now(),"yyyy-mm-dd")# #TimeFormat(now(),"hh:mm:ss")#] userid_#oObUser.getProperty('id')#, #oObUser.getProperty('email')#, #oObUser.getProperty('name')#">
 		
-		<cflocation url="#myself##myfusebox.thiscircuit#.reset_password_confirm&#request.session.urltoken#" addtoken="false">
+		<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.reset_password_confirm')#" addtoken="false">
 
 	<cfelse>
 

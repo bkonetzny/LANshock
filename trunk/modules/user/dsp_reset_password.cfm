@@ -25,7 +25,7 @@ $LastChangedRevision: 33 $
 	</div>
 </cfif>
 
-<form action="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#request.session.UrlToken#" method="post" name="passwordreset">
+<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post" name="passwordreset">
 <input type="hidden" name="form_submitted" value="true">
 <table class="vlist" width="100%">
 	<tr>

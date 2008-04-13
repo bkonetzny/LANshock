@@ -26,10 +26,10 @@ $LastChangedRevision: 33 $
 </cfif>
 
 <cfif isNumeric(attributes.id)>
-	<a href="#myself##myfusebox.thiscircuit#.userdetails<cfif request.session.isAdmin>&id=#attributes.id#</cfif>&#request.session.UrlToken#" class="link_extended">#request.content.show_profile#</a>
+	<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.userdetails<cfif session.isAdmin>&id=#attributes.id#</cfif>')#" class="link_extended">#request.content.show_profile#</a>
 </cfif>
 
-<form action="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#request.session.UrlToken#" method="post" name="personaldata">
+<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post" name="personaldata">
 <input type="hidden" name="form_submitted" value="true">
 <input type="hidden" name="id" value="#attributes.id#">
 
@@ -43,7 +43,7 @@ $LastChangedRevision: 33 $
 			</div>
 		</div>
 	</cfif>
-	<cfif request.session.isAdmin>
+	<cfif session.isAdmin>
 		<div class="formrow">
 			<div class="formrow_input formrow_nolabel">
 				<input type="checkbox" name="profile_verified" id="profile_verified" value="1"<cfif attributes.profile_verified> checked</cfif>> <label for="profile_verified">#request.content.profile_verified#</label>
@@ -69,7 +69,7 @@ $LastChangedRevision: 33 $
 			<span class="required">*</span>
 		</div>
 		<div class="formrow_input">
-			<input type="text" name="firstname" id="profile_firstname" value="#attributes.firstname#"<cfif NOT request.session.isAdmin AND (NOT stModuleConfig.userprofile.edit_personal_data OR attributes.profile_verified)> disabled="disabled"</cfif>> <cfif NOT stModuleConfig.userprofile.edit_personal_data> <img src="#stImageDir.general#/locked.gif" alt="" border="0"></cfif>
+			<input type="text" name="firstname" id="profile_firstname" value="#attributes.firstname#"<cfif NOT session.isAdmin AND (NOT stModuleConfig.userprofile.edit_personal_data OR attributes.profile_verified)> disabled="disabled"</cfif>> <cfif NOT stModuleConfig.userprofile.edit_personal_data> <img src="#stImageDir.general#/locked.gif" alt="" border="0"></cfif>
 		</div>
 	</div>
 	<div class="formrow">
@@ -78,7 +78,7 @@ $LastChangedRevision: 33 $
 			<span class="required">*</span>
 		</div>
 		<div class="formrow_input">
-			<input type="text" name="lastname" id="profile_lastname" value="#attributes.lastname#"<cfif NOT request.session.isAdmin AND (NOT stModuleConfig.userprofile.edit_personal_data OR attributes.profile_verified)> disabled="disabled"</cfif>> <cfif NOT stModuleConfig.userprofile.edit_personal_data> <img src="#stImageDir.general#/locked.gif" alt="" border="0"></cfif>
+			<input type="text" name="lastname" id="profile_lastname" value="#attributes.lastname#"<cfif NOT session.isAdmin AND (NOT stModuleConfig.userprofile.edit_personal_data OR attributes.profile_verified)> disabled="disabled"</cfif>> <cfif NOT stModuleConfig.userprofile.edit_personal_data> <img src="#stImageDir.general#/locked.gif" alt="" border="0"></cfif>
 		</div>
 	</div>
 	<script language="javascript">
@@ -91,7 +91,7 @@ $LastChangedRevision: 33 $
 			<span class="required">*</span>
 		</div>
 		<div class="formrow_input">
-			<input type="text" name="dt_birthdate" id="profile_birthday" value="#LSDateFormat(attributes.dt_birthdate)#" maxlength="10" size="10"<cfif NOT request.session.isAdmin AND (NOT stModuleConfig.userprofile.edit_personal_data OR attributes.profile_verified)> disabled</cfif>>
+			<input type="text" name="dt_birthdate" id="profile_birthday" value="#LSDateFormat(attributes.dt_birthdate)#" maxlength="10" size="10"<cfif NOT session.isAdmin AND (NOT stModuleConfig.userprofile.edit_personal_data OR attributes.profile_verified)> disabled</cfif>>
 			<a href="##" onClick="cal.select(document.forms['personaldata'].dt_birthdate,'cal_img_1','dd.MM.yyyy'); return false;" name="cal_img_1" id="cal_img_1"><img src="#stImageDir.general#/calendar.gif"></a>
 			<cfif NOT stModuleConfig.userprofile.edit_personal_data> <img src="#stImageDir.general#/locked.gif" alt="" border="0"></cfif>
 		</div>
@@ -125,7 +125,7 @@ $LastChangedRevision: 33 $
 			<label for="profile_country">#request.content.country#</label>
 		</div>
 		<div class="formrow_input">
-			<select name="country" id="profile_country"<cfif NOT request.session.isAdmin AND (NOT stModuleConfig.userprofile.edit_personal_data OR attributes.profile_verified)> disabled</cfif>>
+			<select name="country" id="profile_country"<cfif NOT session.isAdmin AND (NOT stModuleConfig.userprofile.edit_personal_data OR attributes.profile_verified)> disabled</cfif>>
 				<cfloop from="1" to="#ArrayLen(aCountryList)#" index="idx">
 					<option value="#aCountryList[idx]#"<cfif attributes.country EQ aCountryList[idx]> selected</cfif>>#stCountryList[aCountryList[idx]]#</option>
 				</cfloop>
@@ -138,7 +138,7 @@ $LastChangedRevision: 33 $
 			<label for="profile_city">#request.content.city#</label>
 		</div>
 		<div class="formrow_input">
-			<input type="text" name="city" id="profile_city" value="#attributes.city#" <cfif NOT request.session.isAdmin AND (NOT stModuleConfig.userprofile.edit_personal_data OR attributes.profile_verified)> disabled</cfif>><cfif NOT stModuleConfig.userprofile.edit_personal_data> <img src="#stImageDir.general#/locked.gif" alt="" border="0"></cfif>
+			<input type="text" name="city" id="profile_city" value="#attributes.city#" <cfif NOT session.isAdmin AND (NOT stModuleConfig.userprofile.edit_personal_data OR attributes.profile_verified)> disabled</cfif>><cfif NOT stModuleConfig.userprofile.edit_personal_data> <img src="#stImageDir.general#/locked.gif" alt="" border="0"></cfif>
 		</div>
 	</div>
 	<div class="formrow">
@@ -146,7 +146,7 @@ $LastChangedRevision: 33 $
 			<label for="profile_street">#request.content.street#</label>
 		</div>
 		<div class="formrow_input">
-			<input type="text" name="street" id="profile_street" value="#attributes.city#" <cfif NOT request.session.isAdmin AND (NOT stModuleConfig.userprofile.edit_personal_data OR attributes.profile_verified)> disabled</cfif>><cfif NOT stModuleConfig.userprofile.edit_personal_data> <img src="#stImageDir.general#/locked.gif" alt="" border="0"></cfif>
+			<input type="text" name="street" id="profile_street" value="#attributes.city#" <cfif NOT session.isAdmin AND (NOT stModuleConfig.userprofile.edit_personal_data OR attributes.profile_verified)> disabled</cfif>><cfif NOT stModuleConfig.userprofile.edit_personal_data> <img src="#stImageDir.general#/locked.gif" alt="" border="0"></cfif>
 		</div>
 	</div>
 	<div class="formrow">
@@ -154,7 +154,7 @@ $LastChangedRevision: 33 $
 			<label for="profile_zip">#request.content.zip#</label>
 		</div>
 		<div class="formrow_input">
-			<input type="text" name="zip" id="profile_zip" value="#attributes.zip#" <cfif NOT request.session.isAdmin AND (NOT stModuleConfig.userprofile.edit_personal_data OR attributes.profile_verified)> disabled</cfif>><cfif NOT stModuleConfig.userprofile.edit_personal_data> <img src="#stImageDir.general#/locked.gif" alt="" border="0"></cfif>
+			<input type="text" name="zip" id="profile_zip" value="#attributes.zip#" <cfif NOT session.isAdmin AND (NOT stModuleConfig.userprofile.edit_personal_data OR attributes.profile_verified)> disabled</cfif>><cfif NOT stModuleConfig.userprofile.edit_personal_data> <img src="#stImageDir.general#/locked.gif" alt="" border="0"></cfif>
 		</div>
 	</div>
 	<div class="formrow">

@@ -11,19 +11,19 @@ $LastChangedRevision: 33 $
 
 <cfparam name="attributes.form_submitted" default="false">
 <cfparam name="aError" default="#ArrayNew(1)#">
-<cfparam name="attributes.id" default="#request.session.userid#">
+<cfparam name="attributes.id" default="#session.userid#">
 
 <cfif NOT isNumeric(attributes.id)>
-	<cflocation url="#myself##request.lanshock.settings.modulePrefix.core#user.user_not_found&1&#request.session.urltoken#" addtoken="false">
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.user_not_found')#" addtoken="false">
 </cfif>
 
-<cfif request.session.isAdmin AND NOT attributes.id EQ request.session.userid>
+<cfif session.isAdmin AND NOT attributes.id EQ session.userid>
 	<cfset check = UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin')>
 </cfif>
 	
 <cfscript>
-	if(request.session.isAdmin) UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin');
-	else attributes.id = request.session.userid;
+	if(session.isAdmin) UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin');
+	else attributes.id = session.userid;
 
 	oObUser = objectBreeze.objectCreate("user");
 	oObUser.read(attributes.id);
@@ -51,7 +51,7 @@ $LastChangedRevision: 33 $
 			oObUser.commit();
 		</cfscript>
 
-		<cflocation url="#myself##myfusebox.thiscircuit#.userdetails&id=#attributes.id#&#request.session.UrlToken#" addtoken="false">
+		<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.userdetails&id=#attributes.id#')#" addtoken="false">
 	
 	</cfif>
 

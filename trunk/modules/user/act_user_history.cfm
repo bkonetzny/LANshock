@@ -9,22 +9,22 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 33 $
 --->
 
-<cfparam name="attributes.id" default="#request.session.UserID#">
+<cfparam name="attributes.id" default="#session.UserID#">
 
 <cfif NOT isNumeric(attributes.id)>
-	<cflocation url="#myself##request.lanshock.settings.modulePrefix.core#user.user_not_found&#request.session.urltoken#" addtoken="false">
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.user_not_found')#" addtoken="false">
 </cfif>
 
 <cfinvoke component="user" method="getUser" returnvariable="qUserData">	
 	<cfinvokeargument name="id" value="#attributes.id#">
 </cfinvoke>
 
+<cfif NOT qUserData.recordcount>
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.user_not_found')#" addtoken="false">
+</cfif>
+
 <cfinvoke component="user" method="getUserHistory" returnvariable="qUserHistory">	
 	<cfinvokeargument name="id" value="#attributes.id#">
 </cfinvoke>
-
-<cfif NOT qUserData.recordcount>
-	<cflocation url="#myself##request.lanshock.settings.modulePrefix.core#user.user_not_found&#request.session.urltoken#" addtoken="false">
-</cfif>
 
 <cfsetting enablecfoutputonly="No">

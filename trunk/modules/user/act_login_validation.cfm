@@ -9,11 +9,11 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 33 $
 --->
 
-<cfparam name="attributes.relocationurl" default="#myself##myfusebox.thiscircuit#.userdetails&#request.session.urltoken#">
+<cfparam name="attributes.relocationurl" default="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.userdetails')#">
 
 <!--- Fixes the Login Bug --->
-<cfif NOT isDefined("request.session.UserID") OR NOT len(request.session.UserID) OR NOT isNumeric(request.session.UserID)>
-	<cflocation url="#myself##myfusebox.thiscircuit#.login&#request.session.urltoken#" addtoken="false">
+<cfif NOT isDefined("session.UserID") OR NOT len(session.UserID) OR NOT isNumeric(session.UserID)>
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.login')#" addtoken="false">
 <cfelse>
 	<cflocation url="#attributes.relocationurl#" addtoken="false">
 </cfif>
