@@ -58,12 +58,12 @@ $LastChangedRevision: 96 $
 			<cfcookie name="#idx#" expires="NOW">
 		</cfloop>
 			
-		<cflocation url="#myself##myfusebox.thiscircuit#.login&email=#UrlDecode(attributes.email)#&#request.session.UrlToken#" addtoken="false">
+		<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.login&email=#UrlDecode(attributes.email)#')#" addtoken="false">
 	
 	</cfif>
 
 </cfif>
 
-<cfinvoke component="#request.lanshock.environment.componentpath#core._utils.i18n.i18nUtil" method="getLocalesStruct" returnvariable="stLocales">
+<cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#core._utils.i18n.i18nUtil" method="getLocalesStruct" returnvariable="stLocales">
 
 <cfsetting enablecfoutputonly="No">

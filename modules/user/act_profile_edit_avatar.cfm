@@ -11,19 +11,19 @@ $LastChangedRevision: 33 $
 
 <cfparam name="attributes.form_submitted" default="false">
 <cfparam name="aError" default="#ArrayNew(1)#">
-<cfparam name="attributes.id" default="#request.session.userid#">
+<cfparam name="attributes.id" default="#session.userid#">
 
 <cfif NOT isNumeric(attributes.id)>
-	<cflocation url="#myself##request.lanshock.settings.modulePrefix.core#user.user_not_found&1&#request.session.urltoken#" addtoken="false">
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.user_not_found')#" addtoken="false">
 </cfif>
 
-<cfif request.session.isAdmin AND NOT attributes.id EQ request.session.userid>
+<cfif session.isAdmin AND NOT attributes.id EQ session.userid>
 	<cfset check = UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin')>
 </cfif>
 	
 <cfscript>
-	if(request.session.isAdmin) UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin');
-	else attributes.id = request.session.userid;
+	if(session.isAdmin) UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin');
+	else attributes.id = session.userid;
 </cfscript>
 
 <cfif attributes.form_submitted>
@@ -32,56 +32,37 @@ $LastChangedRevision: 33 $
 		
 	<cfif attributes.avatar_delete>
 		<cftry>
-			<cffile action="delete" file="#UDF_Module('absPath')#avatar/#attributes.id#">
+			<cffile action="delete" file="#application.lanshock.oHelper.UDF_Module('absStoragePathPublic')#avatars/#attributes.id#.png">
 			<cfcatch><!--- do nothing ---></cfcatch>
 		</cftry>
 	</cfif>
 	
 	<!--- avatar image --->
 	<cfif len(avatar)>
-		<cffile action="upload" filefield="avatar" destination="#UDF_Module('absPath')#avatar/temp/" mode="777" nameconflict="makeunique">
+	
+		<cffile action="upload" filefield="avatar" destination="#application.lanshock.oHelper.UDF_Module('storagePathTemp')#" nameconflict="makeunique" mode="777">
+		<cfset sUploadFile = cffile.serverdirectory & '/' & cffile.serverfile>
+		
+		<cfif NOT directoryExists("#application.lanshock.oHelper.UDF_Module('absStoragePathPublic')#avatars/")>
+			<cfdirectory action="create" directory="#application.lanshock.oHelper.UDF_Module('absStoragePathPublic')#avatars/" mode="777">
+		</cfif>
+		
 		<cftry>
-			<cfif ListFindNoCase("gif,jpg,jpeg", cffile.serverfileext)>
-				<cfscript>
-					imageCFC = createObject("component","#application.lanshock.environment.componentpath#core._utils.image.image");
-					oImage = imageCFC.getImageInfo("","#UDF_Module('absPath')#avatar/temp/#cffile.serverfile#");
-					if(oImage.width / application.lanshock.settings.layout.avatar.width GTE oImage.height / application.lanshock.settings.layout.avatar.height)
-						imageCFC.scaleX(oImage.img,"","#UDF_Module('absPath')#avatar/#attributes.id#.png",application.lanshock.settings.layout.avatar.width);
-					else imageCFC.scaleY(oImage.img,"","#UDF_Module('absPath')#avatar/#attributes.id#.png",application.lanshock.settings.layout.avatar.height);
-				</cfscript>
-			</cfif>
-			<cffile action="delete" file="#UDF_Module('absPath')#avatar/temp/#cffile.serverfile#">
-			<cfcatch>
-				<cftry>
-					<cffile action="delete" file="#UDF_Module('absPath')#avatar/temp/#cffile.serverfile#">
-					<cfcatch><!--- do nothing ---></cfcatch>
-				</cftry>
-			</cfcatch>
+			<cfset oImage = application.lanshock.oFactory.load('lanshock.core._utils.image.image')>
+		
+			<cfset oImage.setOption('defaultJpegCompression','100')>
+			<cfset oImage.setOption('tempDirectory',application.lanshock.oHelper.UDF_Module('storagePathTemp'))>
+			
+			<cfset oImage.resize('',sUploadFile,'#application.lanshock.oHelper.UDF_Module('absStoragePathPublic')#avatars/#attributes.id#.png',application.lanshock.settings.layout.avatar.width,application.lanshock.settings.layout.avatar.height,true)>
+
+			<cfcatch><!--- do nothing ---></cfcatch>
 		</cftry>
-	<cfelseif len(attributes.avatar_sample) AND FileExists('#UDF_Module('absPath')#avatar/samples/#attributes.avatar_sample#')>
-		<cfscript>
-			imageCFC = createObject("component","#application.lanshock.environment.componentpath#core._utils.image.image");
-			oImage = imageCFC.getImageInfo("","#UDF_Module('absPath')#avatar/samples/#attributes.avatar_sample#");
-			if(oImage.width / application.lanshock.settings.layout.avatar.width GTE oImage.height / application.lanshock.settings.layout.avatar.height)
-				imageCFC.scaleX(oImage.img,"","#UDF_Module('absPath')#avatar/#attributes.id#.png",application.lanshock.settings.layout.avatar.width);
-			else imageCFC.scaleY(oImage.img,"","#UDF_Module('absPath')#avatar/#attributes.id#.png",application.lanshock.settings.layout.avatar.height);
-		</cfscript>
-		<!--- <cffile action="copy" destination="#UDF_Module('absPath')#avatar/#attributes.id#" mode="777" source="#UDF_Module('absPath')#avatar/samples/#attributes.avatar_sample#"> --->
+		
+		<cffile action="delete" file="#sUploadFile#">
 	</cfif>
 	
-	<cflocation url="#myself##myfusebox.thiscircuit#.userdetails&id=#attributes.id#&#request.session.UrlToken#" addtoken="false">
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.userdetails&id=#attributes.id#')#" addtoken="false">
 
 </cfif>
-
-<cfdirectory directory="#UDF_Module('absPath')#avatar/samples/" filter="*.jpg" name="qSamples1">
-<cfdirectory directory="#UDF_Module('absPath')#avatar/samples/" filter="*.gif" name="qSamples2">
-
-<cfset lSamples = ''>
-<cfloop query="qSamples1">
-	<cfset lSamples = ListAppend(lSamples,name)>
-</cfloop>
-<cfloop query="qSamples2">
-	<cfset lSamples = ListAppend(lSamples,name)>
-</cfloop>
 
 <cfsetting enablecfoutputonly="No">

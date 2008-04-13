@@ -9,14 +9,14 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 33 $
 --->
 
-<cfset sImage = UserShowAvatar(attributes.userid)>
+<cfset sImage = application.lanshock.oHelper.UserShowAvatar(attributes.userid)>
 
 <cfoutput>
 	<h3>#request.content.login#</h3>
 	
 	<cfif stModuleConfig.registration_active>
 		<p>
-			#request.content.login_notice# <a href="#myself##myfusebox.thiscircuit#.register&#request.session.UrlToken#">#request.content.register#</a>.<br>
+			#request.content.login_notice# <a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.register')#">#request.content.register#</a>.<br>
 			<noscript><span class="text_important">#request.content.jscript#</span></noscript>
 		</p>
 	</cfif>
@@ -32,8 +32,9 @@ $LastChangedRevision: 33 $
 		</div>
 	</cfif>
 
-	<form action="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#request.session.UrlToken#" method="post">
+	<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post">
 	<input type="hidden" name="form_submitted" value="true"/>
+	<input type="hidden" name="loginmode" value="password"/>
 	<input type="hidden" name="relocationurl" value="#attributes.relocationurl#"/>
 	
 	<div class="form">
@@ -48,7 +49,7 @@ $LastChangedRevision: 33 $
 					#request.content.name#
 				</div>
 				<div class="formrow_input">
-					#GetUsernameByID(attributes.userid)#
+					#application.lanshock.oHelper.GetUsernameByID(attributes.userid)#
 				</div>
 			</div>
 		</cfif>
@@ -79,7 +80,7 @@ $LastChangedRevision: 33 $
 		<div class="formrow">
 			<div class="formrow_input formrow_nolabel">
 				<fieldset>
-					<input type="checkbox" name="cookie" id="cookie" value="true"<cfif len(sImage)> checked="checked"</cfif>/>
+					<input type="checkbox" name="bSaveCookie" id="cookie" value="true"<cfif len(sImage)> checked="checked"</cfif>/>
 					<label for="cookie">#request.content.cookie#</label>
 				</fieldset>
 			</div>
@@ -88,9 +89,9 @@ $LastChangedRevision: 33 $
 			<div class="formrow_buttonbar">
 				<input type="submit" value="#request.content.login#"/>
 				<ul>
-					<li><a href="#myself##myfusebox.thiscircuit#.reset_password&#request.session.urltoken#">#request.content.forgot_password#</a></li>
+					<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.reset_password')#">#request.content.forgot_password#</a></li>
 					<cfif len(sImage)>
-						<li><a href="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&changeuser=true&#request.session.urltoken#">#request.content.changeuser#</a></li>
+						<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&changeuser=true')#">#request.content.changeuser#</a></li>
 					</cfif>
 				</ul>
 			</div>
@@ -99,13 +100,43 @@ $LastChangedRevision: 33 $
 	</div>
 	</form>
 
+	<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post">
+	<input type="hidden" name="form_submitted" value="true"/>
+	<input type="hidden" name="loginmode" value="openid"/>
+	<input type="hidden" name="relocationurl" value="#attributes.relocationurl#"/>
+	
+	<div class="form">
+		<div class="formrow">
+			<div class="formrow_label">
+				<label for="password">OpenID</label>
+				<span class="required">*</span>
+			</div>
+			<div class="formrow_input">
+				<input type="text" name="openid_url" id="openid_url" maxlenght="255" style="padding-left: 20px; background: url(#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/icons/openid.gif) no-repeat;"/>
+			</div>
+		</div>
+		<div class="formrow">
+			<div class="formrow_buttonbar">
+				<input type="submit" value="#request.content.login# with OpenID"/>
+				<ul>
+					<li><a href="http://openid.net/what/" target="_blank">What is OpenID?</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="clearer"></div>
+	</div>
+	</form>
+
+	<cfset sFocusField = 'email'>
+	<cfif attributes.loginmode EQ "password" AND len(attributes.email)>
+		<cfset sFocusField = 'password'>
+	<cfelseif attributes.loginmode EQ "openid">
+		<cfset sFocusField = 'openid_url'>
+	</cfif>
+
 	<script type="text/javascript">
 	<!--
-		<cfif len(attributes.email)>
-			document.getElementById('password').focus();
-		<cfelse>
-			document.getElementById('email').focus();
-		</cfif>
+		$('###sFocusField#').focus();
 	//-->
 	</script>
 </cfoutput>

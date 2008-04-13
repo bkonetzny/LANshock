@@ -9,14 +9,22 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 33 $
 --->
 
-<!--- std vars --->
 <cfparam name="aError" default="#ArrayNew(1)#">
 <cfparam name="attributes.form_submitted" default="false">
-<cfparam name="attributes.as_login" default="false">
+<cfparam name="attributes.loginmode" default="password">
 <cfparam name="attributes.relocationusereferer" default="false">
 
-<cfif request.session.userloggedin>
-	<cflocation url="#myself##myfusebox.thiscircuit#.login_validation&#request.session.urltoken#" addtoken="false">
+<cfif session.oUser.isLoggedIn()>
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.login_validation')#" addtoken="false">
+</cfif>
+
+<cfif StructKeyExists(attributes,"openid.mode")>
+	<cfset attributes.loginmode = "openidauth">
+	<cfset attributes.form_submitted = true>
+</cfif>
+
+<cfif NOT ListFind("password,openid,openidauth",attributes.loginmode)>
+	<cfset attributes.loginmode = "password">
 </cfif>
 
 <cfif attributes.relocationusereferer>
@@ -26,128 +34,271 @@ $LastChangedRevision: 33 $
 </cfif>
 
 <!--- form vars --->
-<cfif isDefined("cookie.email")>
-	<cfparam name="attributes.email" default="#cookie.email#">
+<cfparam name="attributes.email" default="">
+<cfif StructKeyExists(cookie,'email') AND NOT len(attributes.email)>
+	<cfset attributes.email = cookie.email>
 	<!--- only check for userid when email is defined in cookie --->
 	<cfif isDefined("cookie.userid")>
 		<cfif isDefined("attributes.changeuser")>
-			<cfcookie name="userid" expires="NOW">
+			<cfcookie name="userid" expires="now">
 		<cfelse>
 			<cfparam name="attributes.userid" default="#cookie.userid#">
 		</cfif>
 	</cfif>
 </cfif>
-<cfparam name="attributes.email" default="">
+
+<cfif isDefined("cookie.email") AND attributes.email NEQ cookie.email>
+	<cfcookie name="userid" expires="now">
+	<cfcookie name="email" expires="now">
+	<cfcookie name="password" expires="now">
+	<cfset StructDelete(cookie,'userid')>
+	<cfset StructDelete(cookie,'email')>
+	<cfset StructDelete(cookie,'password')>
+</cfif>
+
 <cfparam name="attributes.userid" default="">
 <cfparam name="attributes.password" default="">
+<cfparam name="attributes.bSaveCookie" default="false">
 
-<cfscript>
-	// cookie detection
-	attributes.bIsCookieLogin = false;
-	
-	if(isDefined("cookie.email") and isDefined("cookie.password")){
-		attributes.email = cookie.email;
-		if(NOT len(attributes.password)){
-			attributes.password = decrypt(cookie.password,request.lanshock.settings.crypkey);
-			attributes.form_submitted = true;
-			attributes.bIsCookieLogin = true;
-		}
-	}
-	else if(NOT attributes.as_login AND len(attributes.password)) attributes.password = LCase(hash(attributes.password));
-	
-	// as login detection
-	bUserAsLoginActivated = false;
-	if(attributes.as_login AND isDefined("attributes.user_id") AND StructKeyExists(application.aslogin,attributes.user_id)){
-		bUserAsLoginActivated = StructDelete(application.aslogin,attributes.user_id,"true");
-		attributes.form_submitted = true;
-	}
+<cfset bIsCookieLogin = false>
 
-	// validation
-	if(attributes.form_submitted AND NOT bUserAsLoginActivated){
-		if(NOT len(attributes.email)) ArrayAppend(aError, request.content.error_user_wrong_email);
-		if(NOT len(attributes.password)) ArrayAppend(aError, request.content.error_user_wrong_password);
-	}
-</cfscript>
+<cfif attributes.loginmode EQ "password">
+	
+	<!--- cookie detection --->
+	<cfif isDefined("cookie.email") AND isDefined("cookie.password")>
+		<cfset bIsCookieLogin = true>
+		<cfset attributes.email = cookie.email>
+		<cfset attributes.password = decrypt(cookie.password,request.lanshock.settings.crypkey)>
+	<cfelseif len(attributes.password)>
+		<cfset attributes.password = LCase(hash(attributes.password))>
+	</cfif>
+
+	<!--- validation --->
+	<cfif attributes.form_submitted>
+		<cfif NOT len(attributes.email)>
+			<cfset ArrayAppend(aError, request.content.error_user_wrong_email)>
+		</cfif>
+		<cfif NOT len(attributes.password)>
+			<cfset ArrayAppend(aError, request.content.error_user_wrong_password)>
+		</cfif>
+	</cfif>
+
+<cfelseif attributes.loginmode EQ "openid">
+
+	<!--- validation --->
+	<cfif attributes.form_submitted>
+		<cfif NOT len(attributes.openid_url)>
+			<cfset ArrayAppend(aError, "$$$ Please enter an OpenID url")>
+		</cfif>
+	</cfif>
+
+<cfelseif attributes.loginmode EQ "openidauth">
+
+	<!--- validation --->
+	<cfif session.oUser.existsCustomDataValue('openid')>
+
+		<cfset oConsumer = application.lanshock.oFactory.load('lanshock.core._utils.openid.OpenIDConsumer')>
+
+		<cfset OpenID = Duplicate(session.oUser.getCustomDataValue('openid'))>
+
+		<cfif attributes['openid.mode'] eq "id_res">
+
+			<cfif StructKeyExists(OpenID,"nonce") and StructKeyExists(attributes,"nonce") and OpenID['nonce'] eq URLDecode(attributes['nonce'])>
+
+				<cfif OpenID['mode'] eq "dumb" or OpenID['assoc_handle'] eq "">
+					<cfset OpenID['assoc_handle'] = attributes['openid.assoc_handle']>
+				</cfif>
+
+				<cfif (OpenID['mode'] eq "smart" and oConsumer.isValidSignature(OpenID,attributes)) or oConsumer.isValidHandle(OpenID,attributes)>
+					<!--- <cfset ArrayAppend(aError,"$$$ OpenID identity has been successfully authorized")> --->
+				<cfelse>
+					<cfset ArrayAppend(aError,"$$$ OpenID invalid authorization")>
+				</cfif>
+
+			<cfelse>
+				<cfset ArrayAppend(aError,"$$$ OpenID reply attack has been detected")>
+			</cfif>
+
+		<cfelseif attributes['openid.mode'] eq "cancel">
+			<cfset ArrayAppend(aError,"$$$ OpenID denied by user")>
+		</cfif>
+
+	<cfelse>
+		<cfset ArrayAppend(aError,"$$$ OpenID session has expired")>
+	</cfif>
+
+</cfif>
 
 <cfif attributes.form_submitted AND NOT ArrayLen(aError)>
 
-	<cfinvoke component="user" method="getUser" returnvariable="qLogin">	
-		<cfif bUserAsLoginActivated>
-			<cfinvokeargument name="id" value="#attributes.user_id#">
-		<cfelse>
+	<cfinvoke component="#application.lanshock.oFactory.load('user','reactorGateway')#" method="getByFields" returnvariable="qUser">
+		<cfif attributes.loginmode EQ "password">
 			<cfinvokeargument name="email" value="#attributes.email#">
-			<cfinvokeargument name="password" value="#attributes.password#">
+			<cfinvokeargument name="pwd" value="#attributes.password#">
+		<cfelseif attributes.loginmode EQ "openid">
+			<cfinvokeargument name="openid_url" value="#attributes.openid_url#">
+		<cfelseif attributes.loginmode EQ "openidauth">
+			<cfinvokeargument name="openid_url" value="#OpenID['openid.user_identity']#">
 		</cfif>
 	</cfinvoke>
-
-	<cfif NOT qLogin.recordcount>
-
-		<cfcookie name="password" expires="NOW">
 	
-		<cfinvoke component="user" method="checkEmail" returnvariable="bEmailIsFree">
-			<cfinvokeargument name="email" value="#attributes.email#">
-		</cfinvoke>
+	<cfif NOT qUser.recordcount>
 
-		<cfscript>
-			if(NOT bEmailIsFree) ArrayAppend(aError, request.content.error_user_password);
-			else ArrayAppend(aError, request.content.error_user_notfound);
-		</cfscript>
+		<cfcookie name="password" expires="now">
+		
+		<cfif attributes.loginmode EQ "password">
+			<cfinvoke component="#application.lanshock.oFactory.load('user','reactorGateway')#" method="getByFields" returnvariable="qEmailCheck">
+				<cfinvokeargument name="email" value="#attributes.email#">
+			</cfinvoke>
+	
+			<cfif qEmailCheck.recordcount>
+				<cfset ArrayAppend(aError, request.content.error_user_password)>
+				<cfset application.lanshock.oLogger.writeLog('modules.user.login','Login failed for "#attributes.email#": Wrong password','warn')>
+			<cfelse>
+				<cfset ArrayAppend(aError, request.content.error_user_notfound)>
+				<cfset application.lanshock.oLogger.writeLog('modules.user.login','Login failed for "#attributes.email#": User not found','warn')>
+			</cfif>
+		<cfelseif attributes.loginmode EQ "openid">
+			<cfset ArrayAppend(aError, "$$$ OpenID not found")>
+			<cfset application.lanshock.oLogger.writeLog('modules.user.login','Login failed for OpenID "#attributes.openid_url#": No user with specified OpenID','warn')>
+		</cfif>
 
 	<cfelse>
 	
-		<cfinvoke component="#application.lanshock.environment.componentpath#modules.admin.admin" method="getAdmins" returnvariable="qAdmins">	
-
-		<cfif qLogin.locked>
-			<cfset ArrayAppend(aError, request.content.error_user_locked)>
+		<cfif attributes.loginmode EQ "openid">
+			
+			<!--- Create CFC instance --->
+			<cfset oConsumer = application.lanshock.oFactory.load('lanshock.core._utils.openid.OpenIDConsumer')>
+		
+			<!--- OpenID variables --->
+			<cfset OpenID = StructNew()>
+		
+			<!--- Nonce for reply attack detection --->
+			<cfset OpenID['nonce'] = CreateUUID()>
+		
+			<!--- Mandatory OpenID request parameters --->
+			<cfset OpenID['openid.user_identity'] = attributes.openid_url>
+			<cfset OpenID['openid.identity'] = oConsumer.normalizeURL(attributes.openid_url)>
+			<cfset OpenID['openid.return_to'] = application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&nonce=#OpenID['nonce']#',true,'classic')>
+		
+			<!--- Optional OpenID request parameters --->
+			<cfset OpenID['openid.trust_root'] = application.lanshock.oRuntime.getEnvironment().sServerPath>
+			<cfset OpenID['openid.sreg.required'] = "email,fullname">
+			<cfset OpenID['openid.sreg.optional'] = "dob,gender,postcode,country,language,timezone">
+			<cfset OpenID['openid.sreg.policy_url'] = application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.openid_policy',true)>
+		
+			<!--- Discover OpenID server --->
+			<cfset Results = oConsumer.discoverOpenIDServer(OpenID)>
+	
+			<cfif Results['status']>
+		
+				<!--- Identity Provider (IdP) server --->
+				<cfset OpenID['openid_server'] = Results['server']>
+		
+				<!--- In case delegation is set --->
+				<cfif StructKeyExists(Results,"identity")>
+					<cfset OpenID['openid.identity'] = Results['identity']>
+				</cfif>
+		
+				<!--- Establish a shared secret between Consumer and Identity Provider --->
+				<cfset Results = oConsumer.getAssociate(OpenID)>
+		
+				<cfif Results['status']>
+		
+					<cfset OpenID['mode'] = "smart">
+		
+					<!--- Save all returned keys for further use --->
+					<cfloop item="sKey" collection="#Results#">
+						<cfif sKey neq "status">
+							<cfset OpenID[sKey] = Results[sKey]>
+						</cfif>
+					</cfloop>
+		
+				<cfelse>
+		
+					<cfset OpenID['mode'] = "dumb">
+					<cfset OpenID['assoc_handle'] = "">
+		
+				</cfif>
+		
+				<!--- Uncomment next two lines if you want to test 'dumb' mode only --->
+				<!--- Railo: smart-mode doesn't seem to work --->
+				<cfset OpenID['mode'] = "dumb">
+				<cfset OpenID['assoc_handle'] = "">
+				
+				<!--- Save working variables to session scope, could be only 'assoc_handle' and 'mac_key' --->
+				<cfset session.oUser.setCustomDataValue('openid',duplicate(OpenID))>
+		
+				<!--- Redirect user-agent to IdP server for request processing --->
+				<cfset oConsumer.doRedirect(OpenID) />
+		
+			<cfelse>
+				<cfset ArrayAppend(aError, "$$$ Can't connect to OpenID server.")>
+			</cfif>
 		</cfif>
 
+		<cfif qUser.status EQ 'locked'>
+			<cfset ArrayAppend(aError, request.content.error_user_locked)>
+			<cfset application.lanshock.oLogger.writeLog('modules.user.login','Login failed for "#qUser.name#": User is locked','warn')>
+		</cfif>
+	
 		<cfif NOT ArrayLen(aError)>
-			<cfparam name="attributes.cookie" default="false">
-			
-			<cfinvoke component="user" method="updateLastLogin">
-				<cfinvokeargument name="id" value="#qLogin.id#">
-			</cfinvoke>
-			
-			<!--- set cookies if this is no "as login" --->
-			<cfif NOT attributes.as_login>
-				<cfcookie name="userid" value="#qLogin.id#" expires="NEVER">
-				<cfcookie name="email" value="#attributes.email#" expires="NEVER">
-				<cfif attributes.cookie>
-					<cfcookie name="password" value="#encrypt(attributes.password,request.lanshock.settings.crypkey)#" expires="NEVER">
-				</cfif>
-			</cfif>
+			<cfset application.lanshock.oLogger.writeLog('modules.user.login','Login successful for "#qUser.name#"')>
 		
-			<cfif ListFind(ValueList(qAdmins.id),qLogin.id)>
+			<cfset oUser = application.lanshock.oFactory.load('user','reactorRecord')>
+			<cfset oUser.setId(qUser.id)>
+			<cfset oUser.load()>
+			<cfset oUser.setLogincount(oUser.getLogincount()+1)>
+			<cfset oUser.setDt_lastlogin(now())>
+			<cfset oUser.save()>
+
+			<cfset qUserPermissions = QueryNew("module,name")>
+
+			<cfset qRoles = oUser.getcore_security_rolesiterator().getQuery()>
+
+			<cfloop query="qRoles">
+		
+				<cfset oRole = application.lanshock.oFactory.load('core_security_roles','reactorRecord')>
+				<cfset oRole.setId(qRoles.id)>
+				<cfset oRole.setModule(qRoles.module)>
+				<cfset oRole.load()>
+				<cfset qRolePermissions = oRole.getcore_security_permissionsiterator().getQuery()>
+
+				<cfloop query="qRolePermissions">
 			
-				<cfinvoke component="#request.lanshock.environment.componentpath#modules.admin.admin" method="updateRights">
-								
-			</CFIF>
-			
-			<cfscript>
-				// session vars
-				request.session.UserLoggedIn = true;
-				request.session.UserID = qLogin.id;
-				if(ListFind(ValueList(qAdmins.id),qLogin.id)){
-					oAdmin = CreateObject('component','#request.lanshock.environment.componentpath#modules.admin.admin');
-					oAdmin.setAdminSessionRights(request.session.userid);
-					request.session.isAdmin = true;
-				}
-				else request.session.isAdmin = false;
+					<cfset QueryAddRow(qUserPermissions)>
+					<cfset QuerySetCell(qUserPermissions,'module',qRolePermissions.module)>
+					<cfset QuerySetCell(qUserPermissions,'name',qRolePermissions.name)>
+					
+				</cfloop>
 				
-				if(listLen(qLogin.language,'_') EQ 2) request.session.lang = qLogin.language;
-			</cfscript>
+			</cfloop>
 			
-			<cffile action="append" file="#application.lanshock.environment.abspath#storage/secure/logs/core_user_login.log" output="#cgi.remote_addr# - [#DateFormat(now(),"yyyy-mm-dd")# #TimeFormat(now(),"hh:mm:ss")#] user_#request.session.UserID#, #qLogin.name#">
+			<cfcookie name="email" value="#oUser.getEmail()#" expires="never">
+			<!--- set cookies if this is no "as login" --->
+			<cfif attributes.bSaveCookie>
+				<cfcookie name="userid" value="#oUser.getId()#" expires="never">
+				<cfcookie name="password" value="#encrypt(attributes.password,request.lanshock.settings.crypkey)#" expires="never">
+			</cfif>
 			
-			<cfif attributes.bIsCookieLogin AND len(application.lanshock.settings.startpage)>
-				<cflocation url="#myself##application.lanshock.settings.startpage#&cookielogin=true&#request.session.urltoken#" addtoken="false">
+			<cfset session.oUser.setDataValue('UserLoggedIn',true)>
+			<cfset session.oUser.setDataValue('UserID',oUser.getId())>
+			<cfset session.oUser.setDataValue('name',oUser.getName())>
+			<cfset session.oUser.setDataValue('firstname',oUser.getFirstname())>
+			<cfset session.oUser.setDataValue('lastname',oUser.getLastname())>
+			<cfset session.oUser.setDataValue('email',oUser.getEmail())>
+			<cfset session.oUser.setDataValue('lang',oUser.getLanguage())>
+			<cfset session.oUser.setDataValue('qPermissions',qUserPermissions)>
+			
+			<cfif bIsCookieLogin AND len(application.lanshock.settings.startpage)>
+				<cflocation url="#application.lanshock.oHelper.buildUrl('#application.lanshock.settings.startpage#')#" addtoken="false">
 			<cfelseif len(attributes.relocationurl)>
 				<cfset relocationurl = "&relocationurl=" & UrlEncodedFormat(attributes.relocationurl)>
 			<cfelse>
 				<cfset relocationurl = "">
 			</cfif>
 
-			<cflocation url="#myself##myfusebox.thiscircuit#.login_validation#relocationurl#&#request.session.urltoken#" addtoken="false">
+			<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.login_validation#relocationurl#')#" addtoken="false">
 		</cfif>
 
 	</cfif>

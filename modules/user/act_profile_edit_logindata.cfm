@@ -11,20 +11,20 @@ $LastChangedRevision: 33 $
 
 <cfparam name="attributes.form_submitted" default="false">
 <cfparam name="aError" default="#ArrayNew(1)#">
-<cfparam name="attributes.id" default="#request.session.userid#">
+<cfparam name="attributes.id" default="#session.userid#">
 
 <cfif NOT isNumeric(attributes.id)>
-	<cflocation url="#myself##request.lanshock.settings.modulePrefix.core#user.user_not_found&1&#request.session.urltoken#" addtoken="false">
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.user_not_found')#" addtoken="false">
 </cfif>
 
-<cfif request.session.isAdmin AND NOT attributes.id EQ request.session.userid>
+<cfif session.isAdmin AND NOT attributes.id EQ session.userid>
 	<cfset check = UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin')>
 </cfif>
 	
-<cfif request.session.isAdmin>
+<cfif session.isAdmin>
 	<cfset UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin')>
 <cfelse>
-	<cfset attributes.id = request.session.userid>
+	<cfset attributes.id = session.userid>
 </cfif>
 	
 <cfscript>
@@ -52,10 +52,10 @@ $LastChangedRevision: 33 $
 		if(attributes.pass1 NEQ attributes.pass2 OR (NOT len(attributes.pass1) AND NOT isNumeric(attributes.id))) ArrayAppend(aError, request.content.password);
 		else if(len(attributes.pass1)) attributes.password = attributes.pass1;
 		
-		if(request.session.isAdmin OR stModuleConfig.userprofile.edit_nickname){
+		if(session.isAdmin OR stModuleConfig.userprofile.edit_nickname){
 			if(NOT len(attributes.name) OR NOT bUsernameIsFree) ArrayAppend(aError, request.content.name);
 		}
-		if(request.session.isAdmin OR stModuleConfig.userprofile.edit_personal_data){
+		if(session.isAdmin OR stModuleConfig.userprofile.edit_personal_data){
 			if(NOT len(attributes.email) OR NOT isEmail(attributes.email) OR NOT bEmailIsFree) ArrayAppend(aError, request.content.email);
 		}
 	</cfscript>
@@ -72,7 +72,7 @@ $LastChangedRevision: 33 $
 			oObUser.commit();
 		</cfscript>
 
-		<cflocation url="#myself##myfusebox.thiscircuit#.userdetails&id=#attributes.id#&#request.session.UrlToken#" addtoken="false">
+		<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.userdetails&id=#attributes.id#')#" addtoken="false">
 	
 	</cfif>
 

@@ -15,7 +15,7 @@ $LastChangedRevision: 33 $
 		<cfargument name="email" type="string" required="false" default="">
 		<cfargument name="password" type="string" required="false" default="">
 
-		<cfquery datasource="#request.lanshock.environment.datasource#" name="qGetUser">
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qGetUser">
 			SELECT u.*, COUNT(cp.id) AS post_count
 			FROM user u
 			LEFT OUTER JOIN core_comments_posts cp ON u.id = cp.user_id
@@ -39,7 +39,7 @@ $LastChangedRevision: 33 $
 	<cffunction name="getUserHistory" access="public" output="false" returntype="query">
 		<cfargument name="id" type="numeric" required="true">
 
-		<cfquery datasource="#request.lanshock.environment.datasource#" name="qGetUserHistory">
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qGetUserHistory">
 			SELECT *
 			FROM user_history
 			WHERE user_id = <cfqueryparam  cfsqltype="cf_sql_integer" value="#arguments.id#">
@@ -76,7 +76,7 @@ $LastChangedRevision: 33 $
 
 		<cfif arguments.id EQ 0>
 
-			<cfquery datasource="#request.lanshock.environment.datasource#">
+			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 				INSERT INTO user (name,email,firstname,lastname,pwd,dt_birthdate,gender,idcardnumber,profile_verified,geo_lat,geo_long,language,signature,homepage,country,city,street,zip,dt_registered)
 				VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#HTMLEditFormat(arguments.name)#">,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#HTMLEditFormat(arguments.email)#">,
@@ -99,7 +99,7 @@ $LastChangedRevision: 33 $
 						#now()#)
 			</cfquery>
 
-			<cfquery datasource="#request.lanshock.environment.datasource#" name="qGetUserID">
+			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qGetUserID">
 				SELECT id
 				FROM user
 				WHERE email = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.email#" maxlength="255">
@@ -109,7 +109,7 @@ $LastChangedRevision: 33 $
 		
 		<cfelse>
 
-			<cfquery datasource="#request.lanshock.environment.datasource#">
+			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 				UPDATE user
 				SET name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#HTMLEditFormat(arguments.name)#">,
 					email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#HTMLEditFormat(arguments.email)#">,
@@ -146,7 +146,7 @@ $LastChangedRevision: 33 $
 		<cfargument name="id" type="numeric" required="true">		
 		<cfargument name="locked" type="string" required="false" default="">
 
-		<cfquery datasource="#request.lanshock.environment.datasource#">
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 			UPDATE user
 			SET id = id
 				<cfif isNumeric(arguments.locked)>
@@ -162,7 +162,7 @@ $LastChangedRevision: 33 $
 	<cffunction name="updateLastLogin" access="public" output="false" returntype="boolean">
 		<cfargument name="id" type="string" required="true">
 
-		<cfquery datasource="#request.lanshock.environment.datasource#">
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 			UPDATE user
 			SET dt_lastlogin = #now()#,
 				logincount = logincount + 1
@@ -180,7 +180,7 @@ $LastChangedRevision: 33 $
 		<cfargument name="lastname" type="string" required="true">
 		<cfargument name="password" type="string" required="true">
 
-		<cfquery datasource="#request.lanshock.environment.datasource#" name="qUserRegister">
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qUserRegister">
 			INSERT INTO user (name,email,firstname,lastname,pwd,dt_registered)
 			VALUES (<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.name#" maxlength="255">,
 					<cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.email#" maxlength="255">,
@@ -190,7 +190,7 @@ $LastChangedRevision: 33 $
 					#now()#)
 		</cfquery>
 
-		<cfquery datasource="#request.lanshock.environment.datasource#" name="qGetUserID">
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qGetUserID">
 			SELECT id
 			FROM user
 			WHERE name = <cfqueryparam cfsqltype="CF_SQL_VARCHAR" value="#arguments.name#" maxlength="255">
@@ -212,7 +212,7 @@ $LastChangedRevision: 33 $
 		<cfargument name="email" type="string" required="true">
 		<cfargument name="id" type="numeric" required="false" default="0">
 
-		<cfquery datasource="#request.lanshock.environment.datasource#" name="qCheckFreeEmail">
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qCheckFreeEmail">
 			SELECT id
 			FROM user
 			WHERE email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.email#">
@@ -233,7 +233,7 @@ $LastChangedRevision: 33 $
 		<cfargument name="username" type="string" required="true">
 		<cfargument name="id" type="numeric" required="false" default="0">
 
-		<cfquery datasource="#request.lanshock.environment.datasource#" name="qCheckFreeUsername">
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qCheckFreeUsername">
 			SELECT id
 			FROM user
 			WHERE name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.username#">
@@ -252,7 +252,7 @@ $LastChangedRevision: 33 $
 
 	<cffunction name="getAdminIDs" output="false" returntype="string">
 
-		<cfquery datasource="#request.lanshock.environment.datasource#" name="qGetAdminIDs">
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qGetAdminIDs">
 			SELECT user
 			FROM admin
 		</cfquery>
@@ -265,10 +265,10 @@ $LastChangedRevision: 33 $
 		<cfargument name="userid" type="numeric" required="true">
 		<cfargument name="status" type="string" required="true">
 
-		<cfquery datasource="#application.lanshock.environment.datasource#">
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 			INSERT INTO user_history (user_id,admin_id,status,datetime)
 			VALUES (<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.userid#">,
-					<cfqueryparam cfsqltype="cf_sql_integer" value="#request.session.userid#">,
+					<cfqueryparam cfsqltype="cf_sql_integer" value="#session.userid#">,
 					<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.status#">,
 					#now()#)
 		</cfquery>

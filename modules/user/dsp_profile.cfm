@@ -12,46 +12,38 @@ $LastChangedRevision: 91 $
 <cfoutput query="qUserData">
 <h3>#request.content.profile#</h3>
 
-<cfif request.session.UserLoggedIn>
+<cfif session.UserLoggedIn AND session.UserID NEQ id>
 	<h4>#request.content.options_headline#</h4>
 	
 	<ul class="options">
-		<cfif NOT request.session.UserID EQ id>
-			<li><a href="javascript:SendMsg(#id#);"><img src="#stImageDir.general#/mail.gif" alt=""> #request.content.user_send_message#</a></li>
-			<li><a href="#myself##request.lanshock.settings.modulePrefix.core#mail.buddy_add&buddy_id=#id#&#request.session.UrlToken#"><img src="#stImageDir.general#/btn_add.gif" alt=""> #request.content.user_add_to_buddylist#</a></li>
-		<cfelse>
-			<li><a href="javascript:Panel();"><img src="#stImageDir.general#/openpanel.gif" alt="" align="absmiddle"> #request.content.show_panel#</a></li>
-			<cfif qNewMail.recordcount>
-				<li><a href="#myself##request.lanshock.settings.modulePrefix.core#mail.main&#request.session.UrlToken#">#formatContentString('<!--- TODO: $$$ ---> You have <strong>{1}</strong> new Messages.',qNewMail.recordcount)#</a></li>
-			</cfif>
-		</cfif>
+		<li><a href="javascript:SendMsg(#id#);"><img src="#stImageDir.general#/mail.gif" alt=""> #request.content.user_send_message#</a></li>
+		<li><a href="#application.lanshock.oHelper.buildUrl('mail.buddy_add&buddy_id=#id#')#"><img src="#stImageDir.general#/btn_add.gif" alt=""> #request.content.user_add_to_buddylist#</a></li>
 	</ul>
 </cfif>
 
-<cfif request.session.isAdmin>
-	<h4>#request.content.admin_options#</h4>
+<cfif session.isAdmin>
+	<h4 onclick="$('##adminpanel').toggle();">#request.content.admin_options#</h4>
 
-	<div class="expandable">
+	<div id="adminpanel" style="display: none;">
 		<div>
 			<table cellspacing="10">
 				<tr>
 					<td valign="top">
-						<!--- <a href="#myself##myfusebox.thiscircuit#.userdetails_edit&id=#id#&#request.session.UrlToken#" class="link_extended">#request.content.profile_edit#</a><br> --->
-						<a href="#myself##request.lanshock.settings.modulePrefix.core#admin.as_login&user_id=#id#&as_login=true&#request.session.UrlToken#" target="_blank" class="link_extended">#request.content.option_login_as#</a><br>
-						<a href="#myself##myfusebox.thiscircuit#.user_history&id=#id#&#request.session.UrlToken#" class="link_extended">#request.content.show_history#</a>
+						<!--- <a href="#myself##myfusebox.thiscircuit#.userdetails_edit&id=#id#&#session.UrlToken#" class="link_extended">#request.content.profile_edit#</a><br> --->
+						<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.user_history&id=#id#')#" class="link_extended">#request.content.show_history#</a>
 						
-						<form name="search" action="#myself##request.lanshock.settings.modulePrefix.core#admin.userlist&#request.session.urltoken#" method="post">
-							<a href="#myself##request.lanshock.settings.modulePrefix.core#admin.userlist&#request.session.urltoken#" class="link_extended">#request.content.show_userlist#</a><br>
+						<form name="search" action="#application.lanshock.oHelper.buildUrl('admin.userlist')#" method="post">
+							<a href="#application.lanshock.oHelper.buildUrl('admin.userlist')#" class="link_extended">#request.content.show_userlist#</a><br>
 							<input type="text" name="search" value=""> <input type="submit" value="#request.content.form_search#">
 						</form>
 						
-						<form action="#myself##request.lanshock.settings.modulePrefix.core#admin.userpassword_change&#request.session.urltoken#" method="post">
+						<form action="#application.lanshock.oHelper.buildUrl('admin.userpassword_change')#" method="post">
 							<input type="hidden" name="userid" value="#id#">
 							#request.content.userpassword_change#<br>
 							<input type="password" name="password" value=""> <input type="submit" value="#request.content.form_save#">
 						</form>
 						
-						<form action="#myself##request.lanshock.settings.modulePrefix.core#admin.userstatus_change&#request.session.urltoken#" method="post">
+						<form action="#application.lanshock.oHelper.buildUrl('admin.userstatus_change')#" method="post">
 							<input type="hidden" name="userid" value="#id#">
 							<input type="hidden" name="locked" value="#abs(locked-1)#">
 								<cfif locked>
@@ -62,7 +54,7 @@ $LastChangedRevision: 91 $
 						</form>
 					</td>
 					<td valign="top">
-						<form action="#myself##request.lanshock.settings.modulePrefix.core#admin.usernotice_save&#request.session.urltoken#" method="post">
+						<form action="#application.lanshock.oHelper.buildUrl('admin.usernotice_save')#" method="post">
 							<input type="hidden" name="userid" value="#id#">
 							#request.content.usernotice#<br>
 							<textarea style="width: 400px; height: 100px;" name="notice">#notice#</textarea><br>
@@ -77,12 +69,12 @@ $LastChangedRevision: 91 $
 
 <h4>#request.content.headline_userdata#</h4>
 
-<cfif request.session.userid EQ id OR (request.session.isAdmin AND UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin','boolean'))>
-	<a href="#myself##myfusebox.thiscircuit#.profile_edit_logindata<cfif request.session.isAdmin>&id=#id#</cfif>&#request.session.UrlToken#" class="link_extended"><!--- TODO: $$$ ---> Logindaten und Passwort &auml;ndern</a>
+<cfif session.userid EQ id OR (session.isAdmin AND UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin','boolean'))>
+	<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.profile_edit_logindata')#" class="link_extended"><!--- TODO: $$$ ---> Logindaten und Passwort &auml;ndern</a>
 </cfif>
 
 <table class="vlist">
-	<cfif request.session.UserLoggedIn>
+	<cfif session.UserLoggedIn>
 		<tr>
 			<th>#request.content.id#</th>
 			<td>#id#</td>
@@ -92,39 +84,33 @@ $LastChangedRevision: 91 $
 	<tr>
 		<th>#request.content.name#</th>
 		<td>#name#</td>
-		<td<cfif request.session.UserLoggedIn> rowspan="4"</cfif> align="center">#UserShowAvatar(id)#
-			<cfif (request.session.userid EQ id OR (request.session.isAdmin AND UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin','boolean'))) AND application.lanshock.settings.layout.avatar.mode EQ 'lanshock'>
-				<br><a href="#myself##myfusebox.thiscircuit#.profile_edit_avatar<cfif request.session.isAdmin>&id=#id#</cfif>&#request.session.UrlToken#" class="link_extended"><!--- TODO: $$$ ---> Avatar &auml;ndern</a>
+		<td<cfif session.UserLoggedIn> rowspan="4"</cfif> align="center">#application.lanshock.oHelper.UserShowAvatar(id)#
+			<cfif (session.userid EQ id OR (session.isAdmin AND UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin','boolean'))) AND application.lanshock.settings.layout.avatar.mode EQ 'lanshock'>
+				<br><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.profile_edit_avatar')#" class="link_extended"><!--- TODO: $$$ ---> Avatar &auml;ndern</a>
 			</cfif>
 		</td>
 	</tr>
-	<cfif request.session.UserLoggedIn>
+	<cfif session.UserLoggedIn>
 		<tr>
 			<th>#request.content.email#</th>
 			<td><a href="mailto:#email#">#email#</a></td>
 		</tr>
 		<tr>
 			<th>#request.content.lastlogin#</th>
-			<td><span class="text_light"><cfif len(dt_lastlogin)>#UDF_DateTimeFormat(dt_lastlogin)#<cfelse>#request.content.lastlogin_never#</cfif></span></td>
+			<td><span class="text_light"><cfif len(dt_lastlogin)>#session.oUser.dateTimeFormat(dt_lastlogin)#<cfelse>#request.content.lastlogin_never#</cfif></span></td>
 		</tr>
-		<cfif request.session.userid EQ id OR request.session.isAdmin>
-			<tr>
-				<th>#request.content.password_securitylevel#</th>
-				<td><img src="#stImageDir.module#/security-#password_level#.gif" alt=""></td>
-			</tr>
-		</cfif>
 	</cfif>
 </table>
 
-<cfif request.session.UserLoggedIn>
+<cfif session.UserLoggedIn>
 	<h4>#request.content.personal_data#</h4>
 	
-	<cfif profile_verified>
+	<cfif status EQ 'confirmed'>
 		<p><img src="#stImageDir.general#/locked.gif" alt=""/> #request.content.profile_verified#</p>
 	</cfif>
 	
-	<cfif request.session.userid EQ id OR (request.session.isAdmin AND UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin','boolean'))>
-		<a href="#myself##myfusebox.thiscircuit#.profile_edit_personaldata<cfif request.session.isAdmin>&id=#id#</cfif>&#request.session.UrlToken#" class="link_extended"><!--- TODO: $$$ ---> Pers&ouml;nliche Daten &auml;ndern</a>
+	<cfif session.userid EQ id OR (session.isAdmin AND UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin','boolean'))>
+		<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.profile_edit_personaldata')#" class="link_extended"><!--- TODO: $$$ ---> Pers&ouml;nliche Daten &auml;ndern</a>
 	</cfif>
 	
 	<table class="vlist">
@@ -136,25 +122,28 @@ $LastChangedRevision: 91 $
 			<th>#request.content.lastname#</th>
 			<td>#lastname#</td>
 		</tr>
-		<tr>
-			<th>#request.content.birthday#</th>
-			<td><cfif isDate(dt_birthdate)>#LSDateFormat(dt_birthdate)# (<!--- TODO: $$$ ---> Alter #DateDiff('yyyy',dt_birthdate,now())#)<cfelse><span class="text_light">#request.content.data_unknown#</span></cfif></td>
-		</tr>
-		<tr>
-			<th>#request.content.gender#</th>
-			<td><cfswitch expression="#gender#">
-					<cfcase value="0"><span class="text_light">#request.content.data_unknown#</span></cfcase>
-					<cfcase value="1"><img src="#stImageDir.module#/male.gif" alt="" border="0"></cfcase>
-					<cfcase value="2"><img src="#stImageDir.module#/female.gif" alt="" border="0"></cfcase>
-				</cfswitch></td>
-		</tr>
+		<cfif isDate(dt_birthdate)>
+			<tr>
+				<th>#request.content.birthday#</th>
+				<td>#LSDateFormat(dt_birthdate)# (<!--- TODO: $$$ ---> Alter #DateDiff('yyyy',dt_birthdate,now())#)</td>
+			</tr>
+		</cfif>
+		<cfif ListFind('1,2',gender)>
+			<tr>
+				<th>#request.content.gender#</th>
+				<td><cfswitch expression="#gender#">
+						<cfcase value="1"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/male.png"/></cfcase>
+						<cfcase value="2"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/female.png"/></cfcase>
+					</cfswitch></td>
+			</tr>
+		</cfif>
 		<cfif len(language)>
 			<tr>
 				<th>#request.content.settings_language#</th>
-				<td><img src="#UDF_Module('webPath','#request.lanshock.settings.modulePrefix.core#general')#flags/#LCase(ListLast(language,'_'))#.gif" alt="#language#"> #GetLocaleDisplayName(language)#</td>
+				<td><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/flags/png/#LCase(ListLast(language,'_'))#.png" alt="#GetLocaleDisplayName(language)#"> #GetLocaleDisplayName(language)#</td>
 			</tr>
 		</cfif>
-		<cfif request.session.isAdmin AND len(idcardnumber)>
+		<cfif session.isAdmin AND len(idcardnumber)>
 			<tr>
 				<th>#request.content.id_card_number#</th>
 				<td>#idcardnumber#</td>
@@ -164,8 +153,8 @@ $LastChangedRevision: 91 $
 
 	<!--- <h4><!--- TODO: $$$ ---> Messaging</h4>
 	
-	<cfif request.session.userid EQ id>
-		<a href="#myself##myfusebox.thiscircuit#.userdetails_edit&#request.session.UrlToken#" class="link_extended"><!--- TODO: $$$ ---> Messaging Daten &auml;ndern</a>
+	<cfif session.userid EQ id>
+		<a href="#myself##myfusebox.thiscircuit#.userdetails_edit&#session.UrlToken#" class="link_extended"><!--- TODO: $$$ ---> Messaging Daten &auml;ndern</a>
 	</cfif>
 	
 	<table class="vlist">
@@ -199,16 +188,16 @@ $LastChangedRevision: 91 $
 <h4><!--- TODO: $$$ ---> Info</h4>
 
 <table class="vlist">
-	<cfif request.session.UserLoggedIn>
-		<cfif StructKeyExists(application.module,'#request.lanshock.settings.modulePrefix.module#seatplan')>
+	<cfif session.UserLoggedIn>
+		<cfif application.lanshock.oModules.isLoaded('seatplan')>
 			<tr>
 				<th>#request.content.seat#</th>
 				<td><cftry>
-						<cfinvoke component="#application.lanshock.environment.componentpath#modules.seatplan.seatplan" method="getSeatLinkDataByUserID" returnvariable="stSeat">
+						<cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#modules.seatplan.seatplan" method="getSeatLinkDataByUserID" returnvariable="stSeat">
 							<cfinvokeargument name="userid" value="#id#">
 						</cfinvoke>
 						<cfif NOT StructIsEmpty(stSeat)>
-							<a href="#myself##stSeat.linkurl#&#request.session.UrlToken#">#stSeat.description#</a>
+							<a href="#application.lanshock.oHelper.buildUrl('#stSeat.linkurl#')#">#stSeat.description#</a>
 						<cfelse>
 							<span class="text_light">#request.content.data_unknown#</span>
 						</cfif>
@@ -225,23 +214,26 @@ $LastChangedRevision: 91 $
 		</tr>
 		<tr>
 			<th>#request.content.lastlogin#</th>
-			<td><cfif len(dt_lastlogin)>#UDF_DateTimeFormat(dt_lastlogin)#<cfelse>#request.content.lastlogin_never#</cfif></td>
+			<td><cfif len(dt_lastlogin)>#session.oUser.dateTimeFormat(dt_lastlogin)#<cfelse>#request.content.lastlogin_never#</cfif></td>
 		</tr>
 		<tr>
 			<th>#request.content.registered#</th>
-			<td><cfif len(dt_registered)>#UDF_DateTimeFormat(dt_registered)#<cfelse>#request.content.registered_notavaible#</cfif></td>
+			<td><cfif len(dt_registered)>#session.oUser.dateTimeFormat(dt_registered)#<cfelse>#request.content.registered_notavaible#</cfif></td>
 		</tr>
 	</cfif>
+	<cftry>
 	<tr>
 		<th>#request.content.comment_posts#</th>
 		<td>#post_count#</td>
 	</tr>
+	<cfcatch></cfcatch>
+	</cftry>
 </table>
 
 <h4>#request.content.misc#</h4>
 
-<cfif request.session.userid EQ id OR (request.session.isAdmin AND UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin','boolean'))>
-	<a href="#myself##myfusebox.thiscircuit#.profile_edit_settings<cfif request.session.isAdmin>&id=#id#</cfif>&#request.session.UrlToken#" class="link_extended"><!--- TODO: $$$ ---> Einstellungen &auml;ndern</a>
+<cfif session.userid EQ id OR (session.isAdmin AND UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin','boolean'))>
+	<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.profile_edit_settings')#" class="link_extended"><!--- TODO: $$$ ---> Einstellungen &auml;ndern</a>
 </cfif>
 
 <table class="vlist">
@@ -251,7 +243,7 @@ $LastChangedRevision: 91 $
 			<td><a href="#homepage#" target="_blank">#homepage#</a></td>
 		</tr>
 	</cfif>
-	<cfif request.session.UserLoggedIn>
+	<cfif session.UserLoggedIn>
 		<tr>
 			<th>#request.content.geo_lat#</th>
 			<td>#geo_lat#</td>
@@ -264,13 +256,7 @@ $LastChangedRevision: 91 $
 	<cfif len(signature)>
 		<tr>
 			<th>#request.content.signature#</th>
-			<td>#ConvertText(signature)#</td>
-		</tr>
-	</cfif>
-	<cfif len(additional_data) AND (request.session.userid EQ id OR request.session.isAdmin)>
-		<tr>
-			<th>#request.content.additional_data#</th>
-			<td><cfloop list="#additional_data#" index="idx" delimiters=";">#idx#<br/></cfloop></td>
+			<td>#application.lanshock.oHelper.ConvertText(signature)#</td>
 		</tr>
 	</cfif>
 </table>

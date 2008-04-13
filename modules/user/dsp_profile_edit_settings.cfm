@@ -24,10 +24,10 @@ $LastChangedRevision: 33 $
 </cfif>
 
 <cfif isNumeric(attributes.id)>
-	<a href="#myself##myfusebox.thiscircuit#.userdetails<cfif request.session.isAdmin>&id=#attributes.id#</cfif>&#request.session.UrlToken#" class="link_extended">#request.content.show_profile#</a>
+	<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.userdetails<cfif session.isAdmin>&id=#attributes.id#</cfif>')#" class="link_extended">#request.content.show_profile#</a>
 </cfif>
 
-<form action="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#request.session.UrlToken#" method="post">
+<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post">
 <input type="hidden" name="form_submitted" value="true">
 <input type="hidden" name="id" value="#attributes.id#">
 

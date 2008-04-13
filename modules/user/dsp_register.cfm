@@ -13,7 +13,7 @@ $LastChangedRevision: 33 $
 <div class="headline">#request.content.register#</div>
 
 <div align="center">
-	#request.content.register_notice# <a href="#myself##myfusebox.thiscircuit#.login&#request.session.UrlToken#">#request.content.login#</a>.
+	#request.content.register_notice# <a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.login')#">#request.content.login#</a>.
 </div>
 
 <cfif myfusebox.thisfuseaction NEQ 'register' OR stModuleConfig.registration_active>
@@ -29,7 +29,7 @@ $LastChangedRevision: 33 $
 	</div>
 </cfif>
 
-<form action="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#request.session.UrlToken#" method="post" enctype="multipart/form-data" name="user" id="user">
+<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post" enctype="multipart/form-data" name="user" id="user">
 <input type="hidden" name="form_submitted" value="true">
 <table class="vlist">
 	<tr>
@@ -37,7 +37,7 @@ $LastChangedRevision: 33 $
 	</tr>
 	<tr>
 		<th>#request.content.name#</th>
-		<td><input type="text" name="name" value="#attributes.name#" <cfif NOT request.session.isAdmin AND NOT stModuleConfig.userprofile.edit_nickname> disabled</cfif>> <span class="required">*</span><cfif NOT stModuleConfig.userprofile.edit_nickname> <img src="#stImageDir.general#/locked.gif" alt="" border="0"></cfif></td>
+		<td><input type="text" name="name" value="#attributes.name#" <cfif NOT session.isAdmin AND NOT stModuleConfig.userprofile.edit_nickname> disabled</cfif>> <span class="required">*</span><cfif NOT stModuleConfig.userprofile.edit_nickname> <img src="#stImageDir.general#/locked.gif" alt="" border="0"></cfif></td>
 	</tr>
 	<tr>
 		<th>#request.content.email#</th>
