@@ -132,8 +132,6 @@ $LastChangedRevision: 103 $
 
 			<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.frameworks.reactor')#" method="createConfig"/>
 	
-			<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.frameworks.transfer')#" method="createConfig"/>
-	
 			<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.frameworks.fusebox')#" method="createConfig"/>
 			
 			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
@@ -272,6 +270,7 @@ $LastChangedRevision: 103 $
 		<cfelse>
 		
 			<cfset application.lanshock.oLogger.writeLog('core.modules','Invalid info.xml.cfm: #arguments.folder#','error')>
+			<cfset uninstallModule(arguments.folder)>
 		
 		</cfif>
 		
@@ -285,8 +284,6 @@ $LastChangedRevision: 103 $
 		<cfset StructDelete(variables.stModules,arguments.folder)>
 
 		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.frameworks.reactor')#" method="createConfig"/>
-
-		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.frameworks.transfer')#" method="createConfig"/>
 
 		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.frameworks.fusebox')#" method="createConfig"/>
 	
