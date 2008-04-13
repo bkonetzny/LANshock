@@ -14,6 +14,7 @@ $LastChangedRevision: 56 $
 		<cfargument name="sTable" type="string" required="true">
 		<cfargument name="aStructure" type="array" required="true">
 		
+		<cfset var sTableName = lCase(arguments.sTable)>
 		<cfset var stLocal = StructNew()>
 		<cfset stLocal.stTableStructureOld = getTableStructureOld(arguments.sTable)>
 		
@@ -26,7 +27,7 @@ $LastChangedRevision: 56 $
 		<cfset stLocal.stTableData = parseTableStructure(arguments.aStructure)>
 		
 		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.datasource.mysql')#" method="generateSQL" returnvariable="stLocal.aSqlCode">
-			<cfinvokeargument name="tablename" value="#lCase(arguments.sTable)#">
+			<cfinvokeargument name="tablename" value="#sTableName#">
 			<cfinvokeargument name="stTableData" value="#stLocal.stTableData#">
 			<cfinvokeargument name="stTableStructureOld" value="#stLocal.stTableStructureOld#">
 			<cfinvokeargument name="mode" value="#stLocal.mode#">
@@ -35,12 +36,12 @@ $LastChangedRevision: 56 $
 		<cfloop from="1" to="#ArrayLen(stLocal.aSqlCode)#" index="stLocal.idx">
 			<cfset stLocal.sSqlCode = stLocal.aSqlCode[stLocal.idx]>
 			<cftry>
-				<cfset application.lanshock.oLogger.writeLog('core.datasource','Deploying table "#application.lanshock.oRuntime.getEnvironment().sDatasource#.#arguments.sTable#" | Mode: "#stLocal.mode#" | SQL: #stLocal.sSqlCode#')>
+				<cfset application.lanshock.oLogger.writeLog('core.datasource','Deploying table "#application.lanshock.oRuntime.getEnvironment().sDatasource#.#sTableName#" | Mode: "#stLocal.mode#" | SQL: #stLocal.sSqlCode#')>
 				<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 					#PreserveSingleQuotes(stLocal.sSqlCode)#
 				</cfquery>
 				<cfcatch>
-					<cfset application.lanshock.oLogger.writeLog('core.datasource','SQL Error for table "#application.lanshock.oRuntime.getEnvironment().sDatasource#.#arguments.sTable#" | Message: "#cfcatch.message#" | Detail: "#cfcatch.detail#"','error')>
+					<cfset application.lanshock.oLogger.writeLog('core.datasource','SQL Error for table "#application.lanshock.oRuntime.getEnvironment().sDatasource#.#sTableName#" | Message: "#cfcatch.message#" | Detail: "#cfcatch.detail#"','error')>
 				</cfcatch>
 			</cftry>
 		</cfloop>
@@ -87,27 +88,32 @@ $LastChangedRevision: 56 $
 			
 			stLocal.idx = '';
 			stLocal.stTableData = StructNew();
-			stLocal.stTableData.field = StructNew();
-			stLocal.stTableData.pk = StructNew();
-			stLocal.stTableData.fk = StructNew();
-			stLocal.stTableData.index = StructNew();
+			stLocal.stTableData.field = ArrayNew(1);
+			stLocal.stTableData.pk = ArrayNew(1);
+			stLocal.stTableData.fk = ArrayNew(1);
+			stLocal.stTableData.index = ArrayNew(1);
+			stLocal.stTableData.engine = ArrayNew(1);
 		</cfscript>
 
 		<cfloop from="1" to="#ArrayLen(arguments.aTableStructure)#" index="stLocal.idx">
-		
-			<cfscript>
-				if(arguments.aTableStructure[stLocal.idx].xmlname EQ "field")
-					stLocal.stTableData.field[arguments.aTableStructure[stLocal.idx].xmlattributes.name] = arguments.aTableStructure[stLocal.idx].xmlattributes;
 
-				if(arguments.aTableStructure[stLocal.idx].xmlname EQ "pk")
-					stLocal.stTableData.pk[arguments.aTableStructure[stLocal.idx].xmlattributes.fields] = arguments.aTableStructure[stLocal.idx].xmlattributes;
-
-				if(arguments.aTableStructure[stLocal.idx].xmlname EQ "fk")
-					stLocal.stTableData.fk[arguments.aTableStructure[stLocal.idx].xmlattributes.field] = arguments.aTableStructure[stLocal.idx].xmlattributes;
-
-				if(arguments.aTableStructure[stLocal.idx].xmlname EQ "index")
-					stLocal.stTableData.index[arguments.aTableStructure[stLocal.idx].xmlattributes.name] = arguments.aTableStructure[stLocal.idx].xmlattributes;
-			</cfscript>
+			<cfswitch expression="#arguments.aTableStructure[stLocal.idx].xmlname#">
+				<cfcase value="field">
+					<cfset ArrayAppend(stLocal.stTableData.field,arguments.aTableStructure[stLocal.idx].xmlattributes)>
+				</cfcase>
+				<cfcase value="pk">
+					<cfset ArrayAppend(stLocal.stTableData.pk,arguments.aTableStructure[stLocal.idx].xmlattributes)>
+				</cfcase>
+				<cfcase value="fk">
+					<cfset ArrayAppend(stLocal.stTableData.fk,arguments.aTableStructure[stLocal.idx].xmlattributes)>
+				</cfcase>
+				<cfcase value="index">
+					<cfset ArrayAppend(stLocal.stTableData.index,arguments.aTableStructure[stLocal.idx].xmlattributes)>
+				</cfcase>
+				<cfcase value="engine">
+					<cfset ArrayAppend(stLocal.stTableData.engine,arguments.aTableStructure[stLocal.idx].xmlattributes)>
+				</cfcase>
+			</cfswitch>
 		
 		</cfloop>
 		

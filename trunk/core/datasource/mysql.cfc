@@ -46,7 +46,9 @@ $LastChangedRevision: 78 $
 		<cfset variables.stTableData = arguments.stTableData>
 		<cfset variables.stTableStructureOld = arguments.stTableStructureOld>
 		<cfset variables.mode = arguments.mode>
+		<cfset variables.engine = "MyISAM">
 		
+		<cfset detectEngine()>
 		<cfset buildPkArray()>
 		<cfset buildFkArray()>
 		<cfset buildIndexArray()>
@@ -90,19 +92,38 @@ $LastChangedRevision: 78 $
 			<cfset sSql = left(sSql,len(sSql)-1)>
 		</cfif>
 		<cfif variables.mode EQ 'create'>
-			<cfset sSql = sSql & ') ENGINE=InnoDB DEFAULT CHARSET=utf8'>
+			<cfset sSql = sSql & ') ENGINE=#variables.engine# DEFAULT CHARSET=utf8'>
 		</cfif>
 		
 		<cfset ArrayAppend(aQueries,sSql)>
+		
+		<cfif variables.mode EQ 'alter'>
+			<cfset ArrayAppend(aQueries,'ALTER TABLE `#arguments.tablename#` ENGINE=#variables.engine#')>
+		</cfif>
 		
 		<cfreturn aQueries>
 				
 	</cffunction>
 
+	<cffunction name="detectEngine" output="false" returntype="void">
+		
+		<cfset var iEngines = ArrayLen(variables.stTableData.engine)>
+		<cfset var idxEngine = 0>
+		<cfset var sCurrentPkString = ''>
+		
+		<cfloop from="1" to="#iEngines#" index="idxEngine">
+			
+			<cfif variables.stTableData.engine[idxEngine].server EQ 'mysql'>
+				<cfset variables.engine = variables.stTableData.engine[idxEngine].engine>
+			</cfif>
+				
+		</cfloop>
+				
+	</cffunction>
+
 	<cffunction name="buildFieldsArray" output="false" returntype="void">
 		
-		<cfset var aFields = ListToArray(StructKeyList(variables.stTableData.field))>
-		<cfset var iFields = ArrayLen(aFields)>
+		<cfset var iFields = ArrayLen(variables.stTableData.field)>
 		<cfset var idxField = 0>
 		<cfset var stFieldTypeMappings = StructNew()>
 		<cfset var sCurrentFieldString = ''>
@@ -114,40 +135,40 @@ $LastChangedRevision: 78 $
 		
 		<cfloop from="1" to="#iFields#" index="idxField">
 			<cfset sCurrentFieldString = ''>
-			<cfset stCurrentField.name = variables.stTableData.field[aFields[idxField]].name>
-			<cfset stCurrentField.type = variables.stTableData.field[aFields[idxField]].type>
+			<cfset stCurrentField.name = variables.stTableData.field[idxField].name>
+			<cfset stCurrentField.type = variables.stTableData.field[idxField].type>
 			<cfset stCurrentField.len = ''>
 			<cfset stCurrentField.null = 'NOT NULL'>
 			<cfset stCurrentField.default = ''>
 			<cfset stCurrentField.special = ''>
 		
 			<!--- check field TYPE --->
-			<cfif StructKeyExists(stFieldTypeMappings,variables.stTableData.field[aFields[idxField]].type)>
-				<cfset stCurrentField.type = stFieldTypeMappings[variables.stTableData.field[aFields[idxField]].type]>
+			<cfif StructKeyExists(stFieldTypeMappings,variables.stTableData.field[idxField].type)>
+				<cfset stCurrentField.type = stFieldTypeMappings[variables.stTableData.field[idxField].type]>
 			</cfif>
 
 			<!--- check field LENGTH --->
-			<cfif StructKeyExists(variables.stTableData.field[aFields[idxField]],'len')>
-				<cfset stCurrentField.len = '(#variables.stTableData.field[aFields[idxField]].len#)'>
+			<cfif StructKeyExists(variables.stTableData.field[idxField],'len')>
+				<cfset stCurrentField.len = '(#variables.stTableData.field[idxField].len#)'>
 			</cfif>
 
 			<!--- check field NULL --->
-			<cfif StructKeyExists(variables.stTableData.field[aFields[idxField]],'null') AND variables.stTableData.field[aFields[idxField]].null>
+			<cfif StructKeyExists(variables.stTableData.field[idxField],'null') AND variables.stTableData.field[idxField].null>
 				<cfset stCurrentField.null = 'NULL'>
 			</cfif>
 
 			<!--- check field DEFAULT --->
-			<cfif StructKeyExists(variables.stTableData.field[aFields[idxField]],'default')>
-				<cfif stCurrentField.null EQ 'NULL' AND variables.stTableData.field[aFields[idxField]].default EQ 'NULL'>
+			<cfif StructKeyExists(variables.stTableData.field[idxField],'default')>
+				<cfif stCurrentField.null EQ 'NULL' AND variables.stTableData.field[idxField].default EQ 'NULL'>
 					<cfset stCurrentField.default = " default NULL">
 				<cfelse>
-					<cfset stCurrentField.default = " default '#variables.stTableData.field[aFields[idxField]].default#'">
+					<cfset stCurrentField.default = " default '#variables.stTableData.field[idxField].default#'">
 				</cfif>
 			</cfif>
 
 			<!--- check field SPECIAL --->
-			<cfif StructKeyExists(variables.stTableData.field[aFields[idxField]],'special')>
-				<cfset stCurrentField.special = " #variables.stTableData.field[aFields[idxField]].special#">
+			<cfif StructKeyExists(variables.stTableData.field[idxField],'special')>
+				<cfset stCurrentField.special = " #variables.stTableData.field[idxField].special#">
 			</cfif>
 			
 			<!--- fix for "Value '0000-00-00' can not be represented as java.sql.Timestamp" --->
@@ -181,15 +202,14 @@ $LastChangedRevision: 78 $
 
 	<cffunction name="buildPkArray" output="false" returntype="void">
 		
-		<cfset var aPks = ListToArray(StructKeyList(variables.stTableData.pk,'|'),'|')>
-		<cfset var iPks = ArrayLen(aPks)>
+		<cfset var iPks = ArrayLen(variables.stTableData.pk)>
 		<cfset var idxPk = 0>
 		<cfset var idxPkItem = 0>
 		<cfset var sCurrentPkString = ''>
 		
 		<cfloop from="1" to="#iPks#" index="idxPk">
 				
-			<cfset sCurrentPkString = "PRIMARY KEY (" & ListQualify(variables.stTableData.pk[aPks[idxPk]].fields,'`') & ")">
+			<cfset sCurrentPkString = "PRIMARY KEY (" & ListQualify(variables.stTableData.pk[idxPk].fields,'`') & ")">
 		
 			<cfif variables.mode EQ 'create'>
 				<cfset ArrayAppend(variables.stData.aSqlPk,sCurrentPkString)>
@@ -205,18 +225,17 @@ $LastChangedRevision: 78 $
 
 	<cffunction name="buildFkArray" output="false" returntype="void">
 		
-		<cfset var aFks = ListToArray(StructKeyList(variables.stTableData.fk))>
-		<cfset var iFks = ArrayLen(aFks)>
+		<cfset var iFks = ArrayLen(variables.stTableData.fk)>
 		<cfset var idxFk = 0>
 		<cfset var idxFkItem = 0>
 		<cfset var sCurrentFkString = ''>
 		
 		<cfloop from="1" to="#iFks#" index="idxFk">
 			
-			<cfset sCurrentFkString = "INDEX `FK_#variables.stTableData.fk[aFks[idxFk]].field#`(`#variables.stTableData.fk[aFks[idxFk]].field#`)">
+			<cfset sCurrentFkString = "INDEX `FK_#variables.stTableData.fk[idxFk].field#`(`#variables.stTableData.fk[idxFk].field#`)">
 		
 			<cfif variables.mode EQ 'alter'>
-				<cfset ArrayAppend(variables.stData.aSqlPreprocess,"DROP INDEX `FK_#variables.stTableData.fk[aFks[idxFk]].field#`")>
+				<cfset ArrayAppend(variables.stData.aSqlPreprocess,"DROP INDEX `FK_#variables.stTableData.fk[idxFk].field#`")>
 				<cfset sCurrentFkString = 'ADD ' & sCurrentFkString>
 			</cfif>
 			
@@ -228,18 +247,17 @@ $LastChangedRevision: 78 $
 
 	<cffunction name="buildIndexArray" output="false" returntype="void">
 		
-		<cfset var aIndex = ListToArray(StructKeyList(variables.stTableData.index))>
-		<cfset var iIndex = ArrayLen(aIndex)>
+		<cfset var iIndex = ArrayLen(variables.stTableData.index)>
 		<cfset var idxIndex = 0>
 		<cfset var idxIndexItem = 0>
 		<cfset var sCurrentIndexString = ''>
 		
 		<cfloop from="1" to="#iIndex#" index="idxIndex">
 			
-			<cfset sCurrentIndexString = "INDEX `#variables.stTableData.index[aIndex[idxIndex]].name#`(#ListQualify(variables.stTableData.index[aIndex[idxIndex]].fields,'`')#)">
+			<cfset sCurrentIndexString = "INDEX `#variables.stTableData.index[idxIndex].name#`(#ListQualify(variables.stTableData.index[idxIndex].fields,'`')#)">
 		
 			<cfif variables.mode EQ 'alter'>
-				<cfset ArrayAppend(variables.stData.aSqlPreprocess,"DROP INDEX `#variables.stTableData.index[aIndex[idxIndex]].name#`")>
+				<cfset ArrayAppend(variables.stData.aSqlPreprocess,"DROP INDEX `#variables.stTableData.index[idxIndex].name#`")>
 				<cfset sCurrentIndexString = 'ADD ' & sCurrentIndexString>
 			</cfif>
 			
