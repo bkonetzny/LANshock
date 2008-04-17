@@ -10,7 +10,7 @@ $LastChangedRevision$
 --->
 
 <cfoutput>
-<div class="headline">#request.content.gallery_delete#</div>
+<h3>#request.content.gallery_delete#</h3>
 
 <cfif ArrayLen(aError)>
 	<div class="errorBox">
@@ -23,7 +23,7 @@ $LastChangedRevision$
 	</div>
 </cfif>
 
-<div class="headline2">#request.content.gallery_delete#</div>
+<h4>#request.content.gallery_delete#</h4>
 
 <table>
 	<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post">

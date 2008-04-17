@@ -14,7 +14,7 @@ $LastChangedRevision$
 <cfparam name="attributes.gallery_id" default="0">
 <cfparam name="attributes.id" default="0">
 
-<cfinvoke component="gallery" method="getGallery" returnvariable="qGallery">
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.gallery.gallery')#" method="getGallery" returnvariable="qGallery">
 	<cfinvokeargument name="id" value="#attributes.gallery_id#">
 </cfinvoke>
 
@@ -23,7 +23,7 @@ $LastChangedRevision$
 </cfif>
 
 <cfif attributes.id NEQ 0>
-	<cfinvoke component="gallery" method="getItem" returnvariable="qItem">
+	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.gallery.gallery')#" method="getItem" returnvariable="qItem">
 		<cfinvokeargument name="id" value="#attributes.id#">
 	</cfinvoke>
 
@@ -37,38 +37,17 @@ $LastChangedRevision$
 <cfparam name="attributes.filename" default="">
 
 <cfif attributes.form_submitted>
-			
-	<cfif NOT DirectoryExists(stModuleConfig.files.storage)>
-		<cfdirectory action="create" directory="#stModuleConfig.files.storage#" mode="777">
-	</cfif>
-		
-	<cfif NOT DirectoryExists(stModuleConfig.files.tmp)>
-		<cfdirectory action="create" directory="#stModuleConfig.files.tmp#" mode="777">
-	</cfif>
-		
-	<cfif NOT DirectoryExists("#stModuleConfig.files.storage##attributes.gallery_id#/original/")>
-		<cfdirectory action="create" directory="#stModuleConfig.files.storage##attributes.gallery_id#/original/" mode="777">
-	</cfif>
-
-	<cfset uuidFile = '#stModuleConfig.files.storage##attributes.gallery_id#/original/#CreateUUID()#.jpg'>
-	<cfif len(attributes.file)>
-		<cffile action="upload" filefield="file" destination="#uuidFile#" mode="777" nameconflict="overwrite">
-	</cfif>
 	
-	<cfinvoke component="gallery" method="setItem" returnvariable="item_id">
+	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.gallery.gallery')#" method="setItem" returnvariable="item_id">
 		<cfinvokeargument name="id" value="#attributes.id#">
 		<cfinvokeargument name="gallery_id" value="#attributes.gallery_id#">
 		<cfinvokeargument name="title" value="#attributes.title#">
 		<cfinvokeargument name="text" value="#attributes.text#">
 		<cfif len(attributes.file)>
-			<cfinvokeargument name="file" value="#uuidFile#">
+			<cfinvokeargument name="bUploadFile" value="true">
 		</cfif>
 		<cfinvokeargument name="settings" value="#stModuleConfig#">
 	</cfinvoke>
-	
-	<!--- <cfif len(attributes.file) AND FileExists(uuidFile)>
-		<cffile action="delete" file="#uuidFile#">
-	</cfif> --->
 	
 	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.gallery&id=#attributes.gallery_id#')#" addtoken="false">
 

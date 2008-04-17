@@ -9,16 +9,18 @@ $LastChangedBy$
 $LastChangedRevision$
 --->
 
-<cfinvoke component="gallery" method="getGallery" returnvariable="qGallery">
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.gallery.gallery')#" method="getGallery" returnvariable="qGallery">
 	<cfinvokeargument name="id" value="#attributes.id#">
 </cfinvoke>
 
-<cfinvoke component="gallery" method="getItemlist" returnvariable="qItemlist">
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.gallery.gallery')#" method="getItemlist" returnvariable="qItemlist">
 	<cfinvokeargument name="gallery_id" value="#attributes.id#">
 </cfinvoke>
 	
 <cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#modules.comments.comments" method="getCommentCountStruct" returnvariable="qCommentCount">
 	<cfinvokeargument name="module" value="#myfusebox.thiscircuit#">
 </cfinvoke>
+
+<cfhtmlhead text='<link rel="alternate" type="application/rss+xml" title="#request.lanshock.settings.appname# - Gallery: #qGallery.title# - Media RSS" href="#application.lanshock.oHelper.buildUrl("gallery.media_rss&id=#attributes.id#")#" />'>
 
 <cfsetting enablecfoutputonly="No">

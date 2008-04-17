@@ -12,6 +12,8 @@ $LastChangedRevision$
 
 	<cffunction name="getGallerylist" access="public" returntype="query" output="false">
 		<cfargument name="showVisibleOnly" type="boolean" required="false" default="true">
+		
+		<cfset var qGallerylist = 0>
 	
 		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qGallerylist">
 			SELECT g.*, COUNT(i.id) AS itemcount
@@ -29,7 +31,9 @@ $LastChangedRevision$
 	</cffunction>
 	
 	<cffunction name="getItemlist" access="public" returntype="query" output="false">
-		<cfargument name="gallery_id" type="numeric" required="yes">
+		<cfargument name="gallery_id" type="numeric" required="true">
+		
+		<cfset var qItemlist = 0>
 	
 		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qItemlist">
 			SELECT *
@@ -48,37 +52,37 @@ $LastChangedRevision$
 		<cfargument name="title" type="string" required="false" default="">
 		<cfargument name="text" type="string" required="false" default="">
 		<cfargument name="file" type="string" required="false" default="">
+		<cfargument name="bUploadFile" type="boolean" required="false" default="false">
 		<cfargument name="settings" type="struct" required="true">
 
-		<cfset var uuid = ''>
-		<cfset var item = ''>
-		<cfset var tn = ''>
-		<cfset var image = ''>
-		<cfset var item_id = ''>
-		<cfset var metadata = ''>
-		<cfset var bCopyFile = false>
+		<cfset var iItemID = ''>
+		<cfset var sItemFilename = ''>
+		<cfset var qGetUUID = 0>
+		<cfset var qGetID = 0>
+		<cfset var wddxMetadata = ''>
 
-		<cfif arguments.id EQ 0>
-			<cfset uuid = '#CreateUUID()#.jpg'>
-		<cfelse>
+		<cfif arguments.id NEQ 0>
 			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qGetUUID">
 				SELECT filename, metadata
 				FROM gallery_item
 				WHERE id = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.id#">
 			</cfquery>
-			<cfset uuid = qGetUUID.filename>
-			<cfset metadata = qGetUUID.metadata>
+			<cfset sItemFilename = qGetUUID.filename>
+			<cfset wddxMetadata = qGetUUID.metadata>
 		</cfif>
 		
-		<cfif len(arguments.file)>
+		<cfif arguments.bUploadFile OR len(arguments.file)>
 		
-			<cfset item = '#arguments.settings.files.storage##arguments.gallery_id#/#uuid#'>
-			<cfset tn = '#arguments.settings.files.storage##arguments.gallery_id#/tn/#uuid#'>
-			<cfset image = ''>
-			<cfset metadata = ''>
-			
-			<cfif NOT DirectoryExists('#arguments.settings.files.storage##arguments.gallery_id#/')>
+			<cfif NOT DirectoryExists(arguments.settings.files.storage)>
+				<cfdirectory action="create" directory="#arguments.settings.files.storage#" mode="777">
+			</cfif>
+		
+			<cfif NOT DirectoryExists("#arguments.settings.files.storage##arguments.gallery_id#/")>
 				<cfdirectory action="create" directory="#arguments.settings.files.storage##arguments.gallery_id#/" mode="777">
+			</cfif>
+		
+			<cfif NOT DirectoryExists("#arguments.settings.files.storage##arguments.gallery_id#/original/")>
+				<cfdirectory action="create" directory="#arguments.settings.files.storage##arguments.gallery_id#/original/" mode="777">
 			</cfif>
 			
 			<cfif NOT DirectoryExists('#arguments.settings.files.storage##arguments.gallery_id#/#arguments.settings.item.max_width#x#arguments.settings.item.max_height#/')>
@@ -88,19 +92,29 @@ $LastChangedRevision$
 			<cfif NOT DirectoryExists('#arguments.settings.files.storage##arguments.gallery_id#/#arguments.settings.tn.max_width#x#arguments.settings.tn.max_height#/')>
 				<cfdirectory action="create" directory="#arguments.settings.files.storage##arguments.gallery_id#/#arguments.settings.tn.max_width#x#arguments.settings.tn.max_height#/" mode="777">
 			</cfif>
+
+			<cfset uuidFile = '#arguments.settings.files.storage##arguments.gallery_id#/original/#CreateUUID()#.jpg'>
+			<cfif arguments.bUploadFile>
+				<cffile action="upload" filefield="form.file" destination="#uuidFile#" mode="777">
+			<cfelseif len(arguments.file)>
+				<cffile action="copy" source="#arguments.file#" destination="#uuidFile#" mode="777">
+				<cfset sItemFilename = GetFileFromPath(uuidFile)>
+			</cfif>
 			
 			<cfset oImage = createObject("component","#application.lanshock.oRuntime.getEnvironment().sComponentPath#core._utils.image.image")>
 			
 			<cfset oImage.setOption('defaultJpegCompression','100')>
-			<cfset oImage.setOption('tempDirectory',arguments.settings.files.tmp)>
+			<cfset oImage.setOption('tempDirectory',application.lanshock.oHelper.UDF_Module('storagePathTemp'))>
 			
-			<cfset stImageInfo = oImage.getImageInfo('',arguments.file)>
+			<cfset stImageInfo = oImage.getImageInfo('',uuidFile)>
 			
-			<cfset oImage.resize('',arguments.file,'#arguments.settings.files.storage##arguments.gallery_id#/#arguments.settings.item.max_width#x#arguments.settings.item.max_height#/#uuid#',arguments.settings.item.max_width,arguments.settings.item.max_height,true)>
-			<cfset oImage.resize('',arguments.file,'#arguments.settings.files.storage##arguments.gallery_id#/#arguments.settings.tn.max_width#x#arguments.settings.tn.max_height#/#uuid#',arguments.settings.tn.max_width,arguments.settings.tn.max_height,true)>
+			<cfset oImage.resize('',uuidFile,'#arguments.settings.files.storage##arguments.gallery_id#/#arguments.settings.item.max_width#x#arguments.settings.item.max_height#/#sItemFilename#',arguments.settings.item.max_width,arguments.settings.item.max_height,true)>
+			<cfset oImage.resize('',uuidFile,'#arguments.settings.files.storage##arguments.gallery_id#/#arguments.settings.tn.max_width#x#arguments.settings.tn.max_height#/#sItemFilename#',arguments.settings.tn.max_width,arguments.settings.tn.max_height,true)>
+			
+			<cfset oImage = ''>
 			
 			<cfif stImageInfo.metadata.recordcount>
-				<cfwddx action="cfml2wddx" input="#stImageInfo.metadata#" output="metadata">
+				<cfwddx action="cfml2wddx" input="#stImageInfo.metadata#" output="wddxMetadata">
 			</cfif>
 			
 		</cfif>
@@ -112,18 +126,18 @@ $LastChangedRevision$
 				VALUES (<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.gallery_id#">,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.title#">,
 						<cfqueryparam cfsqltype="cf_sql_longvarchar" value="#arguments.text#">,
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#uuid#">,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#sItemFilename#">,
 						#now()#,
-						<cfqueryparam cfsqltype="cf_sql_longvarchar" value="#metadata#">)
+						<cfqueryparam cfsqltype="cf_sql_longvarchar" value="#wddxMetadata#">)
 			</cfquery>
 			
 			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qGetID">
 				SELECT id
 				FROM gallery_item
-				WHERE filename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#uuid#">
+				WHERE filename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#sItemFilename#">
 			</cfquery>
 			
-			<cfset item_id = qGetID.id>
+			<cfset iItemID = qGetID.id>
 			
 		<cfelse>
 
@@ -131,22 +145,26 @@ $LastChangedRevision$
 				UPDATE gallery_item
 				SET gallery_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.gallery_id#">,
 					title = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.title#">,
-					text = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#arguments.text#">,
-					filename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#uuid#">,
-					metadata = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#metadata#">
+					text = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#arguments.text#">
+					<cfif arguments.bUploadFile OR len(arguments.file)>
+						,filename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#sItemFilename#">
+						,metadata = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#wddxMetadata#">
+					</cfif>
 				WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.id#">
 			</cfquery>
 			
-			<cfset item_id = arguments.id>
+			<cfset iItemID = arguments.id>
 		
 		</cfif>
 			
-		<cfreturn item_id>
+		<cfreturn iItemID>
 		
 	</cffunction>
 	
 	<cffunction name="getItem" access="public" returntype="query" output="false">
-		<cfargument name="id" type="numeric" required="yes">
+		<cfargument name="id" type="numeric" required="true">
+		
+		<cfset var qItem = 0>
 	
 		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qItem">
 			SELECT *
@@ -155,6 +173,37 @@ $LastChangedRevision$
 		</cfquery>
 		
 		<cfreturn qItem>
+		
+	</cffunction>
+
+	<cffunction name="getItemPartners" access="public" returntype="query" output="false">
+		<cfargument name="id" type="numeric" required="true">
+		<cfargument name="gallery_id" type="numeric" required="true">
+		
+		<cfset var qItemPartners = 0>
+	
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qItemPartners">
+			SELECT id, title, filename FROM (
+				SELECT id, title, filename
+				FROM gallery_item
+				WHERE gallery_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.gallery_id#">
+				AND id < <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.id#">
+				ORDER BY id DESC
+				LIMIT 5
+			) qPrev
+			UNION
+			SELECT id, title, filename FROM (
+				SELECT id, title, filename
+				FROM gallery_item
+				WHERE gallery_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.gallery_id#">
+				AND id > <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.id#">
+				ORDER BY id
+				LIMIT 5
+			) qNext
+			ORDER BY id
+		</cfquery>
+		
+		<cfreturn qItemPartners>
 		
 	</cffunction>
 	
@@ -171,6 +220,14 @@ $LastChangedRevision$
 			<cffile action="delete" file="#arguments.settings.files.storage##qItem.gallery_id#/#qItem.filename#">
 		</cfif>
 			
+		<cfif FileExists('#arguments.settings.files.storage##qItem.gallery_id#/#arguments.settings.item.max_width#x#arguments.settings.item.max_height#/#qItem.filename#')>
+			<cffile action="delete" file="#arguments.settings.files.storage##qItem.gallery_id#/#arguments.settings.item.max_width#x#arguments.settings.item.max_height#/#qItem.filename#">
+		</cfif>
+			
+		<cfif FileExists('#arguments.settings.files.storage##qItem.gallery_id#/#arguments.settings.tn.max_width#x#arguments.settings.tn.max_height#/#qItem.filename#')>
+			<cffile action="delete" file="#arguments.settings.files.storage##qItem.gallery_id#/#arguments.settings.tn.max_width#x#arguments.settings.tn.max_height#/#qItem.filename#">
+		</cfif>
+			
 		<cfif FileExists('#arguments.settings.files.storage##qItem.gallery_id#/tn/#qItem.filename#')>
 			<cffile action="delete" file="#arguments.settings.files.storage##qItem.gallery_id#/tn/#qItem.filename#">
 		</cfif>
@@ -182,7 +239,7 @@ $LastChangedRevision$
 		</cfquery>
 	
 		<cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#modules.comments.comments" method="deleteTopic">
-			<cfinvokeargument name="module" value="#request.varScope.myfusebox.thiscircuit#">
+			<cfinvokeargument name="module" value="#application.lanshock.oApplication.getMyFusebox().thiscircuit#">
 			<cfinvokeargument name="identifier" value="gallery_item_#arguments.id#">
 		</cfinvoke>
 		
@@ -256,6 +313,8 @@ $LastChangedRevision$
 	<cffunction name="deleteGallery" access="public" returntype="boolean" output="false">
 		<cfargument name="id" type="numeric" required="true">
 		<cfargument name="settings" type="struct" required="true">
+		
+		<cfset var qGalleryFiles = 0>
 
 		<cfinvoke method="getItemList" returnvariable="qItemList">
 			<cfinvokeargument name="gallery_id" value="#arguments.id#">

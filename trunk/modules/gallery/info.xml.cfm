@@ -19,16 +19,10 @@ $LastChangedRevision$
 	
 	<navigation>
 		<item action="general_settings" permissions="config"/>
+		<item action="general_versions" permissions="config"/>
 	</navigation>
 	
-	<dependencies>
-		<filesystem folder="galleries"/>
-	</dependencies>
-	
 	<security>
-		<area name="configure"/>
-		<area name="edit"/>
-		<area name="delete"/>
 		<permissions list="config,edit-self,edit-all,delete-self,delete-all"/>
 		<role name="Gallery Admin" permissions="config,edit-self,edit-all,delete-self,delete-all"/>
 		<role name="Gallery User" permissions="edit-self,delete-self"/>
@@ -57,6 +51,21 @@ $LastChangedRevision$
 			<field name="metadata" type="text" null="false" default=""/>
 			<pk fields="id"/>
 			<fk field="gallery_id" mapping="gallery.id"/>
+		</table>
+		<table name="gallery_version">
+			<field name="id" type="integer" len="11" null="false" special="auto_increment"/>
+			<field name="width" type="integer" len="11" null="false" default="0"/>
+			<field name="height" type="integer" len="11" null="false" default="0"/>
+			<pk fields="id"/>
+		</table>
+		<table name="gallery_item_version_rel">
+			<field name="id" type="integer" len="11" null="false" special="auto_increment"/>
+			<field name="item_id" type="integer" len="11" null="false" default="0"/>
+			<field name="version_id" type="integer" len="11" null="false" default="0"/>
+			<field name="width" type="integer" len="11" null="false" default="0"/>
+			<field name="height" type="integer" len="11" null="false" default="0"/>
+			<pk fields="id"/>
+			<fk field="item_id" mapping="gallery_item.id"/>
 		</table>
 	</database>
 

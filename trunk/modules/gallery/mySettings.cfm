@@ -21,15 +21,14 @@ $LastChangedRevision$
 	stDefaultModuleConfig.items_per_col = 4;
 </cfscript>
 
-<cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#core.configmanager" method="createConfig" returnvariable="stModuleConfig">
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.configmanager')#" method="createConfig" returnvariable="stModuleConfig">
 	<cfinvokeargument name="module" value="#myfusebox.thiscircuit#">
 	<cfinvokeargument name="data" value="#stDefaultModuleConfig#">
 	<cfinvokeargument name="version" value="2.0">
 </cfinvoke>
 
-<cfscript>
-	stModuleConfig.files.storage = "#application.lanshock.oHelper.UDF_Module('absStoragePathPublic')#galleries/";
-	stModuleConfig.files.tmp = getTempDirectory();
-</cfscript>
+<cfparam name="stModuleConfig.lResolutions" default="120x120,640x480">
+
+<cfset stModuleConfig.files.storage = "#application.lanshock.oHelper.UDF_Module('absStoragePathPublic')#galleries/">
 
 <cfsetting enablecfoutputonly="No">

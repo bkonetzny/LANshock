@@ -24,22 +24,38 @@ $LastChangedRevision$
 	<cfelse>
 		#request.content.item_nav_next#
 	</cfif>
+
+	<div style="margin-top: 10px;">
+	<cfloop query="qItemPartnersPrev">
+		<cfif fileExists(application.lanshock.oHelper.UDF_Module('absStoragePathPublic') & 'galleries/#qGallery.id#/#stDefaultModuleConfig.tn.max_width#x#stDefaultModuleConfig.tn.max_height#/#qItemPartnersPrev.filename#')>
+			<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.item&gallery_id=#qGallery.id#&id=#qItemPartnersPrev.id#')###gallery_image"><img src="#application.lanshock.oHelper.UDF_Module('webStoragePathPublic')#galleries/#qGallery.id#/#stDefaultModuleConfig.tn.max_width#x#stDefaultModuleConfig.tn.max_height#/#qItemPartnersPrev.filename#" title="#qItemPartnersPrev.title#" alt="#qItemPartnersPrev.title#" width="40" height="30"/></a>
+		</cfif>
+	</cfloop>
+	<cfif fileExists(application.lanshock.oHelper.UDF_Module('absStoragePathPublic') & 'galleries/#qGallery.id#/#stDefaultModuleConfig.tn.max_width#x#stDefaultModuleConfig.tn.max_height#/#qItem.filename#')>
+		<img src="#application.lanshock.oHelper.UDF_Module('webStoragePathPublic')#galleries/#qGallery.id#/#stDefaultModuleConfig.tn.max_width#x#stDefaultModuleConfig.tn.max_height#/#qItem.filename#" title="#qItem.title#" alt="#qItem.title#" width="40" height="30" style="-moz-opacity:0.3; filter:alpha(opacity=30);"/> 
+	</cfif>
+	<cfloop query="qItemPartnersNext">
+		<cfif fileExists(application.lanshock.oHelper.UDF_Module('absStoragePathPublic') & 'galleries/#qGallery.id#/#stDefaultModuleConfig.tn.max_width#x#stDefaultModuleConfig.tn.max_height#/#qItemPartnersNext.filename#')>
+			<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.item&gallery_id=#qGallery.id#&id=#qItemPartnersNext.id#')###gallery_image"><img src="#application.lanshock.oHelper.UDF_Module('webStoragePathPublic')#galleries/#qGallery.id#/#stDefaultModuleConfig.tn.max_width#x#stDefaultModuleConfig.tn.max_height#/#qItemPartnersNext.filename#" title="#qItemPartnersPrev.title#" alt="#qItemPartnersPrev.title#" width="40" height="30"/></a>
+		</cfif>
+	</cfloop>
+	</div>
 </div>
 
 <h4>#qItem.title#</h4> <span class="text_small text_light">#LSDateFormat(qItem.dt_created)#</span>
 
 <div align="center">
 	<cfif fileExists(application.lanshock.oHelper.UDF_Module('absStoragePathPublic') & 'galleries/#qGallery.id#/#qItem.filename#')>
-		<img src="#application.lanshock.oHelper.UDF_Module('webStoragePathPublic')#galleries/#qGallery.id#/#qItem.filename#">
+		<img src="#application.lanshock.oHelper.UDF_Module('webStoragePathPublic')#galleries/#qGallery.id#/#qItem.filename#" title="#qItem.title#" alt="#qItem.title#"/>
 	<cfelseif fileExists(application.lanshock.oHelper.UDF_Module('absStoragePathPublic') & 'galleries/#qGallery.id#/#stDefaultModuleConfig.item.max_width#x#stDefaultModuleConfig.item.max_height#/#qItem.filename#')>
-		<img src="#application.lanshock.oHelper.UDF_Module('webStoragePathPublic')#galleries/#qGallery.id#/#stDefaultModuleConfig.item.max_width#x#stDefaultModuleConfig.item.max_height#/#qItem.filename#">
+		<img src="#application.lanshock.oHelper.UDF_Module('webStoragePathPublic')#galleries/#qGallery.id#/#stDefaultModuleConfig.item.max_width#x#stDefaultModuleConfig.item.max_height#/#qItem.filename#" title="#qItem.title#" alt="#qItem.title#"/>
 	</cfif>
 </div>
 
 <cfif len(qItem.text)>
 	<h4>#request.content.description#</h4>
 	
-	#ConvertText(qItem.text)#
+	#application.lanshock.oHelper.ConvertText(qItem.text)#
 </cfif>
 
 <cfif isWDDX(qItem.metadata)>

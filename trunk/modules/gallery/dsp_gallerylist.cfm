@@ -28,7 +28,7 @@ $LastChangedRevision$
 			WHERE linktosource LIKE '%gallery_id=#id#%'
 		</cfquery>
 		<tr>
-			<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.gallery&id=#qGallerylist.id#')#">#qGallerylist.title# <cfif NOT qGallerylist.visible>(#request.content.gallery_invisible#)</cfif>
+			<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.gallery&id=#qGallerylist.id#')#">#qGallerylist.title#
 				<cfif len(qGallerylist.tn)>
 					<cfif fileExists(application.lanshock.oHelper.UDF_Module('absStoragePathPublic') & 'galleries/#qGallerylist.id#/tn/#qGallerylist.tn#')>
 						<br><img src="#application.lanshock.oHelper.UDF_Module('webStoragePathPublic')#galleries/#qGallerylist.id#/tn/#qGallerylist.tn#" title="#qGallerylist.title#"/>
@@ -38,10 +38,11 @@ $LastChangedRevision$
 				</cfif>
 				</a>
 			</td>
-			<td>#qGallerylist.itemcount# #request.content.gallery_itemcount#
-				<cfif qGetComments.recordcount><br>#qGetComments.comments# #request.content.gallery_commentcount#</cfif>
-				<br>#request.content.gallery_date#: #session.oUser.DateTimeFormat(qGallerylist.dt_created)#
-				<br>#request.content.gallery_owner#: <a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#qGallerylist.user_id#')#">#application.lanshock.oHelper.getUsernameById(qGallerylist.user_id)#</a>
+			<td><cfif NOT qGallerylist.visible>#request.content.gallery_invisible#<br/></cfif>
+				#qGallerylist.itemcount# #request.content.gallery_itemcount#
+				<cfif qGetComments.recordcount><br/>#qGetComments.comments# #request.content.gallery_commentcount#</cfif>
+				<br/>#request.content.gallery_date#: #session.oUser.DateTimeFormat(qGallerylist.dt_created)#
+				<br/>#request.content.gallery_owner#: <a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#qGallerylist.user_id#')#">#application.lanshock.oHelper.getUsernameById(qGallerylist.user_id)#</a>
 			</td>
 		</tr>
 	</cfloop>

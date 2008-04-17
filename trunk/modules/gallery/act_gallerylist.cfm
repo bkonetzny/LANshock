@@ -9,8 +9,8 @@ $LastChangedBy$
 $LastChangedRevision$
 --->
 
-<cfinvoke component="gallery" method="getGallerylist" returnvariable="qGallerylist">
-	<cfif session.isAdmin>
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.gallery.gallery')#" method="getGallerylist" returnvariable="qGallerylist">
+	<cfif session.oUser.checkPermissions('edit-all')>
 		<cfinvokeargument name="showVisibleOnly" value="false">
 	</cfif>
 </cfinvoke>

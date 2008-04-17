@@ -10,14 +10,14 @@ $LastChangedRevision$
 --->
 
 <cfoutput>
-<div class="headline">#request.content.zip_upload#</div>
+<h3>#request.content.zip_upload#</h3>
 
-<div class="headline2">#request.content.zip_upload#</div>
+<h4>#request.content.zip_upload#</h4>
 
+<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post" enctype="multipart/form-data">
+<input type="hidden" name="form_submitted" value="true"/>
+<input type="hidden" name="gallery_id" value="#attributes.gallery_id#"/>
 <table>
-	<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post" enctype="multipart/form-data">
-	<input type="hidden" name="form_submitted" value="true"/>
-	<input type="hidden" name="gallery_id" value="#attributes.gallery_id#"/>
 	<tr>
 		<td>#request.content.zip_file#</td>
 		<td><input type="file" name="file"/></td>
@@ -26,8 +26,27 @@ $LastChangedRevision$
 		<td>&nbsp;</td>
 		<td><input type="submit" value="#request.content.form_save#"/></td>
 	</tr>
-	</form>
 </table>
+
+<cfif session.oUser.checkPermissions('edit-all')>
+	<h4>$$$ Uploaded Zip-File</h4>
+	
+	<table class="list">
+		<tr>
+			<th>Name</th>
+			<th>Size</th>
+			<th>Datum</th>
+		</tr>
+		<cfloop query="qTmpFiles">
+			<tr>
+				<td><input type="radio" name="existing_file" value="#qTmpFiles.name#"/> #qTmpFiles.name#</td>
+				<td align="center">#qTmpFiles.size#</td>
+				<td align="center">#session.oUser.DateTimeFormat(qTmpFiles.dateLastModified)#</td>
+			</tr>
+		</cfloop>
+	</table>
+</cfif>
+</form>
 </cfoutput>
 
 <cfsetting enablecfoutputonly="No">

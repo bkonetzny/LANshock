@@ -23,6 +23,12 @@ $LastChangedRevision$
 		<include template="act_general_settings.cfm"/>
 		<include template="dsp_general_settings.cfm"/>
 	</fuseaction>
+	
+	<fuseaction name="general_versions">
+		<lanshock:security area="config"/>
+		<include template="act_general_versions.cfm"/>
+		<include template="dsp_general_versions.cfm"/>
+	</fuseaction>
 
 	<!-- Show Gallerylist -->
 	<fuseaction name="gallerylist">
@@ -71,6 +77,11 @@ $LastChangedRevision$
 	<fuseaction name="item_delete">
 		<include template="act_item_delete.cfm"/>
 		<include template="dsp_item_delete.cfm"/>
+	</fuseaction>
+
+	<fuseaction name="media_rss" lanshock:showlayout="none">
+		<include template="act_media_rss.cfm"/>
+		<include template="dsp_media_rss.cfm"/>
 	</fuseaction>
 	
 </circuit>
