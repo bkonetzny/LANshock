@@ -15,7 +15,7 @@ $LastChangedRevision$
 <cfparam name="attributes.id" default="0">
 
 <cfif attributes.id NEQ 0>
-	<cfinvoke component="gallery" method="getGallery" returnvariable="qGallery">
+	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.gallery.gallery')#" method="getGallery" returnvariable="qGallery">
 		<cfinvokeargument name="id" value="#attributes.id#">
 	</cfinvoke>
 	
@@ -46,7 +46,7 @@ $LastChangedRevision$
 	
 	<cfif NOT ArrayLen(aError)>
 	
-		<cfinvoke component="gallery" method="setGallery" returnvariable="gallery_id">
+		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.gallery.gallery')#" method="setGallery" returnvariable="gallery_id">
 			<cfinvokeargument name="id" value="#attributes.id#">
 			<cfinvokeargument name="title" value="#attributes.title#">
 			<cfinvokeargument name="date" value="#attributes.date#">
@@ -63,7 +63,7 @@ $LastChangedRevision$
 </cfif>
 
 <cfif attributes.id NEQ 0>
-	<cfinvoke component="gallery" method="getItemlist" returnvariable="qItemlist">
+	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.gallery.gallery')#" method="getItemlist" returnvariable="qItemlist">
 		<cfinvokeargument name="gallery_id" value="#attributes.id#">
 	</cfinvoke>
 </cfif>

@@ -15,7 +15,7 @@ $LastChangedRevision$
 <cfparam name="attributes.id" default="0">
 <cfparam name="attributes.delete_accepted" default="false">
 
-<cfinvoke component="gallery" method="getGallery" returnvariable="qGallery">
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.gallery.gallery')#" method="getGallery" returnvariable="qGallery">
 	<cfinvokeargument name="id" value="#attributes.id#">
 </cfinvoke>
 
@@ -32,7 +32,7 @@ $LastChangedRevision$
 	
 	<cfif NOT ArrayLen(aError)>
 
-		<cfinvoke component="gallery" method="deleteGallery">
+		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.gallery.gallery')#" method="deleteGallery">
 			<cfinvokeargument name="id" value="#attributes.id#">
 			<cfinvokeargument name="settings" value="#stModuleConfig#">
 		</cfinvoke>

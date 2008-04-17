@@ -10,10 +10,10 @@ $LastChangedRevision$
 --->
 
 <cfparam name="attributes.form_submitted" default="false">
-
 <cfparam name="attributes.gallery_id" default="0">
+<cfparam name="attributes.existing_file" default="0">
 
-<cfinvoke component="gallery" method="getGallery" returnvariable="qGallery">
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.gallery.gallery')#" method="getGallery" returnvariable="qGallery">
 	<cfinvokeargument name="id" value="#attributes.gallery_id#">
 </cfinvoke>
 
@@ -21,9 +21,13 @@ $LastChangedRevision$
 	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.main')#" addtoken="false">
 </cfif>
 
+<cfif NOT session.oUser.checkPermissions('edit-all')>
+	<cfset attributes.existing_file = ''>
+</cfif>
+
 <cfif attributes.form_submitted>
 
-	<cfif len(attributes.file)>
+	<cfif len(attributes.file) OR len(attributes.existing_file)>
 	
 		<cfset uuid = CreateUUID()>
 		<cfset uuidZip = '#uuid#.zip'>
@@ -33,22 +37,26 @@ $LastChangedRevision$
 			<cfdirectory action="create" directory="#stModuleConfig.files.storage#" mode="777">
 		</cfif>
 			
-		<cfif NOT DirectoryExists(stModuleConfig.files.tmp)>
-			<cfdirectory action="create" directory="#stModuleConfig.files.tmp#" mode="777">
+		<cfif NOT DirectoryExists(application.lanshock.oHelper.UDF_Module('storagePathTemp'))>
+			<cfdirectory action="create" directory="#application.lanshock.oHelper.UDF_Module('storagePathTemp')#" mode="777">
 		</cfif>
-			
-		<cfif NOT DirectoryExists('#stModuleConfig.files.tmp##uuid#/')>
-			<cfdirectory action="create" directory="#stModuleConfig.files.tmp##uuid#/" mode="777">
+		
+		<cfif NOT DirectoryExists('#application.lanshock.oHelper.UDF_Module('storagePathTemp')##uuid#/')>
+			<cfdirectory action="create" directory="#application.lanshock.oHelper.UDF_Module('storagePathTemp')##uuid#/" mode="777">
 		</cfif>
 
-		<cffile action="upload" filefield="file" destination="#stModuleConfig.files.tmp##uuidZip#" mode="777" nameconflict="overwrite">
+		<cfif len(attributes.file)>
+			<cffile action="upload" filefield="file" destination="#application.lanshock.oHelper.UDF_Module('storagePathTemp')##uuidZip#" mode="777" nameconflict="overwrite">
+		<cfelse>
+			<cfset uuidZip = attributes.existing_file>
+		</cfif>
 		
 		<cftry>
 			<cfscript>
 				/* Create an instance of a component object */
 				zip = CreateObject("component","#application.lanshock.oRuntime.getEnvironment().sComponentPath#core._utils.zip");
 				/* Extract Zip file */ 
-				status = zip.Extract('#stModuleConfig.files.tmp##uuidZip#','#stModuleConfig.files.tmp##uuid#/');
+				status = zip.Extract('#application.lanshock.oHelper.UDF_Module('storagePathTemp')##uuidZip#','#application.lanshock.oHelper.UDF_Module('storagePathTemp')##uuid#/');
 			</cfscript>
 			<cfcatch>
 				<cfset bSkip = true>
@@ -57,30 +65,34 @@ $LastChangedRevision$
 	
 		<cfif NOT bSkip>
 		
-			<cfdirectory action="list" directory="#stModuleConfig.files.tmp##uuid#/" name="qDir" sort="name ASC">
+			<cfdirectory action="list" directory="#application.lanshock.oHelper.UDF_Module('storagePathTemp')##uuid#/" name="qDir" sort="name ASC">
 			
-			<cfloop query="qDir">
-				<cfif type NEQ "dir">
-					<cftry>
-						<cfinvoke component="gallery" method="setItem">
-							<cfinvokeargument name="id" value="0">
-							<cfinvokeargument name="gallery_id" value="#attributes.gallery_id#">
-							<cfinvokeargument name="title" value="#left(name,255)#">
-							<cfinvokeargument name="text" value="">
-							<cfinvokeargument name="file" value="#stModuleConfig.files.tmp##uuid#/#name#">
-							<cfinvokeargument name="settings" value="#stModuleConfig#">
-						</cfinvoke>
-						<cfcatch><!--- do nothing ---></cfcatch>
-					</cftry>
-				</cfif>
-			</cfloop>
+			<cfif qDir.recordcount>
+				<cfsetting requesttimeout="#qDir.recordcount*30#">
+				
+				<cfloop query="qDir">
+					<cfif type NEQ "dir">
+						<cftry>
+							<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.gallery.gallery')#" method="setItem">
+								<cfinvokeargument name="id" value="0">
+								<cfinvokeargument name="gallery_id" value="#attributes.gallery_id#">
+								<cfinvokeargument name="title" value="#left(name,255)#">
+								<cfinvokeargument name="text" value="">
+								<cfinvokeargument name="file" value="#application.lanshock.oHelper.UDF_Module('storagePathTemp')##uuid#/#name#">
+								<cfinvokeargument name="settings" value="#stModuleConfig#">
+							</cfinvoke>
+							<cfcatch><!--- do nothing ---></cfcatch>
+						</cftry>
+					</cfif>
+				</cfloop>
+			</cfif>
 		</cfif>
-			
-		<cfif DirectoryExists('#stModuleConfig.files.tmp##uuid#/')>
-			<cfdirectory action="delete" directory="#stModuleConfig.files.tmp##uuid#/" recurse="true">
+		
+		<cfif DirectoryExists('#application.lanshock.oHelper.UDF_Module('storagePathTemp')##uuid#/')>
+			<cfdirectory action="delete" directory="#application.lanshock.oHelper.UDF_Module('storagePathTemp')##uuid#/" recurse="true">
 		</cfif>
-		<cfif FileExists('#stModuleConfig.files.tmp##uuidZip#')>
-			<cffile action="delete" file="#stModuleConfig.files.tmp##uuidZip#">
+		<cfif len(attributes.file) AND FileExists('#application.lanshock.oHelper.UDF_Module('storagePathTemp')##uuidZip#')>
+			<cffile action="delete" file="#application.lanshock.oHelper.UDF_Module('storagePathTemp')##uuidZip#">
 		</cfif>
 	
 	</cfif>
@@ -88,5 +100,7 @@ $LastChangedRevision$
 	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.gallery&id=#attributes.gallery_id#')#" addtoken="false">
 
 </cfif>
+
+<cfdirectory name="qTmpFiles" action="list" directory="#application.lanshock.oHelper.UDF_Module('storagePathTemp')#" filter="*.zip">
 
 <cfsetting enablecfoutputonly="No">

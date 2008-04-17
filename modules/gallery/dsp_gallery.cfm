@@ -22,40 +22,37 @@ $LastChangedRevision$
 		<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.gallery_delete&id=#qGallery.id#')#">#request.content.gallery_delete#</a></li>
 		<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.item_edit&gallery_id=#qGallery.id#')#">#request.content.item_new#</a></li>
 		<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.item_zip_upload&gallery_id=#qGallery.id#')#">#request.content.zip_upload#</a></li>
+		<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.media_rss&id=#qGallery.id#')#" target="_blank">$$$ Media-RSS</a></li>
 	</ul>
 </cfif>
 
-<cfset iStartRow = 1>
-<cfset iGridRows = ceiling(qItemlist.recordcount / stModuleConfig.items_per_col)>
-<cfloop from="1" to="#iGridRows#" index="idx">
-	<cfset iEndRow = iStartRow+stModuleConfig.items_per_col-1>
-	<cfloop query="qItemlist" startrow="#iStartRow#" endrow="#iEndRow#">
-		<cfquery dbtype="query" name="qGetComments">
-			SELECT postcount
-			FROM qCommentCount
-			WHERE identifier = <cfqueryparam cfsqltype="cf_sql_varchar" value="gallery_item_#id#">
-		</cfquery>
-		<div style="float: left; width: #stModuleConfig.tn.max_width#px; margin: 3px; padding: 3px; border: 1px solid gray; border-bottom: 2px solid black; border-right: 2px solid black;">
-			<cfif session.userid EQ qGallery.user_id OR session.isAdmin>
-				<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.item_edit&id=#qItemlist.id#&gallery_id=#qGallery.id#')#"><img src="#stImageDir.general#/btn_edit.gif" alt="#request.content.item_edit#"></a>
-				<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.item_delete&id=#qItemlist.id#&gallery_id=#qGallery.id#')#"><img src="#stImageDir.general#/btn_delete.gif" alt="#request.content.item_delete#"></a>
+<div style="overflow: auto;">
+<cfloop query="qItemlist">
+	<cfquery dbtype="query" name="qGetComments">
+		SELECT postcount
+		FROM qCommentCount
+		WHERE identifier = <cfqueryparam cfsqltype="cf_sql_varchar" value="gallery_item_#id#">
+	</cfquery>
+	<div style="float: left; width: #stModuleConfig.tn.max_width#px; height: #stModuleConfig.tn.max_height+60#px; margin-left: 2px; margin-bottom: 3px; padding: 3px; border: 1px solid gray; border-bottom: 2px solid gray; border-right: 2px solid gray;">
+		<cfif session.userid EQ qGallery.user_id OR session.isAdmin>
+			<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.item_edit&id=#qItemlist.id#&gallery_id=#qGallery.id#')#"><img src="#stImageDir.general#/btn_edit.gif" alt="#request.content.item_edit#"></a>
+			<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.item_delete&id=#qItemlist.id#&gallery_id=#qGallery.id#')#"><img src="#stImageDir.general#/btn_delete.gif" alt="#request.content.item_delete#"></a>
+			<br/>
+		</cfif>
+		<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.item&id=#qItemlist.id#&gallery_id=#qGallery.id#')#">
+			<cfif fileExists(application.lanshock.oHelper.UDF_Module('absStoragePathPublic') & 'galleries/#qGallery.id#/#stDefaultModuleConfig.tn.max_width#x#stDefaultModuleConfig.tn.max_height#/#qItemlist.filename#')>
+				<img src="#application.lanshock.oHelper.UDF_Module('webStoragePathPublic')#galleries/#qGallery.id#/#stDefaultModuleConfig.tn.max_width#x#stDefaultModuleConfig.tn.max_height#/#qItemlist.filename#" title="#qItemlist.title#" alt="#qItemlist.title#"/>
+			<cfelseif fileExists(application.lanshock.oHelper.UDF_Module('absStoragePathPublic') & 'galleries/#qGallery.id#/tn/#qItemlist.filename#')>
+				<img src="#application.lanshock.oHelper.UDF_Module('webStoragePathPublic')#galleries/#qGallery.id#/tn/#qItemlist.filename#" title="#qItemlist.title#" alt="#qItemlist.title#"/>
 			</cfif>
-			<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.item&id=#qItemlist.id#&gallery_id=#qGallery.id#')#">
-				<cfif fileExists(application.lanshock.oHelper.UDF_Module('absStoragePathPublic') & 'galleries/#qGallery.id#/tn/#filename#')>
-					<img src="#application.lanshock.oHelper.UDF_Module('webStoragePathPublic')#galleries/#qGallery.id#/tn/#filename#" title="#title#">
-				<cfelseif fileExists(application.lanshock.oHelper.UDF_Module('absStoragePathPublic') & 'galleries/#qGallery.id#/#stDefaultModuleConfig.tn.max_width#x#stDefaultModuleConfig.tn.max_height#/#filename#')>
-					<img src="#application.lanshock.oHelper.UDF_Module('webStoragePathPublic')#galleries/#qGallery.id#/#stDefaultModuleConfig.tn.max_width#x#stDefaultModuleConfig.tn.max_height#/#filename#" title="#title#">
-				</cfif>
-				<br/>#title#
-			</a>
-			<cfif qGetComments.recordcount>
-				<span class="text_small text_light">#qGetComments.postcount# #request.content._core__comments__comments#</span>
-			</cfif>
-		</div>
-	</cfloop>
-	<cfset iStartRow = iEndRow+1>
-	<div class="clearer"></div>
+			<span style="display: block;">#title#</span>
+		</a>
+		<cfif qGetComments.recordcount>
+			<span class="text_small text_light">#qGetComments.postcount# #request.content._core__comments__comments#</span>
+		</cfif>
+	</div>
 </cfloop>
+</div>
 </cfoutput>
 
 <cfsetting enablecfoutputonly="No">
