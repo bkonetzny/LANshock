@@ -473,7 +473,6 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
      * private Updates the date part
      */
     ,updateDate:function() {
-
         var d = this.df.getValue();
         if(d) {
             if(!(this.dateValue instanceof Date)) {
@@ -529,7 +528,12 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
         if(this.isRendered) {
             var value = this.dateValue instanceof Date ? this.dateValue.format(this.hiddenFormat) : '';
             this.el.dom.value = value;
+	    this.handler();
         }
+    }
+    ,handler:function() {
+	alert(this.getValue());
+        return true;
     }
     // }}}
     // {{{
