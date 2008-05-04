@@ -116,6 +116,12 @@ $LastChangedRevision: 103 $
 			<cfif directoryExists(sModelDirectory)>
 				<cfdirectory action="list" directory="#sModelDirectory#" recurse="true" name="qModelFiles">
 				
+				<cfquery dbtype="query" name="qModelFiles">
+					SELECT *
+					FROM qModelFiles
+					WHERE directory NOT LIKE '%.svn%'
+				</cfquery>
+				
 				<cfloop query="qModelFiles">
 					<cfif qModelFiles.type EQ 'file' AND len(qModelFiles.directory)-len(sModelDirectory) GT 0>
 						<cfset sModelTarget = expandPath('model/#right(qModelFiles.directory,len(qModelFiles.directory)-len(sModelDirectory))#/#qModelFiles.name#')>
@@ -123,6 +129,7 @@ $LastChangedRevision: 103 $
 						<cfif NOT directoryExists(getDirectoryFromPath(sModelTarget))>
 							<cfdirectory action="create" directory="#getDirectoryFromPath(sModelTarget)#" mode="777">
 						</cfif>
+						
 						<cffile action="copy" source="#qModelFiles.directory#/#qModelFiles.name#" destination="#sModelTarget#" mode="777">
 					</cfif>
 				</cfloop>
@@ -152,7 +159,7 @@ $LastChangedRevision: 103 $
 				WHERE module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
 			</cfquery>
 			
-			<cfif stModuleConfig.data.general.createCircuit>
+			<cfif stModuleConfig.data.general.type NEQ 'service'>
 			
 				<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 					INSERT INTO core_navigation (module, action, level, sortorder, permissions)
@@ -330,7 +337,7 @@ $LastChangedRevision: 103 $
 			<cfset stData.info.name = stXML.module.XmlAttributes.name>
 			<cfset stData.info.version = stXML.module.XmlAttributes.version>
 			<cfset stData.info.date = ParseDateTime(stXML.module.XmlAttributes.date)>
-			<cfset stData.info.folder = arguments.folder>
+			<cfset stData.info.folder = LCase(arguments.folder)>
 			<cfset stData.info.author = stXML.module.XmlAttributes.author>
 			<cfset stData.info.url = stXML.module.XmlAttributes.url>
 			<cfset stData.info.hint = stXML.module.XmlAttributes.hint>
