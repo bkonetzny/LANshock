@@ -758,6 +758,11 @@
 		<cfargument name="fieldAlias" hint="I am the alias of the field." required="yes" type="any" _type="string" />
 		<cfargument name="expression" hint="I am the expression to add replace the field with." required="yes" type="any" _type="string" />
 		<cfargument name="cfDataType" hint="I am the cfsql data type to use." required="no" type="any" _type="string" />
+		
+		<!--- Railo fix --->
+		<cfif NOT StructKeyExists(arguments,'cfDataType')>
+			<cfset arguments.cfDataType = ''>
+		</cfif>
 
 		<cfset addQueryCommand(arguments, "setFieldExpression") />
 
