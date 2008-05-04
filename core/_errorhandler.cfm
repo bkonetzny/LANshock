@@ -38,7 +38,7 @@ $LastChangedRevision$
 	</cfcatch>
 </cftry>
 
-<cfoutput><cfcontent reset="true"><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<cfoutput><cftry><cfcontent reset="true"><cfcatch></cfcatch></cftry><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
 	<title>LANshock - Error Occurred While Processing Request</title>
