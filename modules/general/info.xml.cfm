@@ -9,7 +9,7 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 75 $
 -->
 
-<module name="LANshock General" version="1.0.7.1" date="2006-03-05" author="LANshock" url="http://www.lanshock.com">
+<module name="LANshock General" version="2.0.0.0" date="2008-01-11" author="LANshock" url="http://www.lanshock.com">
 	
 	<general requiresLogin="false"/>
 	

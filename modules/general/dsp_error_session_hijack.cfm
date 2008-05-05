@@ -18,7 +18,7 @@ $LastChangedRevision: 50 $
 	<cfset StructDelete(session,idx2)>
 </cfloop>
 
-<cffile action="append" file="#application.lanshock.environment.abspath#storage/secure/logs/core_general_sessionhijacking.log" output="#cgi.remote_addr# - [#DateFormat(now(),"yyyy-mm-dd")# #TimeFormat(now(),"hh:mm:ss")#] #attributes.ip_session# / #cgi.remote_addr#">
+<cffile action="append" file="#application.lanshock.oRuntime.getEnvironment().sBasePath#storage/secure/logs/core_general_sessionhijacking.log" output="#cgi.remote_addr# - [#DateFormat(now(),"yyyy-mm-dd")# #TimeFormat(now(),"hh:mm:ss")#] #attributes.ip_session# / #cgi.remote_addr#">
 
 <cfoutput>
 	<h4>#request.content.session_hijack#</h4>

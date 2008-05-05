@@ -9,10 +9,12 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 50 $
 --->
 
+<cfset application.lanshock.oLogger.writeLog('core.http404','UserAgent: "#cgi.http_user_agent#"','error')>
+
 <cfheader statuscode="404">
 <cfoutput>
 	<h4>404 - Page Not Found</h4>
 	<p>The Page you are looking for was not found.</p>
 </cfoutput>
-	
+
 <cfsetting enablecfoutputonly="No">
