@@ -45,19 +45,10 @@ function validateCommentsForm(uuidFormName,sErrorMessage){
 	else return true;
 }
 
-function Panel(){
-	var myself = LANshock.getVar('myself');
-	var sessionUrlToken = LANshock.getVar('sessionUrlToken');
-	window.open(myself+'c_general.panel&'+sessionUrlToken,
-				"Panel",
-				"height=500,width=220,left=20,top=20,locationbar=0,menubar=0,resizable=1,scrollbars=1,status=0"
-	);
-}
-
 function SendMsg(iUserID){
 	var myself = LANshock.getVar('myself');
 	var sessionUrlToken = LANshock.getVar('sessionUrlToken');
-	window.open(myself+'c_mail.message_dialog&user_id='+iUserID+'&'+sessionUrlToken,
+	window.open(myself+'mail.message_dialog&user_id='+iUserID+'&'+sessionUrlToken,
 				"NewMessage",
 				"height=300,width=300,left=340,top=20,locationbar=0,menubar=0,resizable=0,scrollbars=1,status=0"
 	);
@@ -66,7 +57,7 @@ function SendMsg(iUserID){
 function showLANshockCode(){
 	var myself = LANshock.getVar('myself');
 	var sessionUrlToken = LANshock.getVar('sessionUrlToken');
-	window.open(myself+'c_general.lanshock_code_popup&'+sessionUrlToken,
+	window.open(myself+'general.lanshock_code_popup&'+sessionUrlToken,
 				"LANshockCode",
 				"height=450,width=600,left=20,top=20,locationbar=0,menubar=0,resizable=1,scrollbars=1,status=0"
 	);
