@@ -9,9 +9,9 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 96 $
 --->
 
-<cfinvoke component="#request.lanshock.environment.componentpath#core._utils.i18n.i18nUtil" method="getLocalesStruct" returnvariable="stLocales">
+<cfset stLocales = application.lanshock.oFactory.load('lanshock.core._utils.i18n.i18nUtil').getLocalesStruct()>
 
-<cfset stUserOnline = application.sessions.stSessions>
-<cfset aStructOrder = StructSort(stUserOnline,'textnocase','DESC','session.timestamp')>
+<cfset stUserOnline = application.lanshock.oSessionmanager.getSessions()>
+<cfset aStructOrder = StructSort(stUserOnline,'textnocase','DESC','session.dtsessioncreated')>
 
 <cfsetting enablecfoutputonly="No">

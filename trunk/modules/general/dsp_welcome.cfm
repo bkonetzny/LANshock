@@ -10,7 +10,7 @@ $LastChangedRevision: 50 $
 --->
 
 <cfif len(application.lanshock.settings.startpage)>
-	<cflocation url="#myself##application.lanshock.settings.startpage#&#request.session.urltoken#" addtoken="false">
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#application.lanshock.settings.startpage#')#" addtoken="false">
 </cfif>
 
 <cfoutput>
@@ -18,15 +18,15 @@ $LastChangedRevision: 50 $
 	
 	<p>#request.content.welcome1#</p>
 	
-	<h4><a class="link_extended" href="#myself##myfusebox.thiscircuit#.language&#request.session.urltoken#">#request.content.welcome_change_language#</a></h4>
+	<h4><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.language')#">#request.content.welcome_change_language#</a></h4>
 	
 	<p>#request.content.welcome_change_language_txt#</p>
 	
-	<h4><a class="link_extended" href="#myself##request.lanshock.settings.modulePrefix.core#user.login&#request.session.urltoken#">#request.content.welcome_login#</a></h4>
+	<h4><a href="#application.lanshock.oHelper.buildUrl('user.login')#">#request.content.welcome_login#</a></h4>
 	
 	<p>#request.content.welcome_login_txt#</p>
 	
-	<h4><a class="link_extended" href="#myself##myfusebox.thiscircuit#.online&#request.session.urltoken#">#request.content.welcome_online#</a></h4>
+	<h4><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.online')#">#request.content.welcome_online#</a></h4>
 	
 	<p>#request.content.welcome_online_txt#</p>
 </cfoutput>

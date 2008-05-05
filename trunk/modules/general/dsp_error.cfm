@@ -16,6 +16,8 @@ $LastChangedRevision: 50 $
 	<h4>#request.content.error_headline#</h4>
 	<h3>#attributes.type#</h3>
 	<p>#attributes.message#</p>
+	
+	<cfdump var="#StructKeyList(application.lanshock.oModules.getModules('installed'))#">
 </cfoutput>
 	
 <cfsetting enablecfoutputonly="No">

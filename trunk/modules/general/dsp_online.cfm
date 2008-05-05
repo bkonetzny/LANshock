@@ -11,31 +11,30 @@ $LastChangedRevision: 50 $
 
 <cfoutput>
 	<h3>#request.content.online_headline#</h3>
-
 	<table>
 		<tr>
 			<th>#request.content.online_username#</th>
-			<cfif request.session.isAdmin>
+			<cfif session.oUser.checkPermissions(module="admin",area="*")>
 				<th>#request.content.online_location#</th>
 				<th>#request.content.online_ip#</th>
 				<th>#request.content.online_timestamp#</th>
 			</cfif>
 		</tr>
 		<cfloop from="1" to="#ArrayLen(aStructOrder)#" index="idx">
-		<cfset keyUser = aStructOrder[idx]>
-		<tr>
-			<td<cfif request.session.isAdmin> rowspan="2"</cfif>><img src="#UDF_Module('webPath')#flags/#LCase(ListLast(stUserOnline[keyUser].session.lang,'_'))#.gif" alt="#stLocales[stUserOnline[keyUser].session.lang]#"> <cfif isNumeric(stUserOnline[keyUser].session.userid)><a href="#myself##request.lanshock.settings.modulePrefix.core#user.userdetails&id=#stUserOnline[keyUser].session.userid#&#request.session.UrlToken#">#GetUsernameByID(stUserOnline[keyUser].session.userid)#</a><cfelse>#GetUsernameByID(0)#</cfif></td>
-			<cfif request.session.isAdmin>
-				<td title="#stUserOnline[keyUser].fusebox.urlvalue#"><cfif StructKeyExists(Application.module,stUserOnline[keyUser].fusebox.circuit)>#Application.module[stUserOnline[keyUser].fusebox.circuit].name#</cfif></td>
-				<td>#stUserOnline[keyUser].session.ip_address#</td>
-				<td>#UDF_DateTimeFormat(stUserOnline[keyUser].session.timestamp)#</td>
-			</cfif>
-		</tr>
-		<cfif request.session.isAdmin>
+			<cfset keyUser = aStructOrder[idx]>
 			<tr>
-				<td colspan="3">#request.content.online_useragent# <span class="text_small text_light">#stUserOnline[keyUser].http_user_agent#</span></td>
+				<td<cfif session.oUser.checkPermissions(module="admin",area="*")> rowspan="2"</cfif>><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/flags/png/#LCase(ListLast(stUserOnline[keyUser].session.stUser.lang,'_'))#.png" alt="#stLocales[stUserOnline[keyUser].session.stUser.lang]#"> <cfif isNumeric(stUserOnline[keyUser].session.stUser.userid) AND stUserOnline[keyUser].session.stUser.userid GT 0><a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#stUserOnline[keyUser].session.stUser.userid#')#">#application.lanshock.oHelper.GetUsernameByID(stUserOnline[keyUser].session.stUser.userid)#</a><cfelse>#application.lanshock.oHelper.GetUsernameByID(0)#</cfif></td>
+				<cfif session.oUser.checkPermissions(module="admin",area="*")>
+					<td>#stUserOnline[keyUser].fusebox.circuit#.#stUserOnline[keyUser].fusebox.action#</td>
+					<td>#stUserOnline[keyUser].session.stUser.ip_address#</td>
+					<td>#session.oUser.DateTimeFormat(stUserOnline[keyUser].session.dtsessioncreated)#</td>
+				</cfif>
 			</tr>
-		</cfif>
+			<cfif session.oUser.checkPermissions(module="admin",area="*")>
+				<tr>
+					<td colspan="3">#request.content.online_useragent# <span class="text_small text_light">#stUserOnline[keyUser].http_user_agent#</span></td>
+				</tr>
+			</cfif>
 		</cfloop>
 	</table>
 </cfoutput>
