@@ -6,7 +6,12 @@
 <fusebox>
 	<circuits>
 		<circuit alias="udfs" path="core/_utils/udf/" parent="" />
-		<circuit alias="c_admin" path="modules/admin/"/>		<circuit alias="c_comments" path="modules/comments/"/>		<circuit alias="c_cron" path="modules/cron/"/>		<circuit alias="c_general" path="modules/general/"/>		<circuit alias="c_installer" path="modules/installer/"/>		<circuit alias="c_mail" path="modules/mail/"/>		<circuit alias="c_user" path="modules/user/"/>
+		<circuit alias="admin" path="modules/admin/controller/"/>
+		<circuit alias="m_admin" path="modules/admin/model/"/>
+		<circuit alias="v_admin" path="modules/admin/view/"/>		<circuit alias="c_comments" path="modules/comments/"/>		<circuit alias="c_cron" path="modules/cron/"/>		<circuit alias="c_general" path="modules/general/"/>		<circuit alias="c_installer" path="modules/installer/"/>		<circuit alias="c_mail" path="modules/mail/"/>
+		<circuit alias="user" path="modules/user/controller/"/>
+		<circuit alias="m_user" path="modules/user/model/"/>
+		<circuit alias="v_user" path="modules/user/view/"/>
 	</circuits>
 
 	<parameters>		
@@ -24,6 +29,7 @@
 		<parameter name="parsePath" value="storage/secure/parsed/fusebox/" />
 		<parameter name="pluginsPath" value="fusebox5/plugins/" />
 		<parameter name="lexiconPath" value="fusebox5/lexicon/" />
+		<parameter name="wrapIncludeInCfoutput" value="false" />
 	</parameters>
 
 	<globalfuseactions>
@@ -35,7 +41,6 @@
 	<plugins>
 		<phase name="preProcess">
 			<plugin name="AttributesFilter" template="AttributesFilter.cfm"/>
-			<plugin name="Security" template="Security.cfm"/>
 			<plugin name="LanguageLoader" template="LanguageLoader.cfm"/>
 			<plugin name="NestedSettings" template="NestedSettings.cfm"/>
 			<plugin name="LayoutHeader" template="LayoutHeader.cfm"/>
