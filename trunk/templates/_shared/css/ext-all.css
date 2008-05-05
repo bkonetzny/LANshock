@@ -1,4 +1,4 @@
-@import url('../js/ext-2.0/resources/css/ext-all.css');
+@import url('../js/ext/resources/css/ext-all.css');
 
 body .x-panel {margin-bottom:20px;}
 .icon-grid {background-image:url(../images/famfamfam/icons/application_view_list.png) !important;}
@@ -8,5 +8,6 @@ body .x-panel {margin-bottom:20px;}
 .option {background-image:url(../images/famfamfam/icons/plugin.png) !important;}
 .remove {background-image:url(../images/famfamfam/icons/delete.png) !important;}
 .save {background-image:url(../images/famfamfam/icons/save.png) !important;}
-
+.icon-edit-record {background-image:url(../images/famfamfam/icons/page_edit.png) ! important;}
+.icon-delete-record {background-image:url(../images/famfamfam/icons/delete.png) ! important;}
 .x-grid3-hd-row td.ux-filtered-column {font-style: italic;font-weight: bold;}

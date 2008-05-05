@@ -2,13 +2,6 @@
 @import "ext-ux.grid.RowActions.css";
 @import "uni-form.css";
 
-.icon-edit-record {
-	background-image:url(../images/famfamfam/icons/page_edit.png) ! important;
-}
-.icon-delete-record {
-	background-image:url(../images/famfamfam/icons/delete.png) ! important;
-}
-
 .errorBox{
 	border: 1px solid #CC0000;
 	background-image: url(../images/famfamfam/icons/error.png);
