@@ -1,2 +1,50 @@
 @import "ext-all.css";
+@import "ext-ux.grid.RowActions.css";
 @import "uni-form.css";
+
+.icon-edit-record {
+	background-image:url(../images/famfamfam/icons/page_edit.png) ! important;
+}
+.icon-delete-record {
+	background-image:url(../images/famfamfam/icons/delete.png) ! important;
+}
+
+.errorBox{
+	border: 1px solid #CC0000;
+	background-image: url(../images/famfamfam/icons/error.png);
+	background-repeat: no-repeat;
+	background-position: left;
+	padding: 10px;
+	padding-left: 40px;
+	margin: 20px;
+	text-align: left;
+	font-weight: bold;
+	color: #CC0000;
+}
+
+.errorBox ul, .errorBox ol{
+	padding: 10px;
+	padding-left: 20px;
+	margin: 0px;
+	margin-top: 10px;
+	font-weight: normal;
+	list-style-type: circle;
+}
+
+.errorBox a, .errorBox a:link, .errorBox a:visited, .errorBox a:active, .errorBox a:hover{
+	padding: 10px;
+	padding-left: 20px;
+	margin: 0px;
+	margin-top: 10px;
+	font-weight: normal;
+	color: #CC0000;
+	text-decoration: none;
+}
+
+div.clearer {
+	clear:both;
+	font-size:0px;
+	line-height:0px;
+	display:block;
+	height:0px;
+}
