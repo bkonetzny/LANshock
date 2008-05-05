@@ -136,17 +136,24 @@ limitations under the License.
 		if (fb_.verbInfo.attributes.contentvariable is not "" and not fb_.verbInfo.attributes.overwrite) {
 			fb_appendLine('<cfif not isDefined("#fb_.verbInfo.attributes.contentvariable#")>');
 		}
+		if (NOT structKeyExists(fb_.app, "wrapIncludeInCfoutput") OR NOT isBoolean(fb_.app.wrapIncludeInCfoutput) OR fb_.app.wrapIncludeInCfoutput) {
+			fb_.openCfoutput = "<cfoutput>";
+			fb_.closeCfoutput = "</cfoutput>";
+		} else {
+			fb_.openCfoutput = "";
+			fb_.closeCfoutput = "";
+		}
 		fb_appendLine("<cftry>");
 		if (fb_.verbInfo.attributes.contentvariable is not "") {
 			if (fb_.verbInfo.attributes.append) {
-				fb_appendLine('<cfparam name="#fb_.verbInfo.attributes.contentvariable#" default=""><cfsavecontent variable="#fb_.verbInfo.attributes.contentvariable#"><cfoutput>###fb_.verbInfo.attributes.contentvariable###<cfinclude template="#fb_.verbInfo.action.getCircuit().getApplication().parseRootPath##fb_.targetCircuit.getRelativePath()##fb_.template#"></cfoutput></cfsavecontent>');
+				fb_appendLine('<cfparam name="#fb_.verbInfo.attributes.contentvariable#" default=""><cfsavecontent variable="#fb_.verbInfo.attributes.contentvariable#"><cfoutput>###fb_.verbInfo.attributes.contentvariable###</cfoutput>#fb_.openCfoutput#<cfinclude template="#fb_.verbInfo.action.getCircuit().getApplication().parseRootPath##fb_.targetCircuit.getRelativePath()##fb_.template#">#fb_.closeCfoutput#</cfsavecontent>');
 			} else if (fb_.verbInfo.attributes.prepend) {
-				fb_appendLine('<cfparam name="#fb_.verbInfo.attributes.contentvariable#" default=""><cfsavecontent variable="#fb_.verbInfo.attributes.contentvariable#"><cfoutput><cfinclude template="#fb_.verbInfo.action.getCircuit().getApplication().parseRootPath##fb_.targetCircuit.getRelativePath()##fb_.template#">###fb_.verbInfo.attributes.contentvariable###</cfoutput></cfsavecontent>');
+				fb_appendLine('<cfparam name="#fb_.verbInfo.attributes.contentvariable#" default=""><cfsavecontent variable="#fb_.verbInfo.attributes.contentvariable#">#fb_.openCfoutput#<cfinclude template="#fb_.verbInfo.action.getCircuit().getApplication().parseRootPath##fb_.targetCircuit.getRelativePath()##fb_.template#">#fb_.closeCfoutput#<cfoutput>###fb_.verbInfo.attributes.contentvariable###</cfoutput></cfsavecontent>');
 			} else {
-				fb_appendLine('<cfsavecontent variable="#fb_.verbInfo.attributes.contentvariable#"><cfoutput><cfinclude template="#fb_.verbInfo.action.getCircuit().getApplication().parseRootPath##fb_.targetCircuit.getRelativePath()##fb_.template#"></cfoutput></cfsavecontent>');
+				fb_appendLine('<cfsavecontent variable="#fb_.verbInfo.attributes.contentvariable#">#fb_.openCfoutput#<cfinclude template="#fb_.verbInfo.action.getCircuit().getApplication().parseRootPath##fb_.targetCircuit.getRelativePath()##fb_.template#">#fb_.closeCfoutput#</cfsavecontent>');
 			}
 		} else {
-			fb_appendLine('<cfoutput><cfinclude template="#fb_.verbInfo.action.getCircuit().getApplication().parseRootPath##fb_.targetCircuit.getRelativePath()##fb_.template#"></cfoutput>');
+			fb_appendLine('#fb_.openCfoutput#<cfinclude template="#fb_.verbInfo.action.getCircuit().getApplication().parseRootPath##fb_.targetCircuit.getRelativePath()##fb_.template#">#fb_.closeCfoutput#');
 		}
 		fb_appendLine('<cfcatch type="missingInclude"><cfif len(cfcatch.MissingFileName) gte #fb_.templateLen# and right(cfcatch.MissingFileName,#fb_.templateLen#) is "#fb_.template#">');
 		if (fb_.verbInfo.attributes.required) {

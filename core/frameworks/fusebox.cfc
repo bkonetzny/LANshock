@@ -66,6 +66,7 @@ $LastChangedRevision: 103 $
 		<parameter name="parsePath" value="storage/secure/parsed/fusebox/" />
 		<parameter name="pluginsPath" value="fusebox5/plugins/" />
 		<parameter name="lexiconPath" value="fusebox5/lexicon/" />
+		<parameter name="wrapIncludeInCfoutput" value="false" />
 	</parameters>
 	<globalfuseactions>
 		<appinit/>
@@ -75,7 +76,6 @@ $LastChangedRevision: 103 $
 	<plugins>
 		<phase name="preProcess">
 			<plugin name="AttributesFilter" template="AttributesFilter.cfm"/>
-			<plugin name="Security" template="Security.cfm"/>
 			<plugin name="LanguageLoader" template="LanguageLoader.cfm"/>
 			<plugin name="NestedSettings" template="NestedSettings.cfm"/>
 			<plugin name="LayoutHeader" template="LayoutHeader.cfm"/>
