@@ -26,7 +26,7 @@ $LastChangedRevision: 102 $
 
 <cfif ArrayLen(aError)>
 	<div class="errorBox">
-		#request.content.error#
+		<h3>#request.content.error#</h3>
 		<ul>
 			<cfloop from="1" to="#ArrayLen(aError)#" index="idxError">
 			<li>#aError[idxError]#</li>
