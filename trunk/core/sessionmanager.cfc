@@ -53,7 +53,9 @@ $LastChangedRevision$
 		<cfset variables.stSessions[sKey] = StructNew()>
 		<cfset variables.stSessions[sKey].query_string = cgi.query_string>
 		<cfset variables.stSessions[sKey].http_user_agent = cgi.http_user_agent>
-		<cfset variables.stSessions[sKey].session = session>
+		<cfset variables.stSessions[sKey].session = StructNew()>
+		<cfset variables.stSessions[sKey].session.dtSessionCreated = session.dtSessionCreated>
+		<cfset variables.stSessions[sKey].session.stUser = session.oUser.getData()>
 		<cfset variables.stSessions[sKey].fusebox = StructNew()>
 		<cfset variables.stSessions[sKey].fusebox.circuit = application.lanshock.oApplication.getMyFusebox().originalCircuit>
 		<cfset variables.stSessions[sKey].fusebox.action = application.lanshock.oApplication.getMyFusebox().originalFuseaction>
