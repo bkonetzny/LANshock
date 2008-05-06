@@ -10,7 +10,7 @@ $LastChangedRevision: 80 $
 
 <cfcomponent extends="fusebox5.Application" output="false">
 	<cfset this.name = 'lanshock_' & LCase(hash(GetCurrentTemplatePath()))>
-	<cfset this.applicationTimeout = createTimeSpan(0,2,0,0)>
+	<cfset this.applicationTimeout = createTimeSpan(1,0,0,0)>
 	<cfset this.clientManagement = false>
 	<cfset this.loginStorage = "session">
 	<cfset this.sessionManagement = true>
@@ -59,7 +59,7 @@ $LastChangedRevision: 80 $
 		
 		<cfif StructKeyExists(attributes,'reinitapp') AND isBoolean(attributes.reinitapp) AND attributes.reinitapp>
 			<cfset dtRequestStarted = now()>
-			<cfif StructKeyExists(application.lanshock,'oLogger')>
+			<cfif StructKeyExists(application,'lanshock') AND StructKeyExists(application.lanshock,'oLogger')>
 				<cftry>
 					<cfset application.lanshock.oLogger.writeLog('core.application','Running "reloadApplication" manually')>
 					<cfcatch></cfcatch>
