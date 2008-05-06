@@ -9,9 +9,9 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 75 $
 -->
 
-<module name="LANshock Comment-System" version="2.0.0.0 beta" date="2008-02-19" author="LANshock" url="http://www.lanshock.com">
+<module name="LANshock Comment-System" version="2.0.0.0 beta" date="2008-05-06" author="LANshock" url="http://www.lanshock.com">
 
-	<general requiresLogin="true"/>
+	<general type="service" requiresLogin="true"/>
 
 	<license>
 		<license type="gpl"/>
