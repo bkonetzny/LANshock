@@ -116,6 +116,8 @@ $LastChangedRevision: 143 $
 				<cfdefaultcase> <!--- value="lanshock" --->
 					<cfif isNumeric(arguments.userid) AND FileExists("#application.lanshock.oRuntime.getEnvironment().sStoragePath#public/modules/user/avatars/#arguments.userid#.png")>
 						<cfset stLocal.sResult = '<img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#storage/public/modules/user/avatars/#arguments.userid#.png" title="#getUsernameById(arguments.userid)#" alt="#getUsernameById(arguments.userid)#" />'>
+					<cfelse>
+						<cfset stLocal.sResult = '<img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/lanshock/profile.png" title="#getUsernameById(arguments.userid)#" alt="#getUsernameById(arguments.userid)#" />'>
 					</cfif>
 				</cfdefaultcase>
 			</cfswitch>
