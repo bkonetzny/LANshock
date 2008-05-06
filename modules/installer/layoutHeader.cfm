@@ -41,6 +41,7 @@ $LastChangedRevision: 51 $
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<title>#request.content.__globalmodule__name#</title>
+	<cfset bRequestIncludeCss = false>
 	<cfinclude template="../../templates/basic.header.inc.cfm">
 	<link rel="stylesheet" href="#application.lanshock.oRuntime.getEnvironment().sWebPath#modules/installer/styles.css" type="text/css"/>
 </head>

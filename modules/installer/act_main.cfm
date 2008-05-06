@@ -74,6 +74,7 @@ $LastChangedRevision: 89 $
 				<cfset oUser.setLastname('Administrator')>
 				<cfset oUser.setEmail(attributes.root_email)>
 				<cfset oUser.setPwd(hash(attributes.root_password))>
+				<cfset oUser.setGender(1)>
 				<cfset oUser.setDt_registered(now())>
 				<cfset oUser.setLanguage('de_DE')>
 				<cfset oUser.save()>

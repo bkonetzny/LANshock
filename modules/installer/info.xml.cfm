@@ -9,9 +9,9 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 75 $
 -->
 
-<module name="LANshock Installer" version="2.0.0.0 beta" date="2008-01-10" author="LANshock" url="http://www.lanshock.com">
+<module name="LANshock Installer" version="2.0.0.0 beta" date="2008-05-06" author="LANshock" url="http://www.lanshock.com">
 	
-	<general requiresLogin="false"/>
+	<general type="service" requiresLogin="false"/>
 	
 	<license>
 		<license type="gpl"/>
