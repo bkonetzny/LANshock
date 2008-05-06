@@ -3,35 +3,14 @@
 @import "uni-form.css";
 
 .errorBox{
-	border: 1px solid #CC0000;
-	background-image: url(../images/famfamfam/icons/error.png);
-	background-repeat: no-repeat;
-	background-position: left;
-	padding: 10px;
-	padding-left: 40px;
-	margin: 20px;
-	text-align: left;
+	color: #c00;
+}
+
+.errorBox h3{
+	background: url(../images/famfamfam/icons/error.png) no-repeat center left;
+	padding-left: 24px;
 	font-weight: bold;
-	color: #CC0000;
-}
-
-.errorBox ul, .errorBox ol{
-	padding: 10px;
-	padding-left: 20px;
-	margin: 0px;
-	margin-top: 10px;
-	font-weight: normal;
-	list-style-type: circle;
-}
-
-.errorBox a, .errorBox a:link, .errorBox a:visited, .errorBox a:active, .errorBox a:hover{
-	padding: 10px;
-	padding-left: 20px;
-	margin: 0px;
-	margin-top: 10px;
-	font-weight: normal;
-	color: #CC0000;
-	text-decoration: none;
+	color: #c00;
 }
 
 div.clearer {
