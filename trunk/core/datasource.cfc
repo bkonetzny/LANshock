@@ -16,7 +16,7 @@ $LastChangedRevision: 56 $
 		
 		<cfset var sTableName = lCase(arguments.sTable)>
 		<cfset var stLocal = StructNew()>
-		<cfset stLocal.stTableStructureOld = getTableStructureOld(arguments.sTable)>
+		<cfset stLocal.stTableStructureOld = getTableStructureOld(sTableName)>
 		
 		<cfif StructIsEmpty(stLocal.stTableStructureOld)>
 			<cfset stLocal.mode = 'create'>

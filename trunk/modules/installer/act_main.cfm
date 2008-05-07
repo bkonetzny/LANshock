@@ -89,6 +89,10 @@ $LastChangedRevision: 89 $
 				<cfset oUser.save()>	
 				
 				<cfset bUserSaved = true>
+			
+			<cfelse>
+			
+				<cfset ArrayAppend(aError,"user_email_duplicate")>
 		
 			</cfif>
 		
@@ -110,6 +114,6 @@ $LastChangedRevision: 89 $
 <cfset lDatasourcesTypes = 'mysql'>
 
 <cfset stStatusDb = application.lanshock.oFactory.load('lanshock.modules.installer.installer').checkDbConnection()>
-<cfset stStatusUser = application.lanshock.oFactory.load('lanshock.modules.installer.installer',false).checkUserAccounts()>
+<cfset stStatusUser = application.lanshock.oFactory.load('lanshock.modules.installer.installer').checkUserAccounts()>
 
 <cfsetting enablecfoutputonly="No">

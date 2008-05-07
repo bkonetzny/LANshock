@@ -12,6 +12,8 @@ $LastChangedRevision: 51 $
 <cfparam name="attributes.form_submitted" default="false">
 <cfparam name="attributes.password" default="false">
 
+<cfset sConfigFile = application.lanshock.oRuntime.getEnvironment().sStoragePath & 'secure/config/lanshock/config.ini.cfm'>
+
 <cfif attributes.form_submitted AND len(attributes.password)>
 	<cffile action="write" file="#sConfigFile#" output="" mode="777">
 

@@ -78,7 +78,7 @@ $LastChangedRevision: 103 $
 		<cfargument name="folder" type="string" required="true">
 		
 		<cfset var stReturn = StructNew()>
-		<cfset var stModuleConfig = loadModuleInfoXml(arguments.folder)>
+		<cfset var stModuleConfig = StructNew()>
 		<cfset var idx = ''>
 		<cfset var stTableStructure = StructNew()>
 		<cfset var idxNavigation = ''>
@@ -93,23 +93,10 @@ $LastChangedRevision: 103 $
 		<cfset var sModelTarget = ''>
 		<cfset var qModelFiles = 0>
 		
+		<cfset arguments.folder = lCase(arguments.folder)>
+		<cfset stModuleConfig = loadModuleInfoXml(arguments.folder)>
+		
 		<cfif stModuleConfig.status>
-			
-			<cfif NOT StructIsEmpty(stModuleConfig.data.database) AND NOT StructIsEmpty(stModuleConfig.data.database.tables)>
-				
-				<cfloop collection="#stModuleConfig.data.database.tables#" item="idx">
-					
-					<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.datasource')#" method="deployTable" returnvariable="stTableStructure">
-						<cfinvokeargument name="sTable" value="#idx#">
-						<cfinvokeargument name="aStructure" value="#stModuleConfig.data.database.tables[idx]#">
-					</cfinvoke>
-					
-					<cfset variables.stDatasource[idx] = stTableStructure>
-					<cfset variables.stDatasource[idx].module = arguments.folder>
-					
-				</cfloop>
-				
-			</cfif>
 			
 			<cfset sModelDirectory = expandPath('modules/#stModuleConfig.data.info.folder#/model/')>
 			
@@ -136,114 +123,133 @@ $LastChangedRevision: 103 $
 			</cfif>
 		
 			<cfset variables.stModules[arguments.folder] = stModuleConfig.data>
-
-			<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.frameworks.reactor')#" method="createConfig"/>
 	
 			<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.frameworks.fusebox')#" method="createConfig"/>
 			
-			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
-				DELETE FROM core_modules
-				WHERE folder = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
-			</cfquery>
+			<cfif StructKeyExists(application.lanshock.oRuntime.getEnvironment(),'sDatasource')>
 			
-			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
-				INSERT INTO core_modules (name, folder, version, date)
-				VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.name#">,
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">,
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.version#">,
-						<cfqueryparam cfsqltype="cf_sql_timestamp" value="#stModuleConfig.data.info.date#">)
-			</cfquery>
-			
-			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
-				DELETE FROM core_navigation
-				WHERE module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
-			</cfquery>
-			
-			<cfif stModuleConfig.data.general.type NEQ 'service'>
-			
+				<cfif NOT StructIsEmpty(stModuleConfig.data.database) AND NOT StructIsEmpty(stModuleConfig.data.database.tables)>
+					
+					<cfloop collection="#stModuleConfig.data.database.tables#" item="idx">
+						
+						<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.datasource')#" method="deployTable" returnvariable="stTableStructure">
+							<cfinvokeargument name="sTable" value="#idx#">
+							<cfinvokeargument name="aStructure" value="#stModuleConfig.data.database.tables[idx]#">
+						</cfinvoke>
+						
+						<cfset variables.stDatasource[idx] = stTableStructure>
+						<cfset variables.stDatasource[idx].module = arguments.folder>
+						
+					</cfloop>
+					
+				</cfif>
+
+				<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.frameworks.reactor')#" method="createConfig"/>
+				
 				<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
-					INSERT INTO core_navigation (module, action, level, sortorder, permissions)
-					VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">,
-							<cfqueryparam cfsqltype="cf_sql_varchar" value="main">,
-							1,
-							1,
-							'')
+					DELETE FROM core_modules
+					WHERE folder = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
 				</cfquery>
 				
-				<cfloop collection="#stModuleConfig.data.navigation#" item="idxNavigation">
-					<cfset iNavCounter = iNavCounter + 1>
+				<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
+					INSERT INTO core_modules (name, folder, version, date)
+					VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.name#">,
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">,
+							<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.version#">,
+							<cfqueryparam cfsqltype="cf_sql_timestamp" value="#stModuleConfig.data.info.date#">)
+				</cfquery>
+				
+				<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
+					DELETE FROM core_navigation
+					WHERE module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
+				</cfquery>
+				
+				<cfif stModuleConfig.data.general.type NEQ 'service'>
+				
 					<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 						INSERT INTO core_navigation (module, action, level, sortorder, permissions)
 						VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">,
-								<cfqueryparam cfsqltype="cf_sql_varchar" value="#LCase(idxNavigation)#">,
-								2,
-								<cfqueryparam cfsqltype="cf_sql_integer" value="#iNavCounter#">,
-								<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.navigation[idxNavigation]#">)
+								<cfqueryparam cfsqltype="cf_sql_varchar" value="main">,
+								1,
+								1,
+								'')
 					</cfquery>
-				</cfloop>
-			
-			</cfif>
-			
-			<cfloop list="#stModuleConfig.data.security_permissions#" index="idxPermissions">
-				<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qPermissionLookup">
-					SELECT id
-					FROM core_security_permissions
-					WHERE module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
-					AND name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#idxPermissions#">
-				</cfquery>
-				<cfif NOT qPermissionLookup.recordcount>
-					<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
-						INSERT INTO core_security_permissions (name, module)
-						VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#idxPermissions#">,
-								<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">)
-					</cfquery>
-				</cfif>
-			</cfloop>
-			
-			<cfloop collection="#stModuleConfig.data.security_roles#" item="idxRoles">
-				<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qRoleLookup">
-					SELECT id
-					FROM core_security_roles
-					WHERE module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
-					AND name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.security_roles[idxRoles].name#">
-				</cfquery>
-				<cfif NOT qRoleLookup.recordcount>
-					<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
-						INSERT INTO core_security_roles (name, module)
-						VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.security_roles[idxRoles].name#">,
-								<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">)
-					</cfquery>
+					
+					<cfloop collection="#stModuleConfig.data.navigation#" item="idxNavigation">
+						<cfset iNavCounter = iNavCounter + 1>
+						<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
+							INSERT INTO core_navigation (module, action, level, sortorder, permissions)
+							VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">,
+									<cfqueryparam cfsqltype="cf_sql_varchar" value="#LCase(idxNavigation)#">,
+									2,
+									<cfqueryparam cfsqltype="cf_sql_integer" value="#iNavCounter#">,
+									<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.navigation[idxNavigation]#">)
+						</cfquery>
+					</cfloop>
 				
-					<cfquery name="qRoleLookup" datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
+				</cfif>
+				
+				<cfloop list="#stModuleConfig.data.security_permissions#" index="idxPermissions">
+					<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qPermissionLookup">
+						SELECT id
+						FROM core_security_permissions
+						WHERE module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
+						AND name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#idxPermissions#">
+					</cfquery>
+					<cfif NOT qPermissionLookup.recordcount>
+						<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
+							INSERT INTO core_security_permissions (name, module)
+							VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#idxPermissions#">,
+									<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">)
+						</cfquery>
+					</cfif>
+				</cfloop>
+				
+				<cfloop collection="#stModuleConfig.data.security_roles#" item="idxRoles">
+					<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qRoleLookup">
 						SELECT id
 						FROM core_security_roles
-						WHERE name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.security_roles[idxRoles].name#">
-						AND module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
+						WHERE module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
+						AND name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.security_roles[idxRoles].name#">
 					</cfquery>
+					<cfif NOT qRoleLookup.recordcount>
+						<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
+							INSERT INTO core_security_roles (name, module)
+							VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.security_roles[idxRoles].name#">,
+									<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">)
+						</cfquery>
 					
-					<cfif qRoleLookup.recordcount>
-					
-						<cfquery name="qPermissionsLookup" datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
+						<cfquery name="qRoleLookup" datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 							SELECT id
-							FROM core_security_permissions
-							WHERE name IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.security_roles[idxRoles].permissions#" list="true">)
+							FROM core_security_roles
+							WHERE name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.security_roles[idxRoles].name#">
 							AND module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
 						</cfquery>
 						
-						<cfif qPermissionsLookup.recordcount>
+						<cfif qRoleLookup.recordcount>
 						
-							<cfloop list="#ValueList(qPermissionsLookup.id)#" index="idxPermission">
-								<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
-									INSERT INTO core_security_roles_permissions_rel (permission_id, role_id)
-									VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#idxPermission#">,
-											<cfqueryparam cfsqltype="cf_sql_varchar" value="#qRoleLookup.id#">)
-								</cfquery>
-							</cfloop>
-					
+							<cfquery name="qPermissionsLookup" datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
+								SELECT id
+								FROM core_security_permissions
+								WHERE name IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.security_roles[idxRoles].permissions#" list="true">)
+								AND module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stModuleConfig.data.info.folder#">
+							</cfquery>
+							
+							<cfif qPermissionsLookup.recordcount>
+							
+								<cfloop list="#ValueList(qPermissionsLookup.id)#" index="idxPermission">
+									<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
+										INSERT INTO core_security_roles_permissions_rel (permission_id, role_id)
+										VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#idxPermission#">,
+												<cfqueryparam cfsqltype="cf_sql_varchar" value="#qRoleLookup.id#">)
+									</cfquery>
+								</cfloop>
+						
+							</cfif>
 						</cfif>
 					</cfif>
-				</cfif>
-			</cfloop>
+				</cfloop>
+			</cfif>
 			
 			<!--- 
 				<cfif isStruct(stModules[idx].cron) AND NOT StructIsEmpty(stModules[idx].cron)>
@@ -290,19 +296,23 @@ $LastChangedRevision: 103 $
 
 		<cfset StructDelete(variables.stModules,arguments.folder)>
 
-		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.frameworks.reactor')#" method="createConfig"/>
-
 		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.frameworks.fusebox')#" method="createConfig"/>
-	
-		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
-			DELETE FROM core_modules
-			WHERE folder = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.folder#">
-		</cfquery>
 		
-		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
-			DELETE FROM core_navigation
-			WHERE module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.folder#">
-		</cfquery>
+		<cfif StructKeyExists(application.lanshock.oRuntime.getEnvironment(),'sDatasource')>
+
+			<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.frameworks.reactor')#" method="createConfig"/>
+		
+			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
+				DELETE FROM core_modules
+				WHERE folder = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.folder#">
+			</cfquery>
+			
+			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
+				DELETE FROM core_navigation
+				WHERE module = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.folder#">
+			</cfquery>
+		
+		</cfif>
 		
 	</cffunction>
 	
@@ -502,12 +512,14 @@ $LastChangedRevision: 103 $
 	
 	<cffunction name="buildNavigation" output="false" returntype="void">
 		<cfset var qNavigation = QueryNew("module,action,level,label,permissions")>
-			
-		<cfquery name="qNavigation" datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
-			SELECT *, action AS label
-			FROM core_navigation
-			ORDER BY module ASC, level ASC, sortorder ASC
-		</cfquery>
+		
+		<cfif StructKeyExists(application.lanshock.oRuntime.getEnvironment(),'sDatasource')>
+			<cfquery name="qNavigation" datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
+				SELECT *, action AS label
+				FROM core_navigation
+				ORDER BY module ASC, level ASC, sortorder ASC
+			</cfquery>
+		</cfif>
 		
 		<cfset variables.qNavigation = qNavigation>
 		
