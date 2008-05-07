@@ -69,7 +69,7 @@ $LastChangedRevision: 34 $
 		<cfset var idxProfileSection = ''>
 		<cfset var idxProfileString = ''>
 		
-		<cfif StructIsEmpty(variables.stRuntimeConfig)>
+		<cfif StructIsEmpty(variables.stRuntimeConfig) AND fileExists(sRuntimeConfigFile)>
 		
 			<cfset stRuntimeConfigRaw = GetProfileSections(sRuntimeConfigFile)>
 			

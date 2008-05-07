@@ -21,7 +21,7 @@ $LastChangedRevision: 102 $
 <cfif stStatusDb.bStatus>
 	<div class="box_success" onclick="$('##form_config').toggle();">#request.content.status_config_success#</div>
 <cfelse>
-	<div class="box_failure">#request.content.status_config_failure# #stStatus.cfcatch.message#</div>
+	<div class="box_failure">#request.content.status_config_failure# #stStatusDb.cfcatch.message#</div>
 </cfif>
 
 <cfif ArrayLen(aError)>
