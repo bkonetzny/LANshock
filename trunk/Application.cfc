@@ -87,6 +87,12 @@ $LastChangedRevision: 80 $
 		</cfif>
 		<cfset stImageDir.template = application.lanshock.oRuntime.getEnvironment().sWebPath & 'templates/' & request.lanshock.settings.layout.template & '/images'>
 	</cffunction>
+
+	<cffunction name="onRequestEnd">
+		<cfif isDefined("session.isBot") AND session.isBot>
+			<cfset StructClear(session)>
+		</cfif>
+	</cffunction>
 	
 	<cffunction name="reloadApplication">
 		<cfset StructDelete(application,'lanshock')>

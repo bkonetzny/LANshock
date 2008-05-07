@@ -13,7 +13,7 @@ $LastChangedRevision$
 	<cffunction name="init" output="false" returntype="void">
 	
 		<cfset variables.stSessions = StructNew()>
-		<cfset variables.iTimeout = 300>
+		<cfset variables.iTimeout = 1200>
 		<cfset variables.iSessions = 0>
 	
 	</cffunction>
@@ -28,8 +28,11 @@ $LastChangedRevision$
 			<cfset session.dtSessionCreated = now()>
 			<cfset session.oUser = application.lanshock.oFactory.load('lanshock.core.session')>
 			<cfset session.oUser.init()>
-			<cfset session.oPreferences = application.lanshock.oFactory.load('lanshock.core.preferences')>
+			<!--- <cfset session.oPreferences = application.lanshock.oFactory.load('lanshock.core.preferences')> --->
+			<cfset session.isBot = isBot(cgi.http_user_agent)>
 		</cfif>
+		
+		<cfset session.dtSessionLastCall = now()>
 		
 		<!--- check session hijacking --->
 		<cfif session.ip_address NEQ cgi.remote_addr AND application.lanshock.oApplication.getMyFusebox().originalCircuit NEQ 'general'>
@@ -42,8 +45,28 @@ $LastChangedRevision$
 			<cflocation url="#application.lanshock.oHelper.buildUrl('general.error_session_hijack&ip_session=#sSessionIP#')#" addtoken="false">
 		</cfif>
 		
-		<cfset updateSessions()>
+		<cfparam name="session.isBot" default="false">
+		
+		<cfif NOT session.isBot>
+			<cfset updateSessions()>
+		<cfelse>
+			<cfset application.lanshock.oLogger.writeLog('core.sessionmanager.bots','Tracked Bot / Crawler | UserAgent: "#cgi.http_user_agent#"')>
+		</cfif>
 		<cfset cleanSessions()>
+	</cffunction>
+	
+	<cffunction name="isBot" output="false" returntype="boolean">
+		<cfargument name="sUserAgent" type="string" required="true">
+		<cfset var bReturn = false>
+
+		<cfif ReFindNoCase("Googlebot",arguments.sUserAgent)
+			OR ReFindNoCase("Yahoo! Slurp",arguments.sUserAgent)
+			OR ReFindNoCase("msnbot",arguments.sUserAgent)
+			OR ReFindNoCase("WebAlta Crawler",arguments.sUserAgent)>
+			<cfset bReturn = true>
+		</cfif>
+		
+		<cfreturn bReturn>
 	</cffunction>
 	
 	<cffunction name="updateSessions" output="false" returntype="void">
@@ -55,6 +78,7 @@ $LastChangedRevision$
 		<cfset variables.stSessions[sKey].http_user_agent = cgi.http_user_agent>
 		<cfset variables.stSessions[sKey].session = StructNew()>
 		<cfset variables.stSessions[sKey].session.dtSessionCreated = session.dtSessionCreated>
+		<cfset variables.stSessions[sKey].session.dtSessionLastCall = session.dtSessionLastCall>
 		<cfset variables.stSessions[sKey].session.stUser = session.oUser.getData()>
 		<cfset variables.stSessions[sKey].fusebox = StructNew()>
 		<cfset variables.stSessions[sKey].fusebox.circuit = application.lanshock.oApplication.getMyFusebox().originalCircuit>
@@ -66,7 +90,7 @@ $LastChangedRevision$
 		<cfset var idx = 0>
 
 		<cfloop collection="#variables.stSessions#" item="idx">
-			<cfif StructIsEmpty(variables.stSessions[idx].session)>
+			<cfif DateDiff('s',variables.stSessions[idx].session.dtSessionLastCall,now()) GTE variables.iTimeout>
 				<cfset StructDelete(variables.stSessions,idx)>
 			</cfif>
 		</cfloop>
