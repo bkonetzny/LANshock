@@ -25,9 +25,10 @@ $LastChangedRevision: 50 $
 			<tr>
 				<td<cfif session.oUser.checkPermissions(module="admin",area="*")> rowspan="2"</cfif>><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/flags/png/#LCase(ListLast(stUserOnline[keyUser].session.stUser.lang,'_'))#.png" alt="#stLocales[stUserOnline[keyUser].session.stUser.lang]#"> <cfif isNumeric(stUserOnline[keyUser].session.stUser.userid) AND stUserOnline[keyUser].session.stUser.userid GT 0><a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#stUserOnline[keyUser].session.stUser.userid#')#">#application.lanshock.oHelper.GetUsernameByID(stUserOnline[keyUser].session.stUser.userid)#</a><cfelse>#application.lanshock.oHelper.GetUsernameByID(0)#</cfif></td>
 				<cfif session.oUser.checkPermissions(module="admin",area="*")>
-					<td>#stUserOnline[keyUser].fusebox.circuit#.#stUserOnline[keyUser].fusebox.action#</td>
+					<td><a href="#application.lanshock.oHelper.buildUrl('#stUserOnline[keyUser].fusebox.circuit#.#stUserOnline[keyUser].fusebox.action#')#">#stUserOnline[keyUser].fusebox.circuit#.#stUserOnline[keyUser].fusebox.action#</a></td>
 					<td>#stUserOnline[keyUser].session.stUser.ip_address#</td>
-					<td>#session.oUser.DateTimeFormat(stUserOnline[keyUser].session.dtsessioncreated)#</td>
+					<td>#session.oUser.DateTimeFormat(stUserOnline[keyUser].session.dtSessionLastCall)# (#DateDiff('n',stUserOnline[keyUser].session.dtSessionLastCall,now())# Min.)
+						<br/>#session.oUser.DateTimeFormat(stUserOnline[keyUser].session.dtSessionCreated)# (#DateDiff('n',stUserOnline[keyUser].session.dtSessionCreated,stUserOnline[keyUser].session.dtSessionLastCall)# Min.)</td>
 				</cfif>
 			</tr>
 			<cfif session.oUser.checkPermissions(module="admin",area="*")>
