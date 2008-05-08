@@ -9,20 +9,33 @@ $LastChangedBy$
 $LastChangedRevision$
 --->
 
-<!--- create default config --->
 <cfscript>
-	stDefaultModuleConfig = StructNew();
-	stDefaultModuleConfig.types = StructNew();
-	stDefaultModuleConfig.types.m_gallery = StructNew();
-	stDefaultModuleConfig.types.m_gallery.image = "picture.gif";
-	stDefaultModuleConfig.types.m_news = StructNew();
-	stDefaultModuleConfig.types.m_news.image = "article.gif";
+	stModuleConfig = StructNew();
+	stModuleConfig.types = StructNew();
+	stModuleConfig.types.gallery = StructNew();
+	stModuleConfig.types.gallery.image = "image.png";
+	stModuleConfig.types.blog = StructNew();
+	stModuleConfig.types.blog.image = "newspaper.png";
 </cfscript>
 
-<cfinvoke component="#application.lanshock.environment.componentpath#core.configmanager" method="createConfig" returnvariable="stModuleConfig">
-	<cfinvokeargument name="module" value="#myfusebox.thiscircuit#">
-	<cfinvokeargument name="data" value="#stDefaultModuleConfig#">
-	<cfinvokeargument name="version" value="1">
-</cfinvoke>
+<cfset lTypesShow = ''>
+<cfset lTypesHide = ''>
+
+<cfinvoke component="discussion" method="getGroups" returnvariable="qGroups"></cfinvoke>
+
+<cfloop query="qGroups">
+	<cfinvoke component="discussion" method="getBoards" returnvariable="qBoards">
+		<cfinvokeargument name="group_id" value="#qGroups.id#">
+	</cfinvoke>
+	
+	<cfloop query="qBoards">
+		<cfif NOT len(qGroups.permission)
+				OR (len(qGroups.permission) AND session.oUser.checkPermissions(ListLast(qGroups.permission,'.'),ListFirst(qGroups.permission,'.')))>
+			<cfset lTypesShow = ListAppend(lTypesShow,"discussion_board_#qBoards.id#")>
+		<cfelse>
+			<cfset lTypesHide = ListAppend(lTypesHide,"discussion_board_#qBoards.id#")>
+		</cfif>
+	</cfloop>
+</cfloop>
 
 <cfsetting enablecfoutputonly="No">

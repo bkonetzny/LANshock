@@ -10,11 +10,11 @@ $LastChangedRevision$
 --->
 
 <cfoutput>
-<div class="headline">#request.content.board_edit_headline#</div>
+<h3>#request.content.board_edit_headline#</h3>
 
-<div class="headline2">#request.content.board_edit#</div>
+<h4>#request.content.board_edit#</h4>
 <table>
-	<form action="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#request.session.UrlToken#" method="post">
+	<form action="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#session.UrlToken#" method="post">
 	<input type="hidden" name="form_submitted" value="true">
 	<input type="hidden" name="id" value="#attributes.id#">
 	<tr>
@@ -52,12 +52,12 @@ $LastChangedRevision$
 	</form>
 </table>
 
-<div class="headline2">#request.content.board_edit_avaible#</div>
+<h4>#request.content.board_edit_avaible#</h4>
 
 <table class="list">
 	<cfloop query="qGroups">
 		<tr>
-			<td colspan="3" class="empty"><div class="headline2">#request.content.group# "#name#"</div></td>
+			<td colspan="3" class="empty"><h4>#request.content.group# "#name#"</h4></td>
 		</tr>
 		<tr>
 			<th>#request.content.board_title#</th>
@@ -69,9 +69,9 @@ $LastChangedRevision$
 		</cfinvoke>
 		<cfloop query="qBoards">
 			<tr>
-				<td><a href="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&id=#id#&#request.session.UrlToken#">#title#</a></td>
+				<td><a href="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&id=#id#&#session.UrlToken#">#title#</a></td>
 				<td>#subtitle#&nbsp;</td>
-				<td class="empty"><img src="#stImageDir.general#/btn_delete.gif" alt="#request.content.form_delete#" border="0"><!--- <a href="#myself##myfusebox.thiscircuit#.board_del&id=#id#&#request.session.UrlToken#" title="#request.content.form_delete#"><img src="#stImageDir.general#/btn_delete.gif" alt="#request.content.form_delete#" border="0"></a> ---></td>
+				<td class="empty"><img src="#stImageDir.general#/btn_delete.gif" alt="#request.content.form_delete#" border="0"><!--- <a href="#myself##myfusebox.thiscircuit#.board_del&id=#id#&#session.UrlToken#" title="#request.content.form_delete#"><img src="#stImageDir.general#/btn_delete.gif" alt="#request.content.form_delete#" border="0"></a> ---></td>
 			</tr>
 		</cfloop>
 	</cfloop>

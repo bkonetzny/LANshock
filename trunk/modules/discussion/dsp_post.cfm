@@ -10,9 +10,9 @@ $LastChangedRevision$
 --->
 
 <cfoutput>
-	<div class="headline">#qBoard.title#</div>
+	<h3>#qBoard.title#</h3>
 	
-	<div class="headline2">#request.content.new_topic#</div>
+	<h4>#request.content.new_topic#</h4>
 
 	#stComments.html#
 </cfoutput>

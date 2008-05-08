@@ -15,7 +15,7 @@ $LastChangedRevision$
 
 <cfset uuidTopic = CreateUUID()>
 
-<cfinvoke component="#request.lanshock.environment.componentpath#core.comments.comments" method="getCommentsPanel" returnvariable="stComments">
+<cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#modules.comments.comments" method="getCommentsPanel" returnvariable="stComments">
 	<cfinvokeargument name="module" value="#myfusebox.thiscircuit#">
 	<cfinvokeargument name="identifier" value="topic_#uuidTopic#">
 	<cfinvokeargument name="linktosource" value="topic&uuid=#uuidTopic#">

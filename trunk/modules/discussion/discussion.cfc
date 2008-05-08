@@ -12,7 +12,7 @@ $LastChangedRevision$
 
 	<cffunction name="getGroups" access="remote" returntype="query" output="false">
 	
-		<cfquery datasource="#request.lanshock.environment.datasource#" name="qGroups">
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qGroups">
 			SELECT *
 			FROM discussion_group
 			ORDER BY name
@@ -25,7 +25,7 @@ $LastChangedRevision$
 	<cffunction name="getGroup" access="remote" returntype="query" output="false">
 		<cfargument name="id" type="numeric" required="true">
 	
-		<cfquery datasource="#request.lanshock.environment.datasource#" name="qGroup">
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qGroup">
 			SELECT *
 			FROM discussion_group
 			WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.id#">
@@ -38,19 +38,22 @@ $LastChangedRevision$
 	<cffunction name="setGroup" access="remote" returntype="boolean" output="false">
 		<cfargument name="id" type="numeric" required="true">
 		<cfargument name="name" type="string" required="true">
+		<cfargument name="permission" type="string" required="false" default="">
 
 		<cfif arguments.id EQ 0>
 
-			<cfquery datasource="#request.lanshock.environment.datasource#">
-				INSERT INTO discussion_group (name)
-				VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.name#">)
+			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
+				INSERT INTO discussion_group (name,permission)
+				VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.name#">,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.permission#">)
 			</cfquery>
 		
 		<cfelse>
 
-			<cfquery datasource="#request.lanshock.environment.datasource#">
+			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 				UPDATE discussion_group
-				SET name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.name#">
+				SET name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.name#">,
+					permission = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.permission#">
 				WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.id#">
 			</cfquery>
 		
@@ -63,7 +66,7 @@ $LastChangedRevision$
 	<cffunction name="getBoards" access="remote" returntype="query" output="false">
 		<cfargument name="group_id" type="numeric" required="true">
 	
-		<cfquery datasource="#request.lanshock.environment.datasource#" name="qBoards">
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qBoards">
 			SELECT *
 			FROM discussion_board
 			WHERE group_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.group_id#">
@@ -77,7 +80,7 @@ $LastChangedRevision$
 	<cffunction name="getBoard" access="remote" returntype="query" output="false">
 		<cfargument name="id" type="numeric" required="true">
 	
-		<cfquery datasource="#request.lanshock.environment.datasource#" name="qBoard">
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qBoard">
 			SELECT *
 			FROM discussion_board
 			WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.id#">
@@ -95,7 +98,7 @@ $LastChangedRevision$
 
 		<cfif arguments.id EQ 0>
 
-			<cfquery datasource="#request.lanshock.environment.datasource#">
+			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 				INSERT INTO discussion_board (title, subtitle, group_id)
 				VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.title#">,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.subtitle#">,
@@ -104,7 +107,7 @@ $LastChangedRevision$
 		
 		<cfelse>
 
-			<cfquery datasource="#request.lanshock.environment.datasource#">
+			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 				UPDATE discussion_board
 				SET title = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.title#">,
 					subtitle = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.subtitle#">,
@@ -136,7 +139,7 @@ $LastChangedRevision$
 			<cfinvokeargument name="id" value="#arguments.boardid#">
 		</cfinvoke>
 		
-		<cfinvoke component="#request.lanshock.environment.componentpath#core.comments.comments" method="getTopics" returnvariable="qTopics">
+		<cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#modules.comments.comments" method="getTopics" returnvariable="qTopics">
 			<cfinvokeargument name="type" value="discussion_board_#arguments.boardid#">
 		</cfinvoke>
 		
@@ -154,15 +157,15 @@ $LastChangedRevision$
 
 		<cfsavecontent variable="channel">
 		<cfoutput>
-<channel rdf:about="#cgi.server_name#:#cgi.server_port##request.lanshock.environment.webpath#">
+<channel rdf:about="#cgi.server_name#:#cgi.server_port##application.lanshock.oRuntime.getEnvironment().sWebPath#">
 	<title>#xmlFormat(request.lanshock.settings.appname)# (#xmlFormat(qBoard.title)#)</title>
 	<description>#xmlFormat(qBoard.title)#<cfif len(qBoard.subtitle)> - #xmlFormat(qBoard.subtitle)#</cfif></description>
-	<link>http://#cgi.server_name#:#cgi.server_port##request.lanshock.environment.webpath##request.varScope.myself##request.varScope.myfusebox.thiscircuit#.board&amp;id=#qBoard.id#</link>
+	<link>http://#cgi.server_name#:#cgi.server_port##application.lanshock.oRuntime.getEnvironment().sWebPath##request.varScope.myself##request.varScope.myfusebox.thiscircuit#.board&amp;id=#qBoard.id#</link>
 	
 	<items>
 		<rdf:Seq>
 			<cfloop query="qTopics">
-			<rdf:li rdf:resource="http://#cgi.server_name#:#cgi.server_port##request.lanshock.environment.webpath##request.varScope.myself##request.varScope.myfusebox.thiscircuit#.topic&amp;id=#id#" />
+			<rdf:li rdf:resource="http://#cgi.server_name#:#cgi.server_port##application.lanshock.oRuntime.getEnvironment().sWebPath##request.varScope.myself##request.varScope.myfusebox.thiscircuit#.topic&amp;id=#id#" />
 			</cfloop>
 		</rdf:Seq>
 	</items>
@@ -181,10 +184,10 @@ $LastChangedRevision$
 		<cfset dateStr = dateFormat(dtPost,"yyyy-mm-dd")>
 		<cfset dateStr = dateStr & "T" & timeFormat(dtPost,"HH:mm:ss") & "-" & numberFormat(z.utcHourOffset,"00") & ":00">
 		<cfoutput>
-<item rdf:about="http://#cgi.server_name#:#cgi.server_port##request.lanshock.environment.webpath##request.varScope.myself##request.varScope.myfusebox.thiscircuit#.topic&amp;id=#id#">
+<item rdf:about="http://#cgi.server_name#:#cgi.server_port##application.lanshock.oRuntime.getEnvironment().sWebPath##request.varScope.myself##request.varScope.myfusebox.thiscircuit#.topic&amp;id=#id#">
 	<title>#xmlFormat(title)#</title>
 	<description>#xmlFormat(text)#</description>
-	<link>http://#cgi.server_name#:#cgi.server_port##request.lanshock.environment.webpath##request.varScope.myself##request.varScope.myfusebox.thiscircuit#.topic&amp;id=#id#</link>
+	<link>http://#cgi.server_name#:#cgi.server_port##application.lanshock.oRuntime.getEnvironment().sWebPath##request.varScope.myself##request.varScope.myfusebox.thiscircuit#.topic&amp;id=#id#</link>
 	<dc:date>#dateStr#</dc:date>
 	<dc:subject>#xmlFormat(qBoard.title)#</dc:subject>
 </item>

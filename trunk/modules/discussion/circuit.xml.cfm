@@ -10,7 +10,7 @@ $LastChangedBy$
 $LastChangedRevision$
 -->
 
-<circuit access="public" xmlns:customattributes="customattributes/">
+<circuit access="public" xmlns:lanshock="lanshock/">
 
 	<!-- Show Groups and Boards -->
 	<fuseaction name="overview">
@@ -44,14 +44,14 @@ $LastChangedRevision$
 
 	<!-- Show Group Edit -->
 	<fuseaction name="group_edit">
-		<set name="check" value="#UDF_SecurityCheck(area='group')#"/>
+		<lanshock:security area="group"/>
 		<include template="act_group_edit.cfm"/>
 		<include template="dsp_group_edit.cfm"/>
 	</fuseaction>
 
 	<!-- Show Board Edit -->
 	<fuseaction name="board_edit">
-		<set name="check" value="#UDF_SecurityCheck(area='board')#"/>
+		<lanshock:security area="board"/>
 		<include template="act_board_edit.cfm"/>
 		<include template="dsp_board_edit.cfm"/>
 	</fuseaction>
@@ -63,13 +63,13 @@ $LastChangedRevision$
 	</fuseaction>
 
 	<!-- Show RSS -->
-	<fuseaction name="rss" customattributes:showlayout="none">
+	<fuseaction name="rss" lanshock:showlayout="none">
 		<include template="act_rss.cfm"/>
 		<include template="dsp_rss.cfm"/>
 	</fuseaction>
 
 	<!-- Cron -->
-	<fuseaction name="cron_monitoring" customattributes:showlayout="none">
+	<fuseaction name="cron_monitoring" lanshock:showlayout="none">
 		<include template="act_cron_monitoring.cfm"/>
 	</fuseaction>
 

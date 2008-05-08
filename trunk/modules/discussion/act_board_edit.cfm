@@ -37,20 +37,20 @@ $LastChangedRevision$
 		<cfinvokeargument name="subtitle" value="#attributes.subtitle#">
 	</cfinvoke>
 
-	<cflocation url="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#request.session.urltoken#" addtoken="false">
+	<cflocation url="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#session.urltoken#" addtoken="false">
 
 </cfif>
 
 <cfinvoke component="discussion" method="getGroups" returnvariable="qGroups"></cfinvoke>
 
-<cfinvoke component="#request.lanshock.environment.componentpath#core.comments.comments" method="getModuleTypes" returnvariable="stModuleTypes">
+<cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#modules.comments.comments" method="getModuleTypes" returnvariable="stModuleTypes">
 
 <cfif StructKeyExists(stModuleTypes,myfusebox.thiscircuit)>
 	<cfset StructDelete(stModuleTypes,myfusebox.thiscircuit)>
 </cfif>
 
 <cfif NOT qGroups.recordcount>
-	<cflocation url="#myself##myfusebox.thiscircuit#.group_edit&#request.session.urltoken#" addtoken="false">
+	<cflocation url="#myself##myfusebox.thiscircuit#.group_edit&#session.urltoken#" addtoken="false">
 </cfif>
 
 <cfsetting enablecfoutputonly="No">
