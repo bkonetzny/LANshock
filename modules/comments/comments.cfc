@@ -91,8 +91,7 @@ $LastChangedRevision: 46 $
 										var oFCKeditor#uuidFormName# = new FCKeditor('text');
 										oFCKeditor#uuidFormName#.BasePath = sBasePath + "fckeditor/";
 										oFCKeditor#uuidFormName#.Config['CustomConfigurationsPath'] = sBasePath + "lanshock_fckeditor_config.js";
-										oFCKeditor#uuidFormName#.ToolbarSet = 'Default';
-										oFCKeditor#uuidFormName#.Value = '';
+										oFCKeditor#uuidFormName#.ToolbarSet = 'Minimum';
 										oFCKeditor#uuidFormName#.ReplaceTextarea();
 									//-->
 									</script>

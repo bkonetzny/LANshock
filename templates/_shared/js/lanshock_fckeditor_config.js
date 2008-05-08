@@ -9,12 +9,13 @@ FCKConfig.ImageDlgHideLink = true;
 FCKConfig.FlashBrowser = false;
 FCKConfig.FlashUpload = false;
 FCKConfig.FlashDlgHideAdvanced = true;
-
-/*FCKConfig.ToolbarSets["Default"] = [
-	['Bold','Italic','Underline','-','OrderedList','UnorderedList','-','Link','Unlink','-','About']
-];*/
+FCKConfig.ForcePasteAsPlainText	= true;
 
 FCKConfig.ToolbarSets["Default"] = [
 	['Source'],
-	['Bold','Italic','Underline','-','OrderedList','UnorderedList','Blockquote','-','Link','Unlink','Image','Flash']
+	['Bold','Italic','Underline','-','OrderedList','UnorderedList','Blockquote','-','Link','Unlink','Image','Flash','-','About']
+];
+
+FCKConfig.ToolbarSets["Minimum"] = [
+	['Bold','Italic','Underline','-','OrderedList','UnorderedList','Blockquote','-','Link','Unlink','-','About']
 ];
