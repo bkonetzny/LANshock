@@ -13,7 +13,7 @@ $LastChangedRevision: 50 $
 
 <cfheader statuscode="404">
 <cfoutput>
-	<h4>404 - Page Not Found</h4>
+	<h3>404 - Page Not Found</h3>
 	<p>The Page you are looking for was not found.</p>
 </cfoutput>
 

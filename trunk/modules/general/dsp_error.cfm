@@ -13,11 +13,9 @@ $LastChangedRevision: 50 $
 <cfparam name="attributes.message" default="">
 
 <cfoutput>
-	<h4>#request.content.error_headline#</h4>
-	<h3>#attributes.type#</h3>
+	<h3>#request.content.error_headline#</h3>
+	<h4>#attributes.type#</h4>
 	<p>#attributes.message#</p>
-	
-	<cfdump var="#StructKeyList(application.lanshock.oModules.getModules('installed'))#">
 </cfoutput>
 	
 <cfsetting enablecfoutputonly="No">
