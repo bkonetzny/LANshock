@@ -61,7 +61,8 @@
           position:relative;
         }
 
-        .uniForm .inlineLabels .textInput,
+        .uniForm .inlineLabels .divInput,
+		.uniForm .inlineLabels .textInput,
         .uniForm .inlineLabels .fileUpload{
           float:left;
         }
@@ -109,6 +110,7 @@
         position:relative; top:.15em;
       }
 
+      .uniForm .blockLabels .divInput,
       .uniForm .blockLabels .textInput,
       .uniForm .blockLabels .fileUpload{
         float:left;

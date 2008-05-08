@@ -4,7 +4,7 @@
 	#chr(60)#/cfif>
 	<div class="ctrlHolder">
 		<label for="formrow_#attributes.stFieldData.uuid#"><cfif attributes.stFieldData.required><em>*</em> </cfif>##request.content.#caller.objectName#_rowtype_label_#attributes.stFieldData.alias###</label>
-		<div id="divDatePicker#attributes.stFieldData.uuid#"></div>
+		<div class="divInput" id="divDatePicker#attributes.stFieldData.uuid#"></div>
 		<input type="hidden" name="#attributes.stFieldData.alias#" id="formrow_#attributes.stFieldData.uuid#" value="##LsDateFormat(#caller.Format("o#caller.objectName#.get#attributes.stFieldData.alias#()","#attributes.stFieldData.format#")#,'YYYY-MM-DD')## ##LsTimeFormat(#caller.Format("o#caller.objectName#.get#attributes.stFieldData.alias#()","#attributes.stFieldData.format#")#,'HH:MM:SS')##"/>
 		<script type="text/javascript">
 			var myDatePicker#attributes.stFieldData.uuid# = new Ext.ux.form.DateTime({
