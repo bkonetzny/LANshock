@@ -26,6 +26,7 @@
 .uniForm .inlineLabels .label{
   width:45%; /* Required property */
 }
+.uniForm .inlineLabels .divInput,
 .uniForm .inlineLabels .textInput,
 .uniForm .inlineLabels .fileUpload{
   width:45%; /* Required property */
@@ -43,6 +44,7 @@
 }
 
 /* .blockLabels */
+.uniForm .blockLabels .divInput,
 .uniForm .blockLabels .textInput,
 .uniForm .blockLabels .fileUpload{
   width:53%; /* Required property */
