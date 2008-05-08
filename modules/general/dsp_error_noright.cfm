@@ -13,7 +13,7 @@ $LastChangedRevision: 50 $
 <cfparam name="attributes.right_area" default="">
 
 <cfoutput>
-	<h4>#request.content.righterr1#</h4>
+	<h3>#request.content.righterr1#</h3>
 	
 	<p>#request.content.righterr2#</p>
 
