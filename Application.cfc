@@ -29,6 +29,7 @@ $LastChangedRevision: 80 $
 	<cffunction name="onFuseboxApplicationStart">
 		<cfset application.lanshock = StructNew()>
 		<cfset application.lanshock.dtAppStart = now()>
+		<cfset application.lanshock.bInitPhase = true>
 		<cfset application.lanshock.oFactory = CreateObject('component','lanshock.core.factory')>
 		<cfset application.lanshock.oRuntime = application.lanshock.oFactory.load('lanshock.core.runtime')>
 		<cfset application.lanshock.oRuntime.init()>
@@ -44,6 +45,7 @@ $LastChangedRevision: 80 $
 		<cfset application.lanshock.oSessionmanager.init()>
 		<cfset application.lanshock.oModules = application.lanshock.oFactory.load('lanshock.core.modules')>
 		<cfset application.lanshock.oModules.init()>
+		<cfset application.lanshock.bInitPhase = false>
 		
 		<cfset application.lanshock.oLogger.writeLog('core.application','Running "onFuseboxApplicationStart"')>
 	</cffunction>
@@ -68,6 +70,9 @@ $LastChangedRevision: 80 $
 			<cfset session = StructNew()>
 			<cfset reloadApplication()>
 			<cfoutput>LANshock reloaded on #LSDateFormat(now())# #LSTimeFormat(now())# in #DateDiff('s',dtRequestStarted,now())# seconds.</cfoutput>
+			<cfabort>
+		<cfelseif NOT isDefined("application.lanshock.bInitPhase") OR application.lanshock.bInitPhase>
+			<cfoutput>LANshock is reloading<cfif isDefined("application.lanshock.dtAppStart")> since #LSDateFormat(application.lanshock.dtAppStart)#  #LSTimeFormat(application.lanshock.dtAppStart)#</cfif>.</cfoutput>
 			<cfabort>
 		</cfif>
 		
@@ -117,6 +122,8 @@ $LastChangedRevision: 80 $
 		
 		<cfset var sRelocation = ''>
 		<cfset var sLogMessage = ''>
+
+		<cfset application.lanshock.bInitPhase = false>
 
 		<cfif ListFindNoCase("fusebox.undefinedCircuit,fusebox.undefinedFuseaction",arguments.exception.type)>
 			<cftry>
