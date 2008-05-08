@@ -19,18 +19,21 @@ $LastChangedRevision$
 
 <cfif qGroup.recordcount>
 	<cfparam name="attributes.name" default="#qGroup.name#">
+	<cfparam name="attributes.permission" default="#qGroup.permission#">
 </cfif>
 
 <cfparam name="attributes.name" default="">
+<cfparam name="attributes.permission" default="">
 
 <cfif attributes.form_submitted>
 
 	<cfinvoke component="discussion" method="setGroup">
 		<cfinvokeargument name="id" value="#attributes.id#">
 		<cfinvokeargument name="name" value="#attributes.name#">
+		<cfinvokeargument name="permission" value="#attributes.permission#">
 	</cfinvoke>
 
-	<cflocation url="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#request.session.urltoken#" addtoken="false">
+	<cflocation url="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#session.urltoken#" addtoken="false">
 
 </cfif>
 

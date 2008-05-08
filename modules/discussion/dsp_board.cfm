@@ -10,55 +10,59 @@ $LastChangedRevision$
 --->
 
 <cfoutput>
-	<div class="headline">#qBoard.title#</div>
+	<h3>#qBoard.title#</h3>
 	
-	<table width="100%">
-		<tr>
-			<cfif request.session.userloggedin>
-				<td><a href="#myself##myfusebox.thiscircuit#.post&board_id=#qBoard.id#&#request.session.urltoken#" class="link_extended">#request.content.new_topic#</a></td>
-			</cfif>
-			<form action="#myself##myfusebox.thiscircuit#.board&#request.session.urltoken#" method="post">
-			<td align="right">
-				#request.content.change_board#
-				<select name="id" onChange="submit();">
-					<cfloop query="qGroups">
-						<cfinvoke component="discussion" method="getBoards" returnvariable="qBoards">
-							<cfinvokeargument name="group_id" value="#id#">
-						</cfinvoke>
-						<optgroup label="#name#">
-							<cfloop query="qBoards">
-								<option value="#id#"<cfif id EQ attributes.id> selected</cfif>>#title#</option>
-							</cfloop>
-						</optgroup>
-					</cfloop>
-				</select>
-			</td>
-			</form>
-		</tr>
-	</table>
+	<cfif session.userloggedin>
+		<ul class="options">
+			<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.post&board_id=#qBoard.id#')#">#request.content.new_topic#</a></li>
+		</ul>
+	</cfif>
+	
+	<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.board')#" method="post">
+		<div class="form">
+			<div class="formrow">
+				<div class="formrow_label">
+					<label for="board_select">#request.content.change_board#</label>
+				</div>
+				<div class="formrow_input">
+					<select name="id" id="board_select" onChange="submit();">
+						<cfloop query="qGroups">
+							<cfinvoke component="discussion" method="getBoards" returnvariable="qBoards">
+								<cfinvokeargument name="group_id" value="#id#">
+							</cfinvoke>
+							<optgroup label="#name#">
+								<cfloop query="qBoards">
+									<option value="#id#"<cfif id EQ attributes.id> selected</cfif>>#title#</option>
+								</cfloop>
+							</optgroup>
+						</cfloop>
+					</select>
+				</div>
+			</div>
+			<div class="clearer"></div>
+		</div>
+	</form>
 
-	<div class="headline2">#qBoard.subtitle#</div>
+	<h4>#qBoard.subtitle#</h4>
 
-	<table class="list">
-		<tr>
-			<th>#request.content.topic#</th>
-			<th>#request.content.created_by#</th>
-			<th>#request.content.post_count#</th>
-			<th>#request.content.last_post#</th>
-		</tr>
+	<table>
+		<thead>
+			<tr>
+				<th>#request.content.topic#</th>
+				<th>#request.content.post_count#</th>
+				<th>#request.content.last_post#</th>
+			</tr>
+		</thead>
+		<tbody>
 		<cfloop query="qTopics">
 			<tr>
-				<td><a href="#myself##myfusebox.thiscircuit#.topic&id=#id#&#request.session.urltoken#">#title#</a></td>
-				<td>#GetUsernameByID(user_id)#</td>
-				<td align="center">#postcount#</td>
-				<td>
-					<cfif len(dt_lastpost)>
-						#UDF_DateTimeFormat(dt_lastpost)#
-					<cfelse>
-						#UDF_DateTimeFormat(dt_created)#
-					</cfif></td>
+				<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.topic&id=#qTopics.id#')#">#qTopics.title#</a></td>
+				<td align="center">#qTopics.postcount#</td>
+				<td><cfif len(qTopics.dt_lastpost)>#session.oUser.DateTimeFormat(qTopics.dt_lastpost)#<cfelse>#session.oUser.DateTimeFormat(qTopics.dt_created)#</cfif><br/>
+					<a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#qTopics.user_id#')#">#application.lanshock.oHelper.GetUsernameByID(qTopics.user_id)#</a></td>
 			</tr>
 		</cfloop>
+		</tbody>
 	</table>
 </cfoutput>
 

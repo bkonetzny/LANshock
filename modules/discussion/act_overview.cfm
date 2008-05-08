@@ -9,26 +9,20 @@ $LastChangedBy$
 $LastChangedRevision$
 --->
 
-<cfinvoke component="discussion" method="getGroups" returnvariable="qGroups"></cfinvoke>
+<cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#modules.comments.comments" method="getTopics" returnvariable="qTopics"></cfinvoke>
 
-<cfinvoke component="#request.lanshock.environment.componentpath#core.comments.comments" method="getTopics" returnvariable="qTopics"></cfinvoke>
-
-<cfquery dbtype="query" name="qTopTopics" maxrows="10">
+<cfquery dbtype="query" name="qTopTopics" maxrows="5">
 	SELECT *
 	FROM qTopics
+	WHERE type NOT IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#lTypesHide#" list="true">)
 	ORDER BY postcount DESC
 </cfquery>
 
-<cfquery dbtype="query" name="qLastPosts" maxrows="10">
+<cfquery dbtype="query" name="qLastPosts" maxrows="5">
 	SELECT *
 	FROM qTopics
+	WHERE type NOT IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#lTypesHide#" list="true">)
 	ORDER BY dt_lastpost DESC
-</cfquery>
-
-<cfquery dbtype="query" name="qLastTopics" maxrows="10">
-	SELECT *
-	FROM qTopics
-	ORDER BY dt_created DESC
 </cfquery>
 
 <cfsetting enablecfoutputonly="No">

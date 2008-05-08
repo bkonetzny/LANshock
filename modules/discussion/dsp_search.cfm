@@ -10,9 +10,9 @@ $LastChangedRevision$
 --->
 
 <cfoutput>
-	<div class="headline">#request.content.search_headline#</div>
+	<h3>#request.content.search_headline#</h3>
 
-	<form action="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#request.session.urltoken#" method="post">
+	<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post">
 		<input type="hidden" name="form_submitted" value="true">
 		<input type="text" name="search" value="#attributes.search#">
 		<input type="submit" value="#request.content.form_search#">
@@ -27,12 +27,12 @@ $LastChangedRevision$
 			</tr>
 			<cfloop query="qTopics">
 				<tr>
-					<td><a href="#myself##myfusebox.thiscircuit#.topic&id=#id#&#request.session.urltoken#">#title#</a></td>
-					<td align="center">#postcount#</td>
-					<td><cfif len(dt_lastpost)>
-							#UDF_DateTimeFormat(dt_lastpost)#
+					<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.topic&id=#qTopics.id#')#">#qTopics.title#</a></td>
+					<td align="center">#qTopics.postcount#</td>
+					<td><cfif len(qTopics.dt_lastpost)>
+							#session.oUser.DateTimeFormat(qTopics.dt_lastpost)#
 						<cfelse>
-							#UDF_DateTimeFormat(dt_created)#
+							#session.oUser.DateTimeFormat(qTopics.dt_created)#
 						</cfif></td>
 				</tr>
 			</cfloop>

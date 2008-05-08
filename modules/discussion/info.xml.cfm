@@ -19,13 +19,13 @@ $LastChangedRevision$
 	
 	<navigation>
 		<item action="search"/>
-		<item action="group_edit" reqstatus="admin"/>
-		<item action="board_edit" reqstatus="admin"/>
+		<item action="group_edit" permissions="group"/>
+		<item action="board_edit" permissions="board"/>
 	</navigation>
 	
 	<security>
-		<area name="group"/>
-		<area name="board"/>
+		<permissions list="group,board"/>
+		<role name="Discussion Admin" permissions="group,board"/>
 	</security>
 	
 	<cron>
@@ -37,14 +37,16 @@ $LastChangedRevision$
 		<table name="discussion_board">
 			<field name="id" type="integer" len="11" null="false" special="auto_increment"/>
 			<field name="group_id" type="integer" len="10" null="false" default="0"/>
-			<field name="title" type="varchar" len="255" default="NULL"/>
-			<field name="subtitle" type="varchar" len="255" default="NULL"/>
-			<index name="id" value=""/>
+			<field name="title" type="varchar" len="255" null="true" default="NULL"/>
+			<field name="subtitle" type="varchar" len="255" null="true" default="NULL"/>
+			<pk fields="id"/>
+			<fk field="group_id" mapping="discussion_group.id"/>
 		</table>
 		<table name="discussion_group">
 			<field name="id" type="integer" len="11" null="false" special="auto_increment"/>
-			<field name="name" type="varchar" len="255" default="NULL"/>
-			<index name="id" value=""/>
+			<field name="name" type="varchar" len="255" null="true" default="NULL"/>
+			<field name="permission" type="varchar" len="255" null="true" default="NULL"/>
+			<pk fields="id"/>
 		</table>
 	</database>
 
