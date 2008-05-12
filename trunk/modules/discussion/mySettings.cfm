@@ -21,10 +21,10 @@ $LastChangedRevision$
 <cfset lTypesShow = ''>
 <cfset lTypesHide = ''>
 
-<cfinvoke component="discussion" method="getGroups" returnvariable="qGroups"></cfinvoke>
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.discussion.discussion')#" method="getGroups" returnvariable="qGroups">
 
 <cfloop query="qGroups">
-	<cfinvoke component="discussion" method="getBoards" returnvariable="qBoards">
+	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.discussion.discussion')#" method="getBoards" returnvariable="qBoards">
 		<cfinvokeargument name="group_id" value="#qGroups.id#">
 	</cfinvoke>
 	

@@ -12,9 +12,13 @@ $LastChangedRevision$
 <cfoutput>
 <h3>#request.content.board_edit_headline#</h3>
 
+<ul class="options">
+	<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.board_edit&checkTopics=true')#">$$$ Check Topics</a></li>
+</ul>
+
 <h4>#request.content.board_edit#</h4>
 <table>
-	<form action="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#session.UrlToken#" method="post">
+	<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post">
 	<input type="hidden" name="form_submitted" value="true">
 	<input type="hidden" name="id" value="#attributes.id#">
 	<tr>
@@ -47,7 +51,7 @@ $LastChangedRevision$
 			</select></td>
 	</tr> --->
 	<tr>
-		<td colspan="2"><input type="Submit" value="#request.content.form_add#"></td>
+		<td colspan="2"><input type="submit" value="#request.content.form_add#"></td>
 	</tr>
 	</form>
 </table>
@@ -64,12 +68,12 @@ $LastChangedRevision$
 			<th>#request.content.board_subtitle#</th>
 			<th class="empty">&nbsp;</th>
 		</tr>
-		<cfinvoke component="discussion" method="getBoards" returnvariable="qBoards">
+		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.discussion.discussion')#" method="getBoards" returnvariable="qBoards">
 			<cfinvokeargument name="group_id" value="#id#">
 		</cfinvoke>
 		<cfloop query="qBoards">
 			<tr>
-				<td><a href="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&id=#id#&#session.UrlToken#">#title#</a></td>
+				<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&id=#id#')#">#title#</a></td>
 				<td>#subtitle#&nbsp;</td>
 				<td class="empty"><img src="#stImageDir.general#/btn_delete.gif" alt="#request.content.form_delete#" border="0"><!--- <a href="#myself##myfusebox.thiscircuit#.board_del&id=#id#&#session.UrlToken#" title="#request.content.form_delete#"><img src="#stImageDir.general#/btn_delete.gif" alt="#request.content.form_delete#" border="0"></a> ---></td>
 			</tr>

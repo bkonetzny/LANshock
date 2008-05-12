@@ -10,10 +10,20 @@ $LastChangedRevision$
 --->
 
 <cfparam name="attributes.form_submitted" default="false">
-
 <cfparam name="attributes.id" default="0">
+<cfparam name="attributes.checkTopics" default="false">
 
-<cfinvoke component="discussion" method="getBoard" returnvariable="qBoard">
+<cfif attributes.checkTopics>
+	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.comments.comments')#" method="getTopics" returnvariable="qTopics">
+	
+	<cfloop query="qTopics">
+		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.comments.comments')#" method="updateTopicData">
+			<cfinvokeargument name="id" value="#qTopics.id#">
+		</cfinvoke>
+	</cfloop>
+</cfif>
+
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.discussion.discussion')#" method="getBoard" returnvariable="qBoard">
 	<cfinvokeargument name="id" value="#attributes.id#">
 </cfinvoke>
 
@@ -30,27 +40,23 @@ $LastChangedRevision$
 
 <cfif attributes.form_submitted>
 
-	<cfinvoke component="discussion" method="setBoard">
+	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.discussion.discussion')#" method="setBoard">
 		<cfinvokeargument name="id" value="#attributes.id#">
 		<cfinvokeargument name="group_id" value="#attributes.group_id#">
 		<cfinvokeargument name="title" value="#attributes.title#">
 		<cfinvokeargument name="subtitle" value="#attributes.subtitle#">
 	</cfinvoke>
 
-	<cflocation url="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#session.urltoken#" addtoken="false">
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" addtoken="false">
 
 </cfif>
 
-<cfinvoke component="discussion" method="getGroups" returnvariable="qGroups"></cfinvoke>
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.discussion.discussion')#" method="getGroups" returnvariable="qGroups">
 
-<cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#modules.comments.comments" method="getModuleTypes" returnvariable="stModuleTypes">
-
-<cfif StructKeyExists(stModuleTypes,myfusebox.thiscircuit)>
-	<cfset StructDelete(stModuleTypes,myfusebox.thiscircuit)>
-</cfif>
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.comments.comments')#" method="getModuleTypes" returnvariable="stModuleTypes">
 
 <cfif NOT qGroups.recordcount>
-	<cflocation url="#myself##myfusebox.thiscircuit#.group_edit&#session.urltoken#" addtoken="false">
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.group_edit')#" addtoken="false">
 </cfif>
 
 <cfsetting enablecfoutputonly="No">

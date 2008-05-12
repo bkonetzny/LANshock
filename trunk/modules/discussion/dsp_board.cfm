@@ -27,14 +27,17 @@ $LastChangedRevision$
 				<div class="formrow_input">
 					<select name="id" id="board_select" onChange="submit();">
 						<cfloop query="qGroups">
-							<cfinvoke component="discussion" method="getBoards" returnvariable="qBoards">
-								<cfinvokeargument name="group_id" value="#id#">
-							</cfinvoke>
-							<optgroup label="#name#">
-								<cfloop query="qBoards">
-									<option value="#id#"<cfif id EQ attributes.id> selected</cfif>>#title#</option>
-								</cfloop>
-							</optgroup>
+							<cfif NOT len(qGroups.permission)
+								OR (len(qGroups.permission) AND session.oUser.checkPermissions(ListLast(qGroups.permission,'.'),ListFirst(qGroups.permission,'.')))>
+								<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.discussion.discussion')#" method="getBoards" returnvariable="qBoards">
+									<cfinvokeargument name="group_id" value="#id#">
+								</cfinvoke>
+								<optgroup label="#name#">
+									<cfloop query="qBoards">
+										<option value="#qBoards.id#"<cfif qBoards.id EQ attributes.id> selected="selected"</cfif>>#qBoards.title#</option>
+									</cfloop>
+								</optgroup>
+							</cfif>
 						</cfloop>
 					</select>
 				</div>
@@ -43,7 +46,11 @@ $LastChangedRevision$
 		</div>
 	</form>
 
-	<h4>#qBoard.subtitle#</h4>
+	<cfif len(qBoard.subtitle)>
+		<h4>#qBoard.subtitle#</h4>
+	<cfelse>
+		<h4>#qBoard.title#</h4>
+	</cfif>
 
 	<table>
 		<thead>
@@ -58,8 +65,8 @@ $LastChangedRevision$
 			<tr>
 				<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.topic&id=#qTopics.id#')#">#qTopics.title#</a></td>
 				<td align="center">#qTopics.postcount#</td>
-				<td><cfif len(qTopics.dt_lastpost)>#session.oUser.DateTimeFormat(qTopics.dt_lastpost)#<cfelse>#session.oUser.DateTimeFormat(qTopics.dt_created)#</cfif><br/>
-					<a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#qTopics.user_id#')#">#application.lanshock.oHelper.GetUsernameByID(qTopics.user_id)#</a></td>
+				<td>#session.oUser.DateTimeFormat(qTopics.dt_lastpost)#
+					<br/><a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#qTopics.user_id_lastpost#')#">#application.lanshock.oHelper.GetUsernameByID(qTopics.user_id_lastpost)#</a></td>
 			</tr>
 		</cfloop>
 		</tbody>

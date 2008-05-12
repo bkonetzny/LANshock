@@ -14,14 +14,16 @@ $LastChangedRevision$
 
 <cfif attributes.form_submitted AND len(attributes.search)>
 
-	<cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#modules.comments.comments" method="getTopics" returnvariable="qTopics">
+	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.comments.comments')#" method="getTopics" returnvariable="qTopics">
 		<cfinvokeargument name="search" value="#attributes.search#">
 	</cfinvoke>
 	
 	<cfquery dbtype="query" name="qTopics">
 		SELECT *
 		FROM qTopics
-		WHERE type NOT IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#lTypesHide#" list="true">)
+		<cfif len(lTypesHide)>
+			WHERE type NOT IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#lTypesHide#" list="true">)
+		</cfif>
 		ORDER BY dt_lastpost DESC
 	</cfquery>
 

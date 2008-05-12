@@ -16,12 +16,12 @@ $LastChangedRevision$
 		<cfif NOT len(qGroups.permission)
 			OR (len(qGroups.permission) AND session.oUser.checkPermissions(ListLast(qGroups.permission,'.'),ListFirst(qGroups.permission,'.')))>
 				
-			<cfinvoke component="discussion" method="getBoards" returnvariable="qBoards">
+			<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.discussion.discussion')#" method="getBoards" returnvariable="qBoards">
 				<cfinvokeargument name="group_id" value="#qGroups.id#">
 			</cfinvoke>
 	
 			<cfif qBoards.recordcount>
-				<h4>#qGroups.name#</h4>
+				<h4><cfif len(qGroups.permission)><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/lock.png" alt="" /> </cfif>#qGroups.name#</h4>
 				<table>
 					<tr>
 						<th>#request.content.board#</th>
@@ -35,20 +35,19 @@ $LastChangedRevision$
 							FROM qTopics
 							WHERE type = 'discussion_board_#id#'
 						</cfquery>
-						<cfquery dbtype="query" name="qGetLastTopic" maxrows="1">
+						<cfquery dbtype="query" name="qGetLastTopic">
 							SELECT *
 							FROM qTopics
 							WHERE type = 'discussion_board_#id#'
-							ORDER BY dt_created DESC
+							ORDER BY dt_lastpost DESC
 						</cfquery>
 						<tr>
 							<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.board&id=#qBoards.id#')#">#qBoards.title#</a>
 								<br/><span class="text_light">#qBoards.subtitle#</span></td>
 							<td align="center">#qGetTopicCount.records#</td>
-							<td><cfif qGetLastTopic.recordcount>
-									#session.oUser.DateTimeFormat(qGetLastTopic.dt_created)#<br/>
-									<a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#qGetLastTopic.user_id#')#">#application.lanshock.oHelper.GetUsernameByID(qGetLastTopic.user_id)#</a>
-								</cfif></td>
+							<td>#session.oUser.DateTimeFormat(qGetLastTopic.dt_lastpost)#<br/>
+								<a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#qGetLastTopic.user_id_lastpost#')#">#application.lanshock.oHelper.GetUsernameByID(qGetLastTopic.user_id_lastpost)#</a>
+								</td>
 							<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.rss&boardid=#qBoards.id#')#" target="_blank"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/feed.png" alt="<!--- $$$ ---> RSS" /></a></td>
 						</tr>
 					</cfloop>
@@ -86,12 +85,8 @@ $LastChangedRevision$
 				<tr>
 					<td><cfif StructKeyExists(stModuleConfig.types,qLastPosts.module)><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/#stModuleConfig.types[qLastPosts.module].image#" title="#request.content.topic_type# #qLastPosts.module#.#qLastPosts.type#"></cfif></td>
 					<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.topic&id=#qLastPosts.id#')#">#qLastPosts.title#</a>
-						<br/>#request.content.last_post#: <cfif len(qLastPosts.dt_lastpost)>
-							#session.oUser.DateTimeFormat(qLastPosts.dt_lastpost)#
-						<cfelse>
-							#session.oUser.DateTimeFormat(qLastPosts.dt_created)#
-						</cfif>
-						<br/><a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#qLastPosts.user_id#')#">#application.lanshock.oHelper.GetUsernameByID(qLastPosts.user_id)#</a>
+						<br/>#request.content.last_post#: #session.oUser.DateTimeFormat(qLastPosts.dt_lastpost)#
+						<br/><a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#qLastPosts.user_id_lastpost#')#">#application.lanshock.oHelper.GetUsernameByID(qLastPosts.user_id_lastpost)#</a>
 					</td>
 				</tr>
 			</cfloop>
