@@ -13,7 +13,7 @@ $LastChangedRevision$
 
 <cfparam name="attributes.id" default="0">
 
-<cfinvoke component="discussion" method="getGroup" returnvariable="qGroup">
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.discussion.discussion')#" method="getGroup" returnvariable="qGroup">
 	<cfinvokeargument name="id" value="#attributes.id#">
 </cfinvoke>
 
@@ -27,16 +27,16 @@ $LastChangedRevision$
 
 <cfif attributes.form_submitted>
 
-	<cfinvoke component="discussion" method="setGroup">
+	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.discussion.discussion')#" method="setGroup">
 		<cfinvokeargument name="id" value="#attributes.id#">
 		<cfinvokeargument name="name" value="#attributes.name#">
 		<cfinvokeargument name="permission" value="#attributes.permission#">
 	</cfinvoke>
 
-	<cflocation url="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#session.urltoken#" addtoken="false">
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" addtoken="false">
 
 </cfif>
 
-<cfinvoke component="discussion" method="getGroups" returnvariable="qGroups"></cfinvoke>
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.discussion.discussion')#" method="getGroups" returnvariable="qGroups">
 
 <cfsetting enablecfoutputonly="No">

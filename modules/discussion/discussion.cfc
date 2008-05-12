@@ -126,6 +126,7 @@ $LastChangedRevision$
 		<cfargument name="excerpt" type="numeric" required="false" default="250" hint="If mode=short, this how many chars to show.">
 		<cfargument name="params" type="struct" required="false" default="#structNew()#" hint="Passed to getEntries. Note, maxEntries can't be bigger than 15.">
 		<cfargument name="boardid" type="numeric" required="true">
+		<cfargument name="myfusebox" type="struct" required="true">
 		
 		<cfset var articles = "">
 		<cfset var z = getTimeZoneInfo()>
@@ -160,12 +161,12 @@ $LastChangedRevision$
 <channel rdf:about="#cgi.server_name#:#cgi.server_port##application.lanshock.oRuntime.getEnvironment().sWebPath#">
 	<title>#xmlFormat(request.lanshock.settings.appname)# (#xmlFormat(qBoard.title)#)</title>
 	<description>#xmlFormat(qBoard.title)#<cfif len(qBoard.subtitle)> - #xmlFormat(qBoard.subtitle)#</cfif></description>
-	<link>http://#cgi.server_name#:#cgi.server_port##application.lanshock.oRuntime.getEnvironment().sWebPath##request.varScope.myself##request.varScope.myfusebox.thiscircuit#.board&amp;id=#qBoard.id#</link>
+	<link>#application.lanshock.oHelper.buildUrl('#arguments.myfusebox.thiscircuit#.board&id=#qBoard.id#',true)#</link>
 	
 	<items>
 		<rdf:Seq>
 			<cfloop query="qTopics">
-			<rdf:li rdf:resource="http://#cgi.server_name#:#cgi.server_port##application.lanshock.oRuntime.getEnvironment().sWebPath##request.varScope.myself##request.varScope.myfusebox.thiscircuit#.topic&amp;id=#id#" />
+			<rdf:li rdf:resource="#application.lanshock.oHelper.buildUrl('#arguments.myfusebox.thiscircuit#.topic&id=#qTopics.id#',true)#" />
 			</cfloop>
 		</rdf:Seq>
 	</items>
@@ -184,10 +185,10 @@ $LastChangedRevision$
 		<cfset dateStr = dateFormat(dtPost,"yyyy-mm-dd")>
 		<cfset dateStr = dateStr & "T" & timeFormat(dtPost,"HH:mm:ss") & "-" & numberFormat(z.utcHourOffset,"00") & ":00">
 		<cfoutput>
-<item rdf:about="http://#cgi.server_name#:#cgi.server_port##application.lanshock.oRuntime.getEnvironment().sWebPath##request.varScope.myself##request.varScope.myfusebox.thiscircuit#.topic&amp;id=#id#">
+<item rdf:about="#application.lanshock.oHelper.buildUrl('#arguments.myfusebox.thiscircuit#.topic&id=#qTopics.id#',true)#">
 	<title>#xmlFormat(title)#</title>
 	<description>#xmlFormat(text)#</description>
-	<link>http://#cgi.server_name#:#cgi.server_port##application.lanshock.oRuntime.getEnvironment().sWebPath##request.varScope.myself##request.varScope.myfusebox.thiscircuit#.topic&amp;id=#id#</link>
+	<link>#application.lanshock.oHelper.buildUrl('#arguments.myfusebox.thiscircuit#.topic&id=#qTopics.id#',true)#</link>
 	<dc:date>#dateStr#</dc:date>
 	<dc:subject>#xmlFormat(qBoard.title)#</dc:subject>
 </item>

@@ -14,14 +14,14 @@ $LastChangedRevision$
 	
 	<cfif qTopic.module NEQ myfusebox.thiscircuit>
 		<div class="errorBox">
-			<a href="#myself##qTopic.module#.#qTopic.linktosource#&#session.urltoken#">#request.content.link_to_original_content_hint#</a>
+			<a href="#application.lanshock.oHelper.buildUrl('#qTopic.module#.#qTopic.linktosource#')#">#request.content.link_to_original_content_hint#</a>
 		</div>
 	<cfelse>
 		<ul class="options">
-			<li><a href="#myself##myfusebox.thiscircuit#.board&id=#ListLast(qTopic.type,'_')#&#session.urltoken#">#request.content.back_to_board#</a></li>
+			<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.board&id=#ListLast(qTopic.type,'_')#')#">#request.content.back_to_board#</a></li>
 		</ul>
 		
-		<form action="#myself##myfusebox.thiscircuit#.board&#session.urltoken#" method="post">
+		<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.board')#" method="post">
 			<div class="form">
 				<div class="formrow">
 					<div class="formrow_label">
@@ -30,7 +30,7 @@ $LastChangedRevision$
 					<div class="formrow_input">
 						<select name="id" id="board_select" onChange="submit();">
 							<cfloop query="qGroups">
-								<cfinvoke component="discussion" method="getBoards" returnvariable="qBoards">
+								<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.discussion.discussion')#" method="getBoards" returnvariable="qBoards">
 									<cfinvokeargument name="group_id" value="#id#">
 								</cfinvoke>
 								<optgroup label="#name#">
