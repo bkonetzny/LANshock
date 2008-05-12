@@ -262,22 +262,22 @@ $LastChangedRevision: 46 $
 		
 	</cffunction>
 
-	<cffunction name="getTopics" access="public" returntype="query" output="true">
+	<cffunction name="getTopics" access="public" returntype="query" output="false">
 		<cfargument name="type" required="false" type="string" default="">
 		<cfargument name="search" required="false" type="string" default="">
 		
 		<cfset var qGetTopics = 0>
+		<cfset var idx = ''>
 	
 		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qGetTopics">
-			SELECT t.*, p.title, p.text, p.user_id, COUNT(p.id) AS postcount, MAX(p.dt_created) AS dt_lastpost
+			SELECT t.*, p.title, p.text
 			FROM core_comments_topics t
 			LEFT OUTER JOIN core_comments_posts p ON t.id = p.topic_id
-			WHERE 1=1
 			<cfif len(arguments.type)>
-				AND t.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.type#">
+				WHERE t.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.type#">
 			</cfif>
 			<cfif len(arguments.search)>
-				AND (
+				<cfif len(arguments.type)>AND<cfelse>WHERE</cfif> (
 				<cfloop list="#arguments.search#" delimiters=" " index="idx">
 					p.title LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(idx)#%">
 					OR p.text LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(idx)#%">
@@ -285,10 +285,48 @@ $LastChangedRevision: 46 $
 				)
 			</cfif>
 			GROUP BY t.id
-			ORDER BY dt_lastpost DESC, t.dt_created DESC
+			ORDER BY t.dt_lastpost DESC
 		</cfquery>
 		
 		<cfreturn qGetTopics>
+		
+	</cffunction>
+	
+	<cffunction name="updateTopicData" returntype="boolean" output="false">
+		<cfargument name="id" required="false" type="numeric">
+		
+		<cfset var qLastPostInfo = 0>
+		<cfset var qPostcount = 0>
+		<cfset var idx = ''>
+	
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qLastPostInfo">
+			SELECT *
+			FROM  core_comments_posts
+			WHERE topic_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.id#">
+			ORDER BY dt_created DESC
+			LIMIT 1
+		</cfquery>
+	
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qPostcount">
+			SELECT COUNT(id) AS postcount
+			FROM  core_comments_posts
+			WHERE topic_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.id#">
+		</cfquery>
+		
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
+			UPDATE core_comments_topics
+			SET postcount = <cfqueryparam cfsqltype="cf_sql_integer" value="#qPostcount.postcount#">
+				<cfif qLastPostInfo.recordcount>
+					,dt_lastpost = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#qLastPostInfo.dt_created#">
+					,user_id_lastpost = <cfqueryparam cfsqltype="cf_sql_integer" value="#qLastPostInfo.user_id#">
+				<cfelse>
+					,dt_lastpost = NULL
+					,user_id_lastpost = NULL
+				</cfif>
+			WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.id#">
+		</cfquery>
+		
+		<cfreturn true>
 		
 	</cffunction>
 
@@ -297,6 +335,7 @@ $LastChangedRevision: 46 $
 		<cfargument name="identifier" required="true" type="string">
 		<cfargument name="linktosource" required="false" type="string">
 		<cfargument name="type" required="true" type="string">
+		<cfargument name="user_id" required="true" type="numeric">
 		
 		<cfset var qGetTopicID = 0>
 	
@@ -310,12 +349,16 @@ $LastChangedRevision: 46 $
 		<cfif NOT qGetTopicID.recordcount>
 	
 			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
-				INSERT INTO core_comments_topics (module, identifier, linktosource, type, dt_created)
+				INSERT INTO core_comments_topics (module, identifier, linktosource, type, dt_created, user_id_created, dt_lastpost, user_id_lastpost, postcount)
 				VALUES (<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.module#">,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.identifier#">,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.linktosource#">,
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.type#">,
-						#now()#)
+						#now()#,
+						<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.user_id#">,
+						#now()#,
+						<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.user_id#">,
+						1)
 			</cfquery>
 	
 			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qGetTopicID">
@@ -431,6 +474,8 @@ $LastChangedRevision: 46 $
 			</cfquery>
 
 		</cfif>
+	
+		<cfset updateTopicData(arguments.topic_id)>
 		
 		<cfreturn true>
 		
@@ -468,6 +513,8 @@ $LastChangedRevision: 46 $
 				</cfinvoke>
 			</cfif>
 		</cfif>
+	
+		<cfset updateTopicData(arguments.topic_id)>
 		
 		<cfreturn true>
 		
@@ -503,6 +550,21 @@ $LastChangedRevision: 46 $
 		</cfloop>
 		
 		<cfreturn stModules>
+		
+	</cffunction>
+
+	<cffunction name="getPostCountByUserID" access="public" returntype="numeric" output="false">
+		<cfargument name="id" required="true" type="numeric">
+		
+		<cfset var qPostCount = 0>
+	
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qPostCount">
+			SELECT COUNT(id) AS postcount
+			FROM core_comments_posts
+			WHERE user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.id#">
+		</cfquery>
+		
+		<cfreturn qPostCount.postcount>
 		
 	</cffunction>
 

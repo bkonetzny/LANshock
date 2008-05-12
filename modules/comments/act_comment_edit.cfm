@@ -44,6 +44,7 @@ $LastChangedRevision: 46 $
 			<cfinvokeargument name="identifier" value="#attributes.identifier#">
 			<cfinvokeargument name="linktosource" value="#attributes.linktosource#">
 			<cfinvokeargument name="type" value="#attributes.type#">
+			<cfinvokeargument name="user_id" value="#session.oUser.getDataValue('userid')#">
 		</cfinvoke>
 	</cfif>
 
