@@ -12,11 +12,14 @@ $LastChangedRevision$
 <cfparam name="attributes.form_submitted" default="false">
 <cfparam name="aError" default="#ArrayNew(1)#">
 
+<cfparam name="application.lanshock.settings.google_maps_key" default="">
+
 <cfparam name="attributes.appname" default="#application.lanshock.settings.appname#">
 <cfparam name="attributes.language" default="#application.lanshock.settings.language#">
 <cfparam name="attributes.startpage" default="#application.lanshock.settings.startpage#">
 <cfparam name="attributes.startpage_type" default="custom">
 <cfparam name="attributes.startpage_custom" default="#application.lanshock.settings.startpage#">
+<cfparam name="attributes.google_maps_key" default="#application.lanshock.settings.google_maps_key#">
 
 <cfif attributes.form_submitted>
 
@@ -34,6 +37,7 @@ $LastChangedRevision$
 		<cfelse>
 			<cfset stModuleConfigNew.settings.startpage = attributes.startpage>
 		</cfif>
+		<cfset stModuleConfigNew.settings.google_maps_key = attributes.google_maps_key>
 		
 		<cfinclude template="act_core_config.post.inc.cfm">
 	</cfif>

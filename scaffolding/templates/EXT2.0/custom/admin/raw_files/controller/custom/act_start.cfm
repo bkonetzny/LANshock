@@ -20,10 +20,18 @@ $LastChangedRevision$
 </cfif>
 
 <cfset oSystem = CreateObject("java", "java.lang.System")>
+<cfset sJavaVersion = oSystem.getProperty("java.version")>
+
 <cfset oRuntime = CreateObject("java", "java.lang.Runtime")>
 <cfset oStreamReader = CreateObject("java", "java.io.InputStreamReader")>
 <cfset oStreamReader.init(oSystem.in)>
 <cfset oDbDriver = CreateObject("java", "com.mysql.jdbc.Driver")>
+
+<cfif ListGetAt(sJavaVersion,2,'.') GTE 6>
+	<cfset oFile = CreateObject("java", "java.io.File")>
+	<cfset oManagementFactory = CreateObject("java", "java.lang.management.ManagementFactory")>
+	<cfset oDate = CreateObject("java", "java.util.Date")>
+</cfif>
 
 <cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.datasource')#" method="getVersionInformation" returnvariable="sDbVersion"/>
 

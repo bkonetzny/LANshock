@@ -55,4 +55,15 @@
 	<fuseaction access="public" name="cron_dbbackup" lanshock:showlayout="none">
 		<include circuit="#sModule#" template="custom/act_cron_dbbackup"/>
 	</fuseaction>
+	
+	<fuseaction access="public" name="scaffolding">
+		<lanshock:security area="scaffolding"/>
+		<include circuit="admin" template="custom/act_scaffolding"/>
+		<include circuit="v_admin" template="custom/dsp_scaffolding"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="scaffolding_progress" lanshock:showlayout="none">
+		<lanshock:security area="scaffolding"/>
+		<include circuit="admin" template="custom/act_scaffolding_progress"/>
+	</fuseaction>
 </cfoutput>

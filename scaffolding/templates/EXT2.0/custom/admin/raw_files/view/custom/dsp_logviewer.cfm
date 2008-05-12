@@ -28,6 +28,37 @@ $LastChangedRevision$
 			</tr>
 		</cfloop>
 	</table>
+	
+	<h4>$$$ Recent Actions</h4>
+	<table class="list">
+		<tr>
+			<th>#request.content.log_file#</th>
+			<th>$$$ Level</th>
+			<th>$$$ Message</th>
+			<th>$$$ Timestamp</th>
+		</tr>
+		<cfloop query="qCoreLogs">
+			<tr>
+				<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&logfile=#qCoreLogs.logname#.log')#" target="_blank">#qCoreLogs.logname#</a></td>
+				<td><cfswitch expression="#qCoreLogs.level#">
+						<cfcase value="error">
+							<img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/delete.png" alt="#qCoreLogs.level#" title="#qCoreLogs.level#" />
+						</cfcase>
+						<cfcase value="warn">
+							<img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/error.png" alt="#qCoreLogs.level#" title="#qCoreLogs.level#" />
+						</cfcase>
+						<cfcase value="info">
+							<img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/information.png" alt="#qCoreLogs.level#" title="#qCoreLogs.level#" />
+						</cfcase>
+						<cfcase value="debug">
+							<img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/con.png" alt="#qCoreLogs.level#" title="#qCoreLogs.level#" />
+						</cfcase>
+					</cfswitch></td>
+				<td>#qCoreLogs.data#</td>
+				<td>#session.oUser.DateTimeFormat(qCoreLogs.timestamp)#</td>
+			</tr>
+		</cfloop>
+	</table>
 </cfoutput>
 
 <cfsetting enablecfoutputonly="No">

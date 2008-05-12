@@ -10,11 +10,31 @@ $LastChangedRevision$
 --->
 
 <cfoutput>
-<div class="headline"><!--- TODO: $$$ ---> General Settings</div>
+<h3><!--- TODO: $$$ ---> General Settings</h3>
+
+<script type="text/javascript">
+	function switchStartpage(activeElement){
+		if(activeElement == 'select'){
+			$('##formrow_selected_value').show();
+			$('##formrow_custom_value').hide();
+			$('##formrow_default_value').hide();
+		}
+		else if(activeElement == 'custom'){
+			$('##formrow_selected_value').hide();
+			$('##formrow_custom_value').show();
+			$('##formrow_default_value').hide();
+		}
+		else if(activeElement == 'default'){
+			$('##formrow_selected_value').hide();
+			$('##formrow_custom_value').hide();
+			$('##formrow_default_value').show();
+		}
+	}
+</script>
 
 <cfif ArrayLen(aError)>
 	<div class="errorBox">
-		#request.content.error#
+		<h3>#request.content.error#</h3>
 		<ul>
 			<cfloop from="1" to="#ArrayLen(aError)#" index="idxError">
 			<li>#aError[idxError]#</li>
@@ -23,33 +43,59 @@ $LastChangedRevision$
 	</div>
 </cfif>
 
-<form action="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#session.UrlToken#" method="post">
-<input type="hidden" name="form_submitted" value="true">
-<table class="vlist">
-	<tr>
-		<th>#request.content.party_name#</th>
-		<td><input type="text" name="appname" value="#attributes.appname#"></td>
-	</tr>
-	<tr>
-		<th>#request.content.default_language#</th>
-		<td><select name="language">
+<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post" class="uniForm">
+	<div class="hidden">
+		<input type="hidden" name="form_submitted" value="true"/>
+	</div>
+	
+	<fieldset class="inlineLabels">
+		<legend><!--- TODO: $$$ ---> General Settings</legend>
+		
+		<div class="ctrlHolder">
+			<label for="formrow_appname"><em>*</em> #request.content.party_name#</label>
+			<input type="text" class="textInput" name="appname" id="formrow_appname" value="#attributes.appname#"/>
+		</div>
+		
+		<div class="ctrlHolder">
+			<label for="formrow_language"><em>*</em> #request.content.default_language#</label>
+			<select class="selectInput" name="language" id="formrow_language">
 				<cfloop list="#ListSort(StructKeyList(stLocales),'textnocase')#" index="idx">
-					<option value="#idx#"<cfif attributes.language EQ idx> selected</cfif>>#idx# - #stLocales[idx]#</option>
+					<option value="#LCase(idx)#"<cfif attributes.language EQ LCase(idx)> selected="selected"</cfif>>#stLocales[idx]#</option>
 				</cfloop>
-			</select></td>
-	</tr>
-	<tr>
-		<th rowspan="3"><!--- TODO: $$$ ---> Startpage</th>
-		<td><input type="radio" name="startpage_type" value="selected"<cfif attributes.startpage_type EQ 'selected'> checked</cfif>> <select name="startpage">#sSelectList#</select></td>
-	</tr>
-	<tr>
-		<td><input type="radio" name="startpage_type" value="custom"<cfif attributes.startpage_type EQ 'custom' AND len(attributes.startpage_custom)> checked</cfif>> <!--- TODO: $$$ ---> Custom <input type="text" name="startpage_custom" value="#attributes.startpage_custom#"></td>
-	</tr>
-	<tr>
-		<td><input type="radio" name="startpage_type" value="custom"<cfif attributes.startpage_type EQ 'custom' AND NOT len(attributes.startpage_custom)> checked</cfif>> <!--- TODO: $$$ ---> Default: general.welcome</td>
-	</tr>
-</table>
-<input type="submit" value="#request.content.form_save#">
+			</select>
+		</div>
+			
+		<div class="ctrlHolder">
+			<p class="label"><em>*</em> <!--- TODO: $$$ ---> Startpage Mode</p>
+			<label for="formrow_selected" class="inlineLabel" onclick="switchStartpage('select');"><input type="radio" name="startpage_type" id="formrow_selected" value="selected"<cfif attributes.startpage_type EQ 'selected'> checked="checked"</cfif>> <!--- TODO: $$$ ---> Selected</label>
+			<label for="formrow_custom" class="inlineLabel" onclick="switchStartpage('custom');"><input type="radio" name="startpage_type" id="formrow_custom" value="custom"<cfif attributes.startpage_type EQ 'custom' AND len(attributes.startpage_custom)> checked="checked"</cfif>> <!--- TODO: $$$ ---> Custom</label>
+			<label for="formrow_default" class="inlineLabel" onclick="switchStartpage('default');"><input type="radio" name="startpage_type" id="formrow_default" value="custom"<cfif attributes.startpage_type EQ 'custom' AND NOT len(attributes.startpage_custom)> checked="checked"</cfif>> <!--- TODO: $$$ ---> Default</label>
+		</div>
+			
+		<div class="ctrlHolder">
+			<p class="label"><em>*</em> <!--- TODO: $$$ ---> Startpage</p>
+			<div id="formrow_selected_value"<cfif attributes.startpage_type NEQ 'selected'> style="display: none;"</cfif>>
+				<select name="startpage" class="selectInput">#sSelectList#</select>
+			</div>
+			<div id="formrow_custom_value"<cfif attributes.startpage_type NEQ 'custom' OR NOT len(attributes.startpage_custom)> style="display: none;"</cfif>>
+				<input type="text" class="textInput" name="startpage_custom" value="#attributes.startpage_custom#">
+			</div>
+			<div id="formrow_default_value"<cfif attributes.startpage_type NEQ 'custom' OR len(attributes.startpage_custom)> style="display: none;"</cfif>>
+				general.welcome
+			</div>
+		</div>
+		
+		<div class="ctrlHolder">
+			<label for="formrow_google_maps_key"><!--- TODO: $$$ ---> Google Maps API Key</label>
+			<input type="text" class="textInput" name="google_maps_key" id="formrow_google_maps_key" value="#attributes.google_maps_key#"/>
+		</div>
+	
+	</fieldset>
+
+	<div class="buttonHolder">
+		<button type="submit" class="submitButton" id="btnSave">#request.content.form_save#</button>
+		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.core_config')#';">#request.content.form_cancel#</button>
+	</div>
 </form>
 </cfoutput>
 

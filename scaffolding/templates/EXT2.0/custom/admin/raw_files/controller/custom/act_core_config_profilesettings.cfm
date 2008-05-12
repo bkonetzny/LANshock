@@ -14,7 +14,7 @@ $LastChangedRevision$
 	
 <!--- get config --->
 <cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#core.configmanager" method="getConfig" returnvariable="stModuleConfigNew">
-	<cfinvokeargument name="module" value="#request.lanshock.settings.modulePrefix.core#user">
+	<cfinvokeargument name="module" value="user">
 </cfinvoke>
 
 <cfparam name="attributes.registration_active" default="#stModuleConfigNew.registration_active#">
@@ -30,7 +30,7 @@ $LastChangedRevision$
 	
 	<!--- set config --->
 	<cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#core.configmanager" method="setConfig">
-		<cfinvokeargument name="module" value="#request.lanshock.settings.modulePrefix.core#user">
+		<cfinvokeargument name="module" value="user">
 		<cfinvokeargument name="data" value="#stModuleConfigNew#">
 	</cfinvoke>
 	

@@ -24,6 +24,10 @@ $LastChangedRevision$
 			<td>#application.applicationName#</td>
 		</tr>
 		<tr>
+			<th>#request.content.application_started#</th>
+			<td>#session.oUser.dateTimeFormat(application.lanshock.dtAppStart)# (#DateDiff('n',application.lanshock.dtAppStart,now())# Minutes)</td>
+		</tr>
+		<tr>
 			<th>#request.content.path_abs#</th>
 			<td>#application.lanshock.oRuntime.getEnvironment().sBasePath#</td>
 		</tr>
@@ -39,10 +43,6 @@ $LastChangedRevision$
 			<th>#request.content.fusebox_version#</th>
 			<td>#myfusebox.version.runtime#</td>
 		</tr>
-		<!--- <tr>
-			<th><!--- TODO: $$$ ---> Transfer ORM Version</th>
-			<td>#myFusebox.getApplication().getApplicationData().transferFactory.getVersion()#</td>
-		</tr> --->
 		<tr>
 			<th>#request.content.coldfusion#</th>
 			<td>#Server.ColdFusion.ProductName#<cfif StructKeyExists(server,'railo')> (#server.railo.version#)</cfif></td>
@@ -66,8 +66,12 @@ $LastChangedRevision$
 			<td>#oSystem.getProperty("user.name")#</td>
 		</tr>
 		<tr>
+			<th><!--- TODO: $$$ ---> Free Space on Server</th>
+			<td><cfif ListGetAt(sJavaVersion,2,'.') GTE 6>#byteConvert(oFile.init(expandPath('.')).getFreeSpace())#<cfelse>unknown (Java 1.6+ needed)</cfif></td>
+		</tr>
+		<tr>
 			<th><!--- TODO: $$$ ---> JVM Version</th>
-			<td>#oSystem.getProperty("java.version")# (#oSystem.getProperty("java.vendor")#)</td>
+			<td>#sJavaVersion# (#oSystem.getProperty("java.vendor")#)</td>
 		</tr>
 		<tr>
 			<th><!--- TODO: $$$ ---> JVM Locale</th>
@@ -80,6 +84,10 @@ $LastChangedRevision$
 		<tr>
 			<th><!--- TODO: $$$ ---> JVM Heap</th>
 			<td>#byteConvert(oRuntime.getRuntime().freeMemory(),'MB')# <!--- TODO: $$$ --->free of #byteConvert(oRuntime.getRuntime().maxMemory(),'MB')# maximum</td>
+		</tr>
+		<tr>
+			<th><!--- TODO: $$$ ---> JVM Starttime</th>
+			<td><cfif ListGetAt(sJavaVersion,2,'.') GTE 6>#session.oUser.DateTimeFormat(oDate.init(oManagementFactory.getRuntimeMXBean().getStartTime()))# (#DateDiff('n',oDate.init(oManagementFactory.getRuntimeMXBean().getStartTime()),now())# Minutes)<cfelse>unknown (Java 1.6+ needed)</cfif></td>
 		</tr>
 		<!--- <tr>
 			<th><!--- TODO: $$$ ---> JVM System Encoding</th>
@@ -102,9 +110,8 @@ $LastChangedRevision$
 	<h4>#request.content.application_headline#</h4>
 	
 	<p>
-		#request.content.application_reload_txt#<br>
-		#request.content.application_reload_time_txt#<br>
-		#request.content.application_started# <strong>#session.oUser.dateTimeFormat(application.lanshock.dtAppStart,'datetime')#</strong>
+		#request.content.application_reload_txt#<br/>
+		#request.content.application_reload_time_txt#
 	</p>
 
 	<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post">
