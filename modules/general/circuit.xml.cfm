@@ -56,13 +56,5 @@ $LastChangedRevision: 75 $
 	<fuseaction name="session_language">
 		<include template="act_session_language.cfm"/>
 	</fuseaction>
-	
-	<fuseaction name="lanshock_code">
-		<include template="dsp_lanshock_code.cfm"/>
-	</fuseaction>
-	
-	<fuseaction name="lanshock_code_popup" lanshock:showlayout="basic">
-		<include template="dsp_lanshock_code.cfm"/>
-	</fuseaction>
 
 </circuit>
