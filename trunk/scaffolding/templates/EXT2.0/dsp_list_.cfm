@@ -45,24 +45,6 @@ $LastChangedRevision$
 	<</cfif>>
 <</cfloop>>
 
-<<cfset sCodeFilterModel = ''>>
-<<cfset bFirstColumn = true>>
-<<cfloop from="1" to="$$ArrayLen(aFields)$$" index="idx">>
-	<<cfif aFields[idx].showOnList>>
-		<<cfif NOT bFirstColumn>>
-			<<cfset sCodeFilterModel = sCodeFilterModel & "," & chr(13)>>
-		<</cfif>>
-		<<cfset sCodeFilterModel = sCodeFilterModel & "{type: 'string', dataIndex: '$$aFields[idx].alias$$'">>
-		<<!--- <<cfswitch expression="$$aFields[idx].type$$">>
-			<<cfcase value="date">>
-				<<cfset sCodeDataReaderModel = sCodeDataReaderModel & ",type:'date',dateFormat:'Y-m-d g:i'">>
-			<</cfcase>>
-		<</cfswitch>> --->>
-		<<cfset sCodeFilterModel = sCodeFilterModel & "}">>
-		<<cfset bFirstColumn = false>>
-	<</cfif>>
-<</cfloop>>
-
 <<cfset sCodeColumnModel = ''>>
 <<cfset bFirstColumn = true>>
 <<cfloop from="1" to="$$ArrayLen(aFields)$$" index="idx">>
@@ -73,7 +55,7 @@ $LastChangedRevision$
 		<<cfelse>>
 			<<cfset sCodeColumnModel = sCodeColumnModel & "," & chr(13) & "{">>
 		<</cfif>>
-		<<cfset sCodeColumnModel = sCodeColumnModel & "header:'#jsStringFormat(request.content.$$objectName$$_grid_header_$$aFields[idx].label$$)#',width:30,sortable:true,dataIndex:'$$aFields[idx].alias$$'">>
+		<<cfset sCodeColumnModel = sCodeColumnModel & "header:'#jsStringFormat(request.content.$$objectName$$_grid_header_$$aFields[idx].alias$$)#',width:30,sortable:true,dataIndex:'$$aFields[idx].alias$$'">>
 		<<!--- <<cfswitch expression="$$aFields[idx].type$$">>
 			<<cfcase value="date">>
 				<<cfset sCodeColumnModel = sCodeColumnModel & ",renderer:Ext.util.Format.dateRenderer('d.m.Y - H:i')">>
@@ -154,37 +136,35 @@ $LastChangedRevision$
 
 </cfsilent>
 <cfoutput>
+<h3>#request.content['__globalmodule__navigation__#request.page.objectName#_Listing']#</h3>
 <script type="text/javascript">
 	Ext.onReady(function(){
 		
-		Ext.ux.menu.RangeMenu.prototype.icons = {
-          gt: '#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/ext-2.0-ux/img/greater_then.png', 
-          lt: '#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/ext-2.0-ux/img/less_then.png',
-          eq: '#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/ext-2.0-ux/img/equals.png'
-		};
-		
-		Ext.ux.grid.filter.StringFilter.prototype.icon = '#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/ext-2.0-ux/img/find.png';
-	
 		Ext.QuickTips.init();
 	    var xg = Ext.grid;
 	    var sm = new xg.CheckboxSelectionModel();
-	    
-	    var cmenu = new Ext.menu.Menu('gridContextMenu');
-        cmenu.add({
-        	id:'cm_btn_edit',
-        	text:'#jsStringFormat(request.content.$$objectName$$_grid_row_edit)#',
-        	action:'edit',
-        	handler:function(e){window.location.href='#myself##xfa.update#&$$lPKFields$$=' + grid.getSelectionModel().getSelected().id;},
-        	iconCls:'edit'
-        });
-        cmenu.addSeparator();
-        cmenu.add({
-        	id:'cm_btn_remove',
-        	text:'#jsStringFormat(request.content.$$objectName$$_grid_row_delete)#',
-        	action:'remove',
-        	handler:doDel,
-        	iconCls:'remove'
-        });
+        
+        var action = new Ext.ux.grid.RowActions({
+			header:'Actions',
+			actions:[{
+				iconCls:'icon-edit-record',
+				tooltip:'Edit'
+			},{
+				iconCls:'icon-delete-record',
+				tooltip:'Delete'
+			}]
+		});
+		
+		action.on({
+			action:function(grid, record, action, row, col) {
+				if(action == 'icon-edit-record'){
+					window.location.href='#myself##xfa.update#&$$lPKFields$$=' + grid.getSelectionModel().getSelected().id;
+				}
+				else if(action == 'icon-delete-record'){
+					doDel();
+				}
+			}
+		});
 	    	    
 	    var ds = new Ext.data.GroupingStore({
 			proxy: new Ext.data.HttpProxy({
@@ -195,7 +175,7 @@ $LastChangedRevision$
 	        	totalProperty: "totalRecords",
 	        	root: 'data',
 				id: '$$lPKFields$$'
-	           },[
+			},[
 				$$sCodeDataReaderModel$$
 			]),
 			
@@ -203,17 +183,14 @@ $LastChangedRevision$
 			remoteSort: true,
 			autoLoad: false
 		});
-
-		var filters = new Ext.ux.grid.GridFilters({filters:[
-			$$sCodeFilterModel$$
-		]});
 	    
 	    var grid = new xg.GridPanel({
 	        id:'button-grid',
 	        ds: ds,
 	        cm: new xg.ColumnModel([
 	        	sm,
-	        	$$sCodeColumnModel$$
+	        	$$sCodeColumnModel$$,
+	        	action
 	        ]),
 	        sm: sm,
 	
@@ -230,37 +207,27 @@ $LastChangedRevision$
 	            handler: doDel
 	        }],
 	
-	        width:700,
 	        height:533,
-	        frame:true,
-	        title:'#jsStringFormat(request.content['__globalmodule__navigation__$$objectName$$_Listing'])#',
-	        iconCls:'icon-grid',
+	        frame:false,
 	        renderTo: Ext.get('grid_$$objectName$$'),
-	        plugins: filters,
+	        plugins: [action,new Ext.ux.grid.Search({
+				mode:'remote',
+				iconCls:false,
+				dateFormat:'m/d/Y',
+				minLength:1
+			})],
 	        
-	        view: new Ext.grid.GroupingView({
-	        	forceFit:true,
-	        	enableGrouping:false,
-	        	startCollapsed:false
-	        }),
+	        viewConfig: {
+		        forceFit: true
+		    },
 	        
 	        bbar: new Ext.PagingToolbar({
 	            pageSize: 20,
-	            store: ds,
-	            plugins: filters
+	            store: ds
 	        })
 	    });
 		
 		ds.load({params:{start: 0, limit: 20}});
-	    
-	    grid.doRowContextMenu = function (grid, rowIndex, e) {
-          e.stopEvent();
-          var coords = e.getXY();
-          grid.getSelectionModel().selectRow(rowIndex);
-          cmenu.showAt([coords[0],coords[1]]);
-        }
-        
-        grid.addListener('rowcontextmenu', grid.doRowContextMenu);
 	    
 	    function doDel(){
 	        var m = grid.getSelections();
@@ -292,116 +259,4 @@ $LastChangedRevision$
 
 <div id="grid_$$objectName$$"></div>
 </cfoutput>
-<<!--- 
-<table width="790" border="0" cellpadding="2" cellspacing="2" summary="This table shows a list of $$objectName$$ records." class="">
-	<cfoutput>
-	<tr>
-		<cfloop list="#variables.fieldlist#" index="thisField">
-			<cfswitch expression="#thisField#">
-				<<cfloop from="1" to="$$ArrayLen(aFields)$$" index="i">>
-				<cfcase value="$$aFields[i].alias$$">
-					<th width="" align="right" class="standard">
-						<cfif isDefined("attributes._listSortByFieldList") AND attributes._listSortByFieldList IS "$$aFields[i].table$$|$$aFields[i].alias$$|ASC">
-							<a href="#self#?fuseaction=#XFA.Sort#&_listsortByFieldList=$$objectName$$|$$aFields[i].alias$$|DESC">$$aFields[i].label$$</a>
-						<cfelse>
-							<a href="#self#?fuseaction=#XFA.Sort#&_listsortByFieldList=$$objectName$$|$$aFields[i].alias$$|ASC">$$aFields[i].label$$</a>
-						</cfif>
-					</th>
-				</cfcase>
-				<</cfloop>>
-				
-				<<cfloop from="1" to="$$ArrayLen(aJoinedFields)$$" index="i">><<cfif NOT ListFindNoCase(lFields,aJoinedFields[i].alias)>>
-				<cfcase value="$$aJoinedFields[i].alias$$">
-					<th width="" align="left" class="standard">
-						<cfif isDefined("attributes._listSortByFieldList") AND attributes._listSortByFieldList IS "$$aJoinedFields[i].table$$|$$aJoinedFields[i].alias$$|ASC">
-							<a href="#self#?fuseaction=#XFA.Sort#&_listsortByFieldList=$$aJoinedFields[i].table$$|$$aJoinedFields[i].alias$$|DESC">$$aJoinedFields[i].label$$</a>
-						<cfelse>
-							<a href="#self#?fuseaction=#XFA.Sort#&_listsortByFieldList=$$aJoinedFields[i].table$$|$$aJoinedFields[i].alias$$|ASC">$$aJoinedFields[i].label$$</a>
-						</cfif>
-					</th>
-				</cfcase>
-				<</cfif>><</cfloop>>
-			</cfswitch>
-		</cfloop>
-		<th width="" align="center" class="standard">Options</th>
-	</tr>
-	</cfoutput>
-	<cfif q$$objectName$$.recordcount gt 0>
-	<cfoutput query="q$$objectName$$">
-	<tr>
-		<cfloop list="#variables.fieldlist#" index="thisField">
-			<cfswitch expression="#thisField#">
-				<<cfloop from="1" to="$$ArrayLen(aFields)$$" index="i">>
-				<cfcase value="$$aFields[i].alias$$">
-					<td align="right" class="standard">#$$Format("q$$objectName$$.$$aFields[i].alias$$","$$aFields[i].format$$")$$#&nbsp;</td>
-				</cfcase>
-				<</cfloop>>
-				
-				<<cfloop from="1" to="$$ArrayLen(aJoinedFields)$$" index="i">><<cfif NOT ListFindNoCase(lFields,aJoinedFields[i].alias)>>
-				<cfcase value="$$aJoinedFields[i].alias$$">
-					<td align="right" class="standard">#$$Format("q$$objectName$$.$$aJoinedFields[i].alias$$","$$aJoinedFields[i].format$$")$$#&nbsp;</td>
-				</cfcase>
-				<</cfif>><</cfloop>>
-			</cfswitch>
-		</cfloop>
-		<td align="center" class="standard">
-			[<a href="#self##appendParam(appendParam(pageParams,"fuseaction",XFA.display),"$$lPKFields$$",$$lPKFields$$)#">View</a>]
-			[<a href="#self##appendParam(appendParam(pageParams,"fuseaction",XFA.update),"$$lPKFields$$",$$lPKFields$$)#">Edit</a>]
-			[<a href="#self##appendParam(appendParam(pageParams,"fuseaction",XFA.delete),"$$lPKFields$$",$$lPKFields$$)#">Delete</a>]
-		</td>
-	</tr>
-	</cfoutput>
-	<tr>
-		<td colspan="#listLen(fieldlist)#" class="standard">&nbsp;</td>
-	</tr>
-	<cfelse>
-		<tr>
-			<td colspan="#listLen(fieldlist)#" class="standard">&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="#listLen(fieldlist)#" class="standard">There are no $$objectName$$s.</td>
-		</tr>
-		<tr>
-			<td colspan="#listLen(fieldlist)#" class="standard">&nbsp;</td>
-		</tr>
-	</cfif>
-</table>
-<span class="standard">
-	<cfset pagecount = ((attributes.totalRowCount - 1) \ attributes._Maxrows) + 1>
-	<!--- Display a list of page numbers so that the user can go directly to any page --->
-	<cfloop index="page" from="1" to="#pagecount#">
-		<cfset variables.StartRow = ((page - 1)*attributes._Maxrows)+1 >
-		<cfset selParams = appendParam(sortParams,"_StartRow",variables.Startrow)>
-		<cfset selParams = appendParam(selParams,"fuseaction",XFA.Page)>
-		<cfif attributes._Startrow EQ variables.StartRow>
-			<cfoutput>[#page#]</cfoutput>
-		<cfelse>
-			<cfoutput>[<a href="#self##selParams#">#page#</a>]</cfoutput>
-		</cfif>
-	</cfloop>
-	<br />
-	<!--- Display prev and next buttons  --->
-	<cfset prevrow = attributes._Startrow - attributes._Maxrows>
-	<cfset prevParams = appendParam(sortParams,"_StartRow",prevrow)>
-	<cfset prevParams = appendParam(prevParams,"fuseaction",XFA.Prev)>
-	<cfif prevrow LT 1>
-		[Prev]
-	<cfelse>
-	<cfoutput>[<a href="#self##prevParams#">Prev</a>]</cfoutput>
-	</cfif>
-	
-	<cfset nextrow = attributes._Startrow + attributes._Maxrows>
-	<cfset nextParams = appendParam(sortParams,"_StartRow",nextrow)>
-	<cfset nextParams = appendParam(nextParams,"fuseaction",XFA.Next)>
-	<cfif nextrow GT attributes.totalRowCount>
-		[Next]
-	<cfelse>
-	<cfoutput>[<a href="#self##nextParams#">Next</a>]</cfoutput>
-	</cfif>
-	
-	<cfoutput>[<a href="#self##appendParam(pageParams,"fuseaction",XFA.add)#">Add New $$objectName$$</a>]</cfoutput>
-</span> --->>
-<!--- 
-$Log$
- --->
 <</cfoutput>>

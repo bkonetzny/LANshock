@@ -27,10 +27,8 @@ $LastChangedRevision$
 	<fuseaction name="$$objectName$$_action_save" access="private" lanshock:includedCircuit="true">
 		<lanshock:security area="$$objectName$$"/>
 		<set name="bHasErrors" value="false" />
-		
 		<xfa name="continue" value="$$objectName$$_listing" />
 		<xfa name="cancel" value="$$objectName$$_listing" />
-		
 		<include circuit="$$sModule$$" template="form/act_action_save_$$objectName$$" />
 	</fuseaction>
 	

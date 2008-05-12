@@ -21,17 +21,6 @@ $LastChangedRevision$
 	ArrayAppend(aTemplateFiles,stFileData);
 	
 	stFileData = structNew();
-	stFileData.templateFile = "dsp_layout";
-	stFileData.outputFile = "dsp_layout";
-	stFileData.MVCpath = "#destinationFilePath#modules/$tablename$/view/";
-	stFileData.inPlace = "false";
-	stFileData.overwrite = "true";
-	stFileData.useAliasInName = "false";
-	stFileData.suffix = "cfm";
-	stFileData.perObject = "false";
-	ArrayAppend(aTemplateFiles,stFileData);
-	
-	stFileData = structNew();
 	stFileData.templateFile = "dsp_layout_json";
 	stFileData.outputFile = "dsp_layout_json";
 	stFileData.MVCpath = "#destinationFilePath#modules/$tablename$/view/";
@@ -130,6 +119,17 @@ $LastChangedRevision$
 	stFileData.useAliasInName = "false";
 	stFileData.suffix = "cfm";
 	stFileData.perObject = "true";
+	ArrayAppend(aTemplateFiles,stFileData);
+	
+	stFileData = structNew();
+	stFileData.templateFile = "act_json_filter";
+	stFileData.outputFile = "act_json_filter";
+	stFileData.MVCpath = "#destinationFilePath#modules/$tablename$/controller/";
+	stFileData.inPlace = "false";
+	stFileData.overwrite = "true";
+	stFileData.useAliasInName = "false";
+	stFileData.suffix = "cfm";
+	stFileData.perObject = "false";
 	ArrayAppend(aTemplateFiles,stFileData);
 	
 	stFileData = structNew();

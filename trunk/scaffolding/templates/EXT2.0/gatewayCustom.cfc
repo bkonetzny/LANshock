@@ -36,6 +36,7 @@ $LastChangedRevision$
 				<cfset Query.returnObjectFields("$$objectName$$","$$lFields$$")>
 				
 				<cfloop collection="#arguments.stFilter.stJoins#" item="idx">
+					<cfset idx = lCase(idx)>
 					<cfset Query.leftJoin("$$objectName$$",idx,idx)>
 					<cfset Query.setFieldPrefix(idx,"#idx#_")>
 					<cfset Query.returnObjectFields(idx,arguments.stFilter.stJoins[idx])>
@@ -44,6 +45,7 @@ $LastChangedRevision$
 		
 			<cfif StructKeyExists(arguments.stFilter,'stFields')>
 				<cfloop collection="#arguments.stFilter.stFields#" item="idx">
+					<cfset idx = lCase(idx)>
 					<cfif ListLen(idx,'|') EQ 2>
 						<cfset sCurrentTable = ListFirst(idx,'|')>
 						<cfset sCurrentField = ListLast(idx,'|')>
@@ -64,6 +66,7 @@ $LastChangedRevision$
 			
 			<cfif StructKeyExists(arguments.stFilter,'lSortFields')>
 				<cfloop list="#arguments.stFilter.lSortFields#" index="idx">
+					<cfset idx = lCase(idx)>
 					<cfset sSortDirection = 'ASC'>
 					<cfset sSortField = idx>
 					<cfif ListLen(idx,'|') EQ 2>
@@ -129,6 +132,7 @@ $LastChangedRevision$
 		<cfset var qSkip = ""/>
 		<cfset var thisOrder = "" />
 		<cfset var idxFilter = "" />
+		<cfset var bFilterColumn = false>
 		
 		<cfif arguments.startrow GT 1>
 			<!--- Set up the sort order for the skipped records --->
@@ -152,12 +156,28 @@ $LastChangedRevision$
 		<cfset QueryRecordset.leftJoin("$$objectName$$", "$$aJoinedObjects[i].name$$", "$$aJoinedObjects[i].alias$$")/>
 		<cfset QueryRecordset.setFieldPrefix("$$aJoinedObjects[i].name$$","$$aJoinedObjects[i].alias$$_")/>
 	  <</cfloop>>
-	  
-		<cfloop collection="#arguments.filter#" item="idxFilter">
-			<cfif ListLast(idxFilter,'.') EQ 'field'>
-				<cfset QueryRecordset.getWhere().isLike("$$objectName$$", arguments.filter[idxFilter], arguments.filter['filter.'&ListGetAt(idxFilter,2,'.')&'.data.value'])>
-			</cfif>
-		</cfloop>
+
+		<cfif isStruct(arguments.filter)>
+			<cfset QueryRecordset.getWhere().setMode("OR")>
+			<<cfloop from="1" to="$$ArrayLen(aFields)$$" index="idx">>
+				<cfif StructKeyExists(arguments.filter,'$$aFields[idx].alias$$')>
+					<cfset bFilterColumn = false>
+					<cfswitch expression="$$aFields[idx].type$$">
+						<cfcase value="numeric">
+							<cfif isNumeric(arguments.filter['$$aFields[idx].alias$$'])>
+								<cfset bFilterColumn = true>
+							</cfif>
+						</cfcase>
+						<cfdefaultcase>
+							<cfset bFilterColumn = true>
+						</cfdefaultcase>
+					</cfswitch>
+					<cfif bFilterColumn>
+						<cfset QueryRecordset.getWhere().isLike("$$objectName$$",'$$aFields[idx].alias$$',arguments.filter['$$aFields[idx].alias$$'])>
+					</cfif>
+				</cfif>
+			<</cfloop>>
+		</cfif>
 		
 		<!--- Set up the sort order for the required records --->
 		<cfloop list="#arguments.sortByFieldList#" index="thisOrder">

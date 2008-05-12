@@ -24,6 +24,7 @@
 		<cfelseif ListFind("aManyToOne,aManyToMany,aOneToMany",idxRelation)>
 			<cfloop from="1" to="#ArrayLen(stFields[idxRelation])#" index="i">
 				<cfset stFieldData = stFields[idxRelation][i]>
+				<cfparam name="stFieldData.required" default="false">
 				<cfset stFieldData.uuid = replace(CreateUUID(),'-','','ALL')>
 				<cfset stFieldData.formType = "select_manytomany">
 				
