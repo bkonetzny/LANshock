@@ -9,7 +9,7 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 75 $
 -->
 
-<module name="LANshock Comment-System" version="2.0.0.0 beta" date="2008-05-06" author="LANshock" url="http://www.lanshock.com">
+<module name="Comments Service" version="2.0.0.0" date="2008-05-12" author="LANshock" url="http://www.lanshock.com">
 
 	<general type="service" requiresLogin="true"/>
 
@@ -30,6 +30,10 @@ $LastChangedRevision: 75 $
 			<field name="type" type="varchar" len="255" null="false" default=""/>
 			<field name="linktosource" type="varchar" len="255" null="false" default=""/>
 			<field name="dt_created" type="datetime" null="true" default="NULL"/>
+			<field name="user_id_created" type="integer" len="11" null="false" default="0"/>
+			<field name="dt_lastpost" type="datetime" null="true" default="NULL"/>
+			<field name="user_id_lastpost" type="integer" len="11" null="true" default="NULL"/>
+			<field name="postcount" type="integer" len="11" null="false" default="0"/>
 			<field name="isclosed" type="boolean" null="false" default="0"/>
 			<pk fields="id"/>
 			<index name="IDX_module" fields="module"/>
