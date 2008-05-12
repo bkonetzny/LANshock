@@ -1,9 +1,10 @@
+// vim: ts=4:sw=4:nu:fdc=4:nospell
 /**
  * Ext.ux.form.DateTime Extension Class for Ext 2.x Library
  *
  * @author    Ing. Jozef Sakalos
  * @copyright (c) 2008, Ing. Jozef Sakalos
- * @version $Id: Ext.ux.form.DateTime.js 11 2008-02-22 17:13:52Z jozo $
+ * @version $Id: Ext.ux.form.DateTime.js 247 2008-05-09 15:08:10Z jozo $
  *
  * @license Ext.ux.form.DateTime is licensed under the terms of
  * the Open Source LGPL 3.0 license.  Commercial use is permitted to the extent
@@ -12,6 +13,8 @@
  * 
  * License details: http://www.gnu.org/licenses/lgpl.html
  */
+
+/*global Ext */
 
 Ext.ns('Ext.ux.form');
 
@@ -30,7 +33,7 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
      */
     ,dateWidth:100
     /**
-     * @cfg {Number} timeWidth Width of time field in pixels (defaults to 100)
+     * @cfg {Number} timeWidth Width of time field in pixels (defaults to 60)
      */
     ,timeWidth:60
     /**
@@ -41,7 +44,7 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
      * @cfg {String} hiddenFormat Format of datetime used to store value in hidden field
      * and submitted to server (defaults to 'Y-m-d H:i:s' that is mysql format)
      */
-    ,hiddenFormat:'Y-m-d H:i:s'
+    ,hiddenFormat:'Y-m-d G:i'
     /**
      * @cfg {Boolean} otherToNow Set other field to now() if not explicly filled in (defaults to true)
      */
@@ -59,11 +62,11 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
     /**
      * @cfg {String} dateFormat Format of DateField. Can be localized. (defaults to 'm/y/d')
      */
-    ,dateFormat:'m/d/y'
+    ,dateFormat:'Y-m-d'
     /**
      * @cfg {String} timeFormat Format of TimeField. Can be localized. (defaults to 'g:i A')
      */
-    ,timeFormat:'g:i A'
+    ,timeFormat:'G:i'
     /**
      * @cfg {Object} dateConfig Config for DateField constructor.
      */
@@ -131,7 +134,7 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
         // render DateField and TimeField
         // create bounding table
         var t;
-        if('below' === this.timePosition) {
+        if('below' === this.timePosition || 'bellow' === this.timePosition) {
             t = Ext.DomHelper.append(ct, {tag:'table',style:'border-collapse:collapse',children:[
                  {tag:'tr',children:[{tag:'td', style:'padding-bottom:1px', cls:'ux-datetime-date'}]}
                 ,{tag:'tr',children:[{tag:'td', cls:'ux-datetime-time'}]}
@@ -171,8 +174,14 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
             this.tf.errorIcon = this.errorIcon;
         }
 
+        // setup name for submit
+        this.el.dom.name = this.hiddenName || this.name || this.id;
+
         // we're rendered flag
         this.isRendered = true;
+
+        // update hidden field
+        this.updateHidden();
 
     } // eo function onRender
     // }}}
@@ -337,7 +346,9 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
      * private Just to prevent blur event when clicked in the middle of fields
      */
     ,onMouseDown:function(e) {
-        this.wrapClick = 'td' === e.target.nodeName.toLowerCase();
+        if(!this.disabled) {
+            this.wrapClick = 'td' === e.target.nodeName.toLowerCase();
+        }
     }
     // }}}
     // {{{
@@ -347,7 +358,7 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
      */
     ,onSpecialKey:function(t, e) {
         var key = e.getKey();
-        if(key == e.TAB) {
+        if(key === e.TAB) {
             if(t === this.df && !e.shiftKey) {
                 e.stopEvent();
                 this.tf.focus();
@@ -358,7 +369,7 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
             }
         }
         // otherwise it misbehaves in editor grid
-        if(key == e.ENTER) {
+        if(key === e.ENTER) {
             this.updateValue();
         }
 
@@ -390,7 +401,7 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
         if(!w) {
             return;
         }
-        if('below' == this.timePosition) {
+        if('below' === this.timePosition) {
             this.df.setSize(w, h);
             this.tf.setSize(w, h);
             if(Ext.isIE) {
@@ -424,6 +435,9 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
             this.setTime('');
             this.updateValue();
             return;
+        }
+        if ('number' === typeof val) {
+          val = new Date(val);
         }
         val = val ? val : new Date(1970, 0 ,1, 0, 0, 0);
         var da, time;
@@ -473,6 +487,7 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
      * private Updates the date part
      */
     ,updateDate:function() {
+
         var d = this.df.getValue();
         if(d) {
             if(!(this.dateValue instanceof Date)) {
@@ -528,11 +543,12 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
         if(this.isRendered) {
             var value = this.dateValue instanceof Date ? this.dateValue.format(this.hiddenFormat) : '';
             this.el.dom.value = value;
-	    this.handler();
+			this.handler(value);
         }
     }
-    ,handler:function() {
-	alert(this.getValue());
+    // }}}
+    // {{{
+    ,handler:function(value) {
         return true;
     }
     // }}}
@@ -578,3 +594,5 @@ Ext.ux.form.DateTime = Ext.extend(Ext.form.Field, {
 
 // register xtype
 Ext.reg('xdatetime', Ext.ux.form.DateTime);
+
+// eof

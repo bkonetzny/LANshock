@@ -466,11 +466,9 @@
 		<input type="hidden" name="dt_birthdate" id="formrow_A689B1CF30604763A7A54825F5C357D2" value="#LsDateFormat(Trim(ouser.getdt_birthdate()),'YYYY-MM-DD')# #LsTimeFormat(Trim(ouser.getdt_birthdate()),'HH:MM:SS')#"/>
 		<script type="text/javascript">
 			var myDatePickerA689B1CF30604763A7A54825F5C357D2 = new Ext.ux.form.DateTime({
-				handler: function(){
-					$('##formrow_A689B1CF30604763A7A54825F5C357D2').val(myDatePickerA689B1CF30604763A7A54825F5C357D2.getValue().format('Y-m-d G:i'));
-				},
-				dateFormat: 'Y-m-d',
-				timeFormat: 'G:i'
+				handler: function(value){
+					$('##formrow_A689B1CF30604763A7A54825F5C357D2').val(value);
+				}
 			});
 			Ext.onReady(function(){
 				myDatePickerA689B1CF30604763A7A54825F5C357D2.render('divDatePickerA689B1CF30604763A7A54825F5C357D2');
