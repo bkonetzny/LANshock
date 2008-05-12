@@ -11,29 +11,15 @@ $LastChangedRevision: 33 $
 
 <cfparam name="attributes.form_submitted" default="false">
 <cfparam name="aError" default="#ArrayNew(1)#">
-<cfparam name="attributes.id" default="#session.userid#">
-
-<cfif NOT isNumeric(attributes.id)>
-	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.user_not_found')#" addtoken="false">
-</cfif>
-
-<cfif session.isAdmin AND NOT attributes.id EQ session.userid>
-	<cfset check = UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin')>
-</cfif>
-	
-<cfscript>
-	if(session.isAdmin) UDF_SecurityCheck('guest',request.lanshock.settings.modulePrefix.core & 'admin');
-	else attributes.id = session.userid;
-</cfscript>
 
 <cfif attributes.form_submitted>
 
 	<cfparam name="attributes.avatar_delete" default="false">
 		
-	<cfif attributes.avatar_delete>
+	<cfif attributes.avatar_delete OR len(avatar)>
 		<cftry>
 			<cffile action="delete" file="#application.lanshock.oHelper.UDF_Module('absStoragePathPublic')#avatars/#attributes.id#.png">
-			<cfcatch><!--- do nothing ---></cfcatch>
+			<cfcatch><cfset ArrayAppend(aError,cfcatch.message)></cfcatch>
 		</cftry>
 	</cfif>
 	
@@ -53,15 +39,17 @@ $LastChangedRevision: 33 $
 			<cfset oImage.setOption('defaultJpegCompression','100')>
 			<cfset oImage.setOption('tempDirectory',application.lanshock.oHelper.UDF_Module('storagePathTemp'))>
 			
-			<cfset oImage.resize('',sUploadFile,'#application.lanshock.oHelper.UDF_Module('absStoragePathPublic')#avatars/#attributes.id#.png',application.lanshock.settings.layout.avatar.width,application.lanshock.settings.layout.avatar.height,true)>
+			<cfset oImage.resize('',sUploadFile,'#application.lanshock.oHelper.UDF_Module('absStoragePathPublic')#avatars/#session.userid#.png',80,80,true)>
 
-			<cfcatch><!--- do nothing ---></cfcatch>
+			<cfcatch><cfset ArrayAppend(aError,cfcatch.message)></cfcatch>
 		</cftry>
 		
 		<cffile action="delete" file="#sUploadFile#">
 	</cfif>
 	
-	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.userdetails&id=#attributes.id#')#" addtoken="false">
+	<cfif NOT ArrayLen(aError)>
+		<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.userdetails')#" addtoken="false">
+	</cfif>
 
 </cfif>
 

@@ -63,12 +63,13 @@ $LastChangedRevision: 33 $
 <cfset bIsCookieLogin = false>
 
 <cfif attributes.loginmode EQ "password">
-	
+
 	<!--- cookie detection --->
 	<cfif isDefined("cookie.email") AND isDefined("cookie.password")>
 		<cfset bIsCookieLogin = true>
+		<cfset attributes.form_submitted = true>
 		<cfset attributes.email = cookie.email>
-		<cfset attributes.password = decrypt(cookie.password,request.lanshock.settings.crypkey)>
+		<cfset attributes.password = decrypt(cookie.password,application.applicationname)>
 	<cfelseif len(attributes.password)>
 		<cfset attributes.password = LCase(hash(attributes.password))>
 	</cfif>
@@ -237,9 +238,17 @@ $LastChangedRevision: 33 $
 			</cfif>
 		</cfif>
 
-		<cfif qUser.status EQ 'locked'>
-			<cfset ArrayAppend(aError, request.content.error_user_locked)>
-			<cfset application.lanshock.oLogger.writeLog('modules.user.login','Login failed for "#qUser.name#": User is locked','warn')>
+		<cfif qUser.status NEQ 'confirmed'>
+			<cfswitch expression="#qUser.status#">
+				<!--- <cfcase value="new">
+					<cfset ArrayAppend(aError,  "$$$ Your user is not yet confirmed.")>
+					<cfset application.lanshock.oLogger.writeLog('modules.user.login','Login failed for "#qUser.name#": User is not yet confirmed','warn')>
+				</cfcase> --->
+				<cfcase value="locked">
+					<cfset ArrayAppend(aError, request.content.error_user_locked)>
+					<cfset application.lanshock.oLogger.writeLog('modules.user.login','Login failed for "#qUser.name#": User is locked','warn')>
+				</cfcase>
+			</cfswitch>
 		</cfif>
 	
 		<cfif NOT ArrayLen(aError)>
@@ -273,12 +282,11 @@ $LastChangedRevision: 33 $
 				</cfloop>
 				
 			</cfloop>
-			
+
 			<cfcookie name="email" value="#oUser.getEmail()#" expires="never">
-			<!--- set cookies if this is no "as login" --->
 			<cfif attributes.bSaveCookie>
 				<cfcookie name="userid" value="#oUser.getId()#" expires="never">
-				<cfcookie name="password" value="#encrypt(attributes.password,request.lanshock.settings.crypkey)#" expires="never">
+				<cfcookie name="password" value="#encrypt(attributes.password,application.applicationname)#" expires="never">
 			</cfif>
 			
 			<cfset session.oUser.setDataValue('UserLoggedIn',true)>
@@ -290,15 +298,14 @@ $LastChangedRevision: 33 $
 			<cfset session.oUser.setDataValue('lang',oUser.getLanguage())>
 			<cfset session.oUser.setDataValue('qPermissions',qUserPermissions)>
 			
+			<cfset sRelocateUrl = application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.userdetails')>
 			<cfif bIsCookieLogin AND len(application.lanshock.settings.startpage)>
-				<cflocation url="#application.lanshock.oHelper.buildUrl('#application.lanshock.settings.startpage#')#" addtoken="false">
+				<cfset sRelocateUrl = application.lanshock.oHelper.buildUrl('#application.lanshock.settings.startpage#')>
 			<cfelseif len(attributes.relocationurl)>
-				<cfset relocationurl = "&relocationurl=" & UrlEncodedFormat(attributes.relocationurl)>
-			<cfelse>
-				<cfset relocationurl = "">
+				<cfset sRelocateUrl = application.lanshock.oHelper.buildUrl('#attributes.relocationurl#')>
 			</cfif>
-
-			<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.login_validation#relocationurl#')#" addtoken="false">
+			
+			<cflocation url="#sRelocateUrl#" addtoken="false">
 		</cfif>
 
 	</cfif>

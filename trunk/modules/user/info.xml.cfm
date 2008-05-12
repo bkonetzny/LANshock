@@ -9,7 +9,7 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 75 $
 -->
 
-<module name="LANshock User" version="2.0.0.0 beta" date="2008-03-12" author="LANshock" url="http://www.lanshock.com">
+<module name="LANshock User" version="2.0.0.0" date="2008-05-12" author="LANshock" url="http://www.lanshock.com">
 	
 	<general requiresLogin="true"/>
 	
@@ -18,7 +18,7 @@ $LastChangedRevision: 75 $
 	</license>
 	
 	<navigation>
-		<item action="login" reqstatus="notloggedin"/>
+		<item action="login"/>
 		<item action="userdetails"/>
 		<item action="logout"/>
 	</navigation>
@@ -41,8 +41,7 @@ $LastChangedRevision: 75 $
 			<field name="dt_registered" type="datetime" null="true" default="NULL"/>
 			<field name="logincount" type="integer" len="11" null="false" default="0"/>
 			<field name="language" type="varchar" len="5" null="true" default="NULL"/>
-			<field name="geo_lat" type="varchar" len="255" null="true" default="NULL"/>
-			<field name="geo_long" type="varchar" len="255" null="true" default="NULL"/>
+			<field name="geo_latlong" type="varchar" len="255" null="true" default="NULL"/>
 			<field name="country" type="varchar" len="255" null="true" default="NULL"/>
 			<field name="city" type="varchar" len="255" null="true" default="NULL"/>
 			<field name="street" type="varchar" len="255" null="true" default="NULL"/>
@@ -59,6 +58,9 @@ $LastChangedRevision: 75 $
 				<![CDATA[
 					<hasMany name="core_security_roles">
 						<link name="core_security_users_roles_rel" from="user" to="core_security_roles" />
+					</hasMany>
+					<hasMany name="core_comments_posts">
+						<relate from="id" to="user_id" />
 					</hasMany>
 				]]>
 			</table>

@@ -15,6 +15,10 @@ $LastChangedRevision: 33 $
 	<cfinvokeargument name="id" value="#attributes.id#">
 </cfinvoke>
 
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.comments.comments')#" method="getPostCountByUserID" returnvariable="iPostCount">
+	<cfinvokeargument name="id" value="#attributes.id#">
+</cfinvoke>
+
 <cfif NOT qUserData.recordcount>
 	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.user_not_found')#" addtoken="false">
 </cfif>
