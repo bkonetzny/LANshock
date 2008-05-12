@@ -10,7 +10,7 @@ $LastChangedRevision: 33 $
 --->
 
 <cfoutput>
-<div class="headline">#request.content.password_reset_mail_headline#</div>
+<h3>#request.content.password_reset_mail_headline#</h3>
 
 #request.content.password_reset_done_txt#
 </cfoutput>

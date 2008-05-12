@@ -13,10 +13,7 @@ $LastChangedRevision: 33 $
 <cfcookie name="password" expires="now">
 <cfset StructDelete(cookie,'userid')>
 <cfset StructDelete(cookie,'password')>
-
-<cfloop list="#StructKeyList(session)#" index="idx">
-	<cfset StructDelete(session,idx)>
-</cfloop>
+<cfset StructClear(session)>
 
 <cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.login')#" addtoken="false">
 
