@@ -140,7 +140,7 @@ TODO: Move the work done by the Format method into a template.
 		<cfset local.TemplateName = "#CreateUUID()#.cfm">
 		<cffile action="write" addnewline="yes" file="#variables.ScratchpadFilePath##oMetadata.GetOSdelimiter()##local.TemplateName#" output="#local.TemplateCode#" fixnewline="no">
 		<!--- Run the template to generate code --->
-		<cfsavecontent variable="local.generatedScript"><cfinclude template="#variables.ScratchpadIncludePath#/#local.TemplateName#"></cfsavecontent>
+		<cfsavecontent variable="local.generatedScript"><cfoutput><cfinclude template="#variables.ScratchpadIncludePath#/#local.TemplateName#"></cfoutput></cfsavecontent>
 		<!--- Delete the scratchpad file --->
 		<cffile action="delete" file="#variables.ScratchpadFilePath##oMetadata.GetOSdelimiter()##local.TemplateName#">
 		<cfscript>
@@ -255,16 +255,16 @@ TODO: Move the work done by the Format method into a template.
 		
 		<!--- Loop over the existing fuseactions and replace the existing fuseaction with the same name or add the new one --->
 		<cfsavecontent variable="local.xmlOutput">
+			<cfoutput>
 <circuit xmlns:cf="cf/" xmlns:reactor="reactor/" xmlns:cs="coldspring/" xmlns:lanshock="lanshock/">
-		<cfloop from="1" to="#arrayLen(local.aFuseactions)#" index="local.i"><cfif structKeyExists(local.aFuseactions[local.i],"xmlAttributes") AND structKeyExists(local.aFuseactions[local.i].xmlAttributes,"name") AND local.aFuseactions[local.i].xmlAttributes.name IS local.fName><cfset local.found = "true">
-	<cfoutput>#arguments.output#
+<cfloop from="1" to="#arrayLen(local.aFuseactions)#" index="local.i"><cfif structKeyExists(local.aFuseactions[local.i],"xmlAttributes") AND structKeyExists(local.aFuseactions[local.i].xmlAttributes,"name") AND local.aFuseactions[local.i].xmlAttributes.name IS local.fName><cfset local.found = "true">
 	
-</cfoutput><cfelse>
-	<cfoutput>#trim(Replace(toString(local.aFuseactions[local.i]),"<?xml version=""1.0"" encoding=""UTF-8""?>",""))#
+	#arguments.output#<cfelse>
 	
-</cfoutput></cfif></cfloop><cfif NOT local.found>	#arguments.output#
-</cfif>
+	#trim(Replace(toString(local.aFuseactions[local.i]),"<?xml version=""1.0"" encoding=""UTF-8""?>",""))#</cfif></cfloop>
+	<cfif NOT local.found>#arguments.output#</cfif>
 </circuit>
+</cfoutput>
 		</cfsavecontent>
 		
 		<!--- Write out the revised circuit --->
