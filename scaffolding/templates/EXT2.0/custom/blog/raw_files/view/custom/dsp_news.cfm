@@ -28,7 +28,7 @@ $LastChangedRevision$
 				<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#">#request.content.show_all_news#</a> | #request.content.categories# #qCategory.name#
 			</cfif>
 			<cfif len(attributes.user_id)>
-				<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#">#request.content.show_all_news#</a> | <!--- TODO: $$$ ---> Posted by #GetUsernameByID(attributes.user_id)#
+				<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#">#request.content.show_all_news#</a> | <!--- TODO: $$$ ---> Posted by #application.lanshock.oHelper.GetUsernameByID(attributes.user_id)#
 			</cfif>
 		</div>
 	</cfif>

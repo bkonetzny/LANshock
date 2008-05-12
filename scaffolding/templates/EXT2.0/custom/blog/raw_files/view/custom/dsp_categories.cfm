@@ -10,7 +10,7 @@ $LastChangedRevision$
 --->
 
 <cfset stFilter = StructNew()>
-<cfset stFilter.lSortFields = "name|DESC">
+<cfset stFilter.lSortFields = "name|ASC">
 
 <cfinvoke component="#application.lanshock.oFactory.load('news_category','reactorGateway')#" method="getRecords" returnvariable="qCategories">
 	<cfinvokeargument name="stFilter" value="#stFilter#">

@@ -1,0 +1,67 @@
+.fbx_blog .postfilter{
+	margin-bottom: 20px;
+}
+
+.fbx_blog .blogpost{
+	clear: left;
+	margin-bottom: 100px;
+}
+
+.fbx_blog .postfilter,
+.fbx_blog .blogpost .postinfo,
+.fbx_blog .blogpost .categories{
+	color: grey;
+	font-size: 11px;
+}
+
+.fbx_blog .blogpost .mediaplayer{
+	margin-top: 20px;
+}
+
+.fbx_blog .blogpost .postinfo{
+	margin-top: 5px;
+}
+
+.fbx_blog .blogpost .postinfo .author{
+	background-image: url('../../../templates/_shared/images/famfamfam/icons/user_go.png');
+	background-repeat: no-repeat;
+	background-position: left;
+	padding-left: 20px;
+}
+
+.fbx_blog .blogpost .postinfo .authorposts{
+	vertical-align: super;
+}
+
+.fbx_blog .blogpost .text{
+	margin-top: 20px;
+}
+
+.fbx_blog .blogpost .postoptions{
+	margin-top: 10px;
+	padding-top: 10px;
+	list-style: none;
+	color: grey;
+	font-size: 11px;
+}
+
+.fbx_blog .blogpost .postoptions li{
+	float: left;
+	margin-right: 20px;
+	height: 16px;
+	background-repeat: no-repeat;
+	background-position: left;
+	padding-left: 20px;
+}
+
+.fbx_blog .blogpost .postoptions .trackback{
+	background-image: url('../../../templates/_shared/images/famfamfam/icons/transmit.png');
+}
+
+.fbx_blog .blogpost .postoptions .comments{
+	background-image: url('../../../templates/_shared/images/famfamfam/icons/comments.png');
+}
+
+.fbx_blog .blogpost .postoptions .readmore{
+	background-image: url('../../../templates/_shared/images/famfamfam/icons/newspaper_go.png');
+}
