@@ -232,11 +232,9 @@
 		<input type="hidden" name="date" id="formrow_C7FEEE49EAD44F808BC1BED7FEC68EC4" value="#LsDateFormat(Trim(onews_entry.getdate()),'YYYY-MM-DD')# #LsTimeFormat(Trim(onews_entry.getdate()),'HH:MM:SS')#"/>
 		<script type="text/javascript">
 			var myDatePickerC7FEEE49EAD44F808BC1BED7FEC68EC4 = new Ext.ux.form.DateTime({
-				handler: function(){
-					$('##formrow_C7FEEE49EAD44F808BC1BED7FEC68EC4').val(myDatePickerC7FEEE49EAD44F808BC1BED7FEC68EC4.getValue().format('Y-m-d G:i'));
-				},
-				dateFormat: 'Y-m-d',
-				timeFormat: 'G:i'
+				handler: function(value){
+					$('##formrow_C7FEEE49EAD44F808BC1BED7FEC68EC4').val(value);
+				}
 			});
 			Ext.onReady(function(){
 				myDatePickerC7FEEE49EAD44F808BC1BED7FEC68EC4.render('divDatePickerC7FEEE49EAD44F808BC1BED7FEC68EC4');

@@ -7,12 +7,11 @@
 		<div class="divInput" id="divDatePicker#attributes.stFieldData.uuid#"></div>
 		<input type="hidden" name="#attributes.stFieldData.alias#" id="formrow_#attributes.stFieldData.uuid#" value="##LsDateFormat(#caller.Format("o#caller.objectName#.get#attributes.stFieldData.alias#()","#attributes.stFieldData.format#")#,'YYYY-MM-DD')## ##LsTimeFormat(#caller.Format("o#caller.objectName#.get#attributes.stFieldData.alias#()","#attributes.stFieldData.format#")#,'HH:MM:SS')##"/>
 		<script type="text/javascript">
+			<!--
 			var myDatePicker#attributes.stFieldData.uuid# = new Ext.ux.form.DateTime({
-				handler: function(){
-					$('####formrow_#attributes.stFieldData.uuid#').val(myDatePicker#attributes.stFieldData.uuid#.getValue().format('Y-m-d G:i'));
-				},
-				dateFormat: 'Y-m-d',
-				timeFormat: 'G:i'
+				handler: function(value){
+					$('####formrow_#attributes.stFieldData.uuid#').val(value);
+				}
 			});
 			Ext.onReady(function(){
 				myDatePicker#attributes.stFieldData.uuid#.render('divDatePicker#attributes.stFieldData.uuid#');
@@ -20,6 +19,7 @@
 				dt#attributes.stFieldData.uuid# = Date.parseDate("##LsDateFormat(#caller.Format("o#caller.objectName#.get#attributes.stFieldData.alias#()","#attributes.stFieldData.format#")#,'YYYY-MM-DD')## ##LsTimeFormat(#caller.Format("o#caller.objectName#.get#attributes.stFieldData.alias#()","#attributes.stFieldData.format#")#,'HH:MM')##","Y-m-d G:i");
 				myDatePicker#attributes.stFieldData.uuid#.setValue(dt#attributes.stFieldData.uuid#);
 			});
+			//-->
 		</script>
 	</div>
 </cfoutput>
