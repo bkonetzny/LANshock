@@ -51,7 +51,7 @@ $LastChangedRevision$
 		<th>#request.content.directory#</th>
 		<th>$$$ Options</th>
 	</tr>
-	<cfloop collection="#stModulesInstalled#" item="idx">
+	<cfloop list="#ListSort(StructKeyList(stModulesInstalled),'textnocase')#" index="idx">
 		<tr>
 			<td<!---  rowspan="2" ---> valign="top" align="center"><cfif NOT ListFindNoCase(lCoreModules,idx)><input type="checkbox" name="lmodules" value="#idx#" id="module_#idx#"/><cfelse>&nbsp;</cfif></td>
 			<td><label for="module_#idx#">#stModulesInstalled[idx].info.name#</label></td>

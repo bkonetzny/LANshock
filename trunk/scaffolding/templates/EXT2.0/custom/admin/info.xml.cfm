@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="LANshock Administration" version="2.0.0.0 beta" date="2008-03-02" author="LANshock" url="http://www.lanshock.com">
+<module name="Administration" version="2.0.0.0" date="2008-05-12" author="LANshock" url="http://www.lanshock.com">
 	
 	<general requiresLogin="false"/>
 	
@@ -22,11 +22,12 @@
 		<!-- <item action="core_security_users_roles_rel_Listing" permissions="admin"/> -->
 		<item action="user_Listing" permissions="user"/>
 		<item action="logviewer" permissions="logs"/>
+		<item action="scaffolding" permissions="scaffolding"/>
 	</navigation>
 	
 	<security>
-		<permissions list="logs,user,core_configmanager,core_modules,core_navigation,core_security_permissions,core_security_roles,core_security_roles_permissions_rel"/>
-		<role name="LANshock Admin" permissions="logs,user,core_configmanager,core_modules,core_navigation,core_security_permissions,core_security_roles,core_security_roles_permissions_rel"/>
+		<permissions list="logs,user,core_configmanager,core_modules,core_navigation,core_security_permissions,core_security_roles,core_security_roles_permissions_rel,scaffolding"/>
+		<role name="LANshock Admin" permissions="logs,user,core_configmanager,core_modules,core_navigation,core_security_permissions,core_security_roles,core_security_roles_permissions_rel,scaffolding"/>
 	</security>
 	
 	<cron>
@@ -40,6 +41,17 @@
 			<field name="data" type="text" null="false" default=""/>
 			<field name="dtlastchanged" type="datetime" null="true" default="NULL"/>
 			<pk fields="module"/>
+		</table>
+		<table name="core_logs">
+			<field name="id" type="integer" len="11" null="false" special="auto_increment"/>
+			<field name="logname" type="varchar" len="255" null="false" default=""/>
+			<field name="level" type="varchar" len="255" null="false" default=""/>
+			<field name="data" type="text" null="false" default=""/>
+			<field name="timestamp" type="datetime" null="true" default="NULL"/>
+			<pk fields="id"/>
+			<index name="IDX_logname" fields="logname"/>
+			<index name="IDX_level" fields="level"/>
+			<index name="IDX_timestamp" fields="timestamp"/>
 		</table>
 		<table name="core_security_roles">
 			<field name="id" type="integer" len="11" null="false" special="auto_increment"/>
@@ -82,6 +94,7 @@
 			<field name="sortorder" type="integer" len="11" null="false" default="1"/>
 			<field name="permissions" type="varchar" len="255" null="false" default=""/>
 			<pk fields="module,action"/>
+			<engine server="mysql" engine="InnoDB"/>
 		</table>
 	</database>
 	

@@ -23,8 +23,8 @@ $LastChangedRevision$
 	<cfscript>
 		if(NOT len(attributes.server)) ArrayAppend(aError,"<!--- TODO: $$$ ---> server");
 		if(NOT isNumeric(attributes.port)) ArrayAppend(aError,"<!--- TODO: $$$ ---> port");
-		if(NOT len(attributes.username)) ArrayAppend(aError,"<!--- TODO: $$$ ---> username");
-		if(NOT len(attributes.password)) ArrayAppend(aError,"<!--- TODO: $$$ ---> password");
+		//if(NOT len(attributes.username)) ArrayAppend(aError,"<!--- TODO: $$$ ---> username");
+		//if(NOT len(attributes.password)) ArrayAppend(aError,"<!--- TODO: $$$ ---> password");
 		if(NOT len(attributes.from)) ArrayAppend(aError,"<!--- TODO: $$$ ---> from");
 	</cfscript>
 

@@ -1,1 +1,1 @@
-<cfset lFieldsMove = "country,city,street,zip,internal_note,signature,homepage,geo_lat,geo_long">
+<cfset lFieldsMove = "country,city,street,zip,internal_note,signature,homepage,geo_latlong">

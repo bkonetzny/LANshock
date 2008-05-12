@@ -11,11 +11,11 @@
 <cfset QuerySetCell(stRelated.status_custom.qData,'optionname','new')>
 <cfset QuerySetCell(stRelated.status_custom.qData,'optionvalue','new')>
 <cfset QueryAddRow(stRelated.status_custom.qData)>
-<cfset QuerySetCell(stRelated.status_custom.qData,'optionname','verified')>
-<cfset QuerySetCell(stRelated.status_custom.qData,'optionvalue','verified')>
-<cfset QueryAddRow(stRelated.status_custom.qData)>
 <cfset QuerySetCell(stRelated.status_custom.qData,'optionname','confirmed')>
 <cfset QuerySetCell(stRelated.status_custom.qData,'optionvalue','confirmed')>
+<cfset QueryAddRow(stRelated.status_custom.qData)>
+<cfset QuerySetCell(stRelated.status_custom.qData,'optionname','locked')>
+<cfset QuerySetCell(stRelated.status_custom.qData,'optionvalue','locked')>
 
 <cfset stRelated.gender_custom.qData = QueryNew('optionname,optionvalue')>
 <cfset QueryAddRow(stRelated.gender_custom.qData)>
