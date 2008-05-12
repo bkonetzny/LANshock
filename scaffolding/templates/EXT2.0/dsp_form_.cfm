@@ -33,8 +33,8 @@ $LastChangedRevision$
 <cfoutput>
 <script type="text/javascript">
 <!--
-	function validate(myform, XFA){
-		$('##btnSave').disabled = true;
+	function validate(){
+		$('##btnSave').attr('disabled','disabled');
 		return true;
 	};
 //-->
@@ -49,7 +49,7 @@ $LastChangedRevision$
 
 <cfif isDefined("aTranslatedErrors") AND ArrayLen(aTranslatedErrors)>
 	<div class="errorBox">
-		#request.content.error#
+		<h3>#request.content.error#</h3>
 		<ul>
 			<cfloop index="i" from="1" to="#arrayLen(aTranslatedErrors)#">
 				<li>#aTranslatedErrors[i]#</li>
@@ -79,13 +79,9 @@ $LastChangedRevision$
 	<<cfinclude template="../templates/EXT2.0/includes/form_layout.cfm">>
 	
 	<div class="buttonHolder">
-		<cfset sortParams = appendParam("","_listSortByFieldList",attributes._listSortByFieldList)>
-		<cfset sortParams = appendParam(sortParams,"_Maxrows",attributes._Maxrows)>
-		<cfset sortParams = appendParam(sortParams,"_StartRow",attributes._Startrow)>
-		<cfset sortParams = appendParam(sortParams,"fuseaction",XFA.cancel)>
 		<button type="submit" class="submitButton" id="btnSave">#request.content.form_save#</button>
 		<button type="reset" class="resetButton" id="btnReset">#request.content.form_reset#</button>
-		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self##sortParams#';">#request.content.form_cancel#</button>
+		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';">#request.content.form_cancel#</button>
 	</div>
 </form>
 </cfoutput>

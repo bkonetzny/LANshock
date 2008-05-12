@@ -16,9 +16,20 @@ $LastChangedRevision$
 <<cfset sModule = oMetaData.getModule()>>
 
 <<cfoutput>>
+	<cfset aErrors = ArrayNew(1)>
+	<cfset aTranslatedErrors = ArrayNew(1)>
+
+	<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/raw_files/controller/form/act_action_save_prevalidation_$$objectName$$.cfm")>>
+		<cfinclude template="act_action_save_prevalidation_$$objectName$$.cfm">
+	<</cfif>>
+
 	<<cfloop from="1" to="$$ArrayLen(stFields['aTable'])$$" index="i">>
 		<<cfmodule template="../templates/EXT2.0/rowtypes/rowtype.cfm" rowtype="$$stFields['aTable'][i].formType$$" method="validation_pre">>
 	<</cfloop>>
+
+	<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/raw_files/controller/form/act_action_save_postvalidation_$$objectName$$.cfm")>>
+		<cfinclude template="act_action_save_postvalidation_$$objectName$$.cfm">
+	<</cfif>>
 
 	<cfparam name="attributes.$$objectName$$_id" default="0">
 	<cfset o$$objectName$$ = application.lanshock.oFactory.load('$$objectName$$','reactorRecord')>
@@ -31,11 +42,9 @@ $LastChangedRevision$
 		<cfset o$$objectName$$.set$$thisField$$(attributes.$$thisField$$)><</cfloop>>
 	</cfif>
 	
-	<cfif bHasErrors>
-		<cfset o$$objectName$$.validate()>
-		<cfif o$$objectName$$.hasErrors()>
-			<cfset bHasErrors = true>
-		</cfif>
+	<cfset o$$objectName$$.validate()>
+	<cfif o$$objectName$$.hasErrors()>
+		<cfset bHasErrors = true>
 	</cfif>
 	
 	<<cfloop from="1" to="$$ArrayLen(aManyToMany)$$" index="i">>
@@ -62,16 +71,22 @@ $LastChangedRevision$
 		
 		<cfinclude template="act_form_loadrelated_$$objectName$$.cfm">
 		<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/raw_files/controller/form/act_form_loadrelated_custom_$$objectName$$.cfm")>>
-			<cfinclude template="act_form_loadrelated_custom_$$objectName$$">
+			<cfinclude template="act_form_loadrelated_custom_$$objectName$$.cfm">
 		<</cfif>>
 
-		<cfset aErrors = o$$objectName$$._getErrorCollection().getErrors()>
-		<cfset aTranslatedErrors = o$$objectName$$._getErrorCollection().getTranslatedErrors()>
+		<cfset aReactorErrors = o$$objectName$$._getErrorCollection().getErrors()>
+		<cfloop from="1" to="#ArrayLen(aReactorErrors)#" index="idx">
+			<cfset ArrayAppend(aErrors,aReactorErrors[idx])>
+		</cfloop>
+		<cfset aReactorTranslatedErrors = o$$objectName$$._getErrorCollection().getTranslatedErrors()>
+		<cfloop from="1" to="#ArrayLen(aReactorTranslatedErrors)#" index="idx">
+			<cfset ArrayAppend(aTranslatedErrors,aReactorTranslatedErrors[idx])>
+		</cfloop>
 		
 		<cfparam name="request.page.pageContent" default="">
 		<cfsavecontent variable="request.page.pageContent">
 			<cfoutput>#request.page.pageContent#</cfoutput>
-			<cfinclude template="../view/form/dsp_form_$$objectName$$">
+			<cfinclude template="../../view/form/dsp_form_$$objectName$$.cfm">
 		</cfsavecontent>
 	</cfif>
 <</cfoutput>>

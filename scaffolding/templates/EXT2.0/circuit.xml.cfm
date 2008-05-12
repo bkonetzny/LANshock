@@ -13,6 +13,17 @@ $LastChangedRevision$
 <<cfset sModule = oMetaData.getModule()>>
 
 <<cfoutput>>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (C) by LANshock.com
+Released under the GNU General Public License (v2)
+
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
+-->
+
 <circuit xmlns:cf="cf/" xmlns:reactor="reactor/" xmlns:lanshock="lanshock/">
 
 	<prefuseaction>
@@ -40,7 +51,6 @@ $LastChangedRevision$
 								<false>
 									<if condition="request.layout EQ 'admin'">
 										<true>
-											<include circuit="v_$$sModule$$" template="dsp_layout" />
 											<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/raw_files/view/styles.css")>>
 											<lanshock:htmlhead type="style" content="@import url('#application.lanshock.oRuntime.getEnvironment().sWebPath#modules/$$sModule$$/view/styles.css');"/>
 											<</cfif>>

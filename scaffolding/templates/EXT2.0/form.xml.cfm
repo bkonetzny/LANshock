@@ -37,6 +37,6 @@ $LastChangedRevision$
 		<</cfif>>
 		
 		<include circuit="udfs" template="udf_appendParam" />
-		<include circuit="v_$$sModule$$" template="form/dsp_form_$$objectName$$" contentvariable="request.page.pageContent" append="true" />
+		<include circuit="v_$$sModule$$" template="form/dsp_form_$$objectName$$" />
 	</fuseaction>
 <</cfoutput>>
