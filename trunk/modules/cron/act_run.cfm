@@ -19,15 +19,15 @@ $LastChangedRevision: 45 $
 	<cfif NOT len(attributes.cron_id)>
 		<cfset variables.mode = 'cron'>
 		<cfset stOldSessionData = StructNew()>
-		<cfloop list="#structKeyList(request.session)#" index="idx">
-			<cfset stOldSessionData[idx] = request.session[idx]>
+		<cfloop list="#structKeyList(session)#" index="idx">
+			<cfset stOldSessionData[idx] = session[idx]>
 		</cfloop>
 		
 		<cfscript>
-			StructDelete(request.session,'ip_address');
-			request.session.userloggedin = true;
-			request.session.isadmin = true;
-			request.session.urltoken = 'cfid=#request.session.cfid#&cftoken=#request.session.cftoken#';
+			StructDelete(session,'ip_address');
+			session.userloggedin = true;
+			session.isadmin = true;
+			session.urltoken = 'cfid=#session.cfid#&cftoken=#session.cftoken#';
 			qCronlist = objectBreeze.getByWhere('core_cron','active = 1','module ASC, action ASC').getQuery();
 		</cfscript>
 	<cfelse>
@@ -40,9 +40,9 @@ $LastChangedRevision: 45 $
 			<cfset variables.task_time = GetTickCount()>
 			<cftry>
 				<cfif variables.mode EQ 'cron'>
-					<cfhttp url="#application.lanshock.environment.webpathfull##myself##module#.#action#&mode=#variables.mode#&#request.session.urltoken#" useragent="LANshock Cron Service">
+					<cfhttp url="#application.lanshock.oRuntime.getEnvironment().sWebPathfull##myself##module#.#action#&mode=#variables.mode#&#session.urltoken#" useragent="LANshock Cron Service">
 				<cfelse>
-					<cflocation url="#application.lanshock.environment.webpathfull##myself##module#.#action#&mode=#variables.mode#&#request.session.urltoken#">
+					<cflocation url="#application.lanshock.oRuntime.getEnvironment().sWebPathfull##myself##module#.#action#&mode=#variables.mode#&#session.urltoken#">
 				</cfif>
 				<cfscript>
 					oObCron = objectBreeze.objectCreate("core_cron");
@@ -70,7 +70,7 @@ $LastChangedRevision: 45 $
 	</cfloop>
 	
 	<cfif NOT len(attributes.cron_id)>
-		<cfset request.session = stOldSessionData>
+		<cfset session = stOldSessionData>
 
 		<cfset stModuleConfig.last_dt = cronstart>
 		<cfset stModuleConfig.last = (GetTickCount()-request.processtime_part1)/1000>
@@ -81,7 +81,7 @@ $LastChangedRevision: 45 $
 			<cfset stModuleConfig.max_tasks = variables.last_tasks>
 		</cfif>
 		<!--- set config --->
-		<cfinvoke component="#application.lanshock.environment.componentpath#core.configmanager" method="setConfig">
+		<cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#core.configmanager" method="setConfig">
 			<cfinvokeargument name="module" value="#myfusebox.thiscircuit#">
 			<cfinvokeargument name="data" value="#stModuleConfig#">
 		</cfinvoke>

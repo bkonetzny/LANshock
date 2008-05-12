@@ -17,10 +17,6 @@ $LastChangedRevision: 75 $
 		<license type="gpl"/>
 	</license>
 	
-	<navigation>
-		<item action="run"/>
-	</navigation>
-	
 	<database>
 		<table name="core_cron">
 			<field name="id" type="integer" len="11" null="false" special="auto_increment"/>
