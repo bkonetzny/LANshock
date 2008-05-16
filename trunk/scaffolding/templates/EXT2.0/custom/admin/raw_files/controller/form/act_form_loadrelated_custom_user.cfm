@@ -1,6 +1,6 @@
 <cfinvoke component="#application.lanshock.oFactory.load('lanshock.core._utils.i18n.i18nUtil')#" method="getLocalesStruct" returnvariable="stLocalesStruct">
 <cfset stRelated.language_custom.qData = QueryNew('optionname,optionvalue')>
-<cfloop collection="#stLocalesStruct#" item="item">
+<cfloop list="#ListSort(StructKeyList(stLocalesStruct),'textnocase')#" index="item">
 	<cfset QueryAddRow(stRelated.language_custom.qData)>
 	<cfset QuerySetCell(stRelated.language_custom.qData,'optionname',stLocalesStruct[item])>
 	<cfset QuerySetCell(stRelated.language_custom.qData,'optionvalue',item)>
