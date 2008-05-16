@@ -214,17 +214,12 @@ TODO: Move the work done by the Format method into a template.
 		<cfset width = 5 * progressPercent>
 		<cfoutput>
 			<div id="msg_#variables.messageCount#">#arguments.message#</div>
-			<script language="JavaScript">
+			<script type="text/javascript">
 				document.getElementById("msg_#variables.messageCount#").scrollIntoView();
-				window.parent.document.getElementById("progressLabel").innerHTML="#NumberFormat(progressPercent,"09.9")#%";
-				window.parent.document.getElementById("progressBar").width=#width#;
-				<cfif isDefined("arguments.complete")>
-					window.parent.document.getElementById("btnRun1").disabled=false;
-					window.parent.document.getElementById("btnRun2").disabled=false;
-				</cfif>
+				window.parent.oProgressBar.updateProgress('#NumberFormat(progressPercent/100,"9.99")#','#NumberFormat(progressPercent,"09")#%');
 			</script>
-		
-		</cfoutput><cfflush>
+		</cfoutput>
+		<cfflush>
 	</cffunction>
 	
 	<cffunction name="updateCircuit" access="private" returntype="void" output="yes" hint="I update an existing circuit with a new fuseaction">
