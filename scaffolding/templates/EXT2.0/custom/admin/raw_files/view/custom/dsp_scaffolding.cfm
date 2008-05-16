@@ -31,8 +31,18 @@ $LastChangedRevision: 56 $
 			</tr>
 		</cfloop>
 	</table>
-	
-	<iframe name="scaffolding_progress" id="scaffolding_progress" width="100%" height="300" style="display: none;"></iframe>
+	<div id="elmProgressBar"></div>
+	<script type="text/javascript">
+		oProgressBar = new Ext.ProgressBar ({
+				id: 'progressBar',
+				text: '0%',
+				bodyStyle: '',
+				renderTo: 'elmProgressBar'
+			});
+	</script>
+	<div id="scaffolding_progress" style="display: none;">
+		<iframe name="scaffolding_progress" width="100%" height="300"></iframe>
+	</div>
 </cfoutput>
 
 <cfsetting enablecfoutputonly="No">
