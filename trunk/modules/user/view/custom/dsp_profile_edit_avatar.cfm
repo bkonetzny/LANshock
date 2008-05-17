@@ -26,16 +26,15 @@ $LastChangedRevision: 33 $
 <form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" class="uniForm" method="post" enctype="multipart/form-data">
 	<div class="hidden">
 		<input type="hidden" name="form_submitted" value="true"/>
-		<input type="hidden" name="id" value="#attributes.id#"/>
 	</div>
 	
 	<fieldset class="inlineLabels">
 		<legend>#request.content.avatar#</legend>
 		
-		<cfif len(application.lanshock.oHelper.UserShowAvatar(attributes.id))>
+		<cfif len(application.lanshock.oHelper.UserShowAvatar(session.userid))>
 			<div class="ctrlHolder">
 				<label>#request.content.current_avatar#</label>
-				#application.lanshock.oHelper.UserShowAvatar(attributes.id)#
+				#application.lanshock.oHelper.UserShowAvatar(session.userid)#
 			</div>
 			
 			<div class="ctrlHolder">

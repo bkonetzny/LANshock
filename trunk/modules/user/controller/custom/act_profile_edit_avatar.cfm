@@ -18,7 +18,7 @@ $LastChangedRevision: 33 $
 		
 	<cfif attributes.avatar_delete OR len(avatar)>
 		<cftry>
-			<cffile action="delete" file="#application.lanshock.oHelper.UDF_Module('absStoragePathPublic')#avatars/#attributes.id#.png">
+			<cffile action="delete" file="#application.lanshock.oHelper.UDF_Module('absStoragePathPublic')#avatars/#session.userid#.png">
 			<cfcatch><cfset ArrayAppend(aError,cfcatch.message)></cfcatch>
 		</cftry>
 	</cfif>
