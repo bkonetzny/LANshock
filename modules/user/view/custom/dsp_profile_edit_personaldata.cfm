@@ -9,12 +9,6 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 33 $
 --->
 
-<cfset bLockEditing = false>
-<cfif stModuleConfig.userprofile.edit_personal_data OR attributes.status EQ 'confirmed'>
-	<cfset bLockEditing = true>
-	<cfset ArrayAppend(aError,'<img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/lock.png" alt=""/> Profile is locked. New data will not be saved.')>
-</cfif>
-
 <cfoutput>
 <h3>#request.content.personal_data#</h3>
 
