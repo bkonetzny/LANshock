@@ -30,6 +30,9 @@ $LastChangedRevision$
 			<cfset session.oUser.init()>
 			<!--- <cfset session.oPreferences = application.lanshock.oFactory.load('lanshock.core.preferences')> --->
 			<cfset session.isBot = isBot(cgi.http_user_agent)>
+			<cfif isDefined("cookie.email") AND isDefined("cookie.password")>
+				<cflocation url="#application.lanshock.oHelper.buildUrl('user.login')#" addtoken="false">
+			</cfif>
 		</cfif>
 		
 		<cfset session.dtSessionLastCall = now()>
@@ -59,12 +62,7 @@ $LastChangedRevision$
 		<cfargument name="sUserAgent" type="string" required="true">
 		<cfset var bReturn = false>
 
-		<cfif ReFindNoCase("Googlebot",arguments.sUserAgent)
-			OR ReFindNoCase("Yahoo! Slurp",arguments.sUserAgent)
-			OR ReFindNoCase("msnbot",arguments.sUserAgent)
-			OR ReFindNoCase("WebAlta Crawler",arguments.sUserAgent)>
-			<cfset bReturn = true>
-		</cfif>
+		<cfinclude template="_utils/bots.cfm">
 		
 		<cfreturn bReturn>
 	</cffunction>
