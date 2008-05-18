@@ -70,4 +70,10 @@ $LastChangedRevision: 96 $
 
 <cfset aCountryList = StructSort(stCountryList)>
 
+<cfset bLockEditing = false>
+<cfif NOT stModuleConfig.userprofile.edit_personal_data AND attributes.status EQ 'confirmed'>
+	<cfset bLockEditing = true>
+	<cfset ArrayAppend(aError,'<img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/lock.png" alt=""/> Profile is locked. New data will not be saved.')>
+</cfif>
+
 <cfsetting enablecfoutputonly="No">

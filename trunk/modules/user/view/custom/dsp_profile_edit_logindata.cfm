@@ -30,17 +30,10 @@ $LastChangedRevision: 33 $
 	
 	<fieldset class="inlineLabels">
 		<legend>#request.content.headline_userdata#</legend>
-		
-		<cfif NOT stModuleConfig.userprofile.edit_nickname>
-			<div class="ctrlHolder">
-				<label></label>
-				<img src="#stImageDir.general#/locked.gif" alt="" border="0"> #request.content.profile_nickname_admin_edit_hint#
-			</div>
-		</cfif>
 
 		<div class="ctrlHolder">
 			<label for="profile_name"><em>*</em> #request.content.name#</label>
-			<input type="text" class="textInput" name="name" id="profile_name" value="#attributes.name#"<cfif NOT session.isAdmin AND NOT stModuleConfig.userprofile.edit_nickname> disabled="disabled"</cfif>/><cfif NOT stModuleConfig.userprofile.edit_nickname> <img src="#stImageDir.general#/locked.gif" alt="" border="0"></cfif>
+			<input type="text" class="textInput" name="name" id="profile_name" value="#attributes.name#"<cfif bLockEditing> disabled="disabled"</cfif>/>
 		</div>
 		
 		<div class="ctrlHolder">
@@ -54,12 +47,12 @@ $LastChangedRevision: 33 $
 		<legend>#request.content.security#</legend>
 		
 		<div class="ctrlHolder">
-			<label for="profile_password1"><em>*</em> #request.content.password#</label>
+			<label for="profile_password1">#request.content.password#</label>
 			<input type="password" class="textInput" name="pass1" id="profile_password1"/>
 		</div>
 		
 		<div class="ctrlHolder">
-			<label for="profile_password2"><em>*</em> #request.content.password_repeat#</label>
+			<label for="profile_password2">#request.content.password_repeat#</label>
 			<input type="password" class="textInput" name="pass2" id="profile_password2"/>
 		</div>
 
