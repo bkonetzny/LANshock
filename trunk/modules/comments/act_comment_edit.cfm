@@ -61,7 +61,7 @@ $LastChangedRevision: 46 $
 
 <cfif bDoPost AND attributes.topic_id EQ 0>
 	<cflocation url="#application.lanshock.oHelper.buildUrl('#attributes.module#.#attributes.linktosource#')#" addtoken="false">
-<cfelse>
+<cfelseif len(cgi.http_referer)>
 	<cflocation url="#cgi.http_referer#" addtoken="false">
 </cfif>
 
