@@ -12,13 +12,11 @@ $LastChangedRevision: 46 $
 <cfparam name="attributes.topic_id" default="0">
 <cfparam name="attributes.mode" default="0">
 
-<cfif session.oUser.isLoggedIn()>
-
+<cfif session.oUser.checkPermissions('comments-manage','comments')>
 	<cfinvoke component="comments" method="setTopicEnableDisable">		
 		<cfinvokeargument name="topic_id" value="#attributes.topic_id#">
 		<cfinvokeargument name="mode" value="#attributes.mode#">
 	</cfinvoke>
-
 </cfif>
 
 <cfif len(cgi.http_referer)>

@@ -12,12 +12,21 @@ $LastChangedRevision: 46 $
 <cfparam name="attributes.id" default="0">
 
 <cfif session.oUser.isLoggedIn()>
+	<cfset iUserID = session.oUser.getDataValue('userid')>
 
+	<cfif session.oUser.checkPermissions('comments-manage','comments')>
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="getPostData">
+			SELECT user_id
+			FROM core_comments_posts
+			WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#attributes.id#">
+		</cfquery>
+		<cfset iUserID = getPostData.user_id>
+	</cfif>
+	
 	<cfinvoke component="comments" method="deletePost">		
 		<cfinvokeargument name="id" value="#attributes.id#">
-		<cfinvokeargument name="user_id" value="#session.oUser.getDataValue('userid')#">
+		<cfinvokeargument name="user_id" value="#iUserID#">
 	</cfinvoke>
-
 </cfif>
 
 <cfif len(cgi.http_referer)>
