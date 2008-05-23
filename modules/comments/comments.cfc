@@ -512,9 +512,9 @@ $LastChangedRevision: 46 $
 					<cfinvokeargument name="id" value="#qTopic.id#">
 				</cfinvoke>
 			</cfif>
-		</cfif>
 	
-		<cfset updateTopicData(arguments.topic_id)>
+			<cfset updateTopicData(getPostData.topic_id)>
+		</cfif>
 		
 		<cfreturn true>
 		

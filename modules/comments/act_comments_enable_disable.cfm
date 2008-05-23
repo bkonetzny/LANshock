@@ -21,6 +21,8 @@ $LastChangedRevision: 46 $
 
 </cfif>
 
-<cflocation url="#cgi.http_referer#" addtoken="false">
+<cfif len(cgi.http_referer)>
+	<cflocation url="#cgi.http_referer#" addtoken="false">
+</cfif>
 
 <cfsetting enablecfoutputonly="No">
