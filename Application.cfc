@@ -95,8 +95,13 @@ $LastChangedRevision: 80 $
 
 	<cffunction name="onRequestEnd">
 		<cfif isDefined("session.isBot") AND session.isBot>
-			<cfset StructClear(session)>
+			<cfset onSessionEnd()>
 		</cfif>
+	</cffunction>
+
+	<cffunction name="onSessionEnd">
+		<cfset super.onSessionEnd()>
+		<cfset StructClear(session)>
 	</cffunction>
 	
 	<cffunction name="reloadApplication">
