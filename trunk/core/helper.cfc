@@ -11,16 +11,15 @@ $LastChangedRevision: 143 $
 <cfcomponent>
 
 	<cffunction name="ConvertText" output="false" returntype="string">
-		<cfargument name="text" type="string" required="true">
-		<cfargument name="allow_audio" type="boolean" required="false" default="true">
-		<cfargument name="allow_video" type="boolean" required="false" default="true">
-		<cfargument name="allow_img" type="boolean" required="false" default="true">
-		<cfargument name="allow_url" type="boolean" required="false" default="true">
-		<cfargument name="allow_html" type="boolean" required="false" default="false">
+		<cfargument name="text" type="string" required="false" default="">
 		
-		<cfset var sConvertedText = arguments.text>
+		<cfset var sConvertedText = ' ' & arguments.text & ' '>
 		
-		<cfinclude template="_utils/converttext.cfm">
+		<cfif len(trim(sConvertedText)) AND NOT findNoCase('<',sConvertedText)>
+			<cfinclude template="_utils/_pseudocode.cfm">
+		</cfif>
+
+		<cfset sConvertedText = trim(sConvertedText)>
 		
 		<cfreturn sConvertedText>
 		
@@ -126,20 +125,6 @@ $LastChangedRevision: 143 $
 		<cfreturn stLocal.sResult>
 	</cffunction>
 
-	<cffunction name="UDF_DateTimeFormat" output="false" returntype="string">
-		<cfargument name="datetime" type="string" required="true">
-		
-		<cfset var dt_datetime = arguments.datetime>
-		
-		<cfif isDate(dt_datetime) AND NOT LsIsDate(dt_datetime)>
-			<cfset dt_datetime = ParseDateTime(dt_datetime)>
-		</cfif>
-		<cftry>
-			<cfreturn LSDateFormat(dt_datetime) & " " & LSTimeFormat(dt_datetime)>
-			<cfcatch><cfreturn ''></cfcatch>
-		</cftry>
-	</cffunction>
-	
 	<cffunction name="UDF_Module" output="false" returntype="string">
 		<cfargument name="info" type="string" required="false" default="">
 		<cfargument name="curr_module" type="string" required="false" default="">

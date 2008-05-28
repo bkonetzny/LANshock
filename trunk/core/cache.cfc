@@ -46,7 +46,20 @@ $LastChangedRevision: 34 $
 	</cffunction>
 
 	<cffunction name="dropAll" output="false" returntype="void">
-		<cfset init()>
+		<cfset StructClear(variables.stCache)>
+	</cffunction>
+
+	<cffunction name="size" output="false" returntype="numeric">
+		<cfset var iCacheSize = 0>
+		<cfset var idx = ''>
+
+		<cfloop list="#getKeys()#" index="idx">
+			<cfset iCacheSize = iCacheSize + len(serialize(get(idx)))>
+		</cfloop>
+
+		<cfset iCacheSize = iCacheSize * 8>
+		
+		<cfreturn iCacheSize>
 	</cffunction>
 
 </cfcomponent>
