@@ -16,6 +16,7 @@ stConfig.settings = StructNew();
 stConfig.settings.appname = "LANshock";
 stConfig.settings.language = "en_US";
 stConfig.settings.startpage = "";
+stConfig.settings.google_maps_key = "";
 	
 stConfig.settings.mailserver = StructNew();
 stConfig.settings.mailserver.server = cgi.server_name;
@@ -27,13 +28,10 @@ stConfig.settings.mailserver.from = "#stConfig.settings.appname# <no-reply@#cgi.
 stConfig.settings.layout = StructNew();
 stConfig.settings.layout.template = "lanshock";
 stConfig.settings.layout.smileyset = "_default";
-stConfig.settings.layout.converttext = StructNew();
-stConfig.settings.layout.converttext.escapehtml = true;
-stConfig.settings.layout.converttext.pseudocode = true;
 stConfig.settings.layout.avatar = StructNew();
 stConfig.settings.layout.avatar.mode = "lanshock"; // lanshock | gravatar
-stConfig.settings.layout.avatar.height = 80;
-stConfig.settings.layout.avatar.width = 80;
 </cfscript>
+
+<cfparam name="application.lanshock.settings.google_maps_key" default="">
 
 <cfsetting enablecfoutputonly="No">

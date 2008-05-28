@@ -21,7 +21,10 @@ $LastChangedRevision: 34 $
 		<cfif ListFindNoCase(lLogLevels,arguments.level)>
 			<cfset writeDbLog(arguments.type,arguments.message,arguments.level)>
 			<cflock type="exclusive" name="logger.cfc.writelog" timeout="5">
-				<cffile action="append" file="#application.lanshock.oRuntime.getEnvironment().sStoragePath#secure/logs/#arguments.type#.log" output="#now()# - #cgi.remote_addr# - #arguments.level# - #arguments.message#" mode="777" addnewline="true">
+				<cftry>
+					<cffile action="append" file="#application.lanshock.oRuntime.getEnvironment().sStoragePath#secure/logs/#arguments.type#.log" output="#now()# - #cgi.remote_addr# - #arguments.level# - #arguments.message#" mode="777" addnewline="true">
+					<cfcatch><!--- do nothing ---></cfcatch>
+				</cftry>
 			</cflock>
 		</cfif>
 		
