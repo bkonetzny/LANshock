@@ -12,7 +12,7 @@ $LastChangedRevision: 55 $
 <cfparam name="attributes.id" default="">
 
 <cfinvoke component="messenger" method="getWebmailAccounts" returnvariable="qAccount">
-	<cfinvokeargument name="user_id" value="#request.session.userid#">
+	<cfinvokeargument name="user_id" value="#session.userid#">
 	<cfinvokeargument name="id" value="#attributes.id#">
 </cfinvoke>
 
@@ -24,6 +24,6 @@ $LastChangedRevision: 55 $
 	</cfscript>
 </cfif>
 
-<cflocation url="#myself##myfusebox.thiscircuit#.webmail&#request.session.UrlToken#" addtoken="false">
+<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.webmail')#" addtoken="false">
 
 <cfsetting enablecfoutputonly="No">

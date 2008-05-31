@@ -10,9 +10,9 @@ $LastChangedRevision: 55 $
 --->
 
 <cfoutput>
-	<div class="headline">$$$ Webmail Detail</div>
+	<h3>$$$ Webmail Detail</h3>
 	
-	<div class="headline2">$$$ Mail Info</div>
+	<h4>$$$ Mail Info</h4>
 	
 	<table class="vlist">
 		<tr>
@@ -39,7 +39,7 @@ $LastChangedRevision: 55 $
 		</tr>
 	</table>
 	
-	<div class="headline2">$$$ Message Body</div>
+	<h4>$$$ Message Body</h4>
 	
 	#ConvertText(qPop.body)#
 </cfoutput>

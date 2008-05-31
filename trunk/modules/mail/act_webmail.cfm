@@ -14,7 +14,7 @@ $LastChangedRevision: 55 $
 <cfparam name="attributes.action_getheader" default="">
 
 <cfinvoke component="messenger" method="getWebmailAccounts" returnvariable="qAccounts">
-	<cfinvokeargument name="user_id" value="#request.session.userid#">
+	<cfinvokeargument name="user_id" value="#session.userid#">
 </cfinvoke>
 
 <cfset stResults = StructNew()>

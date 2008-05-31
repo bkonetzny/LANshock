@@ -16,7 +16,7 @@ $LastChangedRevision: 55 $
 <cfif attributes.all>
 
 	<cfinvoke component="messenger" method="getMessages" returnvariable="qMessages">
-		<cfinvokeargument name="user_id" value="#request.session.userid#">
+		<cfinvokeargument name="user_id" value="#session.userid#">
 		<cfinvokeargument name="mailtype" value="1">
 	</cfinvoke>
 	
@@ -25,10 +25,10 @@ $LastChangedRevision: 55 $
 </cfif>
 
 <cfinvoke component="messenger" method="deleteMessages">
-	<cfinvokeargument name="user_id" value="#request.session.userid#">
+	<cfinvokeargument name="user_id" value="#session.userid#">
 	<cfinvokeargument name="messageids" value="#attributes.messageids#">
 </cfinvoke>
 
-<cflocation url="#myself##myfusebox.thiscircuit#.inbox&#request.session.UrlToken#" addtoken="false">
+<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.inbox')#" addtoken="false">
 
 <cfsetting enablecfoutputonly="No">

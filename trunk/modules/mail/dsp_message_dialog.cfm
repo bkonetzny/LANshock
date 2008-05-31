@@ -13,7 +13,7 @@ $LastChangedRevision: 55 $
 
 <cfif qMessages.recordcount>
 	<cfoutput>
-		<div class="headline">#request.content.inbox#</div>
+		<h3>#request.content.inbox#</h3>
 		
 		<table width="100%" cellpadding="5">
 		<cfloop query="qMessages">
@@ -24,7 +24,7 @@ $LastChangedRevision: 55 $
 			</cfif>
 			<tr>
 				<td class="alternate">#tmp_topic#</td>
-				<td class="alternate" align="right">#UDF_DateTimeFormat(datetime)#</td>
+				<td class="alternate" align="right">#session.oUser.DateTimeFormat(datetime)#</td>
 			</tr>
 			<tr>
 				<td colspan="2">#ConvertText(text)#</td>
@@ -32,20 +32,20 @@ $LastChangedRevision: 55 $
 		</cfloop>
 		</table>
 		
-		<div class="headline">#request.content.newmsg#</div>
+		<h3>#request.content.newmsg#</h3>
 	</cfoutput>
 </cfif>
 
 <cfoutput>
-	<form action="#myself##myfusebox.thiscircuit#.message_dialog&#request.session.UrlToken#" name="newmsg" method="post">
+	<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.message_dialog')#" name="newmsg" method="post">
 		<input type="hidden" name="form_submitted" value="true">
 		<input type="hidden" name="user_id" value="#attributes.user_id#">
 		&nbsp;
 		<table style="width: 95%; height: 90%;" cellpadding="0" cellspacing="0" align="center">
 			<tr>
 				<td>#request.content.to#<br>
-					<strong>#GetUsernameByID(attributes.user_id)#</strong></td>
-				<td align="center" valign="top" rowspan="2"><span style="width: 80px; height: 80px; border: 1px dotted black;">#UserShowAvatar(attributes.user_id)#</span></td>
+					<strong>#application.lanshock.oHelper.GetUsernameByID(attributes.user_id)#</strong></td>
+				<td align="center" valign="top" rowspan="2"><span style="width: 80px; height: 80px; border: 1px dotted black;">#application.lanshock.oHelper.UserShowAvatar(attributes.user_id)#</span></td>
 			</tr>
 			<tr>
 				<td width="90%">#request.content.topic#<br>

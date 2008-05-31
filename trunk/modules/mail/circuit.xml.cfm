@@ -56,12 +56,6 @@ $LastChangedRevision: 75 $
 		<include template="act_webmail_account_delete.cfm"/>
 	</fuseaction>
 	
-	<!-- Show Panel Buddylist -->
-	<fuseaction name="buddylist" lanshock:showlayout="basic">
-		<include template="act_panel_buddylist.cfm"/>
-		<include template="dsp_panel_buddylist.cfm"/>
-	</fuseaction>
-	
 	<!-- Add User To Buddylist -->
 	<fuseaction name="buddy_add">
 		<include template="act_buddy_add.cfm"/>

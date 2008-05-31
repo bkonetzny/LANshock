@@ -17,32 +17,41 @@ $LastChangedRevision: 60 $
 <cfoutput>
 	<h3>#headline#</h3>
 	
-	<a href="#myself##myfusebox.thiscircuit#.message_new&#request.session.UrlToken#">#request.content.create_new_message#</a>
+	<ul class="options">
+		<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.message_new')#">#request.content.create_new_message#</a></li>
+	</ul>
 
-	<div align="right">
-		<form action="#myself##myfusebox.thiscircuit#.mail_del&all=true&#request.session.UrlToken#" method="post">
-			<input type="submit" value="#request.content.deleteall#"<cfif NOT qMessages.recordcount OR attributes.mailtype> disabled</cfif>>
-		</form>
-	</div>
+	<cfif NOT attributes.mailtype AND qMessages.recordcount>
+		<div align="right">
+			<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.mail_del&all=true')#" method="post">
+				<input type="submit" value="#request.content.deleteall#">
+			</form>
+		</div>
+	</cfif>
 
 	<table>
 		<tr>
 			<th>#request.content.topic#</th>
 			<th><cfif NOT attributes.mailtype>#request.content.from#<cfelse>#request.content.to#</cfif></th>
 			<th>#request.content.attime#</th>
-			<th>&nbsp;</th>
+			<cfif NOT attributes.mailtype><th>&nbsp;</th></cfif>
 		</tr>
 		<cfloop query="qMessages">
-			<cfif NOT len(title)>
-				<cfset tmp_topic = "<em>#request.content.notopic#</em>">
+			<cfif NOT len(qMessages.title)>
+				<cfset sTopic = "<em>#request.content.notopic#</em>">
 			<cfelse>
-				<cfset tmp_topic = title>
+				<cfset sTopic = qMessages.title>
+			</cfif>
+			<cfif attributes.mailtype>
+				<cfset iUserID = qMessages.user_id_to>
+			<cfelse>
+				<cfset iUserID = qMessages.user_id_from>
 			</cfif>
 			<tr>
-				<td><a href="#myself##myfusebox.thiscircuit#.message&id=#id#&mailtype=#attributes.mailtype#&#request.session.UrlToken#"><cfif isNew><strong>#tmp_topic#</strong><cfelse>#tmp_topic#</cfif></a></td>
-				<td><a href="#myself##request.lanshock.settings.modulePrefix.core#user.userdetails&id=<cfif attributes.mailtype>#user_id_to#<cfelse>#user_id_from#</cfif>&#request.session.UrlToken#">#buddyname#</a></td>
-				<td>#UDF_DateTimeFormat(datetime)#</td>
-				<td><cfif NOT attributes.mailtype><a href="#myself##myfusebox.thiscircuit#.mail_del&id=#id#&#request.session.UrlToken#"><img src="#stImageDir.general#/btn_delete.gif" alt="" border="0"></a><cfelse>&nbsp;</cfif></td>
+				<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.message&id=#qMessages.id#&mailtype=#attributes.mailtype#')#"><cfif qMessages.isNew><strong>#sTopic#</strong><cfelse>#sTopic#</cfif></a></td>
+				<td><a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#iUserID#')#">#qMessages.buddyname#</a></td>
+				<td>#session.oUser.dateTimeFormat(qMessages.datetime)#</td>
+				<cfif NOT attributes.mailtype><td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.mail_del&id=#qMessages.id#')#"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/delete.png" alt=""></a></td></cfif>
 			</tr>
 		</cfloop>
 	</table>

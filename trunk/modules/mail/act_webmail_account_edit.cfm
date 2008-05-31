@@ -39,11 +39,11 @@ $LastChangedRevision: 55 $
 				<cfset oObAccount.setProperty(idx,attributes[idx])>
 			</cfif>
 		</cfloop>
-		<cfset oObAccount.setProperty('user_id',request.session.userid)>
+		<cfset oObAccount.setProperty('user_id',session.userid)>
 
 		<cfset oObAccount.commit()>
 		
-		<cflocation url="#myself##myfusebox.thiscircuit#.webmail&#request.session.urltoken#" addtoken="false">
+		<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.webmail')#" addtoken="false">
 	
 	</cfif>
 

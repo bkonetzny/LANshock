@@ -13,7 +13,7 @@ $LastChangedRevision: 55 $
 <cfparam name="attributes.uid" default="">
 
 <cfinvoke component="messenger" method="getWebmailAccounts" returnvariable="qAccount">
-	<cfinvokeargument name="user_id" value="#request.session.userid#">
+	<cfinvokeargument name="user_id" value="#session.userid#">
 	<cfinvokeargument name="id" value="#attributes.account_id#">
 </cfinvoke>
 
@@ -21,11 +21,11 @@ $LastChangedRevision: 55 $
 	<cfpop action="getAll" uid="#attributes.uid#" name="qPop" server="#qAccount.server#" port="#qAccount.port#" username="#qAccount.username#" password="#qAccount.password#" timeout="5">
 	
 	<cfif NOT qPop.recordcount>
-		<cflocation url="#myself##myfusebox.thiscircuit#.webmail&action_getheader=#attributes.account_id#&#request.session.UrlToken#" addtoken="false">
+		<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.webmail&action_getheader=#attributes.account_id#')#" addtoken="false">
 	</cfif>
 	
 <cfelse>
-	<cflocation url="#myself##myfusebox.thiscircuit#.webmail&action_getheader=#attributes.account_id#&#request.session.UrlToken#" addtoken="false">
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.webmail&action_getheader=#attributes.account_id#')#" addtoken="false">
 </cfif>
 
 <cfsetting enablecfoutputonly="No">

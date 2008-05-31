@@ -10,12 +10,12 @@ $LastChangedRevision: 55 $
 --->
 
 <cfoutput>
-	<div class="headline">$$$ Account Manager</div>
+	<h3>$$$ Account Manager</h3>
 	
-	<div class="headline2">$$$ Edit Account</div>
+	<h4>$$$ Edit Account</h4>
 	
 	<table class="vlist">
-		<form action="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#request.session.UrlToken#" method="post">
+		<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post">
 		<input type="hidden" name="form_submitted" value="true">
 		<input type="hidden" name="id" value="#attributes.id#">
 		<tr>
