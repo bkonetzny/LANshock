@@ -18,10 +18,10 @@ $LastChangedRevision: 50 $
 	<p>#request.content.righterr2#</p>
 
 	<cfif len(attributes.right_module) AND len(attributes.right_area)>
-		<p><strong>#attributes.right_module#: #attributes.right_area#</strong></p>
+		<p><strong>#HtmlEditFormat(attributes.right_module)#: #HtmlEditFormat(attributes.right_area)#</strong></p>
 	</cfif>
 	<cfif len(cgi.http_referer)>
-		<a href="#cgi.http_referer#" class="link_extended">#request.content.back#</a>
+		<a href="#cgi.http_referer#">#request.content.back#</a>
 	</cfif>
 </cfoutput>
 
