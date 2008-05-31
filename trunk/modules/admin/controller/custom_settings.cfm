@@ -76,4 +76,37 @@ $LastChangedRevision: 56 $
 	<cfreturn iResult & " " & sUnit>
 </cffunction>
 
+<cffunction name="timeSpanConvert" access="public" returntype="string" output="false">
+	<cfargument name="seconds" type="numeric" required="true">
+	
+	<cfset var sResult = ''>
+	<cfset iBaseSeconds = arguments.seconds>
+	<cfset iDays = 0>
+	<cfset iHours = 0>
+	<cfset iMinutes = 0>
+	<cfset iSeconds = 0>
+	
+	<cfif iBaseSeconds GT (60*60*24)>
+		<cfset iDays = int(iBaseSeconds / (60*60*24))>
+	</cfif>
+	
+	<cfset iBaseSeconds = iBaseSeconds - (iDays * (60*60*24))>
+	
+	<cfif iBaseSeconds GT 60*60>
+		<cfset iHours = int(iBaseSeconds / (60*60))>
+	</cfif>
+	
+	<cfset iBaseSeconds = iBaseSeconds - (iHours * (60*60))>
+	
+	<cfif iBaseSeconds GT 60>
+		<cfset iMinutes = int(iBaseSeconds / 60)>
+	</cfif>
+	
+	<cfset iSeconds = iBaseSeconds - (iMinutes * (60))>
+	
+	<cfset sResult = NumberFormat(iDays,'00') & ':' & NumberFormat(iHours,'00') & ':' & NumberFormat(iMinutes,'00') & ':' & NumberFormat(iSeconds,'00')>
+
+	<cfreturn sResult>
+</cffunction>
+
 <cfsetting enablecfoutputonly="No">

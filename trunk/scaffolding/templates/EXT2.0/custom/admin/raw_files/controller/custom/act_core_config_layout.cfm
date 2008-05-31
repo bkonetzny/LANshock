@@ -26,6 +26,4 @@ $LastChangedRevision$
 
 <cfdirectory action="list" directory="#application.lanshock.oRuntime.getEnvironment().sBasePath#templates/" name="qTemplates" sort="name ASC">
 
-<cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#core.smileyset" method="getSmileySetList" returnvariable="qSmileySets">
-
 <cfsetting enablecfoutputonly="No">
