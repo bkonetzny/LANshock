@@ -14,7 +14,8 @@ $LastChangedRevision: 109 $
 	OR ReFindNoCase("msnbot",arguments.sUserAgent)
 	OR ReFindNoCase("WebAlta Crawler",arguments.sUserAgent)
 	OR ReFindNoCase("Exabot",arguments.sUserAgent)
-	OR ReFindNoCase("Twiceler",arguments.sUserAgent)>
+	OR ReFindNoCase("Twiceler",arguments.sUserAgent)
+	OR ReFindNoCase("Gigabot",arguments.sUserAgent)>
 	<cfset bReturn = true>
 </cfif>
 
