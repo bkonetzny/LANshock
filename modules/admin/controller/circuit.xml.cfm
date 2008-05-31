@@ -5,6 +5,7 @@
 		<lanshock:fuseaction>
 			<set name="request.page" value="#structNew()#"/>
 			<lanshock:i18n load="modules/admin/i18n/lang.properties" returnvariable="request.content"/>
+			
 			<include circuit="admin" template="settings"/>
 		</lanshock:fuseaction>
 	</prefuseaction>
@@ -962,7 +963,7 @@
 		
 		<set name="attributes._listSortByFieldList" overwrite="false" value="core_navigation|action|ASC"/>
 		
-		<set name="fieldlist" value="module,permissions,action,level,sortorder,"/>
+		<set name="fieldlist" value="module,action,permissions,level,sortorder,"/>
 		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_admin" template="list/dsp_list_core_navigation"/>
 	</fuseaction>
@@ -996,7 +997,7 @@
 		<set value="#ocore_navigation.setlPKFields(attributes.lPKFields)#"/>
 		<invoke method="load" object="ocore_navigation"/>
 		
-		<set name="fieldlist" value="module,permissions,action,level,sortorder,"/>
+		<set name="fieldlist" value="module,action,permissions,level,sortorder,"/>
 		<include circuit="udfs" template="udf_appendParam"/>
 		<include append="true" circuit="v_admin" contentvariable="request.page.pageContent" template="display/dsp_display_core_navigation"/>
 	</fuseaction>
@@ -1080,7 +1081,7 @@
 		
 		<set name="attributes._listSortByFieldList" overwrite="false" value="user|id|ASC"/>
 		
-		<set name="fieldlist" value="id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong,"/>
+		<set name="fieldlist" value="id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong,data_access,"/>
 		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_admin" template="list/dsp_list_user"/>
 	</fuseaction>
@@ -1114,7 +1115,7 @@
 		<set value="#ouser.setlPKFields(attributes.lPKFields)#"/>
 		<invoke method="load" object="ouser"/>
 		
-		<set name="fieldlist" value="id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong,"/>
+		<set name="fieldlist" value="id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong,data_access,"/>
 		<include circuit="udfs" template="udf_appendParam"/>
 		<include append="true" circuit="v_admin" contentvariable="request.page.pageContent" template="display/dsp_display_user"/>
 	</fuseaction>

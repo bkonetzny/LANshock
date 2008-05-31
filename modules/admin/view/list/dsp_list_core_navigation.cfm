@@ -6,11 +6,11 @@
 		Each record has a link for viewing, deleting, and editing the selected core_navigation record.
 	</responsibilities>
 	<properties>
-		<history author="Kevin Roche" email="kevin@objectiveinternet.com" date="12-May-2008" role="Architect" type="Create" />
+		<history author="Kevin Roche" email="kevin@objectiveinternet.com" date="31-May-2008" role="Architect" type="Create" />
 		<property name="copyright" value="(c)2008 Objective Internet Limited." />
 		<property name="licence" value="See licence.txt" />
-		<property name="version" value="$Revision: 205 $" />
-		<property name="lastupdated" value="$Date: 2008-03-09 12:47:41 +0100 (So, 09 Mrz 2008) 2008/05/12 14:12:07 $" />
+		<property name="version" value="$Revision: 337 $" />
+		<property name="lastupdated" value="$Date: 2008-05-31 13:51:47 +0200 (Sa, 31 Mai 2008) 2008/05/31 14:34:01 $" />
 		<property name="updatedby" value="$Author: majestixs $" />
 	</properties>
 	<io>
@@ -31,15 +31,15 @@
 			<recordset name="qcore_navigation" primaryKeys="action" scope="variables" comments="Recordset containing core_navigation records " >
 			
 				<string name="module" />
-				<string name="permissions" />
 				<string name="action" />
+				<string name="permissions" />
 				<numeric name="level" />
 				<numeric name="sortorder" />
 			
 			</recordset>
 			
 			<list name="fieldlist" scope="variables" optional="Yes" 
-				default="module,permissions,action,level,sortorder" 
+				default="module,action,permissions,level,sortorder" 
 				comments="List of fields to display." />
 		</in>
 		<out>
@@ -63,10 +63,10 @@
 <cfset sortParams = appendParam(sortParams,"_Maxrows",attributes._Maxrows)>
 <cfset pageParams = appendParam(sortParams,"_StartRow",attributes._Startrow)>
 <!--- Complete list of fields that could be displayed --->
-<cfparam name="variables.fieldlist" default="module,permissions,action,level,sortorder">
+<cfparam name="variables.fieldlist" default="module,action,permissions,level,sortorder">
 </cfsilent>
 <cfoutput>
-<h3>#request.content['__globalmodule__navigation__#request.page.objectName#_Listing']#</h3>
+<h3>#request.content['__globalmodule__navigation__#request.page.objectName#_listing']#</h3>
 <script type="text/javascript">
 	Ext.onReady(function(){
 		
@@ -75,13 +75,13 @@
 	    var sm = new xg.CheckboxSelectionModel();
         
         var action = new Ext.ux.grid.RowActions({
-			header:'Actions',
+			header:'#jsStringFormat(request.content.core_navigation_grid_header__rowactions)#',
 			actions:[{
 				iconCls:'icon-edit-record',
-				tooltip:'Edit'
+				tooltip:'#jsStringFormat(request.content.core_navigation_grid_row_edit)#'
 			},{
 				iconCls:'icon-delete-record',
-				tooltip:'Delete'
+				tooltip:'#jsStringFormat(request.content.core_navigation_grid_row_delete)#'
 			}]
 		});
 		
@@ -106,7 +106,7 @@
 	        	root: 'data',
 				id: 'action'
 			},[
-				{name:'module',mapping:'module'},{name:'permissions',mapping:'permissions'},{name:'action',mapping:'action'},{name:'level',mapping:'level'},{name:'sortorder',mapping:'sortorder'}
+				{name:'module',mapping:'module'},{name:'action',mapping:'action'},{name:'permissions',mapping:'permissions'},{name:'level',mapping:'level'},{name:'sortorder',mapping:'sortorder'}
 			]),
 			
 			sortInfo: {field: 'action', direction: 'ASC'},
@@ -119,7 +119,7 @@
 	        ds: ds,
 	        cm: new xg.ColumnModel([
 	        	sm,
-	        	{id:'id',header:'#jsStringFormat(request.content.core_navigation_grid_header_module)#',width:30,sortable:true,dataIndex:'module'},{header:'#jsStringFormat(request.content.core_navigation_grid_header_permissions)#',width:30,sortable:true,dataIndex:'permissions'},{header:'#jsStringFormat(request.content.core_navigation_grid_header_action)#',width:30,sortable:true,dataIndex:'action'},{header:'#jsStringFormat(request.content.core_navigation_grid_header_level)#',width:30,sortable:true,dataIndex:'level'},{header:'#jsStringFormat(request.content.core_navigation_grid_header_sortorder)#',width:30,sortable:true,dataIndex:'sortorder'},
+	        	{id:'id',header:'#jsStringFormat(request.content.core_navigation_grid_header_module)#',width:30,sortable:true,dataIndex:'module'},{header:'#jsStringFormat(request.content.core_navigation_grid_header_action)#',width:30,sortable:true,dataIndex:'action'},{header:'#jsStringFormat(request.content.core_navigation_grid_header_permissions)#',width:30,sortable:true,dataIndex:'permissions'},{header:'#jsStringFormat(request.content.core_navigation_grid_header_level)#',width:30,sortable:true,dataIndex:'level'},{header:'#jsStringFormat(request.content.core_navigation_grid_header_sortorder)#',width:30,sortable:true,dataIndex:'sortorder'},
 	        	action
 	        ]),
 	        sm: sm,
@@ -153,7 +153,8 @@
 	        
 	        bbar: new Ext.PagingToolbar({
 	            pageSize: 20,
-	            store: ds
+	            store: ds,
+	            displayInfo: true
 	        })
 	    });
 		

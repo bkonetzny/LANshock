@@ -107,8 +107,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_827E3BFACAD0447B83D0163079C55D9A"><em>*</em> #request.content.core_logs_rowtype_label_id#</label>
-		<input type="text" class="textInput" name="id" id="formrow_827E3BFACAD0447B83D0163079C55D9A" value="#NumberFormat(ocore_logs.getid(),"9")#"/>
+		<label for="formrow_3D1E432B0E5C49129F4B0BEA561CA6D4"><em>*</em> #request.content.core_logs_rowtype_label_id#</label>
+		<input type="text" class="textInput" name="id" id="formrow_3D1E432B0E5C49129F4B0BEA561CA6D4" value="#NumberFormat(ocore_logs.getid(),"9")#"/>
 	</div>
 				
 			
@@ -121,8 +121,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_B386F2BBF1B54396A034EDAFAD1F0986"><em>*</em> #request.content.core_logs_rowtype_label_logname#</label>
-		<textarea name="logname" id="formrow_B386F2BBF1B54396A034EDAFAD1F0986">#Trim(ocore_logs.getlogname())#</textarea>
+		<label for="formrow_B6D108868A7C4ACD8F9DE9EC849580EA"><em>*</em> #request.content.core_logs_rowtype_label_logname#</label>
+		<textarea name="logname" id="formrow_B6D108868A7C4ACD8F9DE9EC849580EA">#Trim(ocore_logs.getlogname())#</textarea>
 	</div>
 				
 			
@@ -135,8 +135,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_83C6259B2CFF4982A7E75E90B2E92DA3"><em>*</em> #request.content.core_logs_rowtype_label_level#</label>
-		<textarea name="level" id="formrow_83C6259B2CFF4982A7E75E90B2E92DA3">#Trim(ocore_logs.getlevel())#</textarea>
+		<label for="formrow_644ABE6B1BCB4675909822E34E6AFF73"><em>*</em> #request.content.core_logs_rowtype_label_level#</label>
+		<textarea name="level" id="formrow_644ABE6B1BCB4675909822E34E6AFF73">#Trim(ocore_logs.getlevel())#</textarea>
 	</div>
 				
 			
@@ -149,8 +149,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_01F33088BC314420B1274E210C1388BC"><em>*</em> #request.content.core_logs_rowtype_label_data#</label>
-		<textarea name="data" id="formrow_01F33088BC314420B1274E210C1388BC">#Trim(ocore_logs.getdata())#</textarea>
+		<label for="formrow_B19EBC3E737B4085A880CAC7DB8CB7F6"><em>*</em> #request.content.core_logs_rowtype_label_data#</label>
+		<textarea name="data" id="formrow_B19EBC3E737B4085A880CAC7DB8CB7F6">#Trim(ocore_logs.getdata())#</textarea>
 	</div>
 				
 			
@@ -163,7 +163,7 @@
 	
 	
 	<div class="ctrlHolder">
-		<label for="formrow_B230C88FDD224D34AD6327AB8A8D7A43">#request.content.core_logs_rowtype_label_timestamp#</label>
+		<label for="formrow_C97F6EE40C8344389488D0287115B95F">#request.content.core_logs_rowtype_label_timestamp#</label>
 		Unknown field type "Time"
 	</div>
 				
@@ -178,7 +178,7 @@
 	<div class="buttonHolder">
 		<button type="submit" class="submitButton" id="btnSave">#request.content.form_save#</button>
 		<button type="reset" class="resetButton" id="btnReset">#request.content.form_reset#</button>
-		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';">#request.content.form_cancel#</button>
+		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';return false;">#request.content.form_cancel#</button>
 	</div>
 </form>
 </cfoutput>

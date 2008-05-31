@@ -6,11 +6,11 @@
 		Each record has a link for viewing, deleting, and editing the selected user record.
 	</responsibilities>
 	<properties>
-		<history author="Kevin Roche" email="kevin@objectiveinternet.com" date="12-May-2008" role="Architect" type="Create" />
+		<history author="Kevin Roche" email="kevin@objectiveinternet.com" date="31-May-2008" role="Architect" type="Create" />
 		<property name="copyright" value="(c)2008 Objective Internet Limited." />
 		<property name="licence" value="See licence.txt" />
-		<property name="version" value="$Revision: 205 $" />
-		<property name="lastupdated" value="$Date: 2008-03-09 12:47:41 +0100 (So, 09 Mrz 2008) 2008/05/12 14:12:08 $" />
+		<property name="version" value="$Revision: 337 $" />
+		<property name="lastupdated" value="$Date: 2008-05-31 13:51:47 +0200 (Sa, 31 Mai 2008) 2008/05/31 14:34:04 $" />
 		<property name="updatedby" value="$Author: majestixs $" />
 	</properties>
 	<io>
@@ -53,11 +53,12 @@
 				<string name="reset_password_key" />
 				<string name="openid_url" />
 				<string name="geo_latlong" />
+				<numeric name="data_access" />
 			
 			</recordset>
 			
 			<list name="fieldlist" scope="variables" optional="Yes" 
-				default="id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong" 
+				default="id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong,data_access" 
 				comments="List of fields to display." />
 		</in>
 		<out>
@@ -81,10 +82,10 @@
 <cfset sortParams = appendParam(sortParams,"_Maxrows",attributes._Maxrows)>
 <cfset pageParams = appendParam(sortParams,"_StartRow",attributes._Startrow)>
 <!--- Complete list of fields that could be displayed --->
-<cfparam name="variables.fieldlist" default="id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong">
+<cfparam name="variables.fieldlist" default="id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong,data_access">
 </cfsilent>
 <cfoutput>
-<h3>#request.content['__globalmodule__navigation__#request.page.objectName#_Listing']#</h3>
+<h3>#request.content['__globalmodule__navigation__#request.page.objectName#_listing']#</h3>
 <script type="text/javascript">
 	Ext.onReady(function(){
 		
@@ -93,13 +94,13 @@
 	    var sm = new xg.CheckboxSelectionModel();
         
         var action = new Ext.ux.grid.RowActions({
-			header:'Actions',
+			header:'#jsStringFormat(request.content.user_grid_header__rowactions)#',
 			actions:[{
 				iconCls:'icon-edit-record',
-				tooltip:'Edit'
+				tooltip:'#jsStringFormat(request.content.user_grid_row_edit)#'
 			},{
 				iconCls:'icon-delete-record',
-				tooltip:'Delete'
+				tooltip:'#jsStringFormat(request.content.user_grid_row_delete)#'
 			}]
 		});
 		
@@ -171,7 +172,8 @@
 	        
 	        bbar: new Ext.PagingToolbar({
 	            pageSize: 20,
-	            store: ds
+	            store: ds,
+	            displayInfo: true
 	        })
 	    });
 		

@@ -5,11 +5,11 @@
 		I display a single core_navigation record from an object, a structure, a query or from attributes scope.
 	</responsibilities>
 	<properties>
-		<history author="Kevin Roche" email="kevin@objectiveinternet.com" date="12-May-2008" role="Architect" type="Create" />
+		<history author="Kevin Roche" email="kevin@objectiveinternet.com" date="31-May-2008" role="Architect" type="Create" />
 		<property name="copyright" value="(c)2008 Objective Internet Limited." />
 		<property name="licence" value="See licence.txt" />
 		<property name="version" value="$Revision: 205 $" />
-		<property name="lastupdated" value="$Date: 2008-03-09 12:47:41 +0100 (So, 09 Mrz 2008) 2008/05/12 14:12:07 $" />
+		<property name="lastupdated" value="$Date: 2008-03-09 12:47:41 +0100 (So, 09 Mrz 2008) 2008/05/31 14:34:01 $" />
 		<property name="updatedby" value="$Author: majestixs $" />
 	</properties>
 	<io>
@@ -27,8 +27,8 @@
 			<structure name="stcore_navigation" comments="Not used if ocore_navigation is provided." optional="Yes" >
 				
 				<string name="module" />
-				<string name="permissions" />
 				<string name="action" />
+				<string name="permissions" />
 				<integer name="level" />
 				<integer name="sortorder" />
 				
@@ -37,8 +37,8 @@
 			<number name="_recordNumber" precision="Integer" scope="variables"/>
 			<recordset name="qcore_navigation" primaryKeys="action" scope="variables" optional="Yes" comments="Recordset containing core_navigation records " >
 				<string name="module" />
-				<string name="permissions" />
 				<string name="action" />
+				<string name="permissions" />
 				<integer name="level" />
 				<integer name="sortorder" />
 				
@@ -46,8 +46,8 @@
 			</recordset>
 			
 			<string name="module" scope="attributes" optional="Yes" comments="Not used if ocore_navigation, stcore_navigation or qcore_navigation is provided." />
-			<string name="permissions" scope="attributes" optional="Yes" comments="Not used if ocore_navigation, stcore_navigation or qcore_navigation is provided." />
 			<string name="action" scope="attributes" optional="Yes" comments="Not used if ocore_navigation, stcore_navigation or qcore_navigation is provided." />
+			<string name="permissions" scope="attributes" optional="Yes" comments="Not used if ocore_navigation, stcore_navigation or qcore_navigation is provided." />
 			<integer name="level" scope="attributes" optional="Yes" comments="Not used if ocore_navigation, stcore_navigation or qcore_navigation is provided." />
 			<integer name="sortorder" scope="attributes" optional="Yes" comments="Not used if ocore_navigation, stcore_navigation or qcore_navigation is provided." />
 			
@@ -77,7 +77,7 @@
 <cfset stJoinedFields = StructNew()>
 <!--- Set the complete list of Local Variables which can be used to populate the display. --->
 <!--- The sequence can be rearranged to display the fields required in any order. --->
-<cfparam name="variables.fieldlist" default="module,permissions,action,level,sortorder,">
+<cfparam name="variables.fieldlist" default="module,action,permissions,level,sortorder,">
 <cfset _joinedFieldlist="">
 <cfif isDefined("ocore_navigation")>
 	<!--- Get variables from the object. --->
@@ -156,20 +156,6 @@
 					</td>
 				</tr>
 			</cfcase>
-			<cfcase value="permissions">
-				<tr>
-				  <cfif ListFindNocase(highlightfields,'permissions')>
-					<th align="left" class="highlight">
-				  <cfelse>
-					<th align="left" class="standard">
-				  </cfif>
-						Permissions
-					</th>
-					<td>
-						#Trim(variables.permissions)#
-					</td>
-				</tr>
-			</cfcase>
 			<cfcase value="action">
 				<tr>
 				  <cfif ListFindNocase(highlightfields,'action')>
@@ -181,6 +167,20 @@
 					</th>
 					<td>
 						#Trim(variables.action)#
+					</td>
+				</tr>
+			</cfcase>
+			<cfcase value="permissions">
+				<tr>
+				  <cfif ListFindNocase(highlightfields,'permissions')>
+					<th align="left" class="highlight">
+				  <cfelse>
+					<th align="left" class="standard">
+				  </cfif>
+						Permissions
+					</th>
+					<td>
+						#Trim(variables.permissions)#
 					</td>
 				</tr>
 			</cfcase>

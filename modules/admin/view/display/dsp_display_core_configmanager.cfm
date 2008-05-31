@@ -5,11 +5,11 @@
 		I display a single core_configmanager record from an object, a structure, a query or from attributes scope.
 	</responsibilities>
 	<properties>
-		<history author="Kevin Roche" email="kevin@objectiveinternet.com" date="12-May-2008" role="Architect" type="Create" />
+		<history author="Kevin Roche" email="kevin@objectiveinternet.com" date="31-May-2008" role="Architect" type="Create" />
 		<property name="copyright" value="(c)2008 Objective Internet Limited." />
 		<property name="licence" value="See licence.txt" />
 		<property name="version" value="$Revision: 205 $" />
-		<property name="lastupdated" value="$Date: 2008-03-09 12:47:41 +0100 (So, 09 Mrz 2008) 2008/05/12 14:11:46 $" />
+		<property name="lastupdated" value="$Date: 2008-03-09 12:47:41 +0100 (So, 09 Mrz 2008) 2008/05/31 14:33:48 $" />
 		<property name="updatedby" value="$Author: majestixs $" />
 	</properties>
 	<io>

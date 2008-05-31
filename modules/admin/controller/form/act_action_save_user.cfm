@@ -81,6 +81,13 @@
 		
 
 	
+		
+
+	
+	<cfif NOT StructKeyExists(attributes,'data_access')>
+		<cfset attributes.data_access = 0>
+	</cfif>
+	
 	
 		<cfinclude template="act_action_save_postvalidation_user.cfm">
 	
@@ -110,6 +117,7 @@
 		<cfset ouser.setreset_password_key(attributes.reset_password_key)>
 		<cfset ouser.setopenid_url(attributes.openid_url)>
 		<cfset ouser.setgeo_latlong(attributes.geo_latlong)>
+		<cfset ouser.setdata_access(attributes.data_access)>
 	<cfelse>
 		
 		<cfset ouser.setid(attributes.id)>
@@ -135,6 +143,7 @@
 		<cfset ouser.setreset_password_key(attributes.reset_password_key)>
 		<cfset ouser.setopenid_url(attributes.openid_url)>
 		<cfset ouser.setgeo_latlong(attributes.geo_latlong)>
+		<cfset ouser.setdata_access(attributes.data_access)>
 	</cfif>
 	
 	<cfset ouser.validate()>
@@ -181,4 +190,5 @@
 			<cfoutput>#request.page.pageContent#</cfoutput>
 			<cfinclude template="../../view/form/dsp_form_user.cfm">
 		</cfsavecontent>
+		<cfoutput>#request.page.pageContent#</cfoutput>
 	</cfif>

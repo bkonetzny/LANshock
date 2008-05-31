@@ -97,8 +97,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_A9FE8E0BBC2E479981E44713F2FC6419"><em>*</em> #request.content.core_security_permissions_rowtype_label_id#</label>
-		<input type="text" class="textInput" name="id" id="formrow_A9FE8E0BBC2E479981E44713F2FC6419" value="#NumberFormat(ocore_security_permissions.getid(),"9.99")#"/>
+		<label for="formrow_893B8D5BB3A449569BDE0E48111C5FF6"><em>*</em> #request.content.core_security_permissions_rowtype_label_id#</label>
+		<input type="text" class="textInput" name="id" id="formrow_893B8D5BB3A449569BDE0E48111C5FF6" value="#NumberFormat(ocore_security_permissions.getid(),"9.99")#"/>
 	</div>
 				
 			
@@ -111,8 +111,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_3FCF3F04975C4D57AE303FD17724D7C1"><em>*</em> #request.content.core_security_permissions_rowtype_label_name#</label>
-		<input type="text" class="textInput" name="name" id="formrow_3FCF3F04975C4D57AE303FD17724D7C1" value="#Trim(ocore_security_permissions.getname())#"/>
+		<label for="formrow_E09130A2F6D645299D3226EB5214FFCD"><em>*</em> #request.content.core_security_permissions_rowtype_label_name#</label>
+		<input type="text" class="textInput" name="name" id="formrow_E09130A2F6D645299D3226EB5214FFCD" value="#Trim(ocore_security_permissions.getname())#"/>
 	</div>
 				
 			
@@ -125,8 +125,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_4E610CFA206B4A9CBF5F904EEEFEC8FE"><em>*</em> #request.content.core_security_permissions_rowtype_label_module#</label>
-		<input type="text" class="textInput" name="module" id="formrow_4E610CFA206B4A9CBF5F904EEEFEC8FE" value="#Trim(ocore_security_permissions.getmodule())#"/>
+		<label for="formrow_93561AB4322C4A83BB49E9E8BD2E0652"><em>*</em> #request.content.core_security_permissions_rowtype_label_module#</label>
+		<input type="text" class="textInput" name="module" id="formrow_93561AB4322C4A83BB49E9E8BD2E0652" value="#Trim(ocore_security_permissions.getmodule())#"/>
 	</div>
 				
 			
@@ -140,7 +140,7 @@
 	<div class="buttonHolder">
 		<button type="submit" class="submitButton" id="btnSave">#request.content.form_save#</button>
 		<button type="reset" class="resetButton" id="btnReset">#request.content.form_reset#</button>
-		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';">#request.content.form_cancel#</button>
+		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';return false;">#request.content.form_cancel#</button>
 	</div>
 </form>
 </cfoutput>

@@ -102,8 +102,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_AF765D72DC1C4B3D9D2AC138ED38887F"><em>*</em> #request.content.core_modules_rowtype_label_version#</label>
-		<textarea name="version" id="formrow_AF765D72DC1C4B3D9D2AC138ED38887F">#Trim(ocore_modules.getversion())#</textarea>
+		<label for="formrow_510DC7D174674F58BD9ABC31A8D08094"><em>*</em> #request.content.core_modules_rowtype_label_version#</label>
+		<textarea name="version" id="formrow_510DC7D174674F58BD9ABC31A8D08094">#Trim(ocore_modules.getversion())#</textarea>
 	</div>
 				
 			
@@ -116,7 +116,7 @@
 	
 	
 	<div class="ctrlHolder">
-		<label for="formrow_C9CB7AD159F849908FFFF82F1A42CC2A">#request.content.core_modules_rowtype_label_date#</label>
+		<label for="formrow_B55A5448EA92430EB241E2D7408A96DC">#request.content.core_modules_rowtype_label_date#</label>
 		Unknown field type "Date"
 	</div>
 				
@@ -130,8 +130,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_52D75F9879744E89B312ABC6969032E2"><em>*</em> #request.content.core_modules_rowtype_label_name#</label>
-		<textarea name="name" id="formrow_52D75F9879744E89B312ABC6969032E2">#Trim(ocore_modules.getname())#</textarea>
+		<label for="formrow_75EAF2342FDB410BB681CC161B23E798"><em>*</em> #request.content.core_modules_rowtype_label_name#</label>
+		<textarea name="name" id="formrow_75EAF2342FDB410BB681CC161B23E798">#Trim(ocore_modules.getname())#</textarea>
 	</div>
 				
 			
@@ -144,8 +144,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_B1A6B1DD019943BBBB2853046EDFEB45"><em>*</em> #request.content.core_modules_rowtype_label_folder#</label>
-		<textarea name="folder" id="formrow_B1A6B1DD019943BBBB2853046EDFEB45">#Trim(ocore_modules.getfolder())#</textarea>
+		<label for="formrow_B3E5836828DE4046BFE5E7844176702D"><em>*</em> #request.content.core_modules_rowtype_label_folder#</label>
+		<textarea name="folder" id="formrow_B3E5836828DE4046BFE5E7844176702D">#Trim(ocore_modules.getfolder())#</textarea>
 	</div>
 				
 			
@@ -159,7 +159,7 @@
 	<div class="buttonHolder">
 		<button type="submit" class="submitButton" id="btnSave">#request.content.form_save#</button>
 		<button type="reset" class="resetButton" id="btnReset">#request.content.form_reset#</button>
-		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';">#request.content.form_cancel#</button>
+		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';return false;">#request.content.form_cancel#</button>
 	</div>
 </form>
 </cfoutput>
