@@ -6,11 +6,11 @@
 		Each record has a link for viewing, deleting, and editing the selected core_security_users_roles_rel record.
 	</responsibilities>
 	<properties>
-		<history author="Kevin Roche" email="kevin@objectiveinternet.com" date="12-May-2008" role="Architect" type="Create" />
+		<history author="Kevin Roche" email="kevin@objectiveinternet.com" date="31-May-2008" role="Architect" type="Create" />
 		<property name="copyright" value="(c)2008 Objective Internet Limited." />
 		<property name="licence" value="See licence.txt" />
-		<property name="version" value="$Revision: 205 $" />
-		<property name="lastupdated" value="$Date: 2008-03-09 12:47:41 +0100 (So, 09 Mrz 2008) 2008/05/12 14:12:01 $" />
+		<property name="version" value="$Revision: 337 $" />
+		<property name="lastupdated" value="$Date: 2008-05-31 13:51:47 +0200 (Sa, 31 Mai 2008) 2008/05/31 14:33:58 $" />
 		<property name="updatedby" value="$Author: majestixs $" />
 	</properties>
 	<io>
@@ -63,7 +63,7 @@
 <cfparam name="variables.fieldlist" default="role_id,user_id">
 </cfsilent>
 <cfoutput>
-<h3>#request.content['__globalmodule__navigation__#request.page.objectName#_Listing']#</h3>
+<h3>#request.content['__globalmodule__navigation__#request.page.objectName#_listing']#</h3>
 <script type="text/javascript">
 	Ext.onReady(function(){
 		
@@ -72,13 +72,13 @@
 	    var sm = new xg.CheckboxSelectionModel();
         
         var action = new Ext.ux.grid.RowActions({
-			header:'Actions',
+			header:'#jsStringFormat(request.content.core_security_users_roles_rel_grid_header__rowactions)#',
 			actions:[{
 				iconCls:'icon-edit-record',
-				tooltip:'Edit'
+				tooltip:'#jsStringFormat(request.content.core_security_users_roles_rel_grid_row_edit)#'
 			},{
 				iconCls:'icon-delete-record',
-				tooltip:'Delete'
+				tooltip:'#jsStringFormat(request.content.core_security_users_roles_rel_grid_row_delete)#'
 			}]
 		});
 		
@@ -150,7 +150,8 @@
 	        
 	        bbar: new Ext.PagingToolbar({
 	            pageSize: 20,
-	            store: ds
+	            store: ds,
+	            displayInfo: true
 	        })
 	    });
 		

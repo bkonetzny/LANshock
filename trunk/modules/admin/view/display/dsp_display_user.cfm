@@ -5,11 +5,11 @@
 		I display a single user record from an object, a structure, a query or from attributes scope.
 	</responsibilities>
 	<properties>
-		<history author="Kevin Roche" email="kevin@objectiveinternet.com" date="12-May-2008" role="Architect" type="Create" />
+		<history author="Kevin Roche" email="kevin@objectiveinternet.com" date="31-May-2008" role="Architect" type="Create" />
 		<property name="copyright" value="(c)2008 Objective Internet Limited." />
 		<property name="licence" value="See licence.txt" />
 		<property name="version" value="$Revision: 205 $" />
-		<property name="lastupdated" value="$Date: 2008-03-09 12:47:41 +0100 (So, 09 Mrz 2008) 2008/05/12 14:12:09 $" />
+		<property name="lastupdated" value="$Date: 2008-03-09 12:47:41 +0100 (So, 09 Mrz 2008) 2008/05/31 14:34:04 $" />
 		<property name="updatedby" value="$Author: majestixs $" />
 	</properties>
 	<io>
@@ -49,6 +49,7 @@
 				<string name="reset_password_key" />
 				<string name="openid_url" />
 				<string name="geo_latlong" />
+				<integer name="data_access" />
 				
 			</structure>
 			
@@ -77,6 +78,7 @@
 				<string name="reset_password_key" />
 				<string name="openid_url" />
 				<string name="geo_latlong" />
+				<integer name="data_access" />
 				
 				
 			</recordset>
@@ -104,6 +106,7 @@
 			<string name="reset_password_key" scope="attributes" optional="Yes" comments="Not used if ouser, stuser or quser is provided." />
 			<string name="openid_url" scope="attributes" optional="Yes" comments="Not used if ouser, stuser or quser is provided." />
 			<string name="geo_latlong" scope="attributes" optional="Yes" comments="Not used if ouser, stuser or quser is provided." />
+			<integer name="data_access" scope="attributes" optional="Yes" comments="Not used if ouser, stuser or quser is provided." />
 			
 				
 			<array name="aErrors" scope="variables" optional="Yes" Created by Reactor Validation. Present when an error has been found with server validation and passes back from action." >
@@ -131,7 +134,7 @@
 <cfset stJoinedFields = StructNew()>
 <!--- Set the complete list of Local Variables which can be used to populate the display. --->
 <!--- The sequence can be rearranged to display the fields required in any order. --->
-<cfparam name="variables.fieldlist" default="id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong,">
+<cfparam name="variables.fieldlist" default="id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong,data_access,">
 <cfset _joinedFieldlist="">
 <cfif isDefined("ouser")>
 	<!--- Get variables from the object. --->
@@ -515,6 +518,20 @@
 					</th>
 					<td>
 						#Trim(variables.geo_latlong)#
+					</td>
+				</tr>
+			</cfcase>
+			<cfcase value="data_access">
+				<tr>
+				  <cfif ListFindNocase(highlightfields,'data_access')>
+					<th align="left" class="highlight">
+				  <cfelse>
+					<th align="left" class="standard">
+				  </cfif>
+						Data access
+					</th>
+					<td>
+						#NumberFormat(variables.data_access,"9")#
 					</td>
 				</tr>
 			</cfcase>

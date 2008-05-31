@@ -29,8 +29,8 @@
 	<cfelse>
 		
 		<cfset ocore_navigation.setmodule(attributes.module)>
-		<cfset ocore_navigation.setpermissions(attributes.permissions)>
 		<cfset ocore_navigation.setaction(attributes.action)>
+		<cfset ocore_navigation.setpermissions(attributes.permissions)>
 		<cfset ocore_navigation.setlevel(attributes.level)>
 		<cfset ocore_navigation.setsortorder(attributes.sortorder)>
 	</cfif>
@@ -63,4 +63,5 @@
 			<cfoutput>#request.page.pageContent#</cfoutput>
 			<cfinclude template="../../view/form/dsp_form_core_navigation.cfm">
 		</cfsavecontent>
+		<cfoutput>#request.page.pageContent#</cfoutput>
 	</cfif>

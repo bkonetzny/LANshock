@@ -116,8 +116,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_B66BAD5021AB4018846E6527F9C9173B"><em>*</em> #request.content.core_security_users_roles_rel_rowtype_label_role_id#</label>
-		<input type="text" class="textInput" name="role_id" id="formrow_B66BAD5021AB4018846E6527F9C9173B" value="#NumberFormat(ocore_security_users_roles_rel.getrole_id(),"9")#"/>
+		<label for="formrow_7F86A6D2F697463BB8254D12C9E72C18"><em>*</em> #request.content.core_security_users_roles_rel_rowtype_label_role_id#</label>
+		<input type="text" class="textInput" name="role_id" id="formrow_7F86A6D2F697463BB8254D12C9E72C18" value="#NumberFormat(ocore_security_users_roles_rel.getrole_id(),"9")#"/>
 	</div>
 				
 			
@@ -130,8 +130,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_2E99C32ACDAC4D45BA5FB0ED93DD2749"><em>*</em> #request.content.core_security_users_roles_rel_rowtype_label_user_id#</label>
-		<input type="text" class="textInput" name="user_id" id="formrow_2E99C32ACDAC4D45BA5FB0ED93DD2749" value="#NumberFormat(ocore_security_users_roles_rel.getuser_id(),"9")#"/>
+		<label for="formrow_3EB4CD3454C340EAB7EE8BD19218481C"><em>*</em> #request.content.core_security_users_roles_rel_rowtype_label_user_id#</label>
+		<input type="text" class="textInput" name="user_id" id="formrow_3EB4CD3454C340EAB7EE8BD19218481C" value="#NumberFormat(ocore_security_users_roles_rel.getuser_id(),"9")#"/>
 	</div>
 				
 			
@@ -186,7 +186,7 @@
 	<div class="buttonHolder">
 		<button type="submit" class="submitButton" id="btnSave">#request.content.form_save#</button>
 		<button type="reset" class="resetButton" id="btnReset">#request.content.form_reset#</button>
-		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';">#request.content.form_cancel#</button>
+		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';return false;">#request.content.form_cancel#</button>
 	</div>
 </form>
 </cfoutput>

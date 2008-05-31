@@ -121,8 +121,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_39EC986B9DDC4F0291B8C63852D8A16F"><em>*</em> #request.content.core_security_roles_permissions_rel_rowtype_label_permission_id#</label>
-		<input type="text" class="textInput" name="permission_id" id="formrow_39EC986B9DDC4F0291B8C63852D8A16F" value="#NumberFormat(ocore_security_roles_permissions_rel.getpermission_id(),"9.99")#"/>
+		<label for="formrow_EEA9B61B24604589928AF82506215698"><em>*</em> #request.content.core_security_roles_permissions_rel_rowtype_label_permission_id#</label>
+		<input type="text" class="textInput" name="permission_id" id="formrow_EEA9B61B24604589928AF82506215698" value="#NumberFormat(ocore_security_roles_permissions_rel.getpermission_id(),"9.99")#"/>
 	</div>
 				
 			
@@ -135,8 +135,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_973B8F7715A34050AB024838F5234B50"><em>*</em> #request.content.core_security_roles_permissions_rel_rowtype_label_role_id#</label>
-		<input type="text" class="textInput" name="role_id" id="formrow_973B8F7715A34050AB024838F5234B50" value="#NumberFormat(ocore_security_roles_permissions_rel.getrole_id(),"9.99")#"/>
+		<label for="formrow_9977C6BC2511483B8C06A4DA69246304"><em>*</em> #request.content.core_security_roles_permissions_rel_rowtype_label_role_id#</label>
+		<input type="text" class="textInput" name="role_id" id="formrow_9977C6BC2511483B8C06A4DA69246304" value="#NumberFormat(ocore_security_roles_permissions_rel.getrole_id(),"9.99")#"/>
 	</div>
 				
 			
@@ -149,8 +149,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_A896D0BC6AF142F88E6C161DBA52368B"><em>*</em> #request.content.core_security_roles_permissions_rel_rowtype_label_id#</label>
-		<input type="text" class="textInput" name="id" id="formrow_A896D0BC6AF142F88E6C161DBA52368B" value="#NumberFormat(ocore_security_roles_permissions_rel.getid(),"9")#"/>
+		<label for="formrow_049C028EA4D040349A4DD2343CC77FBC"><em>*</em> #request.content.core_security_roles_permissions_rel_rowtype_label_id#</label>
+		<input type="text" class="textInput" name="id" id="formrow_049C028EA4D040349A4DD2343CC77FBC" value="#NumberFormat(ocore_security_roles_permissions_rel.getid(),"9")#"/>
 	</div>
 				
 			
@@ -205,7 +205,7 @@
 	<div class="buttonHolder">
 		<button type="submit" class="submitButton" id="btnSave">#request.content.form_save#</button>
 		<button type="reset" class="resetButton" id="btnReset">#request.content.form_reset#</button>
-		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';">#request.content.form_cancel#</button>
+		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';return false;">#request.content.form_cancel#</button>
 	</div>
 </form>
 </cfoutput>

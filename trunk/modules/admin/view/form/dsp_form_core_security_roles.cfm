@@ -121,9 +121,9 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="id" id="formrow_B3CCD98AB09D437AA08AC586D0E78085" value="#ocore_security_roles.getid()#" />
+	<input type="hidden" name="id" id="formrow_7EC128104CCE4633A535FCDE27F651E6" value="#ocore_security_roles.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_B3CCD98AB09D437AA08AC586D0E78085">#request.content.core_security_roles_rowtype_label_id#</label>
+		<label for="formrow_7EC128104CCE4633A535FCDE27F651E6">#request.content.core_security_roles_rowtype_label_id#</label>
 		#NumberFormat(ocore_security_roles.getid(),"9.99")#
 	</div>
 	</cfif>
@@ -138,8 +138,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_E330293735014437AFB60CBADD1CFA68"><em>*</em> #request.content.core_security_roles_rowtype_label_name#</label>
-		<input type="text" class="textInput" name="name" id="formrow_E330293735014437AFB60CBADD1CFA68" value="#Trim(ocore_security_roles.getname())#"/>
+		<label for="formrow_EAF46ECCC28540C49409D59082179047"><em>*</em> #request.content.core_security_roles_rowtype_label_name#</label>
+		<input type="text" class="textInput" name="name" id="formrow_EAF46ECCC28540C49409D59082179047" value="#Trim(ocore_security_roles.getname())#"/>
 	</div>
 				
 			
@@ -151,7 +151,7 @@
 					
 
 	
-	<input type="hidden" name="module" id="formrow_BC786C5945484B4E90A117827CC7E1FF" value="#ocore_security_roles.getmodule()#" />
+	<input type="hidden" name="module" id="formrow_9D248148A17340AAA0D0734391512375" value="#ocore_security_roles.getmodule()#" />
 				
 			
 			
@@ -176,8 +176,8 @@
 	
 		<cfset lRelcore_security_roles_permissions_rel = ocore_security_roles.getcore_security_roles_permissions_reliterator().getValueList('permission_id')>
 		<div class="ctrlHolder">
-			<label for="formrow_AD14986C457648D89B120019E5177FB0">core_security_roles_permissions_rel</label>
-			<select class="selectInput" name="core_security_roles_permissions_rel" id="formrow_AD14986C457648D89B120019E5177FB0" multiple="multiple" size="6">
+			<label for="formrow_4A772A06AA5F4CE190DD31D0503D095C">core_security_roles_permissions_rel</label>
+			<select class="selectInput" name="core_security_roles_permissions_rel" id="formrow_4A772A06AA5F4CE190DD31D0503D095C" multiple="multiple" size="6">
 				<option value=""></option>
 				<cfloop query="stRelated.stManyToMany.core_security_roles_permissions_rel.qData">
 					<option value="#stRelated.stManyToMany.core_security_roles_permissions_rel.qData.optionvalue#"<cfif ListFind(lRelcore_security_roles_permissions_rel,stRelated.stManyToMany.core_security_roles_permissions_rel.qData.optionvalue)> selected="selected"</cfif>>#stRelated.stManyToMany.core_security_roles_permissions_rel.qData.optionname#</option>
@@ -198,8 +198,8 @@
 	
 		<cfset lRelcore_security_users_roles_rel = ocore_security_roles.getcore_security_users_roles_reliterator().getValueList('user_id')>
 		<div class="ctrlHolder">
-			<label for="formrow_C6D8CD7E43084E8DAF461DBFB9E29D30">core_security_users_roles_rel</label>
-			<select class="selectInput" name="core_security_users_roles_rel" id="formrow_C6D8CD7E43084E8DAF461DBFB9E29D30" multiple="multiple" size="6">
+			<label for="formrow_2650D3F79D6740378A3CA6D2AD583939">core_security_users_roles_rel</label>
+			<select class="selectInput" name="core_security_users_roles_rel" id="formrow_2650D3F79D6740378A3CA6D2AD583939" multiple="multiple" size="6">
 				<option value=""></option>
 				<cfloop query="stRelated.stManyToMany.core_security_users_roles_rel.qData">
 					<option value="#stRelated.stManyToMany.core_security_users_roles_rel.qData.optionvalue#"<cfif ListFind(lRelcore_security_users_roles_rel,stRelated.stManyToMany.core_security_users_roles_rel.qData.optionvalue)> selected="selected"</cfif>>#stRelated.stManyToMany.core_security_users_roles_rel.qData.optionname#</option>
@@ -219,7 +219,7 @@
 	<div class="buttonHolder">
 		<button type="submit" class="submitButton" id="btnSave">#request.content.form_save#</button>
 		<button type="reset" class="resetButton" id="btnReset">#request.content.form_reset#</button>
-		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';">#request.content.form_cancel#</button>
+		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';return false;">#request.content.form_cancel#</button>
 	</div>
 </form>
 </cfoutput>

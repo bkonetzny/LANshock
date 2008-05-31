@@ -106,9 +106,43 @@
 					
 
 	
+	<cfif mode EQ "edit">
+	<input type="hidden" name="module" id="formrow_8C7745B9F29C4B61BE3A05A9F1C17840" value="#ocore_navigation.getmodule()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_277B5AC383F64AED89AC09775F4EAAD3"><em>*</em> #request.content.core_navigation_rowtype_label_module#</label>
-		<textarea name="module" id="formrow_277B5AC383F64AED89AC09775F4EAAD3">#Trim(ocore_navigation.getmodule())#</textarea>
+		<label for="formrow_8C7745B9F29C4B61BE3A05A9F1C17840">#request.content.core_navigation_rowtype_label_module#</label>
+		#Trim(ocore_navigation.getmodule())#
+	</div>
+	</cfif>
+				
+			
+			
+				
+				
+				
+				
+					
+
+	
+	<cfif mode EQ "edit">
+	<input type="hidden" name="action" id="formrow_644A2FA708B14DE4BD5900611147D263" value="#ocore_navigation.getaction()#" />
+	<div class="ctrlHolder">
+		<label for="formrow_644A2FA708B14DE4BD5900611147D263">#request.content.core_navigation_rowtype_label_action#</label>
+		#Trim(ocore_navigation.getaction())#
+	</div>
+	</cfif>
+				
+			
+			
+				
+				
+				
+				
+					
+
+	
+	<div class="ctrlHolder">
+		<label for="formrow_01F2626464B44CA3B445E62EFCC72251"><em>*</em> #request.content.core_navigation_rowtype_label_permissions#</label>
+		<input type="text" class="textInput" name="permissions" id="formrow_01F2626464B44CA3B445E62EFCC72251" value="#Trim(ocore_navigation.getpermissions())#"/>
 	</div>
 				
 			
@@ -121,8 +155,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_0E64C2B2A17749D08AF0282954369BD8"><em>*</em> #request.content.core_navigation_rowtype_label_permissions#</label>
-		<textarea name="permissions" id="formrow_0E64C2B2A17749D08AF0282954369BD8">#Trim(ocore_navigation.getpermissions())#</textarea>
+		<label for="formrow_297E85948384420EB8075CC86D7830F7"><em>*</em> #request.content.core_navigation_rowtype_label_level#</label>
+		<input type="text" class="textInput" name="level" id="formrow_297E85948384420EB8075CC86D7830F7" value="#NumberFormat(ocore_navigation.getlevel(),"9")#"/>
 	</div>
 				
 			
@@ -135,36 +169,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_568E508E542F42AD90DF5F1A79637C61"><em>*</em> #request.content.core_navigation_rowtype_label_action#</label>
-		<textarea name="action" id="formrow_568E508E542F42AD90DF5F1A79637C61">#Trim(ocore_navigation.getaction())#</textarea>
-	</div>
-				
-			
-			
-				
-				
-				
-				
-					
-
-	
-	<div class="ctrlHolder">
-		<label for="formrow_F20B7BB0573B4924A3C8782CB6437F05"><em>*</em> #request.content.core_navigation_rowtype_label_level#</label>
-		<input type="text" class="textInput" name="level" id="formrow_F20B7BB0573B4924A3C8782CB6437F05" value="#NumberFormat(ocore_navigation.getlevel(),"9")#"/>
-	</div>
-				
-			
-			
-				
-				
-				
-				
-					
-
-	
-	<div class="ctrlHolder">
-		<label for="formrow_1D3162A2D4244F81AE6A816CB40E7525"><em>*</em> #request.content.core_navigation_rowtype_label_sortorder#</label>
-		<input type="text" class="textInput" name="sortorder" id="formrow_1D3162A2D4244F81AE6A816CB40E7525" value="#NumberFormat(ocore_navigation.getsortorder(),"9")#"/>
+		<label for="formrow_F697EF9F8ADC4567AC073C31C98E80A2"><em>*</em> #request.content.core_navigation_rowtype_label_sortorder#</label>
+		<input type="text" class="textInput" name="sortorder" id="formrow_F697EF9F8ADC4567AC073C31C98E80A2" value="#NumberFormat(ocore_navigation.getsortorder(),"9")#"/>
 	</div>
 				
 			
@@ -178,7 +184,7 @@
 	<div class="buttonHolder">
 		<button type="submit" class="submitButton" id="btnSave">#request.content.form_save#</button>
 		<button type="reset" class="resetButton" id="btnReset">#request.content.form_reset#</button>
-		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';">#request.content.form_cancel#</button>
+		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';return false;">#request.content.form_cancel#</button>
 	</div>
 </form>
 </cfoutput>
