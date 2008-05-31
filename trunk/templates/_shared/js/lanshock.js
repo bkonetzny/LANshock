@@ -8,7 +8,7 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 75 $
 */
 
-LANshock={
+LANshock = {
 	properties:{
 		self:"",
 		myself:"",
@@ -18,47 +18,18 @@ LANshock={
 		return LANshock.properties;
 	},
 	getVar:function(key){
-		return LANshock.properties[key];
+		return this.properties[key];
 	},
 	setVar:function(key,value){
-		LANshock.properties[key] = value;
+		this.properties[key] = value;
+	},
+	openWindow:function(sUrl,sName,iWidth,iHeight){
+		if(typeof(iWidth) == 'undefined') iWidth = 800;
+		if(typeof(iHeight) == 'undefined') iHeight = 600;
+		window.open(sUrl,sName,"width="+iWidth+",height="+iHeight+",locationbar=0,menubar=0,resizable=0,scrollbars=1,status=0");
+	},
+	userSendMessage:function(iUserID){
+		var sUrl = this.getVar('myself')+'mail.message_dialog/user_id='+iUserID+'/'+this.getVar('sessionUrlToken');
+		this.openWindow(sUrl,"NewMessage",300,300);
 	}
-}
-
-function clipboardSet(text){
-	window.clipboardData.setData('Text',text);
-}
-
-function clipboardGet(){
-	return window.clipboardData.getData('Text');
-}
-
-function validateCommentsForm(uuidFormName,sErrorMessage){
-	var oElmTitle = document.getElementById(uuidFormName+'title');
-	var oElmText = document.getElementById('text');
-	var oEditor = FCKeditorAPI.GetInstance('text');
-	oEditor.UpdateLinkedField();
-	if(oElmTitle.value == '' || oElmText.value == '' ){
-		alert(sErrorMessage);
-		return false;
-	}
-	else return true;
-}
-
-function SendMsg(iUserID){
-	var myself = LANshock.getVar('myself');
-	var sessionUrlToken = LANshock.getVar('sessionUrlToken');
-	window.open(myself+'mail.message_dialog&user_id='+iUserID+'&'+sessionUrlToken,
-				"NewMessage",
-				"height=300,width=300,left=340,top=20,locationbar=0,menubar=0,resizable=0,scrollbars=1,status=0"
-	);
-}
-
-function showLANshockCode(){
-	var myself = LANshock.getVar('myself');
-	var sessionUrlToken = LANshock.getVar('sessionUrlToken');
-	window.open(myself+'general.lanshock_code_popup&'+sessionUrlToken,
-				"LANshockCode",
-				"height=450,width=600,left=20,top=20,locationbar=0,menubar=0,resizable=1,scrollbars=1,status=0"
-	);
 }
