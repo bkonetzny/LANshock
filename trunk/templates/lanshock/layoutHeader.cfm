@@ -9,8 +9,28 @@ $LastChangedBy$
 $LastChangedRevision$
 --->
 
-<cfoutput><cfset getPageContext().getOut().clearBuffer()>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<cfset qNavigation = application.lanshock.oModules.getNavigation(lang=session.lang)>
+
+<cfquery name="qCurrentModule" dbtype="query">
+	SELECT *
+	FROM qNavigation
+	WHERE module = '#myfusebox.thiscircuit#'
+</cfquery>
+
+<cfquery name="qCurrentModuleSubnavi" dbtype="query">
+	SELECT *
+	FROM qCurrentModule
+	WHERE module = '#myfusebox.thiscircuit#'
+	AND level > 1
+</cfquery>
+
+<cfquery name="qPrimaryNavigation" dbtype="query">
+	SELECT *
+	FROM qNavigation
+	WHERE level = 1
+</cfquery>
+
+<cfcontent type="text/html; charset=UTF-8" reset="true"><cfoutput><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
 	<cfinclude template="../header.inc.cfm">
@@ -22,28 +42,27 @@ $LastChangedRevision$
 		<tr>
 			<td valign="top">
 				<div id="sidebar">
-					<cfif request.session.UserLoggedIn>
-						<h1>#getUsernameById(request.session.userid)#</h1>
+					<cfif session.oUser.isLoggedIn()>
+						<h1>#application.lanshock.oHelper.getUsernameById(session.userid)#</h1>
 						<ul>
-							<li><a href="#myself##request.lanshock.settings.modulePrefix.core#user.userdetails&#request.session.UrlToken#">#stNav[request.lanshock.settings.modulePrefix.core & 'user'].sub[2].name#</a></li>
+							<li><a href="#application.lanshock.oHelper.buildUrl('user.userdetails')#">$$$ Profile</a></li>
 							<li><a href="javascript:Panel();">#request.content.template_show_panel#</a></li>
-							<li><a href="#myself##request.lanshock.settings.modulePrefix.core#mail.main&#request.session.UrlToken#">#stNav[request.lanshock.settings.modulePrefix.core & 'mail'].name#</a></li>
-							<li><a href="#myself##request.lanshock.settings.modulePrefix.core#team.main&#request.session.UrlToken#">#stNav[request.lanshock.settings.modulePrefix.core & 'team'].name#</a></li>
-							<li><a href="#myself##request.lanshock.settings.modulePrefix.core#user.logout&#request.session.UrlToken#">#stNav[request.lanshock.settings.modulePrefix.core & 'user'].sub[3].name#</a></li>
+							<li><a href="#application.lanshock.oHelper.buildUrl('mail.main')#">$$$ Mail</a></li>
+							<li><a href="#application.lanshock.oHelper.buildUrl('user.logout')#">$$$ Logout</a></li>
 						</ul>
 					<cfelse>
 						<h1>#request.content.template_profile#</h1>
 						<ul>
-							<li><a href="#myself##request.lanshock.settings.modulePrefix.core#user.login&#request.session.UrlToken#">#request.content.template_login#</a></li>
+							<li><a href="#application.lanshock.oHelper.buildUrl('user.login')#">#request.content.template_login#</a></li>
 						</ul>
 					</cfif>
 					
-					<cfif StructKeyExists(stNav,myfusebox.thiscircuit)>
-						<h1><a href="#myself##myfusebox.thiscircuit#.#stNav[myfusebox.thiscircuit].action#&#request.session.UrlToken#">#stNav[myfusebox.thiscircuit].name#</a></h1>
+					<cfif qCurrentModule.recordcount>
+						<h1><a href="#application.lanshock.oHelper.buildUrl('#qCurrentModule.module[1]#.#qCurrentModule.action[1]#')#">#qCurrentModule.label[1]#</a></h1>
 						<ul>
-						<cfif (stNav[myfusebox.thiscircuit].reqlogin AND request.session.userloggedin OR NOT stNav[myfusebox.thiscircuit].reqlogin)>
-							<cfloop list="#ListSort(StructKeyList(stNav[myfusebox.thiscircuit].sub),'numeric')#" index="idx">
-								<li<cfif stNav[myfusebox.thiscircuit].sub[idx].reqstatus EQ 'admin'> class="admin"</cfif>><a href="#myself##myfusebox.thiscircuit#.#stNav[myfusebox.thiscircuit].sub[idx].action#&#request.session.UrlToken#">#stNav[myfusebox.thiscircuit].sub[idx].name#</a></li>
+						<cfif qCurrentModuleSubnavi.recordcount	AND (NOT len(qCurrentModule.permissions) OR session.oUser.checkPermissions(qCurrentModule.permissions,qCurrentModule.module))>
+							<cfloop query="qCurrentModuleSubnavi">
+								<li<cfif qCurrentModuleSubnavi.permissions EQ 'admin'> class="admin"</cfif>><a href="#application.lanshock.oHelper.buildUrl('#qCurrentModuleSubnavi.module#.#qCurrentModuleSubnavi.action#')#">#qCurrentModuleSubnavi.label#</a></li>
 							</cfloop>
 						</cfif>
 						</ul>
@@ -51,25 +70,23 @@ $LastChangedRevision$
 					
 					<h1>#request.content.template_navigation#</h1>
 					<ul>
-					<cfif request.session.isAdmin>
-						<cfset idx = '#request.lanshock.settings.modulePrefix.core#admin'>
-						<li class="admin"><a href="#myself##idx#.#stNav[idx].action#&#request.session.UrlToken#">#stNav[idx].name#</a></li>
+					<cfif session.isAdmin>
+						<cfset idx = 'c_admin'>
+						<li class="admin"><a href="#application.lanshock.oHelper.buildUrl('#idx#.#stNav[idx].action#')#">#stNav[idx].name#</a></li>
 					</cfif>
-					<cfloop from="1" to="#ArrayLen(aNav)#" index="idxArray">
-						<cfset idx = aNav[idxArray]>
-						<cfif stNav[idx].type EQ 'module' AND (stNav[idx].reqlogin AND request.session.UserLoggedIn OR NOT stNav[idx].reqLogin)>
-							<li><a href="#myself##idx#.#stNav[idx].action#&#request.session.UrlToken#" title="#stNav[idx].name#">#stNav[idx].name#</a></li>
+					<cfloop query="qPrimaryNavigation">
+						<cfif NOT len(qPrimaryNavigation.permissions) OR session.oUser.checkPermissions(qPrimaryNavigation.permissions,qPrimaryNavigation.module)>
+							<li><a href="#application.lanshock.oHelper.buildUrl('#qPrimaryNavigation.module#.#qPrimaryNavigation.action#')#" title="#qPrimaryNavigation.label#">#qPrimaryNavigation.label#</a></li>
 						</cfif>
 					</cfloop>
 					</ul>
-					
+
 					<h1>#request.content.template_info#</h1>
 					<ul>
-						<li><a href="#myself##request.lanshock.settings.modulePrefix.core#general.info&#request.session.UrlToken#">#stNav[request.lanshock.settings.modulePrefix.core & 'general'].name#</a></li>
-						<!--- <li><a href="#myself##request.lanshock.settings.modulePrefix.core#setup.main&#request.session.UrlToken#">#stNav[request.lanshock.settings.modulePrefix.core & 'setup'].name#</a></li> --->
-						<li><a href="#myself##request.lanshock.settings.modulePrefix.core#general.online&#request.session.UrlToken#"><strong>#request.content.template_online_user# #request.application.sessions.iActiveSessions#<cfif request.application.sessions.iOnlineGuest GT 0> <em>(#request.content.template_online_guests# #request.application.sessions.iOnlineGuest#)</em></cfif></strong></a></li>
-						<li><a href="#myself##request.lanshock.settings.modulePrefix.core#general.language&#request.session.UrlToken#">#GetLocaleDisplayName(request.session.lang)#</a></li>
-						<li>#UDF_DateTimeFormat(now())#</li>
+						<li><a href="#application.lanshock.oHelper.buildUrl('general.info')#">LANshock</a></li>
+						<li><a href="#application.lanshock.oHelper.buildUrl('general.online')#"><strong>#request.content.template_online_user# #application.lanshock.oSessionmanager.getSessionCount()#</a></li>
+						<li><a href="#application.lanshock.oHelper.buildUrl('general.language')#">#GetLocaleDisplayName(session.lang)#</a></li>
+						<li>#session.oUser.dateTimeFormat(now(),'datetime')#</li>
 					</ul>
 				</div>
 			</td>
