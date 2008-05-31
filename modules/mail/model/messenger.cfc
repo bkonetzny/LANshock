@@ -13,16 +13,16 @@ $LastChangedRevision: 55 $
 	<cffunction name="getMessage" access="public" returntype="query" output="false">
 		<cfargument name="user_id" required="true" type="numeric">
 		<cfargument name="id" required="true" type="numeric">
-
+		
 		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qMessage">
-			SELECT m.*, u.name AS buddyname, u.id AS buddyid
-			FROM core_mail_message m, user u
+			SELECT m.*, u_from.name AS username_from, u_to.name AS username_to
+			FROM core_mail_message m
+			INNER JOIN user u_from ON m.user_id_from = u_from.id
+			INNER JOIN user u_to ON m.user_id_to = u_to.id
 			WHERE m.id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.id#" maxlength="11">
-			AND(
-				m.user_id_to = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.user_id#" maxlength="11">
+			AND (m.user_id_to = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.user_id#" maxlength="11">
 				OR m.user_id_from = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.user_id#" maxlength="11">
 			)
-			AND m.user_id_from = u.id
 		</cfquery>
 		
 		<cfif qMessage.recordcount AND qMessage.isnew AND qMessage.user_id_to EQ arguments.user_id>
@@ -45,13 +45,10 @@ $LastChangedRevision: 55 $
 		<cfargument name="newonly" required="false" type="boolean" default="0">
 
 		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qMessages">
-			SELECT m.*, u.name AS buddyname
+			SELECT m.*, u_from.name AS username_from, u_to.name AS username_to
 			FROM core_mail_message m
-			INNER JOIN user u ON <cfif NOT arguments.mailtype>
-					m.user_id_from = u.id
-				<cfelse>
-					m.user_id_to = u.id
-				</cfif>
+			INNER JOIN user u_from ON m.user_id_from = u_from.id
+			INNER JOIN user u_to ON m.user_id_to = u_to.id
 			<cfif NOT arguments.mailtype>
 				WHERE m.user_id_to = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.user_id#" maxlength="11">
 			<cfelse>

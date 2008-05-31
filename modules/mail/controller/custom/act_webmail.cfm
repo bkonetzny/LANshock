@@ -13,7 +13,7 @@ $LastChangedRevision: 55 $
 <cfparam name="attributes.action_getheaders" default="false">
 <cfparam name="attributes.action_getheader" default="">
 
-<cfinvoke component="messenger" method="getWebmailAccounts" returnvariable="qAccounts">
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.mail.model.messenger')#" method="getWebmailAccounts" returnvariable="qAccounts">
 	<cfinvokeargument name="user_id" value="#session.userid#">
 </cfinvoke>
 

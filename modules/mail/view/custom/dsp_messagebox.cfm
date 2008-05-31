@@ -9,13 +9,12 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 60 $
 --->
 
-<cfscript>
-	if(NOT attributes.mailtype) headline = request.content.inbox;
-	else headline = request.content.outbox;
-</cfscript>
-
 <cfoutput>
-	<h3>#headline#</h3>
+	<cfif NOT attributes.mailtype>
+		<h3>#request.content.inbox#</h3>
+	<cfelse>
+		<h3>#request.content.outbox#</h3>
+	</cfif>
 	
 	<ul class="options">
 		<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.message_new')#">#request.content.create_new_message#</a></li>
@@ -42,14 +41,16 @@ $LastChangedRevision: 60 $
 			<cfelse>
 				<cfset sTopic = qMessages.title>
 			</cfif>
-			<cfif attributes.mailtype>
-				<cfset iUserID = qMessages.user_id_to>
-			<cfelse>
+			<cfif NOT attributes.mailtype>
 				<cfset iUserID = qMessages.user_id_from>
+				<cfset sUsername = qMessages.username_from>
+			<cfelse>
+				<cfset iUserID = qMessages.user_id_to>
+				<cfset sUsername = qMessages.username_to>
 			</cfif>
 			<tr>
 				<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.message&id=#qMessages.id#&mailtype=#attributes.mailtype#')#"><cfif qMessages.isNew><strong>#sTopic#</strong><cfelse>#sTopic#</cfif></a></td>
-				<td><a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#iUserID#')#">#qMessages.buddyname#</a></td>
+				<td><a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#iUserID#')#">#sUsername#</a></td>
 				<td>#session.oUser.dateTimeFormat(qMessages.datetime)#</td>
 				<cfif NOT attributes.mailtype><td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.mail_del&id=#qMessages.id#')#"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/delete.png" alt=""></a></td></cfif>
 			</tr>

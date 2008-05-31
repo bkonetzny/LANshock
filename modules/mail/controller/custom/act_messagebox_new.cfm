@@ -16,7 +16,7 @@ $LastChangedRevision: 55 $
 
 <cfif attributes.form_submitted AND len(attributes.user_id)>
 	<cfloop list="#attributes.user_id#" index="idx">
-		<cfinvoke component="messenger" method="sendMessage">
+		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.mail.model.messenger')#" method="sendMessage">
 			<cfinvokeargument name="user_id_from" value="#session.userid#">
 			<cfinvokeargument name="user_id_to" value="#idx#">
 			<cfinvokeargument name="title" value="#attributes.title#">
@@ -27,7 +27,7 @@ $LastChangedRevision: 55 $
 	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.outbox')#" addtoken="false">
 </cfif>
 
-<cfinvoke component="messenger" method="getBuddylist" returnvariable="qBuddylist">
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.mail.model.messenger')#" method="getBuddylist" returnvariable="qBuddylist">
 	<cfinvokeargument name="user_id" value="#session.userid#">
 </cfinvoke>
 
