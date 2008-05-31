@@ -13,7 +13,7 @@ $LastChangedRevision: 298 $
 	<h3>#request.content.serverdata#</h3>
 
 	<h4>#request.content.installed_versions#</h4>
-
+		
 	<table class="vlist">
 		<tr>
 			<th>#request.content.lanshock_version#</th>
@@ -25,7 +25,7 @@ $LastChangedRevision: 298 $
 		</tr>
 		<tr>
 			<th>#request.content.application_started#</th>
-			<td>#session.oUser.dateTimeFormat(application.lanshock.dtAppStart)# (#DateDiff('n',application.lanshock.dtAppStart,now())# Minutes)</td>
+			<td>#session.oUser.dateTimeFormat(application.lanshock.dtAppStart)# (#timeSpanConvert(DateDiff('s',application.lanshock.dtAppStart,now()))#)</td>
 		</tr>
 		<tr>
 			<th>#request.content.path_abs#</th>
@@ -38,6 +38,10 @@ $LastChangedRevision: 298 $
 		<tr>
 			<th>#request.content.component_path#</th>
 			<td>#application.lanshock.oRuntime.getEnvironment().sComponentPath#</td>
+		</tr>
+		<tr>
+			<th><!--- TODO: $$$ ---> LANshock Cache Size</th>
+			<td>#byteConvert(application.lanshock.oCache.size(),'MB')#</td>
 		</tr>
 		<tr>
 			<th>#request.content.fusebox_version#</th>
@@ -87,7 +91,7 @@ $LastChangedRevision: 298 $
 		</tr>
 		<tr>
 			<th><!--- TODO: $$$ ---> JVM Starttime</th>
-			<td><cfif ListGetAt(sJavaVersion,2,'.') GTE 6>#session.oUser.DateTimeFormat(oDate.init(oManagementFactory.getRuntimeMXBean().getStartTime()))# (#DateDiff('n',oDate.init(oManagementFactory.getRuntimeMXBean().getStartTime()),now())# Minutes)<cfelse>unknown (Java 1.6+ needed)</cfif></td>
+			<td><cfif ListGetAt(sJavaVersion,2,'.') GTE 6>#session.oUser.DateTimeFormat(oDate.init(oManagementFactory.getRuntimeMXBean().getStartTime()))# (#timeSpanConvert(DateDiff('s',oDate.init(oManagementFactory.getRuntimeMXBean().getStartTime()),now()))#)<cfelse>unknown (Java 1.6+ needed)</cfif></td>
 		</tr>
 		<!--- <tr>
 			<th><!--- TODO: $$$ ---> JVM System Encoding</th>
@@ -114,49 +118,32 @@ $LastChangedRevision: 298 $
 		#request.content.application_reload_time_txt#
 	</p>
 
-	<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post">
-	<input type="hidden" name="form_submitted_application" value="true"/>
-	<div class="form">
-		<div class="formrow">
-			<div class="formrow_input formrow_nolabel">
-				<input type="checkbox" name="cb_application" id="cb_application" value="true"/> <label for="cb_application">#request.content.application_reload_confirmation#</label>
-			</div>
+	<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" class="uniForm" method="post">
+		<div class="hidden">
+			<input type="hidden" name="form_submitted" value="true"/>
 		</div>
-		<div class="formrow">
-			<div class="formrow_buttonbar">
-				<input type="submit" value="#request.content.application_reload_button#"/>
+	
+		<fieldset class="inlineLabels">
+			<legend>#request.content.application_reload_button#</legend>
+			
+			<div class="ctrlHolder">
+				<p class="label">Reload Mode</p>
+				<label for="reload_type_cache" class="inlineLabel">
+					<input type="radio" name="reload_type" id="reload_type_cache" value="cache" checked="checked"/>
+					<!--- TODO: $$$ ---> Clear Cache
+				</label>
+				<label for="reload_type_application" class="inlineLabel">
+					<input type="radio" name="reload_type" id="reload_type_application" value="application"/>
+					<!--- TODO: $$$ ---> Reload Application
+				</label>
 			</div>
+	
+		</fieldset>
+	
+		<div class="buttonHolder">
+			<button type="submit" class="submitButton" id="btnSave">#request.content.form_save#</button>
 		</div>
-		<div class="clearer"></div>
-	</div>
 	</form>
-		
-	<!--- <cfif is_j2ee_instance>
-		<h4>#request.content.j2ee_headline#</h4>
-	
-		<p>
-			#request.content.j2ee_restart_txt#<br>
-			#request.content.j2ee_restart_time_txt#<br>
-			#request.content.j2ee_name# <strong>#oJRun.getServerName()#</strong>
-		</p>
-	
-		<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post">
-		<input type="hidden" name="form_submitted_j2ee_instance" value="true">
-		<div class="form">
-			<div class="formrow">
-				<div class="formrow_input formrow_nolabel">
-					<input type="checkbox" name="cb_j2ee_instance" id="cb_j2ee_instance" value="true"> <label for="cb_j2ee_instance">#request.content.j2ee_restart_confirmation#</label>
-				</div>
-			</div>
-			<div class="formrow">
-				<div class="formrow_buttonbar">
-					<input type="submit" value="#request.content.j2ee_restart_button#"/>
-				</div>
-			</div>
-			<div class="clearer"></div>
-		</div>
-		</form>
-	</cfif> --->
 </cfoutput>
 
 <cfsetting enablecfoutputonly="No">

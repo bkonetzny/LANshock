@@ -9,14 +9,19 @@ $LastChangedBy$
 $LastChangedRevision$
 --->
 
-<cfparam name="attributes.form_submitted_application" default="false">
-<cfparam name="attributes.cb_application" default="false">
+<cfparam name="attributes.form_submitted" default="false">
+<cfparam name="attributes.reload_type" default="">
 
-<cfif attributes.form_submitted_application AND attributes.cb_application>
-	
-	<cfinvoke component="#application.lanshock.oApplication#" method="reloadApplication"/>
+<cfif attributes.form_submitted>
+	<cfswitch expression="#attributes.reload_type#">
+		<cfcase value="cache">
+			<cfset application.lanshock.oCache.dropAll()>
+		</cfcase>
+		<cfcase value="application">
+			<cfset application.lanshock.oApplication.reloadApplication()>
+		</cfcase>
+	</cfswitch>
 	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" addtoken="false">
-
 </cfif>
 
 <cfset oSystem = CreateObject("java", "java.lang.System")>
@@ -35,7 +40,7 @@ $LastChangedRevision$
 
 <cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.datasource')#" method="getVersionInformation" returnvariable="sDbVersion"/>
 
-<cfinvoke component="#application.lanshock.oRuntime#" method="getVersion" returnvariable="stVersion"/>
+<cfset stVersion = application.lanshock.oRuntime.getVersion()>
 
 <cfset sServerSoftware = cgi.server_software>
 <cfset sServerSoftware = rereplacenocase(sServerSoftware,'( \()','&nbsp;(','ALL')>
