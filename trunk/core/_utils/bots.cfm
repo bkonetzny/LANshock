@@ -9,13 +9,14 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 109 $
 --->
 
-<cfif ReFindNoCase("Googlebot",arguments.sUserAgent)
-	OR ReFindNoCase("Yahoo! Slurp",arguments.sUserAgent)
-	OR ReFindNoCase("msnbot",arguments.sUserAgent)
-	OR ReFindNoCase("WebAlta Crawler",arguments.sUserAgent)
+<cfif ReFindNoCase("Alexa Toolbar",arguments.sUserAgent)
 	OR ReFindNoCase("Exabot",arguments.sUserAgent)
+	OR ReFindNoCase("Gigabot",arguments.sUserAgent)
+	OR ReFindNoCase("Googlebot",arguments.sUserAgent)
+	OR ReFindNoCase("msnbot",arguments.sUserAgent)
 	OR ReFindNoCase("Twiceler",arguments.sUserAgent)
-	OR ReFindNoCase("Gigabot",arguments.sUserAgent)>
+	OR ReFindNoCase("WebAlta Crawler",arguments.sUserAgent)
+	OR ReFindNoCase("Yahoo! Slurp",arguments.sUserAgent)>
 	<cfset bReturn = true>
 </cfif>
 
