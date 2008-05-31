@@ -84,6 +84,13 @@ $LastChangedRevision: 80 $
 		
 		<cfset application.lanshock.oRuntime.prepareRequest()>
 		
+		<!--- todo: remove when railo fixes the issue with non-permanent cookies --->
+		<cfloop list="email,userid,password" index="idx">
+			<cfif StructKeyExists(cookie,idx)>
+				<cfcookie name="#idx#" value="#cookie[idx]#" expires="never">
+			</cfif>
+		</cfloop>
+		
 		<cfset stImageDir = StructNew()>
 		<cfif DirectoryExists(application.lanshock.oRuntime.getEnvironment().sBasePath & 'templates/' & request.lanshock.settings.layout.template & '/images/_general')>
 			<cfset stImageDir.general = application.lanshock.oRuntime.getEnvironment().sWebPath & 'templates/' & request.lanshock.settings.layout.template & '/images/_general'>
