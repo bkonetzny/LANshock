@@ -58,7 +58,7 @@ $LastChangedRevision: 46 $
 			<cfsavecontent variable="addComment">
 				<cfif session.oUser.isLoggedIn()>
 					<cfoutput>
-						<form action="#application.lanshock.oHelper.buildUrl('comments.comment_edit')#" method="post" class="uniForm" onSubmit="return validateCommentsForm('#uuidFormName#','#jsStringFormat(request.content._core__comments__required_hint)#');">
+						<form action="#application.lanshock.oHelper.buildUrl('comments.comment_edit')#" method="post" class="uniForm" onsubmit="return validateCommentsForm_#uuidFormName#();">
 							<div class="hidden">
 								<input type="hidden" name="form_submitted" value="true"/>
 								<input type="hidden" name="id" value="0"/>
@@ -84,7 +84,7 @@ $LastChangedRevision: 46 $
 								
 								<div class="ctrlHolder">
 									<label for="#uuidFormName#text"><em>*</em> #request.content._core__comments__text#</label>
-									<textarea name="text" id="text"></textarea>
+									<textarea name="text" id="#uuidFormName#text"></textarea>
 									<script type="text/javascript">
 									<!--
 										var sBasePath = "#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/";
@@ -93,6 +93,15 @@ $LastChangedRevision: 46 $
 										oFCKeditor#uuidFormName#.Config['CustomConfigurationsPath'] = sBasePath + "lanshock_fckeditor_config.js";
 										oFCKeditor#uuidFormName#.ToolbarSet = 'Minimum';
 										oFCKeditor#uuidFormName#.ReplaceTextarea();
+										
+										function validateCommentsForm_#uuidFormName#(){
+											FCKeditorAPI.GetInstance('#uuidFormName#text').UpdateLinkedField();
+											if($('###uuidFormName#title').val() == '' || $('###uuidFormName#text').val() == '' ){
+												alert('#jsStringFormat(request.content._core__comments__required_hint)#');
+												return false;
+											}
+											else return true;
+										}
 									//-->
 									</script>
 								</div>
