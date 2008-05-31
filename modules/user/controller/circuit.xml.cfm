@@ -30,10 +30,6 @@ $LastChangedRevision: 75 $
 		<include circuit="v_user" template="custom/dsp_login"/>
 	</fuseaction>
 	
-	<fuseaction access="public" name="login_validation">
-		<include circuit="user" template="custom/act_login_validation"/>
-	</fuseaction>
-	
 	<fuseaction access="public" name="logout">
 		<include circuit="user" template="custom/act_logout"/>
 	</fuseaction>

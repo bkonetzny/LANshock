@@ -9,7 +9,7 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 75 $
 -->
 
-<module name="LANshock User" version="2.0.0.0" date="2008-05-12" author="LANshock" url="http://www.lanshock.com">
+<module name="LANshock User" version="2.0.0.0" date="2008-05-31" author="LANshock" url="http://www.lanshock.com">
 	
 	<general requiresLogin="true"/>
 	
@@ -48,6 +48,7 @@ $LastChangedRevision: 75 $
 			<field name="zip" type="varchar" len="255" null="true" default="NULL"/>
 			<field name="reset_password_key" type="varchar" len="255" null="true" default="NULL"/>
 			<field name="openid_url" type="varchar" len="255" null="true" default="NULL"/>
+			<field name="data_access" type="boolean" null="false" default="0"/>
 			<pk fields="id"/>
 		</table>
 	</database>
