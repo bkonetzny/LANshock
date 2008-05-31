@@ -88,5 +88,6 @@ $LastChangedRevision$
 			<cfoutput>#request.page.pageContent#</cfoutput>
 			<cfinclude template="../../view/form/dsp_form_$$objectName$$.cfm">
 		</cfsavecontent>
+		<cfoutput>#request.page.pageContent#</cfoutput>
 	</cfif>
 <</cfoutput>>

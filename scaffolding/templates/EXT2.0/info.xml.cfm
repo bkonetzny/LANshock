@@ -23,14 +23,13 @@ $LastChangedRevision$
 	<general requiresLogin="false"/>
 	
 	<navigation>
-		<item action="main"/>
-		<<cfloop list="$$lTables$$" index="idx">><item action="$$idx$$_Listing" reqstatus="admin"/>
+		<<cfloop list="$$lTables$$" index="idx">><item action="$$idx$$_listing" permissions="$$idx$$"/>
 		<</cfloop>>
 	</navigation>
 	
 	<security>
-		<<cfloop list="$$lTables$$" index="idx">><area name="$$idx$$"/>
-		<</cfloop>>
+		<permissions list="$$lTables$$"/>
+		<role name="$$sModule$$ Admin" permissions="$$lTables$$"/>
 	</security>
 
 </module>
