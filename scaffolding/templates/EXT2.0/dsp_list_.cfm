@@ -136,7 +136,7 @@ $LastChangedRevision$
 
 </cfsilent>
 <cfoutput>
-<h3>#request.content['__globalmodule__navigation__#request.page.objectName#_Listing']#</h3>
+<h3>#request.content['__globalmodule__navigation__#request.page.objectName#_listing']#</h3>
 <script type="text/javascript">
 	Ext.onReady(function(){
 		
@@ -145,13 +145,13 @@ $LastChangedRevision$
 	    var sm = new xg.CheckboxSelectionModel();
         
         var action = new Ext.ux.grid.RowActions({
-			header:'Actions',
+			header:'#jsStringFormat(request.content.$$objectName$$_grid_header__rowactions)#',
 			actions:[{
 				iconCls:'icon-edit-record',
-				tooltip:'Edit'
+				tooltip:'#jsStringFormat(request.content.$$objectName$$_grid_row_edit)#'
 			},{
 				iconCls:'icon-delete-record',
-				tooltip:'Delete'
+				tooltip:'#jsStringFormat(request.content.$$objectName$$_grid_row_delete)#'
 			}]
 		});
 		
