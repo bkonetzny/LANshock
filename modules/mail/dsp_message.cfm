@@ -10,12 +10,14 @@ $LastChangedRevision: 61 $
 --->
 
 <cfoutput query="qMessage">
-<div class="headline">#request.content.message#</div>
+<h3>#request.content.message#</h3>
 
-<a href="#myself##myfusebox.thiscircuit#.main&mailtype=#attributes.mailtype#&#request.session.UrlToken#" class="link_extended">#request.content.back#</a>
+<ul class="options">
+	<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.main&mailtype=#attributes.mailtype#')#">#request.content.back#</a></li>
+</ul>
 
 <div align="center">
-	<input type="button" onClick="javascript:SendMsg(#buddyid#);" value="#request.content.reply#">
+	<input type="button" onclick="javascript:LANshock.userSendMessage(#buddyid#);" value="#request.content.reply#">
 </div>
 
 <table class="list">
@@ -32,12 +34,12 @@ $LastChangedRevision: 61 $
 	</cfif>
 	<tr>
 		<td width="100%">#tmp_topic#</td>
-		<td width="100" nowrap><a href="#myself##request.lanshock.settings.modulePrefix.core#user.userdetails&id=#user_id_from#&#request.session.UrlToken#">#buddyname#</a></td>
-		<td nowrap>#UDF_DateTimeFormat(datetime)#</td>
-		<td class="empty"><cfif NOT attributes.mailtype><a href="#myself##myfusebox.thiscircuit#.mail_del&id=#id#&#request.session.UrlToken#"><img src="#stImageDir.general#/btn_delete.gif" alt="" border="0"></a><cfelse>&nbsp;</cfif></td>
+		<td width="100" nowrap><a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#user_id_from#')#">#buddyname#</a></td>
+		<td nowrap>#session.oUser.DateTimeFormat(datetime)#</td>
+		<td class="empty"><cfif NOT attributes.mailtype><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.mail_del&id=#id#')#"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/delete.png" alt=""></a><cfelse>&nbsp;</cfif></td>
 	</tr>
 	<tr>
-		<td colspan="4">#ConvertText(text)#</td>
+		<td colspan="4">#application.lanshock.oHelper.ConvertText(text)#</td>
 	</tr>
 </table>
 </cfoutput>

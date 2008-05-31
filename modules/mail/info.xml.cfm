@@ -9,7 +9,7 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 75 $
 -->
 
-<module name="LANshock Messenger" version="1.0.6.0" date="2006-04-19" author="LANshock" url="http://www.lanshock.com">
+<module name="LANshock Messenger" version="2.0.0.0" date="2008-05-31" author="LANshock" url="http://www.lanshock.com">
 	
 	<general requiresLogin="true"/>
 	
@@ -20,12 +20,8 @@ $LastChangedRevision: 75 $
 	<navigation>
 		<item action="inbox"/>
 		<item action="outbox"/>
-		<item action="webmail"/>
+		<!-- <item action="webmail"/> -->
 	</navigation>
-	
-	<panels>
-		<panel name="buddylist" action="buddylist" height="350"/>
-	</panels>
 	
 	<database>
 		<table name="core_mail_buddylist">

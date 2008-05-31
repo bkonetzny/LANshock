@@ -12,11 +12,13 @@ $LastChangedRevision: 55 $
 <cfset bEnableGetHeaders = false>
 
 <cfoutput>
-	<div class="headline">$$$ Webmail</div>
+	<h3>$$$ Webmail</h3>
 	
-	<div class="headline2">$$$ Accounts</div>
+	<h4>$$$ Accounts</h4>
 	
-	<a href="#myself##myfusebox.thiscircuit#.webmail_account_edit&#request.session.UrlToken#" class="link_extended">$$$ New Account</a>
+	<ul class="options">
+		<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.webmail_account_edit')#">$$$ New Account</a></li>
+	</ul>
 	
 	<table class="list">
 		<tr>
@@ -30,18 +32,16 @@ $LastChangedRevision: 55 $
 			<cfif isactive><cfset bEnableGetHeaders = true></cfif>
 			<tr>
 				<td class="empty"><img src="#stImageDir.general#/status_led_<cfif isactive>green<cfelse>red</cfif>.gif" alt="isactive = #isactive#"></td>
-				<td><a href="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&action_getheader=#id#&#request.session.UrlToken#">#name#</a></td>
+				<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&action_getheader=#id#')#">#name#</a></td>
 				<td>#username#</td>
 				<td>#server# (#port#)</td>
-				<td class="empty"><a href="#myself##myfusebox.thiscircuit#.webmail_account_edit&id=#id#&#request.session.UrlToken#"><img src="#stImageDir.general#/btn_edit.gif" alt="#request.content.form_edit#"></a> <a href="#myself##myfusebox.thiscircuit#.webmail_account_delete&id=#id#&#request.session.UrlToken#"><img src="#stImageDir.general#/btn_delete.gif" alt="" border="0"></a></td>
+				<td class="empty"><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.webmail_account_edit&id=#id#')#"><img src="#stImageDir.general#/btn_edit.gif" alt="#request.content.form_edit#"></a> <a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.webmail_account_delete&id=#id#')#"><img src="#stImageDir.general#/btn_delete.gif" alt="" border="0"></a></td>
 			</tr>
 		</cfloop>
 	</table>
 	
-	<!--- <cfdump var="#objectBreeze.list("core_mail_webmail").getQuery()#"> --->
-	
 	<div align="center">
-		<form action="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#request.session.UrlToken#" method="post">
+		<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post">
 			<input type="hidden" name="form_submitted" value="true">
 			<input type="hidden" name="action_getheaders" value="true">
 			<input type="submit" value="$$$ Get Headers"<cfif NOT bEnableGetHeaders> disabled</cfif>>
@@ -49,7 +49,7 @@ $LastChangedRevision: 55 $
 	</div>
 
 	<cfif NOT StructIsEmpty(stResults)>
-		<div class="headline2">$$$ E-Mail</div>
+		<h4>$$$ E-Mail</h4>
 		
 		<table class="list">
 			<tr>
@@ -64,9 +64,9 @@ $LastChangedRevision: 55 $
 					<cfloop query="qMessageHeaders">
 						<tr>
 							<td>#stResults[idx].from#</td>
-							<td<cfif left(stResults[idx].subject,14) EQ '*****SPAM*****'> class="text_small text_light text_important"</cfif>><a href="#myself##myfusebox.thiscircuit#.webmail_detail&account_id=#idx#&uid=#UrlEncodedFormat(uid)#&#request.session.UrlToken#">#stResults[idx].subject#</a></td>
+							<td<cfif left(stResults[idx].subject,14) EQ '*****SPAM*****'> class="text_small text_light text_important"</cfif>><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.webmail_detail&account_id=#idx#&uid=#UrlEncodedFormat(uid)#')#">#stResults[idx].subject#</a></td>
 							<td>#UDF_DateTimeFormat(stResults[idx].date)#</td>
-							<td class="empty"><a href="#myself##myfusebox.thiscircuit#.webmail_delete&account_id=#idx#&uid=#UrlEncodedFormat(uid)#&#request.session.UrlToken#"><img src="#stImageDir.general#/btn_delete.gif" alt="" border="0"></a></td>
+							<td class="empty"><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.webmail_delete&account_id=#idx#&uid=#UrlEncodedFormat(uid)#')#"><img src="#stImageDir.general#/btn_delete.gif" alt="" border="0"></a></td>
 						</tr>
 					</cfloop>
 				<cfelse>

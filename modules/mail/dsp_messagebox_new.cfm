@@ -10,33 +10,41 @@ $LastChangedRevision: 55 $
 --->
 
 <cfoutput>
-	<div class="headline">#request.content.create_new_message#</div>
+<h3>#request.content.create_new_message#</h3>
+
+<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" class="uniForm" method="post">
+	<div class="hidden">
+		<input type="hidden" name="form_submitted" value="true"/>
+	</div>
 	
-	<form action="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#request.session.UrlToken#" name="newmsg" method="post">
-		<input type="hidden" name="form_submitted" value="true">
-		<input type="hidden" name="user_id" value="#attributes.user_id#">
-		<table class="vlist">
-			<tr>
-				<th>#request.content.topic#</th>
-				<td><input type="text" name="title" maxlength="255" style="width: 300px;" value="#attributes.title#"></td>
-				<th>#request.content.to#</th>
-			</tr>
-			<tr>
-				<td>#request.content.text#</th>
-				<td><textarea name="text" style="text" style="width: 300px; height: 200px">#attributes.text#</textarea></td>
-				<td><select name="user_id" style="width: 100%; height: 200px;" multiple>
-						<cfloop query="qBuddylist">
-							<option value="#id#">#buddyname#</option>
-						</cfloop>
-					</select></td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-				<td><input type="submit" value="#request.content.send#"></td>
-				<td>&nbsp;</td>
-			</tr>
-		</table>
-	</form>
+	<fieldset class="inlineLabels">
+		<legend>#request.content.create_new_message#</legend>
+		
+		<div class="ctrlHolder">
+			<label for="formrow_language"><em>*</em> #request.content.to#</label>
+			<select class="selectInput" name="user_id" id="user_id" multiple="multiple">
+				<cfloop query="qBuddylist">
+					<option value="#qBuddylist.id#">#qBuddylist.buddyname#</option>
+				</cfloop>
+			</select>
+		</div>
+
+		<div class="ctrlHolder">
+			<label for="title"><em>*</em> #request.content.topic#</label>
+			<input type="text" class="textInput" name="title" id="title" value="#attributes.title#"/>
+		</div>
+		
+		<div class="ctrlHolder">
+			<label for="text"><em>*</em> #request.content.text#</label>
+			<textarea name="text" id="text">#attributes.text#</textarea>
+		</div>
+
+	</fieldset>
+	<div class="buttonHolder">
+		<button type="submit" class="submitButton">#request.content.form_save#</button>
+		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.inbox')#';">#request.content.form_cancel#</button>
+	</div>
+</form>
 </cfoutput>
 
 <cfsetting enablecfoutputonly="No">

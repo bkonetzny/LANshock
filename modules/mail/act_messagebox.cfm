@@ -15,7 +15,7 @@ $LastChangedRevision: 55 $
 </cfif>
 
 <cfinvoke component="messenger" method="getMessages" returnvariable="qMessages">
-	<cfinvokeargument name="user_id" value="#request.session.userid#">
+	<cfinvokeargument name="user_id" value="#session.userid#">
 	<cfinvokeargument name="mailtype" value="#attributes.mailtype#">
 </cfinvoke>
 

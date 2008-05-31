@@ -13,7 +13,7 @@ $LastChangedRevision: 55 $
 
 <cfif isNumeric(attributes.buddy_id) AND attributes.buddy_id GT 0>
 	<cfinvoke component="messenger" method="addBuddy">
-		<cfinvokeargument name="user_id" value="#request.session.userid#">
+		<cfinvokeargument name="user_id" value="#session.userid#">
 		<cfinvokeargument name="buddy_id" value="#attributes.buddy_id#">
 	</cfinvoke>
 </cfif>

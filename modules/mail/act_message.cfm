@@ -13,7 +13,7 @@ $LastChangedRevision: 55 $
 <cfparam name="attributes.mailtype" default="0">
 
 <cfinvoke component="messenger" method="getMessage" returnvariable="qMessage">
-	<cfinvokeargument name="user_id" value="#request.session.userid#">
+	<cfinvokeargument name="user_id" value="#session.userid#">
 	<cfinvokeargument name="id" value="#attributes.id#">
 </cfinvoke>
 

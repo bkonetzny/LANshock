@@ -14,19 +14,21 @@ $LastChangedRevision: 55 $
 <cfparam name="attributes.text" default="">
 <cfparam name="attributes.user_id" default="">
 
-<cfif attributes.form_submitted>
-	<cfinvoke component="messenger" method="sendMessage">
-		<cfinvokeargument name="user_id_from" value="#request.session.userid#">
-		<cfinvokeargument name="user_id_to" value="#attributes.user_id#">
-		<cfinvokeargument name="title" value="#attributes.title#">
-		<cfinvokeargument name="text" value="#attributes.text#">
-	</cfinvoke>
+<cfif attributes.form_submitted AND len(attributes.user_id)>
+	<cfloop list="#attributes.user_id#" index="idx">
+		<cfinvoke component="messenger" method="sendMessage">
+			<cfinvokeargument name="user_id_from" value="#session.userid#">
+			<cfinvokeargument name="user_id_to" value="#idx#">
+			<cfinvokeargument name="title" value="#attributes.title#">
+			<cfinvokeargument name="text" value="#attributes.text#">
+		</cfinvoke>
+	</cfloop>
 	
-	<cflocation url="#myself##myfusebox.thiscircuit#.main&#request.session.UrlToken#" addtoken="false">
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.outbox')#" addtoken="false">
 </cfif>
 
 <cfinvoke component="messenger" method="getBuddylist" returnvariable="qBuddylist">
-	<cfinvokeargument name="user_id" value="#request.session.userid#">
+	<cfinvokeargument name="user_id" value="#session.userid#">
 </cfinvoke>
 
 <cfsetting enablecfoutputonly="No">
