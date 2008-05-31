@@ -25,6 +25,8 @@ $LastChangedRevision: 96 $
 
 <cfif len(cgi.http_referer)>
 	<cflocation url="#cgi.http_referer#" addtoken="false">
+<cfelse>
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.language')#" addtoken="false">
 </cfif>
 
 <cfsetting enablecfoutputonly="No">
