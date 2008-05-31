@@ -18,30 +18,23 @@ $LastChangedRevision: 33 $
 
 <cfif len(attributes.email) AND len(attributes.key)>
 	
-	<cfset sNewPassword = generatePassword(8)>
 	<cfset bSendMail = false>
+
+	<cfinvoke component="#application.lanshock.oFactory.load('user','reactorGateway')#" method="getByFields" returnvariable="qUser">
+		<cfinvokeargument name="email" value="#attributes.email#">
+	</cfinvoke>
 	
 	<cfset oUser = application.lanshock.oFactory.load('user','reactorRecord')>
-	<cfset oUser.setEmail(attributes.email)>
+	<cfset oUser.setId(qUser.id)>
 	<cfset oUser.load()>
 	
-	<cfdump var="#oUser#"><cfabort>
-	
-	<cfset oUser.setLogincount(oUser.getLogincount()+1)>
-	<cfset oUser.setDt_lastlogin(now())>
-	<cfset oUser.save()>
-	<!--- 	
-		iPrimaryKey = objectBreeze.getByProperty('user','email',attributes.email).GetQuery().id;
-
-		oObUser = objectBreeze.objectCreate("user");
-		oObUser.read(iPrimaryKey);
-		if(oObUser.getProperty("reset_password_key") EQ attributes.key){
-			oObUser.setProperty("pwd",LCase(hash(sNewPassword)));
-			oObUser.setProperty("reset_password_key",'');
-			oObUser.commit();
-			bSendMail = true;
-		}
-	</cfscript> --->
+	<cfif oUser.getReset_password_key() EQ attributes.key>
+		<cfset sNewPassword = generatePassword(8)>
+		<cfset oUser.setPwd(hash(sNewPassword))>
+		<cfset oUser.setReset_password_key('')>
+		<cfset oUser.save()>
+		<cfset bSendMail = true>
+	</cfif>
 	
 	<cfif bSendMail>
 		<cfmail to="#attributes.email#" subject="#request.content.password_reset_mail_new_password#" server="#application.lanshock.settings.mailserver.server#" port="#application.lanshock.settings.mailserver.port#" username="#application.lanshock.settings.mailserver.username#" password="#application.lanshock.settings.mailserver.password#" from="#application.lanshock.settings.mailserver.from#">

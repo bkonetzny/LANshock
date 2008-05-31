@@ -33,18 +33,18 @@ $LastChangedRevision: 33 $
 			
 		<div class="ctrlHolder">
 			<label for="formrow_firstname"><em>*</em> #request.content.firstname#</label>
-			<input type="text" class="textInput" name="firstname" id="formrow_firstname" value="#attributes.firstname#"/>
+			<input type="text" class="textInput" name="firstname" id="formrow_firstname" value="#attributes.firstname#"<cfif bLockEditing> disabled="disabled"</cfif>/>
 		</div>
 		
 		<div class="ctrlHolder">
 			<label for="formrow_lastname"><em>*</em> #request.content.lastname#</label>
-			<input type="text" class="textInput" name="lastname" id="formrow_lastname" value="#attributes.lastname#"/>
+			<input type="text" class="textInput" name="lastname" id="formrow_lastname" value="#attributes.lastname#"<cfif bLockEditing> disabled="disabled"</cfif>/>
 		</div>
 			
 		<div class="ctrlHolder">
 			<label for="formrow_dt_birthdate"><em>*</em> #request.content.birthday#</label>
 			<div class="divInput" id="divDatePickerdt_birthdate"></div>
-			<input type="hidden" name="dt_birthdate" id="formrow_dt_birthdate" value="#LsDateFormat(attributes.dt_birthdate,'YYYY-MM-DD')#"/>
+			<input type="hidden" name="dt_birthdate" id="formrow_dt_birthdate" value="#LsDateFormat(attributes.dt_birthdate,'YYYY-MM-DD')#"<cfif bLockEditing> disabled="disabled"</cfif>/>
 			<script type="text/javascript">
 				var myDatePickerdt_birthdate = new Ext.DatePicker({
 					handler : function(dp,date){
@@ -52,6 +52,7 @@ $LastChangedRevision: 33 $
 						elmDate.set({value:date.format("Y-m-d")});
 					}
 				});
+				myDatePickerdt_birthdate.addListener('select',testThis);
 				<cfif isDate(attributes.dt_birthdate)>
 					var dtdt_birthdate = new Date();
 					dtdt_birthdate = Date.parseDate("#LsDateFormat(attributes.dt_birthdate,'YYYY-MM-DD')#","Y-m-d");
@@ -65,8 +66,8 @@ $LastChangedRevision: 33 $
 			
 		<div class="ctrlHolder">
 			<p class="label"><em>*</em> #request.content.gender#</p>
-			<label for="formrow_male" class="inlineLabel"><input type="radio" name="gender" id="formrow_male" value="1"<cfif attributes.gender EQ 1> checked="checked"</cfif>/> #request.content.gender_male#</label>
-			<label for="formrow_female" class="inlineLabel"><input type="radio" name="gender" id="formrow_female" value="0"<cfif attributes.gender EQ 0> checked="checked"</cfif>/> #request.content.gender_female#</label>
+			<label for="formrow_male" class="inlineLabel"><input type="radio" name="gender" id="formrow_male" value="1"<cfif attributes.gender EQ 1> checked="checked"</cfif><cfif bLockEditing> disabled="disabled"</cfif>/> #request.content.gender_male#</label>
+			<label for="formrow_female" class="inlineLabel"><input type="radio" name="gender" id="formrow_female" value="0"<cfif attributes.gender EQ 0> checked="checked"</cfif><cfif bLockEditing> disabled="disabled"</cfif>/> #request.content.gender_female#</label>
 		</div>
 		
 		<div class="ctrlHolder">
@@ -109,8 +110,22 @@ $LastChangedRevision: 33 $
 		</div>
 
 	</fieldset>
+	
+	<fieldset class="inlineLabels">
+		<legend>Daten Zugriff</legend>
+			
+		<div class="ctrlHolder">
+			<p class="label"><em>*</em> Daten Anzeigen</p>
+			<label for="formrow_data_access_true" class="inlineLabel"><input type="radio" name="data_access" id="formrow_data_access_true" value="1"<cfif attributes.data_access EQ 1> checked="checked"</cfif>/> Anzeigen</label>
+			<label for="formrow_data_access_false" class="inlineLabel"><input type="radio" name="data_access" id="formrow_data_access_false" value="0"<cfif attributes.data_access EQ 0> checked="checked"</cfif>/> Nicht anzeigen</label>
+			<p class="formHint">
+				Pers&ouml;nliche Daten sind f&uuml;r andere Benutzer sichtbar
+			</p>
+		</div>
+
+	</fieldset>
 	<div class="buttonHolder">
-		<button type="submit" class="submitButton"<cfif bLockEditing> disabled="disabled"</cfif>>#request.content.form_save#</button>
+		<button type="submit" class="submitButton">#request.content.form_save#</button>
 		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.userdetails')#';">#request.content.form_cancel#</button>
 	</div>
 </form>

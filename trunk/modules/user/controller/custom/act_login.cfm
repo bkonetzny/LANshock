@@ -15,7 +15,7 @@ $LastChangedRevision: 33 $
 <cfparam name="attributes.relocationusereferer" default="false">
 
 <cfif session.oUser.isLoggedIn()>
-	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.login_validation')#" addtoken="false">
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.userdetails')#" addtoken="false">
 </cfif>
 
 <cfif StructKeyExists(attributes,"openid.mode")>

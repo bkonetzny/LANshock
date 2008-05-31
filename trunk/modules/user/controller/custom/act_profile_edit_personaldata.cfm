@@ -27,6 +27,7 @@ $LastChangedRevision: 96 $
 <cfparam name="attributes.city" default="#oUser.getCity()#">
 <cfparam name="attributes.street" default="#oUser.getStreet()#">
 <cfparam name="attributes.zip" default="#oUser.getZip()#">
+<cfparam name="attributes.data_access" default="#oUser.getData_access()#">
 <cfset attributes.status = oUser.getStatus()>
 
 <cfscript>
@@ -60,6 +61,7 @@ $LastChangedRevision: 96 $
 		<cfset oUser.setCity(attributes.city)>
 		<cfset oUser.setStreet(attributes.street)>
 		<cfset oUser.setZip(attributes.zip)>
+		<cfset oUser.setData_access(attributes.data_access)>
 		<cfset oUser.save()>
 
 		<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.userdetails')#" addtoken="false">
