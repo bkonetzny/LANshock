@@ -15,7 +15,7 @@ $LastChangedRevision: 55 $
 
 <cfif attributes.all>
 
-	<cfinvoke component="messenger" method="getMessages" returnvariable="qMessages">
+	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.mail.model.messenger')#" method="getMessages" returnvariable="qMessages">
 		<cfinvokeargument name="user_id" value="#session.userid#">
 		<cfinvokeargument name="mailtype" value="1">
 	</cfinvoke>
@@ -24,7 +24,7 @@ $LastChangedRevision: 55 $
 
 </cfif>
 
-<cfinvoke component="messenger" method="deleteMessages">
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.mail.model.messenger')#" method="deleteMessages">
 	<cfinvokeargument name="user_id" value="#session.userid#">
 	<cfinvokeargument name="messageids" value="#attributes.messageids#">
 </cfinvoke>
