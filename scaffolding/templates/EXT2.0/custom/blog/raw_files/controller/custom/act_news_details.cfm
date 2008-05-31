@@ -9,6 +9,12 @@ $LastChangedBy$
 $LastChangedRevision$
 --->
 
+<cfparam name="attributes.news_id" default="">
+
+<cfif NOT isNumeric(attributes.news_id)>
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.main')#" addtoken="false">
+</cfif>
+
 <cfset stFilter = StructNew()>
 <cfset stFilter.stJoins = StructNew()>
 <cfset stFilter.stJoins.user = "name,firstname,lastname">
