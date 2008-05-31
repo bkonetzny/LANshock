@@ -15,6 +15,9 @@ $LastChangedRevision$
 <<cfset lPrimaryKeys = oMetaData.getPKListFromXML(objectName)>>
 <<cfset FieldName = ListFirst(oMetaData.getPKListFromXML(objectName))>>
 <<cfoutput>>
+	<cfset variables.sOptionNameField = "$$ListGetAt(lFields,2)$$">
+	<cfset variables.sOptionNameCode = "">
+	
 	<<cfif fileExists("../templates/EXT2.0/custom/_gateway/$$objectName$$/gateway.settings.cfm")>>
 		<<cfinclude template="../templates/EXT2.0/custom/_gateway/$$objectName$$/gateway.settings.cfm">>
 	<</cfif>>
@@ -226,7 +229,7 @@ $LastChangedRevision$
 		<cfset var QueryRecordset = createQuery()>
 		
 		<!--- only select option fields --->
-		<cfif StructKeyExists(variables,'sOptionNameCode')>
+		<cfif len(variables.sOptionNameCode)>
 			<cfset QueryRecordset.setFieldExpression("$$objectName$$",variables.sOptionNameField,variables.sOptionNameCode)>
 		</cfif>
 		<cfset QueryRecordset.setFieldAlias("$$objectName$$","$$lPrimaryKeys$$","optionvalue")>

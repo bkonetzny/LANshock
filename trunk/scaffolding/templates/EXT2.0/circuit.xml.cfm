@@ -30,6 +30,11 @@ $LastChangedRevision$
 		<lanshock:fuseaction>
 			<set name="request.page" value="#structNew()#"/>
 			<lanshock:i18n load="modules/$$sModule$$/i18n/lang.properties" returnvariable="request.content"/>
+			<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/controller/circuit_lanshock_fuseaction_i18n.xml.cfm")>>
+				<<cfoutput>>
+				<<cfinclude template="../templates/EXT2.0/custom/$$sModule$$/controller/circuit_lanshock_fuseaction_i18n.xml.cfm">>
+				<</cfoutput>>
+			<</cfif>>
 			<include circuit="$$sModule$$" template="settings" />
 		</lanshock:fuseaction>
 	</prefuseaction>

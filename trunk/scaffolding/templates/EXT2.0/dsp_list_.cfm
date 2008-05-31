@@ -223,7 +223,8 @@ $LastChangedRevision$
 	        
 	        bbar: new Ext.PagingToolbar({
 	            pageSize: 20,
-	            store: ds
+	            store: ds,
+	            displayInfo: true
 	        })
 	    });
 		
