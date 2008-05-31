@@ -38,7 +38,7 @@ $LastChangedRevision$
 			// set LANshock vars
 			LANshock.setVar('self','#jsStringFormat(self)#');
 			LANshock.setVar('myself','#jsStringFormat(myself)#');
-			LANshock.setVar('sessionUrlToken','#jsStringFormat(session.urlToken)#');
+			LANshock.setVar('sessionUrlToken','#jsStringFormat(urlSessionFormat(''))#');
 			Ext.BLANK_IMAGE_URL = '#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/ext/resources/images/default/s.gif';
 		//-->
 		</script>
