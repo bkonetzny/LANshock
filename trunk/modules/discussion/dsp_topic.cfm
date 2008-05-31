@@ -14,7 +14,10 @@ $LastChangedRevision$
 	
 	<cfif qTopic.module NEQ myfusebox.thiscircuit>
 		<div class="errorBox">
-			<a href="#application.lanshock.oHelper.buildUrl('#qTopic.module#.#qTopic.linktosource#')#">#request.content.link_to_original_content_hint#</a>
+			<h3>#request.content.link_to_original_content_hint#</h3>
+			<ul>
+				<li><a href="#application.lanshock.oHelper.buildUrl('#qTopic.module#.#qTopic.linktosource#')#">#request.content.link_to_original_content_hint#</a></li>
+			</ul>
 		</div>
 	<cfelse>
 		<ul class="options">
