@@ -4,7 +4,6 @@
 }
 
 .commententry .commententry_bar{
-	margin-bottom: 10px;
 	border-bottom: 1px solid #EFEFEF;
 }
 
@@ -29,6 +28,7 @@
 }
 
 .commententry .commententry_profile{
+	padding-top: 10px;
 	float: left;
 	width: 100px;
 }
@@ -52,6 +52,7 @@
 }
 
 .commententry .commententry_content{
+	padding-top: 10px;
 }
 
 .commententry .commententry_datetime{
@@ -66,4 +67,17 @@
 	margin-left: 100px;
 	padding: 10px;
 	background-color: #EFEFEF;
+}
+
+.commentself .commententry_count{
+	background-color: orange;
+}
+
+.commentself .commententry_bar{
+	border-bottom: 1px solid orange;
+}
+
+.commentself .commententry_content{
+	border-right: 1px solid orange;
+	border-bottom: 1px solid orange;
 }
