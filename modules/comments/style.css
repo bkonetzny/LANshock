@@ -3,7 +3,24 @@
 	margin-bottom: 40px;
 }
 
-.commententry .commententrycount{
+.commententry .commententry_bar{
+	margin-bottom: 10px;
+	border-bottom: 1px solid #EFEFEF;
+}
+
+.commententry .commententry_bar ul{
+	float: right;
+	margin: 0px;
+	padding: 0px;
+}
+
+.commententry .commententry_bar li{
+	float: left;
+	padding-right: 6px;
+	list-style: none;
+}
+
+.commententry .commententry_count{
 	float: left;
 	background-color: #EFEFEF;
 	width: 30px;
@@ -11,37 +28,40 @@
 	text-align: center;
 }
 
-.commententry .commententrydatetime{
+.commententry .commententry_profile{
 	float: left;
-	margin-left: 10px;
-	margin-right: 20px;
-	font-size: 11px;
+	width: 100px;
 }
 
-.commententry .commententryauthor{
+.commententry .commententry_profile ul{
+	margin: 0px;
+	padding: 0px;
+}
+
+.commententry .commententry_profile li{
 	float: left;
-	font-size: 11px;
+	padding-right: 6px;
+	list-style: none;
 }
 
-.commententry .commententryauthorimg{
-	clear: left;
-	float: left;
-	width: 90px;
-	position: relative;
-	top: 10px;
+.commententry .commententry_author{
+	margin-bottom: 6px;
 }
 
-.commententry .commententryoptions{
-	border: 1px red;
+.commententry .commententry_authorimg{
 }
 
-.commententry .commententrytitle{
-	margin-top: 10px;
-	margin-left: 100px;
-	padding-left: 10px;
+.commententry .commententry_content{
 }
 
-.commententry .commententrytext{
+.commententry .commententry_datetime{
+	font-size: 10px;
+}
+
+.commententry .commententry_title{
+}
+
+.commententry .commententry_text{
 	margin-top: 10px;
 	margin-left: 100px;
 	padding: 10px;

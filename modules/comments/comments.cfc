@@ -16,6 +16,7 @@ $LastChangedRevision: 46 $
 		<cfargument name="linktosource" required="false" type="string" default="">
 		<cfargument name="type" required="false" type="string" default="***unknown_type***">
 		<cfargument name="topic_title" required="false" type="string" default="">
+		<cfargument name="bShowTopicTitleAsHeadline" required="false" type="boolean" default="false">
 		
 		<cfset var uuidFormName = 'form#replacenocase(CreateUUID(),'-','','ALL')#'>
 		<cfset var qGetTopicID = 0>
@@ -88,7 +89,7 @@ $LastChangedRevision: 46 $
 									<script type="text/javascript">
 									<!--
 										var sBasePath = "#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/";
-										var oFCKeditor#uuidFormName# = new FCKeditor('text');
+										var oFCKeditor#uuidFormName# = new FCKeditor('#uuidFormName#text');
 										oFCKeditor#uuidFormName#.BasePath = sBasePath + "fckeditor/";
 										oFCKeditor#uuidFormName#.Config['CustomConfigurationsPath'] = sBasePath + "lanshock_fckeditor_config.js";
 										oFCKeditor#uuidFormName#.ToolbarSet = 'Minimum';
@@ -130,32 +131,52 @@ $LastChangedRevision: 46 $
 		<cfif qGetTopicID.recordcount>
 	
 			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qComments">
-				SELECT *
-				FROM core_comments_posts
-				WHERE topic_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetTopicID.id#">
-				ORDER BY dt_created
+				SELECT p.*, u.name
+				FROM core_comments_posts p
+				LEFT JOIN user u ON u.id = p.user_id
+				WHERE p.topic_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetTopicID.id#">
+				ORDER BY p.dt_created
 			</cfquery>
 		
 			<cfsavecontent variable="htmlComments">
-				<cfoutput>				
-				<h4>#request.content._core__comments__comments#</h4>
+				<cfoutput>
+				<cfif arguments.bShowTopicTitleAsHeadline>
+					<h4>#arguments.topic_title#</h4>
+				<cfelse>
+					<h4>#request.content._core__comments__comments#</h4>
+				</cfif>
 				#enableDisableComments#
 				<cfif qComments.recordcount>
 					<cfloop query="qComments">
 						<div class="commententry">
-							<div class="commententrycount">#qComments.currentrow#</div>
-							<div class="commententrydatetime">#session.oUser.DateTimeFormat(qComments.dt_created)#</div>
-							<div class="commententryauthor"><a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#qComments.user_id#')#">#application.lanshock.oHelper.getUsernameById(qComments.user_id)#</a></div>
-							<cfif session.oUser.getDataValue('userid') EQ qComments.user_id OR session.oUser.checkPermissions('comments-manage','comments')>
-								<div class="commententryoptions">
-									<a href="#application.lanshock.oHelper.buildUrl('comments.comment_delete&id=#qComments.id#')#">
-										<img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/delete.png"/>
-									</a>
-								</div>
-							</cfif>
-							<div class="commententryauthorimg"><a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#qComments.user_id#')#">#application.lanshock.oHelper.UserShowAvatar(qComments.user_id)#</a></div>
-							<div class="commententrytitle">#qComments.title#</div>
-							<div class="commententrytext">#qComments.text#<!--- #application.lanshock.oHelper.ConvertText(qComments.text)#<br><br> ---></div>
+							<div class="commententry_bar">
+								<div class="commententry_count">#qComments.currentrow#</div>
+								<cfif NOT qGetTopicID.isclosed OR session.oUser.checkPermissions('comments-manage','comments')>
+									<ul>
+										<cfif session.oUser.getDataValue('userid') EQ qComments.user_id OR session.oUser.checkPermissions('comments-manage','comments')>
+											<!--- <li><a href="#application.lanshock.oHelper.buildUrl('comments.comment_edit&id=#qComments.id#')#"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/comment_edit.png"/></a></li> --->
+											<li><a href="#application.lanshock.oHelper.buildUrl('comments.comment_delete&id=#qComments.id#')#"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/comment_delete.png"/></a></li>
+										</cfif>
+										<li><a href="javascript:FCKeditorAPI.GetInstance('#uuidFormName#text').InsertHtml('#jsStringFormat(HTMLEditFormat('<blockquote>'&qComments.name&': '&session.oUser.DateTimeFormat(qComments.dt_created)&'<br/>'&reReplaceNoCase(qComments.text,'<br/><br/><span class="user_signature">(.*)</span>','','ALL')))#</blockquote> ');"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/comments.png"/></a></li>
+									</ul>
+								</cfif>
+								<div class="clearer"></div>
+							</div>
+							<div class="commententry_profile">
+								<div class="commententry_author"><a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#qComments.user_id#')#">#qComments.name#</a></div>
+								<div class="commententry_authorimg"><a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#qComments.user_id#')#">#application.lanshock.oHelper.UserShowAvatar(qComments.user_id)#</a></div>
+								<ul>
+									<li><a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#qComments.user_id#')#"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/information.png"/></a></li>
+									<li><a href="javascript:LANshock.userSendMessage(#qComments.user_id#);"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/email.png"/></a></li>
+								</ul>
+								<div class="clearer"></div>
+							</div>
+							<div class="commententry_content">
+								<div class="commententry_title">#qComments.title#</div>
+								<div class="commententry_datetime">#session.oUser.DateTimeFormat(qComments.dt_created)#</div>
+								<div class="commententry_text">#qComments.text#</div>
+								<div class="clearer"></div>
+							</div>
 							<div class="clearer"></div>
 						</div>
 					</cfloop>

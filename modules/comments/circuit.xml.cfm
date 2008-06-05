@@ -10,13 +10,13 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 75 $
 -->
 
-<circuit access="public" xmlns:cf="cf/" xmlns:reactor="reactor/" xmlns:cs="coldspring/" xmlns:lanshock="lanshock/">
+<circuit access="public" xmlns:lanshock="lanshock/">
 	
-	<fuseaction name="comment_edit">
+	<fuseaction name="comment_edit" lanshock:showlayout="none">
 		<include template="act_comment_edit.cfm"/>
 	</fuseaction>
 	
-	<fuseaction  name="comment_delete">
+	<fuseaction  name="comment_delete" lanshock:showlayout="none">
 		<include template="act_comment_delete.cfm"/>
 	</fuseaction>
 	
