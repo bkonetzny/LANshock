@@ -63,7 +63,7 @@ limitations under the License.
 			break;
 
 		case "client":
-			if(StructKeyExists(fb_,'theModule')) fb_appendLine('<cflocation url="#application.lanshock.oHelper.buildUrl('#fb_.theModule#')#" addtoken="false">');
+			if(StructKeyExists(fb_,'theModule')) fb_appendLine('<cflocation url="##application.lanshock.oHelper.buildUrl(''#fb_.theModule#'')##" addtoken="false">');
 			else fb_appendLine('<cflocation url="#fb_.theUrl#" addtoken="false">');
 			break;
 
