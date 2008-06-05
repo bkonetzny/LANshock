@@ -39,17 +39,19 @@ $LastChangedRevision: 46 $
 			<cfsavecontent variable="enableDisableComments">
 				<cfif qGetTopicID.recordcount>
 					<cfoutput>
-						<div align="center">
-							<form action="#application.lanshock.oHelper.buildUrl('comments.comments_enable_disable')#" method="post">
+						<form action="#application.lanshock.oHelper.buildUrl('comments.comments_enable_disable')#" class="uniForm" method="post">
+							<div class="hidden">
 								<input type="hidden" name="topic_id" value="#qGetTopicID.id#"/>
 								<input type="hidden" name="mode" value="#abs(qGetTopicID.isclosed-1)#"/>
+							</div>
+							<div class="buttonHolder">
 								<cfif qGetTopicID.isclosed>
-									<input type="submit" value="#request.content._core__comments__enablecomments#"/>
+									<button type="submit" class="submitButton">#request.content._core__comments__enablecomments#</button>
 								<cfelse>
-									<input type="submit" value="#request.content._core__comments__disablecomments#"/>
+									<button type="submit" class="submitButton">#request.content._core__comments__disablecomments#</button>
 								</cfif>
-							</form>
-						</div>
+							</div>
+						</form>
 					</cfoutput>
 				</cfif>
 			</cfsavecontent>
@@ -148,16 +150,17 @@ $LastChangedRevision: 46 $
 				#enableDisableComments#
 				<cfif qComments.recordcount>
 					<cfloop query="qComments">
-						<div class="commententry">
+						<div class="commententry<cfif session.oUser.getDataValue('userid') EQ qComments.user_id> commentself</cfif>">
 							<div class="commententry_bar">
 								<div class="commententry_count">#qComments.currentrow#</div>
-								<cfif NOT qGetTopicID.isclosed OR session.oUser.checkPermissions('comments-manage','comments')>
+								<cfif session.oUser.isLoggedIn() AND (NOT qGetTopicID.isclosed OR session.oUser.checkPermissions('comments-manage','comments'))>
 									<ul>
 										<cfif session.oUser.getDataValue('userid') EQ qComments.user_id OR session.oUser.checkPermissions('comments-manage','comments')>
-											<!--- <li><a href="#application.lanshock.oHelper.buildUrl('comments.comment_edit&id=#qComments.id#')#"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/comment_edit.png"/></a></li> --->
 											<li><a href="#application.lanshock.oHelper.buildUrl('comments.comment_delete&id=#qComments.id#')#"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/comment_delete.png"/></a></li>
 										</cfif>
-										<li><a href="javascript:FCKeditorAPI.GetInstance('#uuidFormName#text').InsertHtml('#jsStringFormat(HTMLEditFormat('<blockquote>'&qComments.name&': '&session.oUser.DateTimeFormat(qComments.dt_created)&'<br/>'&reReplaceNoCase(qComments.text,'<br/><br/><span class="user_signature">(.*)</span>','','ALL')))#</blockquote> ');"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/comments.png"/></a></li>
+										<cfif NOT qGetTopicID.isclosed>
+											<li><a href="javascript:FCKeditorAPI.GetInstance('#uuidFormName#text').InsertHtml('#jsStringFormat(HTMLEditFormat('<blockquote>'&qComments.name&': '&session.oUser.DateTimeFormat(qComments.dt_created)&'<br/>'&reReplaceNoCase(qComments.text,'<br/><br/><span class="user_signature">(.*)</span>','','ALL')))#</blockquote> ');"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/comments.png"/></a></li>
+										</cfif>
 									</ul>
 								</cfif>
 								<div class="clearer"></div>
@@ -165,10 +168,12 @@ $LastChangedRevision: 46 $
 							<div class="commententry_profile">
 								<div class="commententry_author"><a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#qComments.user_id#')#">#qComments.name#</a></div>
 								<div class="commententry_authorimg"><a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#qComments.user_id#')#">#application.lanshock.oHelper.UserShowAvatar(qComments.user_id)#</a></div>
-								<ul>
-									<li><a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#qComments.user_id#')#"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/information.png"/></a></li>
-									<li><a href="javascript:LANshock.userSendMessage(#qComments.user_id#);"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/email.png"/></a></li>
-								</ul>
+								<cfif session.oUser.getDataValue('userid') NEQ qComments.user_id>
+									<ul>
+										<li><a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#qComments.user_id#')#"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/information.png"/></a></li>
+										<li><a href="javascript:LANshock.userSendMessage(#qComments.user_id#);"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/email.png"/></a></li>
+									</ul>
+								</cfif>
 								<div class="clearer"></div>
 							</div>
 							<div class="commententry_content">
