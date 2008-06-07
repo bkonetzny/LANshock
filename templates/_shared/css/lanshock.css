@@ -1,6 +1,6 @@
-@import "ext-all.css";
-@import "ext-ux.grid.RowActions.css";
-@import "uni-form.css";
+@import url('ext-all.css');
+@import url('ext-ux.grid.RowActions.css');
+@import url('uni-form.css');
 
 .errorBox{
 	color: #c00;
@@ -13,7 +13,8 @@
 	color: #c00;
 }
 
-div.clearer {
+div.clearer,
+div.clear{
 	clear:both;
 	font-size:0px;
 	line-height:0px;
