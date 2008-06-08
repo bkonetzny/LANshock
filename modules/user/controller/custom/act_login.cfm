@@ -252,51 +252,8 @@ $LastChangedRevision: 33 $
 		</cfif>
 	
 		<cfif NOT ArrayLen(aError)>
-			<cfset application.lanshock.oLogger.writeLog('modules.user.login','Login successful for "#qUser.name#"')>
-		
-			<cfset oUser = application.lanshock.oFactory.load('user','reactorRecord')>
-			<cfset oUser.setId(qUser.id)>
-			<cfset oUser.load()>
-			<cfset oUser.setLogincount(oUser.getLogincount()+1)>
-			<cfset oUser.setDt_lastlogin(now())>
-			<cfset oUser.save()>
-
-			<cfset qUserPermissions = QueryNew("module,name")>
-
-			<cfset qRoles = oUser.getcore_security_rolesiterator().getQuery()>
-
-			<cfloop query="qRoles">
-		
-				<cfset oRole = application.lanshock.oFactory.load('core_security_roles','reactorRecord')>
-				<cfset oRole.setId(qRoles.id)>
-				<cfset oRole.setModule(qRoles.module)>
-				<cfset oRole.load()>
-				<cfset qRolePermissions = oRole.getcore_security_permissionsiterator().getQuery()>
-
-				<cfloop query="qRolePermissions">
-			
-					<cfset QueryAddRow(qUserPermissions)>
-					<cfset QuerySetCell(qUserPermissions,'module',qRolePermissions.module)>
-					<cfset QuerySetCell(qUserPermissions,'name',qRolePermissions.name)>
-					
-				</cfloop>
-				
-			</cfloop>
-
-			<cfcookie name="email" value="#oUser.getEmail()#" expires="never">
-			<cfif attributes.bSaveCookie>
-				<cfcookie name="userid" value="#oUser.getId()#" expires="never">
-				<cfcookie name="password" value="#encrypt(attributes.password,application.applicationname)#" expires="never">
-			</cfif>
-			
-			<cfset session.oUser.setDataValue('UserLoggedIn',true)>
-			<cfset session.oUser.setDataValue('UserID',oUser.getId())>
-			<cfset session.oUser.setDataValue('name',oUser.getName())>
-			<cfset session.oUser.setDataValue('firstname',oUser.getFirstname())>
-			<cfset session.oUser.setDataValue('lastname',oUser.getLastname())>
-			<cfset session.oUser.setDataValue('email',oUser.getEmail())>
-			<cfset session.oUser.setDataValue('lang',oUser.getLanguage())>
-			<cfset session.oUser.setDataValue('qPermissions',qUserPermissions)>
+			<cfset oUserModel = application.lanshock.oFactory.load('lanshock.modules.user.model.user')>
+			<cfset oUserModel.login(qUser.id,attributes.bSaveCookie)>
 			
 			<cfset sRelocateUrl = application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.userdetails')>
 			<cfif bIsCookieLogin AND len(application.lanshock.settings.startpage)>

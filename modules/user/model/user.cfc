@@ -10,6 +10,65 @@ $LastChangedRevision: 33 $
 
 <cfcomponent>
 
+	<cffunction name="login" output="false" returntype="boolean">
+		<cfargument name="id" type="numeric" required="true">
+		<cfargument name="bSaveCookie" type="boolean" required="false" default="false">
+		
+		<cfset var oUser = 0>
+		<cfset var qUserPermissions = 0>
+		<cfset var qRoles = 0>
+		<cfset var qRolePermissions = 0>
+		
+		<cfset oUser = application.lanshock.oFactory.load('user','reactorRecord')>
+		<cfset oUser.setId(arguments.id)>
+		<cfset oUser.load()>
+		<cfset oUser.setLogincount(oUser.getLogincount()+1)>
+		<cfset oUser.setDt_lastlogin(now())>
+		<cfset oUser.save()>
+
+		<cfset application.lanshock.oLogger.writeLog('modules.user.login','Login successful for "#oUser.getName()#"')>
+
+		<cfset qUserPermissions = QueryNew("module,name")>
+
+		<cfset qRoles = oUser.getcore_security_rolesiterator().getQuery()>
+
+		<cfloop query="qRoles">
+	
+			<cfset oRole = application.lanshock.oFactory.load('core_security_roles','reactorRecord')>
+			<cfset oRole.setId(qRoles.id)>
+			<cfset oRole.setModule(qRoles.module)>
+			<cfset oRole.load()>
+			<cfset qRolePermissions = oRole.getcore_security_permissionsiterator().getQuery()>
+
+			<cfloop query="qRolePermissions">
+		
+				<cfset QueryAddRow(qUserPermissions)>
+				<cfset QuerySetCell(qUserPermissions,'module',qRolePermissions.module)>
+				<cfset QuerySetCell(qUserPermissions,'name',qRolePermissions.name)>
+				
+			</cfloop>
+			
+		</cfloop>
+
+		<cfcookie name="email" value="#oUser.getEmail()#" expires="never">
+		<cfif arguments.bSaveCookie>
+			<cfcookie name="userid" value="#oUser.getId()#" expires="never">
+			<cfcookie name="password" value="#encrypt(oUser.getPwd(),application.applicationname)#" expires="never">
+		</cfif>
+		
+		<cfset session.oUser.setDataValue('UserLoggedIn',true)>
+		<cfset session.oUser.setDataValue('UserID',oUser.getId())>
+		<cfset session.oUser.setDataValue('name',oUser.getName())>
+		<cfset session.oUser.setDataValue('firstname',oUser.getFirstname())>
+		<cfset session.oUser.setDataValue('lastname',oUser.getLastname())>
+		<cfset session.oUser.setDataValue('email',oUser.getEmail())>
+		<cfset session.oUser.setDataValue('lang',oUser.getLanguage())>
+		<cfset session.oUser.setDataValue('qPermissions',qUserPermissions)>
+
+		<cfreturn true>
+		
+	</cffunction>
+
 	<cffunction name="getUser" access="public" output="false" returntype="query">
 		<cfargument name="id" type="numeric" required="false" default="0">
 		<cfargument name="email" type="string" required="false" default="">
