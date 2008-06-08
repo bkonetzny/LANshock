@@ -6,11 +6,11 @@
 		Each record has a link for viewing, deleting, and editing the selected content_content record.
 	</responsibilities>
 	<properties>
-		<history author="Kevin Roche" email="kevin@objectiveinternet.com" date="14-May-2008" role="Architect" type="Create" />
+		<history author="Kevin Roche" email="kevin@objectiveinternet.com" date="08-Jun-2008" role="Architect" type="Create" />
 		<property name="copyright" value="(c)2008 Objective Internet Limited." />
 		<property name="licence" value="See licence.txt" />
-		<property name="version" value="$Revision: 296 $" />
-		<property name="lastupdated" value="$Date: 2008-05-12 14:48:23 +0200 (Mo, 12 Mai 2008) 2008/05/14 23:46:44 $" />
+		<property name="version" value="$Revision: 342 $" />
+		<property name="lastupdated" value="$Date: 2008-05-31 14:36:37 +0200 (Sa, 31 Mai 2008) 2008/06/08 13:09:23 $" />
 		<property name="updatedby" value="$Author: majestixs $" />
 	</properties>
 	<io>
@@ -32,12 +32,12 @@
 			
 				<numeric name="id" />
 				<string name="title" />
+				<string name="codename" />
 				<string name="content" />
 				<numeric name="user_id" />
 				<date name="dtcreated" />
 				<date name="dtchanged" />
 				<numeric name="bactive" />
-				<string name="codename" />
 			
 				<string name="name" />
 				<string name="email" />
@@ -61,10 +61,11 @@
 				<string name="reset_password_key" />
 				<string name="openid_url" />
 				<string name="geo_latlong" />
+				<numeric name="data_access" />
 			</recordset>
 			
 			<list name="fieldlist" scope="variables" optional="Yes" 
-				default="id,title,content,user_id,dtcreated,dtchanged,bactive,codename,id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong" 
+				default="id,title,codename,content,user_id,dtcreated,dtchanged,bactive,id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong,data_access" 
 				comments="List of fields to display." />
 		</in>
 		<out>
@@ -88,10 +89,10 @@
 <cfset sortParams = appendParam(sortParams,"_Maxrows",attributes._Maxrows)>
 <cfset pageParams = appendParam(sortParams,"_StartRow",attributes._Startrow)>
 <!--- Complete list of fields that could be displayed --->
-<cfparam name="variables.fieldlist" default="id,title,content,user_id,dtcreated,dtchanged,bactive,codename,id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong">
+<cfparam name="variables.fieldlist" default="id,title,codename,content,user_id,dtcreated,dtchanged,bactive,id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong,data_access">
 </cfsilent>
 <cfoutput>
-<h3>#request.content['__globalmodule__navigation__#request.page.objectName#_Listing']#</h3>
+<h3>#request.content['__globalmodule__navigation__#request.page.objectName#_listing']#</h3>
 <script type="text/javascript">
 	Ext.onReady(function(){
 		
@@ -100,13 +101,13 @@
 	    var sm = new xg.CheckboxSelectionModel();
         
         var action = new Ext.ux.grid.RowActions({
-			header:'Actions',
+			header:'#jsStringFormat(request.content.content_content_grid_header__rowactions)#',
 			actions:[{
 				iconCls:'icon-edit-record',
-				tooltip:'Edit'
+				tooltip:'#jsStringFormat(request.content.content_content_grid_row_edit)#'
 			},{
 				iconCls:'icon-delete-record',
-				tooltip:'Delete'
+				tooltip:'#jsStringFormat(request.content.content_content_grid_row_delete)#'
 			}]
 		});
 		
@@ -131,7 +132,7 @@
 	        	root: 'data',
 				id: 'id'
 			},[
-				{name:'id',mapping:'id'},{name:'title',mapping:'title'},{name:'user_id',mapping:'user_id'},{name:'dtchanged',mapping:'dtchanged'},{name:'bactive',mapping:'bactive'},{name:'codename',mapping:'codename'}
+				{name:'id',mapping:'id'},{name:'title',mapping:'title'},{name:'codename',mapping:'codename'},{name:'user_id',mapping:'user_id'},{name:'dtchanged',mapping:'dtchanged'},{name:'bactive',mapping:'bactive'}
 			]),
 			
 			sortInfo: {field: 'id', direction: 'ASC'},
@@ -144,7 +145,7 @@
 	        ds: ds,
 	        cm: new xg.ColumnModel([
 	        	sm,
-	        	{id:'id',header:'#jsStringFormat(request.content.content_content_grid_header_id)#',width:30,sortable:true,dataIndex:'id'},{header:'#jsStringFormat(request.content.content_content_grid_header_title)#',width:30,sortable:true,dataIndex:'title'},{header:'#jsStringFormat(request.content.content_content_grid_header_user_id)#',width:30,sortable:true,dataIndex:'user_id'},{header:'#jsStringFormat(request.content.content_content_grid_header_dtchanged)#',width:30,sortable:true,dataIndex:'dtchanged'},{header:'#jsStringFormat(request.content.content_content_grid_header_bactive)#',width:30,sortable:true,dataIndex:'bactive'},{header:'#jsStringFormat(request.content.content_content_grid_header_codename)#',width:30,sortable:true,dataIndex:'codename'},
+	        	{id:'id',header:'#jsStringFormat(request.content.content_content_grid_header_id)#',width:30,sortable:true,dataIndex:'id'},{header:'#jsStringFormat(request.content.content_content_grid_header_title)#',width:30,sortable:true,dataIndex:'title'},{header:'#jsStringFormat(request.content.content_content_grid_header_codename)#',width:30,sortable:true,dataIndex:'codename'},{header:'#jsStringFormat(request.content.content_content_grid_header_user_id)#',width:30,sortable:true,dataIndex:'user_id'},{header:'#jsStringFormat(request.content.content_content_grid_header_dtchanged)#',width:30,sortable:true,dataIndex:'dtchanged'},{header:'#jsStringFormat(request.content.content_content_grid_header_bactive)#',width:30,sortable:true,dataIndex:'bactive'},
 	        	action
 	        ]),
 	        sm: sm,
@@ -178,7 +179,8 @@
 	        
 	        bbar: new Ext.PagingToolbar({
 	            pageSize: 20,
-	            store: ds
+	            store: ds,
+	            displayInfo: true
 	        })
 	    });
 		

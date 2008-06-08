@@ -23,35 +23,37 @@
 		
 
 	
-	<cfif NOT StructKeyExists(attributes,'bactive')>
-		<cfset attributes.bactive = false>
-	</cfif>
-	
 		
 
 	
+	<cfif NOT StructKeyExists(attributes,'bactive')>
+		<cfset attributes.bactive = 0>
+	</cfif>
+	
+	
+		<cfinclude template="act_action_save_postvalidation_content_content.cfm">
 	
 	<cfparam name="attributes.content_content_id" default="0">
 	<cfset ocontent_content = application.lanshock.oFactory.load('content_content','reactorRecord')>
 	<cfif variables.mode EQ 'insert'>
 		
 		<cfset ocontent_content.settitle(attributes.title)>
+		<cfset ocontent_content.setcodename(attributes.codename)>
 		<cfset ocontent_content.setcontent(attributes.content)>
 		<cfset ocontent_content.setuser_id(attributes.user_id)>
 		<cfset ocontent_content.setdtcreated(attributes.dtcreated)>
 		<cfset ocontent_content.setdtchanged(attributes.dtchanged)>
 		<cfset ocontent_content.setbactive(attributes.bactive)>
-		<cfset ocontent_content.setcodename(attributes.codename)>
 	<cfelse>
 		
 		<cfset ocontent_content.setid(attributes.id)>
 		<cfset ocontent_content.settitle(attributes.title)>
+		<cfset ocontent_content.setcodename(attributes.codename)>
 		<cfset ocontent_content.setcontent(attributes.content)>
 		<cfset ocontent_content.setuser_id(attributes.user_id)>
 		<cfset ocontent_content.setdtcreated(attributes.dtcreated)>
 		<cfset ocontent_content.setdtchanged(attributes.dtchanged)>
 		<cfset ocontent_content.setbactive(attributes.bactive)>
-		<cfset ocontent_content.setcodename(attributes.codename)>
 	</cfif>
 	
 	<cfset ocontent_content.validate()>

@@ -6,7 +6,7 @@
  |                               http://sourceforge.net/projects/lanshock/ |
  | Released Under the GNU General Public License (v2) (see license.txt)    |
 -->
-<module name="Content Module" version="2.0.0.0" date="2008-05-12" author="LANshock" url="http://www.lanshock.com">
+<module name="Content Module" version="2.0.0.0" date="2008-06-08" author="LANshock" url="http://www.lanshock.com">
 	
 	<general requiresLogin="false"/>
 	
@@ -40,8 +40,20 @@
 		</table>
 	</database>
 	
+	<special>
+		<reactor>
+			<table name="content_content">
+				<![CDATA[
+					<hasMany name="user">
+						<relate from="user_id" to="id"/>
+					</hasMany>
+				]]>
+			</table>
+		</reactor>
+	</special>
+	
 	<scaffolding>
-		<table>
+		<table name="content_content">
 			<list>
 				<field name="id"/>
 				<field name="title"/>
