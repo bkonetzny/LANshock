@@ -14,7 +14,6 @@ $LastChangedRevision$
 	
 		<cfset variables.stSessions = StructNew()>
 		<cfset variables.iTimeout = 1200>
-		<cfset variables.iSessions = 0>
 	
 	</cffunction>
 	
@@ -30,8 +29,15 @@ $LastChangedRevision$
 			<cfset session.oUser.init()>
 			<!--- <cfset session.oPreferences = application.lanshock.oFactory.load('lanshock.core.preferences')> --->
 			<cfset session.isBot = isBot(cgi.http_user_agent)>
-			<cfif isDefined("cookie.email") AND isDefined("cookie.password")>
-				<cflocation url="#application.lanshock.oHelper.buildUrl('user.login')#" addtoken="false">
+			<cfif application.lanshock.oModules.isLoaded('user') AND isDefined("cookie.email") AND isDefined("cookie.password")>
+				<cfinvoke component="#application.lanshock.oFactory.load('user','reactorGateway')#" method="getByFields" returnvariable="qUser">
+					<cfinvokeargument name="email" value="#cookie.email#">
+					<cfinvokeargument name="pwd" value="#decrypt(cookie.password,application.applicationname)#">
+				</cfinvoke>
+				<cfif qUser.recordcount>
+					<cfset oUserModel = application.lanshock.oFactory.load('lanshock.modules.user.model.user')>
+					<cfset oUserModel.login(qUser.id,true)>
+				</cfif>
 			</cfif>
 		</cfif>
 		

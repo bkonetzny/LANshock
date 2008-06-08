@@ -142,13 +142,16 @@ $LastChangedRevision: 91 $
 <table class="vlist">
 	<cfif session.oUser.isLoggedIn()>
 		<cfif application.lanshock.oModules.isLoaded('event')>
-			<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.event.model.seatplan')#" method="getSeatLinkDataByUserID" returnvariable="stSeat">
+			<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.event.model.seatplan')#" method="getUserEvents" returnvariable="qUserEvents">
 				<cfinvokeargument name="userid" value="#qUserData.id#">
 			</cfinvoke>
-			<cfif NOT StructIsEmpty(stSeat)>
+			<cfif qUserEvents.recordcount>
 			<tr>
 				<th>#request.content.seat#</th>
-				<td><a href="#application.lanshock.oHelper.buildUrl('#stSeat.linkurl#')#">#stSeat.description#</a></td>
+				<td><ul><cfloop query="qUserEvents">
+						<li>#qUserEvents.eventname#<br/><a href="#application.lanshock.oHelper.buildUrl('#qUserEvents.linkurl#')#">#qUserEvents.description#</a></li>
+					</cfloop>
+					</ul></td>
 			</tr>
 			</cfif>
 		</cfif>
