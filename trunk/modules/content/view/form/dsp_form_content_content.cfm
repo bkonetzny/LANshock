@@ -99,6 +99,23 @@
 		
 	
 	
+		
+		
+		
+		
+		
+			
+				
+				
+				
+				
+				
+				
+			
+		
+				
+		
+	
 	
 	
 				
@@ -122,9 +139,9 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="id" id="formrow_92B951BFE49842C7AA91F229DC72251A" value="#ocontent_content.getid()#" />
+	<input type="hidden" name="id" id="formrow_EFACE480B1E6499E847E3BC81ECED374" value="#ocontent_content.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_92B951BFE49842C7AA91F229DC72251A">#request.content.content_content_rowtype_label_id#</label>
+		<label for="formrow_EFACE480B1E6499E847E3BC81ECED374">#request.content.content_content_rowtype_label_id#</label>
 		#NumberFormat(ocontent_content.getid(),"9")#
 	</div>
 	</cfif>
@@ -139,8 +156,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_C3F6F24C84FA4F6981EEB4717C040ACC"><em>*</em> #request.content.content_content_rowtype_label_title#</label>
-		<input type="text" class="textInput" name="title" id="formrow_C3F6F24C84FA4F6981EEB4717C040ACC" value="#Trim(ocontent_content.gettitle())#"/>
+		<label for="formrow_D1E0CF54079447109034A5A7D885B4C1"><em>*</em> #request.content.content_content_rowtype_label_title#</label>
+		<input type="text" class="textInput" name="title" id="formrow_D1E0CF54079447109034A5A7D885B4C1" value="#Trim(ocontent_content.gettitle())#"/>
 	</div>
 				
 			
@@ -153,17 +170,31 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_662C4864AEA349CEB499375E2726A509"><em>*</em> #request.content.content_content_rowtype_label_content#</label>
-		<textarea name="content" id="formrow_662C4864AEA349CEB499375E2726A509">#Trim(ocontent_content.getcontent())#</textarea>
+		<label for="formrow_EAA52BDA827F40E0BF95C4AE29A214F9"><em>*</em> #request.content.content_content_rowtype_label_codename#</label>
+		<input type="text" class="textInput" name="codename" id="formrow_EAA52BDA827F40E0BF95C4AE29A214F9" value="#Trim(ocontent_content.getcodename())#"/>
+	</div>
+				
+			
+			
+				
+				
+				
+				
+					
+
+	
+	<div class="ctrlHolder">
+		<label for="formrow_FCE052D94CA7466D8AD151D169059E93"><em>*</em> #request.content.content_content_rowtype_label_content#</label>
+		<textarea name="content" id="formrow_FCE052D94CA7466D8AD151D169059E93">#Trim(ocontent_content.getcontent())#</textarea>
 			<script type="text/javascript">
 			<!--
 				var sBasePath = "#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/";
-				var oFCKeditor_formrow_662C4864AEA349CEB499375E2726A509 = new FCKeditor('content');
-				oFCKeditor_formrow_662C4864AEA349CEB499375E2726A509.BasePath = sBasePath + "fckeditor/";
-				oFCKeditor_formrow_662C4864AEA349CEB499375E2726A509.Config['CustomConfigurationsPath'] = sBasePath + "lanshock_fckeditor_config.js";
-				oFCKeditor_formrow_662C4864AEA349CEB499375E2726A509.Value = '';
+				var oFCKeditor_formrow_FCE052D94CA7466D8AD151D169059E93 = new FCKeditor('content');
+				oFCKeditor_formrow_FCE052D94CA7466D8AD151D169059E93.BasePath = sBasePath + "fckeditor/";
+				oFCKeditor_formrow_FCE052D94CA7466D8AD151D169059E93.Config['CustomConfigurationsPath'] = sBasePath + "lanshock_fckeditor_config.js";
+				oFCKeditor_formrow_FCE052D94CA7466D8AD151D169059E93.Value = '';
 				Ext.onReady(function(){
-					oFCKeditor_formrow_662C4864AEA349CEB499375E2726A509.ReplaceTextarea();
+					oFCKeditor_formrow_FCE052D94CA7466D8AD151D169059E93.ReplaceTextarea();
 				});
 			//-->
 			</script>
@@ -178,16 +209,10 @@
 					
 
 	
+	<input type="hidden" name="user_id" id="formrow_617876087D8A49829ECBBD6003F96E35" value="#NumberFormat(ocontent_content.getuser_id(),"9.99")#"/>
 	<div class="ctrlHolder">
-		<label for="formrow_EAF265951A644CBAA32D609E4AE8D4B9"><em>*</em> #request.content.content_content_rowtype_label_user_id#</label>
-		
-			<select class="selectInput" name="user_id" id="formrow_EAF265951A644CBAA32D609E4AE8D4B9">
-				<option value=""></option>
-				<cfloop query="stRelated.stManyToOne.user.qData">
-					<option value="#stRelated.stManyToOne.user.qData.optionvalue#"<cfif ocontent_content.getuser_id() EQ stRelated.stManyToOne.user.qData.optionvalue> selected="selected"</cfif>>#stRelated.stManyToOne.user.qData.optionname#</option>
-				</cfloop>
-			</select>
-		
+		<label for="formrow_617876087D8A49829ECBBD6003F96E35">#request.content.content_content_rowtype_label_user_id#</label>
+		#NumberFormat(ocontent_content.getuser_id(),"9.99")#
 	</div>
 				
 			
@@ -199,28 +224,10 @@
 					
 
 	
-	<cfif NOT isDate(LSDateFormat(ocontent_content.getdtcreated()))>
-		<cfset ocontent_content.setdtcreated(now())>
-	</cfif>
+	<input type="hidden" name="dtcreated" id="formrow_828DE9893DE14DD2B6A26A3071BACB5C" value="#Trim(ocontent_content.getdtcreated())#"/>
 	<div class="ctrlHolder">
-		<label for="formrow_89FBB796B13C4F5984B5330FC5522CB5">#request.content.content_content_rowtype_label_dtcreated#</label>
-		<div class="divInput" id="divDatePicker89FBB796B13C4F5984B5330FC5522CB5"></div>
-		<input type="hidden" name="dtcreated" id="formrow_89FBB796B13C4F5984B5330FC5522CB5" value="#LsDateFormat(LSDateFormat(ocontent_content.getdtcreated()),'YYYY-MM-DD')# #LsTimeFormat(LSDateFormat(ocontent_content.getdtcreated()),'HH:MM:SS')#"/>
-		<script type="text/javascript">
-			<!--
-			var myDatePicker89FBB796B13C4F5984B5330FC5522CB5 = new Ext.ux.form.DateTime({
-				handler: function(value){
-					$('##formrow_89FBB796B13C4F5984B5330FC5522CB5').val(value);
-				}
-			});
-			Ext.onReady(function(){
-				myDatePicker89FBB796B13C4F5984B5330FC5522CB5.render('divDatePicker89FBB796B13C4F5984B5330FC5522CB5');
-				var dt89FBB796B13C4F5984B5330FC5522CB5 = new Date();
-				dt89FBB796B13C4F5984B5330FC5522CB5 = Date.parseDate("#LsDateFormat(LSDateFormat(ocontent_content.getdtcreated()),'YYYY-MM-DD')# #LsTimeFormat(LSDateFormat(ocontent_content.getdtcreated()),'HH:MM')#","Y-m-d G:i");
-				myDatePicker89FBB796B13C4F5984B5330FC5522CB5.setValue(dt89FBB796B13C4F5984B5330FC5522CB5);
-			});
-			//-->
-		</script>
+		<label for="formrow_828DE9893DE14DD2B6A26A3071BACB5C">#request.content.content_content_rowtype_label_dtcreated#</label>
+		#Trim(ocontent_content.getdtcreated())#
 	</div>
 				
 			
@@ -232,28 +239,10 @@
 					
 
 	
-	<cfif NOT isDate(LSDateFormat(ocontent_content.getdtchanged()))>
-		<cfset ocontent_content.setdtchanged(now())>
-	</cfif>
+	<input type="hidden" name="dtchanged" id="formrow_C5D5560FC20D4DD3801D70F007798578" value="#Trim(ocontent_content.getdtchanged())#"/>
 	<div class="ctrlHolder">
-		<label for="formrow_3FADDF8C6D114E71BDACABD7230D5A86">#request.content.content_content_rowtype_label_dtchanged#</label>
-		<div class="divInput" id="divDatePicker3FADDF8C6D114E71BDACABD7230D5A86"></div>
-		<input type="hidden" name="dtchanged" id="formrow_3FADDF8C6D114E71BDACABD7230D5A86" value="#LsDateFormat(LSDateFormat(ocontent_content.getdtchanged()),'YYYY-MM-DD')# #LsTimeFormat(LSDateFormat(ocontent_content.getdtchanged()),'HH:MM:SS')#"/>
-		<script type="text/javascript">
-			<!--
-			var myDatePicker3FADDF8C6D114E71BDACABD7230D5A86 = new Ext.ux.form.DateTime({
-				handler: function(value){
-					$('##formrow_3FADDF8C6D114E71BDACABD7230D5A86').val(value);
-				}
-			});
-			Ext.onReady(function(){
-				myDatePicker3FADDF8C6D114E71BDACABD7230D5A86.render('divDatePicker3FADDF8C6D114E71BDACABD7230D5A86');
-				var dt3FADDF8C6D114E71BDACABD7230D5A86 = new Date();
-				dt3FADDF8C6D114E71BDACABD7230D5A86 = Date.parseDate("#LsDateFormat(LSDateFormat(ocontent_content.getdtchanged()),'YYYY-MM-DD')# #LsTimeFormat(LSDateFormat(ocontent_content.getdtchanged()),'HH:MM')#","Y-m-d G:i");
-				myDatePicker3FADDF8C6D114E71BDACABD7230D5A86.setValue(dt3FADDF8C6D114E71BDACABD7230D5A86);
-			});
-			//-->
-		</script>
+		<label for="formrow_C5D5560FC20D4DD3801D70F007798578">#request.content.content_content_rowtype_label_dtchanged#</label>
+		#Trim(ocontent_content.getdtchanged())#
 	</div>
 				
 			
@@ -267,11 +256,22 @@
 	
 	<div class="ctrlHolder">
 		<div>
-			<label for="formrow_9C18EF09750F48F0965A5351942FBB7E" class="inlineLabel"><input type="checkbox" name="bactive" id="formrow_9C18EF09750F48F0965A5351942FBB7E" value="1"<cfif ocontent_content.getbactive()> checked="checked"</cfif>/> <em>*</em>  #request.content.content_content_rowtype_label_bactive#</label>
+			<label for="formrow_DBC1FA1FDD284F4F80746E3E9A05DCC3" class="inlineLabel"><input type="checkbox" name="bactive" id="formrow_DBC1FA1FDD284F4F80746E3E9A05DCC3" value="1"<cfif ocontent_content.getbactive()> checked="checked"</cfif>/> <em>*</em>  #request.content.content_content_rowtype_label_bactive#</label>
 		</div>
 	</div>
 				
 			
+			
+		
+			</fieldset>
+		
+	
+	
+	
+		
+			<fieldset class="inlineLabels">
+				<legend>aManyToOne</legend>
+		
 			
 				
 				
@@ -280,10 +280,11 @@
 					
 
 	
-	<div class="ctrlHolder">
-		<label for="formrow_C45CFE927B6D444086F8BEF0D172B1D4"><em>*</em> #request.content.content_content_rowtype_label_codename#</label>
-		<input type="text" class="textInput" name="codename" id="formrow_C45CFE927B6D444086F8BEF0D172B1D4" value="#Trim(ocontent_content.getcodename())#"/>
-	</div>
+	
+		<div class="ctrlHolder">
+			attributes.stFieldData.links[1].name is not defined!
+		</div>
+	
 				
 			
 			
@@ -296,7 +297,7 @@
 	<div class="buttonHolder">
 		<button type="submit" class="submitButton" id="btnSave">#request.content.form_save#</button>
 		<button type="reset" class="resetButton" id="btnReset">#request.content.form_reset#</button>
-		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';">#request.content.form_cancel#</button>
+		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';return false;">#request.content.form_cancel#</button>
 	</div>
 </form>
 </cfoutput>

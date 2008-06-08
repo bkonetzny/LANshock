@@ -5,6 +5,7 @@
 		<lanshock:fuseaction>
 			<set name="request.page" value="#structNew()#"/>
 			<lanshock:i18n load="modules/content/i18n/lang.properties" returnvariable="request.content"/>
+			
 			<include circuit="content" template="settings"/>
 		</lanshock:fuseaction>
 	</prefuseaction>
@@ -73,7 +74,7 @@
 		
 		<set name="attributes._listSortByFieldList" overwrite="false" value="content_content|id|ASC"/>
 		
-		<set name="fieldlist" value="id,title,content,user_id,dtcreated,dtchanged,bactive,codename,id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong"/>
+		<set name="fieldlist" value="id,title,codename,content,user_id,dtcreated,dtchanged,bactive,id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong,data_access"/>
 		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_content" template="list/dsp_list_content_content"/>
 	</fuseaction>
@@ -93,23 +94,6 @@
 			<argument name="maxrows" value="#attributes.limit#"/>
 			<argument name="filter" value="#stFilters#"/>
 		</invoke>
-	</fuseaction>
-	
-	<fuseaction access="public" name="content_content_Display">
-		<!-- Display: I display the selected content_content record. -->
-		<set name="request.page.subtitle" value="View content_content"/>
-		<set name="request.page.description" value="I display the selected content_content record."/>
-		<xfa name="Edit" value="content_content_Edit_Form"/>
-		<xfa name="Delete" value="content_content_Action_Delete"/>
-		<xfa name="List" value="content_content_Listing"/>
-		<reactor:record alias="content_content" returnvariable="ocontent_content"/>
-		
-		<set value="#ocontent_content.setlPKFields(attributes.lPKFields)#"/>
-		<invoke method="load" object="ocontent_content"/>
-		
-		<set name="fieldlist" value="id,title,content,user_id,dtcreated,dtchanged,bactive,codename,id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong"/>
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include append="true" circuit="v_content" contentvariable="request.page.pageContent" template="display/dsp_display_content_content"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="content_content_add_form">
