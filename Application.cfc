@@ -36,7 +36,6 @@ $LastChangedRevision: 80 $
 		<cfset application.lanshock.oCache = application.lanshock.oFactory.load('lanshock.core.cache')>
 		<cfset application.lanshock.oCache.init()>
 		<cfset application.lanshock.oLogger = application.lanshock.oFactory.load('lanshock.core.logger')>
-		<cfset application.lanshock.oConfigmanager = application.lanshock.oFactory.load('lanshock.core.configmanager')>
 		<cfset application.lanshock.oApplication = this>
 		<cfset application.lanshock.oLanguage = application.lanshock.oFactory.load('lanshock.core.language')>
 		<cfset application.lanshock.oHelper = application.lanshock.oFactory.load('lanshock.core.helper')>
