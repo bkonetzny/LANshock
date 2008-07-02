@@ -2,10 +2,10 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL: https://lanshock.svn.sourceforge.net/svnroot/lanshock/trunk/core/sessionmanager.cfc $
-$LastChangedDate: 2007-12-20 23:36:46 +0100 (Do, 20 Dez 2007) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 143 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 --->
 
 <cfcomponent>
@@ -75,6 +75,14 @@ $LastChangedRevision: 143 $
 		<cfargument name="value" type="any" required="true">
 		
 		<cfset session.stVariablesScope.stCustomData[arguments.key] = arguments.value>
+	</cffunction>
+
+	<cffunction name="deleteCustomDataValue" output="false" returntype="void">
+		<cfargument name="key" type="string" required="true">
+		
+		<cfif StructKeyExists(session.stVariablesScope.stCustomData,arguments.key)>
+			<cfset StructDelete(session.stVariablesScope.stCustomData,arguments.key)>
+		</cfif>
 	</cffunction>
 
 	<cffunction name="existsCustomDataValue" output="false" returntype="boolean">
