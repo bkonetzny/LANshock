@@ -2,10 +2,10 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL: https://lanshock.svn.sourceforge.net/svnroot/lanshock/trunk/core/sessionmanager.cfc $
-$LastChangedDate: 2007-12-20 23:36:46 +0100 (Do, 20 Dez 2007) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 143 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 --->
 
 <cfcomponent>
@@ -203,6 +203,79 @@ $LastChangedRevision: 143 $
 		
 		<cfif bEnableSES>
 			<cfset sReturn = replaceNoCase(sReturn,'index.cfm/fuseaction/','','ONE')>
+		</cfif>
+		
+		<cfreturn sReturn>
+	
+	</cffunction>
+	
+	<cffunction name="notificationBox" output="false" returntype="string">
+		<cfargument name="sHeadline" type="string" required="false" default="">
+		<cfargument name="aItems" type="any" required="false" default="">
+		<cfargument name="sType" type="string" required="false" default="info">
+		<cfargument name="sMode" type="string" required="false" default="input" hint="global|input|both">
+		
+		<cfset var sReturn = ''>
+		<cfset var sReturnBuffer = ''>
+		<cfset var idx = 0>
+		<cfset var idx2 = 0>
+		<cfset var sClass = ''>
+		<cfset var aNotifications = ArrayNew(1)>
+		<cfset var aItemsParsed = ArrayNew(1)>
+		
+		<cfif arguments.sMode EQ 'global' AND session.oUser.existsCustomDataValue('notification_sHeadline')>
+			<cfset bShowNotifications = true>
+			<cfset arguments.sHeadline = session.oUser.getCustomDataValue('notification_sHeadline')>
+			<cfset arguments.aItems = session.oUser.getCustomDataValue('notification_aItems')>
+			<cfset arguments.sType = session.oUser.getCustomDataValue('notification_sType','info')>
+			<cfset session.oUser.deleteCustomDataValue('notification_sHeadline')>
+			<cfset session.oUser.deleteCustomDataValue('notification_aItems')>
+			<cfset session.oUser.deleteCustomDataValue('notification_sType')>
+		</cfif>
+		
+		<cfif len(arguments.sHeadline)>
+			<cfset aNotifications[1] = StructNew()>
+			<cfset aNotifications[1].sHeadline = arguments.sHeadline>
+			<cfif isArray(arguments.aItems) OR isSimpleValue(arguments.aItems) AND len(arguments.aItems)>
+				<cfif isSimpleValue(arguments.aItems)>
+					<cfset ArrayAppend(aItemsParsed,arguments.aItems)>
+					<cfset aNotifications[1].aItems = aItemsParsed>
+				<cfelse>
+					<cfset aNotifications[1].aItems = arguments.aItems>
+				</cfif>
+			</cfif>
+			<cfset aNotifications[1].sType = arguments.sType>
+		</cfif>
+		
+		<cfif ArrayLen(aNotifications)>
+		
+			<cfloop from="1" to="#ArrayLen(aNotifications)#" index="idx">
+		
+				<cfswitch expression="#aNotifications[idx].sType#">
+					<cfcase value="info"><cfset sClass = ' notificationInfo'></cfcase>
+					<cfcase value="success"><cfset sClass = ' notificationSuccess'></cfcase>
+					<cfcase value="warn"><cfset sClass = ' notificationWarn'></cfcase>
+					<cfcase value="error"><cfset sClass = ' notificationError'></cfcase>
+				</cfswitch>
+				
+				<cfsavecontent variable="sReturnBuffer">
+					<cfoutput>
+					<div class="notificationBox#sClass#">
+						<h3>#aNotifications[idx].sHeadline#</h3>
+						<cfif StructKeyExists(aNotifications[idx],'aItems')>
+							<ul>
+								<cfloop from="1" to="#ArrayLen(aNotifications[idx].aItems)#" index="idx2">
+									<li>#aNotifications[idx].aItems[idx2]#</li>
+								</cfloop>
+							</ul>
+						</cfif>
+					</div>
+					</cfoutput>
+				</cfsavecontent>
+				<cfset sReturn = sReturn & sReturnBuffer>
+
+			</cfloop>
+		
 		</cfif>
 		
 		<cfreturn sReturn>
