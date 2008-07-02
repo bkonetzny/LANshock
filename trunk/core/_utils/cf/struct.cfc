@@ -2,10 +2,10 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL: https://svn.sourceforge.net/svnroot/lanshock/trunk/core/session.cfc $
-$LastChangedDate: 2006-10-22 23:59:51 +0200 (So, 22 Okt 2006) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 34 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 --->
 
 <cfcomponent>
