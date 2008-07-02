@@ -3,10 +3,10 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL: https://lanshock.svn.sourceforge.net/svnroot/lanshock/trunk/core/mySettings.cfm $
-$LastChangedDate: 2008-02-19 00:10:20 +0100 (Di, 19 Feb 2008) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 163 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 --->
 
 <cfscript>
