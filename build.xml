@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="LANshock 2.0" default="" basedir=".">
+	<description></description>
+	
+	<!-- Relative location of source folder -->
+	<property name="source" value="./" />
+
+	<!-- Relative location of deploy folder -->
+	<property name="deploy" value="../lanshock_deploy/" />
+	
+	<!-- delete old archives -->
+	<delete dir="${deploy}lanshock/" failonerror="false"/>
+	<delete file="${deploy}lanshock.tar" failonerror="false"/>
+	<delete file="${deploy}lanshock.tar.gz" failonerror="false"/>
+	<echo message="Removed old deploy files" />
+	
+	<echo message="Aggregation files from ${source}" />
+	
+	<!-- copy files to deploy directory -->
+	<copy todir="${deploy}/lanshock">
+		<fileset dir="${source}">
+			<exclude name="**/.svn"/>
+			<exclude name="**/.settings"/>
+			<exclude name="**/framework/reactor/project/lanshock/**"/>
+			<exclude name="/model/**"/>
+			<exclude name="**/scaffolding/generated/**"/>
+			<exclude name="**/storage/public/modules/**"/>
+			<exclude name="**/storage/secure/config/lanshock/config.ini.cfm"/>
+			<exclude name="**/storage/secure/config/reactor/reactor.xml"/>
+			<exclude name="**/storage/secure/logs/**.log"/>
+			<exclude name="**/storage/secure/modules/**"/>
+			<exclude name="**/storage/secure/parsed/fusebox/**.cfm"/>
+			<exclude name="**/.project"/>
+			<exclude name="**/build.xml"/>
+			<exclude name="**/fusebox.xml.cfm"/>
+		</fileset>
+	</copy>
+	
+	<echo message="Copied files to ${deploy}lanshock" />
+	
+	<!-- build new archives -->
+	<tar tarfile="${deploy}lanshock.tar" basedir="${deploy}lanshock"/>
+	<gzip zipfile="${deploy}lanshock.tar.gz" src="${deploy}lanshock.tar"/>
+	
+	<echo message="Created lanshock.tar.gz" />
+	
+</project>

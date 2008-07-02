@@ -2,10 +2,10 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL: https://svn.sourceforge.net/svnroot/lanshock/trunk/Application.cfc $
-$LastChangedDate: 2006-11-09 22:02:06 +0100 (Do, 09 Nov 2006) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 80 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 --->
 
 <cfcomponent extends="fusebox5.Application" output="false">
