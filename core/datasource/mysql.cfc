@@ -2,10 +2,10 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL: https://svn.sourceforge.net/svnroot/lanshock/trunk/core/admin/datasource_mysql.cfc $
-$LastChangedDate: 2006-11-04 00:16:55 +0100 (Sa, 04 Nov 2006) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 78 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 --->
 
 <cfcomponent>
