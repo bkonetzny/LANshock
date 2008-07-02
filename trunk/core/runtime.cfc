@@ -39,7 +39,11 @@ $LastChangedRevision: 34 $
 		
 		<cfset application.lanshock.oSessionmanager.checkSession()>
 		
-		<cfset SetLocale(session.lang)>
+		<cfif len(session.lang)>
+			<cfset SetLocale(UCase(application.lanshock.settings.language))>
+		<cfelse>
+			<cfset SetLocale(session.lang)>
+		</cfif>
 		<cfset request.ProcessTime_Part1 = GetTickCount()>
 		
 		<cfinvoke component="#application.lanshock.oLanguage#" method="loadProperties" returnvariable="request.content">
