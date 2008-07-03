@@ -26,7 +26,7 @@ $LastChangedRevision$
 		<script type="text/javascript" src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/ext/adapter/jquery/ext-jquery-adapter.js"></script>
 		<cfif bRequestIncludeExt>
 			<script type="text/javascript" src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/ext/ext-all.js"></script>
-			<script type="text/javascript" src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/ext/source/locale/ext-lang-#LCase(ListFirst(session.lang,'_'))#.js"></script>
+			<script type="text/javascript" src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/ext/build/locale/ext-lang-#LCase(ListFirst(session.lang,'_'))#.js"></script>
 			<script type="text/javascript" src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/ext-ux/Ext.ux.form.DateTime.js"></script>
 			<script type="text/javascript" src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/ext-ux/Ext.ux.grid.RowActions.js"></script>
 			<script type="text/javascript" src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/ext-ux/Ext.ux.grid.Search.js"></script>
