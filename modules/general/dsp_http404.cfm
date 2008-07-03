@@ -3,10 +3,10 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL: https://svn.sourceforge.net/svnroot/lanshock/trunk/core/general/dsp_error.cfm $
-$LastChangedDate: 2006-10-23 00:36:12 +0200 (Mo, 23 Okt 2006) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 50 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 --->
 
 <cfset application.lanshock.oLogger.writeLog('core.http404','UserAgent: "#cgi.http_user_agent#"','error')>
