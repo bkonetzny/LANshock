@@ -31,22 +31,10 @@ $LastChangedRevision$
 	stFileData.perObject = "false";
 	ArrayAppend(aTemplateFiles,stFileData);
 
-//View: dsp_list_, disp_display_, dsp_form_
 	stFileData = structNew();
 	stFileData.templateFile = "dsp_list_";
 	stFileData.outputFile = "dsp_list_";
 	stFileData.MVCpath = "#destinationFilePath#modules/$tablename$/view/list/";
-	stFileData.inPlace = "false";
-	stFileData.overwrite = "true";
-	stFileData.useAliasInName = "true";
-	stFileData.suffix = "cfm";
-	stFileData.perObject = "true";
-	ArrayAppend(aTemplateFiles,stFileData);
-	
-	stFileData = structNew();
-	stFileData.templateFile = "dsp_display_";
-	stFileData.outputFile = "dsp_display_";
-	stFileData.MVCpath = "#destinationFilePath#modules/$tablename$/view/display/";
 	stFileData.inPlace = "false";
 	stFileData.overwrite = "true";
 	stFileData.useAliasInName = "true";
@@ -97,17 +85,6 @@ $LastChangedRevision$
 	stFileData.useAliasInName = "false";
 	stFileData.suffix = "cfm";
 	stFileData.perObject = "true";
-	ArrayAppend(aTemplateFiles,stFileData);
-	
-	stFileData = structNew();
-	stFileData.templateFile = "display.xml";
-	stFileData.outputFile = "circuit.xml";
-	stFileData.MVCpath = "#destinationFilePath#modules/$tablename$/controller/";
-	stFileData.inPlace = "true";
-	stFileData.overwrite = "true";
-	stFileData.useAliasInName = "false";
-	stFileData.perObject = "true";
-	stFileData.suffix = "cfm";
 	ArrayAppend(aTemplateFiles,stFileData);
 	
 	stFileData = structNew();
