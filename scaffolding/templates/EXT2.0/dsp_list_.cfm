@@ -158,7 +158,7 @@ $LastChangedRevision$
 		action.on({
 			action:function(grid, record, action, row, col) {
 				if(action == 'icon-edit-record'){
-					window.location.href='#myself##xfa.update#&$$lPKFields$$=' + grid.getSelectionModel().getSelected().id;
+					window.location.href='#application.lanshock.oHelper.buildUrl('#xfa.update#')#&$$lPKFields$$=' + grid.getSelectionModel().getSelected().id;
 				}
 				else if(action == 'icon-delete-record'){
 					doDel();
@@ -167,39 +167,31 @@ $LastChangedRevision$
 		});
 	    	    
 	    var ds = new Ext.data.GroupingStore({
-			proxy: new Ext.data.HttpProxy({
-				url:'#myself##xfa.grid_json#'
-			}),
-			
-			reader: new Ext.data.JsonReader({
-	        	totalProperty: "totalRecords",
-	        	root: 'data',
-				id: '$$lPKFields$$'
-			},[
+			proxy: new Ext.data.HttpProxy({url: '#application.lanshock.oHelper.buildUrl('#xfa.grid_json#')#'}),
+			reader: new Ext.data.JsonReader({totalProperty: 'totalRecords', root: 'data', id: '$$lPKFields$$'},[
 				$$sCodeDataReaderModel$$
 			]),
-			
-			sortInfo: {field: '$$lPKFields$$', direction: 'ASC'},
+			sortInfo: {field:'$$lPKFields$$',direction:'ASC'},
 			remoteSort: true,
 			autoLoad: false
 		});
-	    
-	    var grid = new xg.GridPanel({
-	        id:'button-grid',
-	        ds: ds,
-	        cm: new xg.ColumnModel([
+
+		var grid = new xg.GridPanel({
+			id:'button-grid', ds: ds, sm: sm, height: 533, frame: false,
+	        viewConfig: {forceFit: true}, renderTo: Ext.get('grid_$$objectName$$'),
+	        bbar: new Ext.PagingToolbar({pageSize: 20, store: ds, displayInfo: true}),
+			cm: new xg.ColumnModel([
 	        	sm,
 	        	$$sCodeColumnModel$$,
 	        	action
 	        ]),
-	        sm: sm,
 	
 	        // inline toolbars
 	        tbar:[{
 	            text:'#jsStringFormat(request.content.$$objectName$$_grid_global_add)#',
 	            tooltip:'#jsStringFormat(request.content.$$objectName$$_grid_global_add)#',
 	            iconCls:'add',
-	            handler:function(){window.location.href='#myself##xfa.add#';}
+	            handler:function(){window.location.href='#application.lanshock.oHelper.buildUrl('#xfa.add#')#';}
 	        },'-',{
 	            text:'#jsStringFormat(request.content.$$objectName$$_grid_global_delete)#',
 	            tooltip:'#jsStringFormat(request.content.$$objectName$$_grid_global_delete)#',
@@ -207,25 +199,12 @@ $LastChangedRevision$
 	            handler: doDel
 	        }],
 	
-	        height:533,
-	        frame:false,
-	        renderTo: Ext.get('grid_$$objectName$$'),
 	        plugins: [action,new Ext.ux.grid.Search({
-				mode:'remote',
-				iconCls:false,
-				dateFormat:'m/d/Y',
-				minLength:1
-			})],
-	        
-	        viewConfig: {
-		        forceFit: true
-		    },
-	        
-	        bbar: new Ext.PagingToolbar({
-	            pageSize: 20,
-	            store: ds,
-	            displayInfo: true
-	        })
+				mode: 'remote',
+				iconCls: false,
+				dateFormat: 'm/d/Y',
+				minLength: 1
+			})]
 	    });
 		
 		ds.load({params:{start: 0, limit: 20}});
@@ -249,7 +228,7 @@ $LastChangedRevision$
 				jsonData = jsonData + "]";
 				var conn = new Ext.data.Connection();
 				conn.request({
-					url:"#myself##XFA.delete#",
+					url:'#application.lanshock.oHelper.buildUrl('#xfa.delete#')#',
 					params:{jsonData:jsonData}
 				})
 				ds.reload();		
@@ -257,7 +236,6 @@ $LastChangedRevision$
 		}
 	});
 </script>
-
 <div id="grid_$$objectName$$"></div>
 </cfoutput>
 <</cfoutput>>
