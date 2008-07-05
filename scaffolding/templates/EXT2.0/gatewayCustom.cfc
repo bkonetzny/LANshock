@@ -251,7 +251,7 @@ $LastChangedRevision$
 	<cffunction name="deleteByIDlist" access="remote" output="false" returntype="void" hint="I delete the selected N records">
 		<cfargument name="jsonData" default="" type="string" required="No" Hint="I am the json data to delete"/>
 		
-		<cfset var oJSON = CreateObject('component','#application.lanshock.oRuntime.getEnvironment().sComponentPath#core._utils.json.json')>
+		<cfset var oJSON = application.lanshock.oFactory.load('lanshock.core._utils.json.json')>
 		<cfset var aResult = oJSON.decode(data=arguments.jsonData)>
 		<cfset var idx = ''>
 
