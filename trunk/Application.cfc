@@ -17,7 +17,6 @@ $LastChangedRevision$
 	<cfset this.sessionTimeout = createTimeSpan(0,0,20,0)>
 	<cfset this.setClientCookies = true>
 	<cfset this.setDomainCookies = false>
-	<cfset this.scriptProtect = false>
 	
 	<cffunction name="onApplicationStart">
 		<cfif NOT fileExists(expandPath('fusebox.xml.cfm'))>
@@ -82,13 +81,6 @@ $LastChangedRevision$
 		<cfset setMyFusebox(myFusebox)>
 		
 		<cfset application.lanshock.oRuntime.prepareRequest()>
-		
-		<!--- todo: remove when railo fixes the issue with non-permanent cookies --->
-		<cfloop list="email,userid,password" index="idx">
-			<cfif StructKeyExists(cookie,idx)>
-				<cfcookie name="#idx#" value="#cookie[idx]#" expires="never">
-			</cfif>
-		</cfloop>
 		
 		<cfset stImageDir = StructNew()>
 		<cfif DirectoryExists(application.lanshock.oRuntime.getEnvironment().sBasePath & 'templates/' & request.lanshock.settings.layout.template & '/images/_general')>
