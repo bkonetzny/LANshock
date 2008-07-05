@@ -184,16 +184,16 @@ $LastChangedRevision$
 			<cfset sMode = 'classic'>
 		</cfif>
 		
-		<cfif sMode EQ 'classic'>
+		<cfif sMode EQ 'ses'>
+			<cfset sReturn = myFusebox.getMyself() & replaceList(urlSessionFormat(arguments.sParameters),'?,&,=','/,/,/')>
+			<cfif right(sReturn,1) NEQ '/'>
+				<cfset sReturn = sReturn & '/'>
+			</cfif>
+		<cfelseif sMode EQ 'classic'>
 			<cfif NOT find('?',myFusebox.getMyself())>
 				<cfset sReturn = urlSessionFormat(application.lanshock.oRuntime.getEnvironment().sWebPath & 'index.cfm?fuseaction=' & arguments.sParameters)>
 			<cfelse>
 				<cfset sReturn = myFusebox.getMyself() & urlSessionFormat(arguments.sParameters)>
-			</cfif>
-		<cfelse>
-			<cfset sReturn = myFusebox.getMyself() & replaceList(urlSessionFormat(arguments.sParameters),'?,&,=','/,/,/')>
-			<cfif right(sReturn,1) NEQ '/'>
-				<cfset sReturn = sReturn & '/'>
 			</cfif>
 		</cfif>
 		
