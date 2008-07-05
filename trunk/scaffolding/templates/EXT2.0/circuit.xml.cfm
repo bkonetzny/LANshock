@@ -14,6 +14,7 @@ $LastChangedRevision$
 
 <<cfoutput>>
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE circuit>
 <!--
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
