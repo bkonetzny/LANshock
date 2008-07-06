@@ -52,6 +52,7 @@
 	background-repeat: no-repeat;
 	background-position: left;
 	padding-left: 20px;
+	list-style: none;
 }
 
 .fbx_blog .blogpost .postoptions .trackback{
