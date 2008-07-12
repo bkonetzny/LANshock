@@ -57,7 +57,7 @@ $LastChangedRevision$
 		<set name="request.layout" value="json" />
 		
 		<!-- params by ext.grid -->
-		<include circuit="$$sModule$$" template="act_json_filter" />
+		<include circuit="$$sModule$$" template="list/act_json_filter_$$objectName$$" />
 		
 		<invoke object="application.lanshock.oFactory.load('$$objectName$$','reactorGateway')" method="getRecordsForGrid" returnvariable="request.page.pageContent">
 			<argument name="sortByFieldList" value="$$objectName$$|#attributes.sort#|#attributes.dir#" />

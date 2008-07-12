@@ -9,7 +9,7 @@ $LastChangedRevision$
 --->
 
 <cfscript>	
-	stFileData = structNew();
+	/*stFileData = structNew();
 	stFileData.templateFile = "info.xml";
 	stFileData.outputFile = "info.xml";
 	stFileData.MVCpath = "#destinationFilePath#modules/$tablename$/";
@@ -18,7 +18,7 @@ $LastChangedRevision$
 	stFileData.useAliasInName = "false";
 	stFileData.suffix = "cfm";
 	stFileData.perObject = "false";
-	ArrayAppend(aTemplateFiles,stFileData);
+	ArrayAppend(aTemplateFiles,stFileData);*/
 	
 	stFileData = structNew();
 	stFileData.templateFile = "dsp_layout_json";
@@ -99,14 +99,14 @@ $LastChangedRevision$
 	ArrayAppend(aTemplateFiles,stFileData);
 	
 	stFileData = structNew();
-	stFileData.templateFile = "act_json_filter";
-	stFileData.outputFile = "act_json_filter";
-	stFileData.MVCpath = "#destinationFilePath#modules/$tablename$/controller/";
+	stFileData.templateFile = "act_json_filter_";
+	stFileData.outputFile = "act_json_filter_";
+	stFileData.MVCpath = "#destinationFilePath#modules/$tablename$/controller/list/";
 	stFileData.inPlace = "false";
 	stFileData.overwrite = "true";
-	stFileData.useAliasInName = "false";
+	stFileData.useAliasInName = "true";
 	stFileData.suffix = "cfm";
-	stFileData.perObject = "false";
+	stFileData.perObject = "true";
 	ArrayAppend(aTemplateFiles,stFileData);
 	
 	stFileData = structNew();

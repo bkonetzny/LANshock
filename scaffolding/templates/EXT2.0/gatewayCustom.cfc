@@ -9,6 +9,7 @@ $LastChangedRevision$
 --->>
 
 <<cfset objectName = oMetaData.getSelectedTableAlias()>>
+<<cfset sModule = oMetaData.getModule()>>
 <<cfset aFields = oMetaData.getFieldsFromXML(objectName)>>
 <<cfset lFields = oMetaData.getFieldListFromXML(objectName)>>
 <<cfset aJoinedObjects = oMetaData.getRelationshipsFromXML(objectName,"manyToOne")>>
@@ -18,8 +19,8 @@ $LastChangedRevision$
 	<cfset variables.sOptionNameField = "$$ListGetAt(lFields,2)$$">
 	<cfset variables.sOptionNameCode = "">
 	
-	<<cfif fileExists("../templates/EXT2.0/custom/_gateway/$$objectName$$/gateway.settings.cfm")>>
-		<<cfinclude template="../templates/EXT2.0/custom/_gateway/$$objectName$$/gateway.settings.cfm">>
+	<<cfif fileExists(expandPath('modules/$$sModule$$/scaffolding/model/$$objectName$$/gateway.settings.cfm'))>>
+		<<cfinclude template="../../modules/$$sModule$$/scaffolding/model/$$objectName$$/gateway.settings.cfm">>
 	<</cfif>>
 	<cffunction name="getRecords" access="public" hint="I return all matching rows from the table." output="false" returntype="query">
 		<cfargument name="stFilter" type="struct" required="false" default="#StructNew()#">

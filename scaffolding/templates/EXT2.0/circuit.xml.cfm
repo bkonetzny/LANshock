@@ -31,9 +31,9 @@ $LastChangedRevision$
 		<lanshock:fuseaction>
 			<set name="request.page" value="#structNew()#"/>
 			<lanshock:i18n load="modules/$$sModule$$/i18n/lang.properties" returnvariable="request.content"/>
-			<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/controller/circuit_lanshock_fuseaction_i18n.xml.cfm")>>
+			<<cfif fileExists(expandPath('modules/$$sModule$$/scaffolding/controller/circuit_lanshock_fuseaction_i18n.xml.cfm'))>>
 				<<cfoutput>>
-				<<cfinclude template="../templates/EXT2.0/custom/$$sModule$$/controller/circuit_lanshock_fuseaction_i18n.xml.cfm">>
+				<<cfinclude template="../../modules/$$sModule$$/scaffolding/controller/circuit_lanshock_fuseaction_i18n.xml.cfm">>
 				<</cfoutput>>
 			<</cfif>>
 			<include circuit="$$sModule$$" template="settings" />
@@ -57,7 +57,7 @@ $LastChangedRevision$
 								<false>
 									<if condition="request.layout EQ 'admin'">
 										<true>
-											<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/raw_files/view/styles.css")>>
+											<<cfif fileExists(expandPath('modules/$$sModule$$/view/styles.css'))>>
 											<lanshock:htmlhead type="style" content="@import url('#application.lanshock.oRuntime.getEnvironment().sWebPath#modules/$$sModule$$/view/styles.css');"/>
 											<</cfif>>
 										</true>
@@ -67,7 +67,7 @@ $LastChangedRevision$
 						</false>
 					</if>
 				</true>
-				<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/raw_files/view/styles.css")>>
+				<<cfif fileExists(expandPath('modules/$$sModule$$/view/styles.css'))>>
 				<false>
 					<lanshock:htmlhead type="style" content="@import url('#application.lanshock.oRuntime.getEnvironment().sWebPath#modules/$$sModule$$/view/styles.css');"/>
 				</false>
@@ -77,18 +77,18 @@ $LastChangedRevision$
 	</postfuseaction>
 
 	<fuseaction name="main" access="public">
-		<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/controller/circuit_main.xml.cfm")>>
+		<<cfif fileExists(expandPath('modules/$$sModule$$/scaffolding/controller/circuit_main.xml.cfm'))>>
 			<<cfoutput>>
-			<<cfinclude template="../templates/EXT2.0/custom/$$sModule$$/controller/circuit_main.xml.cfm">>
+			<<cfinclude template="../../modules/$$sModule$$/scaffolding/controller/circuit_main.xml.cfm">>
 			<</cfoutput>>
 		<<cfelse>>
 			<include circuit="$$sModule$$" template="main" />
 		<</cfif>>
 	</fuseaction>
 	
-	<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/controller/circuit.xml.cfm")>>
+	<<cfif fileExists(expandPath('modules/$$sModule$$/scaffolding/controller/circuit.xml.cfm'))>>
 		<<cfoutput>>
-		<<cfinclude template="../templates/EXT2.0/custom/$$sModule$$/controller/circuit.xml.cfm">>
+		<<cfinclude template="../../modules/$$sModule$$/scaffolding/controller/circuit.xml.cfm">>
 		<</cfoutput>>
 	<</cfif>>
 
