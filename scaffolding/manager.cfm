@@ -43,7 +43,7 @@ I am the scaffolder manager. I call the requested functions of the scaffolder.
 	<cfif ListFindNoCase(attributes.scaffolding.go,"build")>
 		<cfset cftemplate = CreateObject("component","scaffolder.scaffolder.cftemplate").init()>
 		<cfset destinationFilePath = GetDirectoryFromPath(GetBaseTemplatePath())&"generated/lanshock/">
-		<cfset sModule = "admin">
+		<cfset sModule = "gallery">
 		<cfif isDefined("attributes.scaffolding.lTables")>
 			<cfset oMetaData.build(cftemplate=cftemplate,destinationFilePath=destinationFilePath,sModule=sModule,lTables=attributes.scaffolding.lTables)>
 		<cfelse>
