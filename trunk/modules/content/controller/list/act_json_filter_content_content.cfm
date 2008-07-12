@@ -1,10 +1,10 @@
 <!---
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
-$HeadURL: https://lanshock.svn.sourceforge.net/svnroot/lanshock/trunk/scaffolding/templates/EXT2.0/dsp_layout.cfm $
-$LastChangedDate: 2008-03-09 12:47:41 +0100 (So, 09 Mrz 2008) $
+$HeadURL: https://lanshock.svn.sourceforge.net/svnroot/lanshock/trunk/scaffolding/templates/EXT2.0/act_json_filter.cfm $
+$LastChangedDate: 2008-07-05 14:13:10 +0200 (Sa, 05 Jul 2008) $
 $LastChangedBy: majestixs $
-$LastChangedRevision: 205 $
+$LastChangedRevision: 379 $
 --->
 <cfparam name="attributes.sort" default="id">
 <cfparam name="attributes.dir" default="ASC">
@@ -14,7 +14,6 @@ $LastChangedRevision: 205 $
 <cfparam name="attributes.query" default="">
 <cfset stFilters = StructNew()>
 <cfset lFilterFields = reReplaceNoCase(attributes.fields,'[\[""\]]*','','ALL')>
-		
 <cfloop list="#lFilterFields#" index="idxFilters">
 	<cfset stFilters[idxFilters] = attributes.query>
 </cfloop>
