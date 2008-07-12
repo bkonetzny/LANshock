@@ -26,6 +26,15 @@ $LastChangedRevision$
 <<cfset aFields = oMetaData.getFieldsFromXML(objectName)>>
 <<!--- Get an array of joinedfields --->>
 <<cfset aJoinedFields = oMetaData.getJoinedFieldsFromXML(objectName)>>
+<<!--- Get table attributes --->>
+<<cfset stTableAttributes = oMetaData.getTableAttributesFromXML(objectName)>>
+<<cfif StructKeyExists(stTableAttributes,'sSortDefault')>>
+	<<cfset sTableSortField = ListFirst(stTableAttributes.sSortDefault,' ')>>
+	<<cfset sTableSortDirection = ListLast(stTableAttributes.sSortDefault,' ')>>
+<<cfelse>>
+	<<cfset sTableSortField = lPKFields>>
+	<<cfset sTableSortDirection = 'DESC'>>
+<</cfif>>
 
 <<cfset sCodeDataReaderModel = ''>>
 <<cfset bFirstColumn = true>>
@@ -50,70 +59,29 @@ $LastChangedRevision$
 <<cfloop from="1" to="$$ArrayLen(aFields)$$" index="idx">>
 	<<cfif aFields[idx].showOnList>>
 		<<cfif bFirstColumn>>
-			<<cfset sCodeColumnModel = sCodeColumnModel & "{id:'id',">>
+			<<cfset sCodeColumnModel = sCodeColumnModel & "{id:'$$lPKFields$$',">>
 			<<cfset bFirstColumn = false>>
 		<<cfelse>>
 			<<cfset sCodeColumnModel = sCodeColumnModel & "," & chr(13) & "{">>
 		<</cfif>>
-		<<cfset sCodeColumnModel = sCodeColumnModel & "header:'#jsStringFormat(request.content.$$objectName$$_grid_header_$$aFields[idx].alias$$)#',width:30,sortable:true,dataIndex:'$$aFields[idx].alias$$'">>
-		<<!--- <<cfswitch expression="$$aFields[idx].type$$">>
-			<<cfcase value="date">>
-				<<cfset sCodeColumnModel = sCodeColumnModel & ",renderer:Ext.util.Format.dateRenderer('d.m.Y - H:i')">>
-			<</cfcase>> 
-		<</cfswitch>> --->>
+		<<cfset sCodeColumnModel = sCodeColumnModel & "header:'#jsStringFormat(request.content.$$objectName$$_grid_header_$$aFields[idx].alias$$)#',sortable:true,dataIndex:'$$aFields[idx].alias$$'">>
+		<<cfswitch expression="$$aFields[idx].type$$">>
+			<<cfcase value="boolean">>
+				<<cfset sCodeColumnModel = sCodeColumnModel & ",width:24,renderer:LANshock.Formatters.formatBoolean">>
+			<</cfcase>>
+			<<cfcase value="datetime">>
+				<<cfset sCodeColumnModel = sCodeColumnModel & ",width:50,renderer:LANshock.Formatters.cfTimeStamp">>
+			<</cfcase>>
+			<<cfdefaultcase>>
+				<<cfset sCodeColumnModel = sCodeColumnModel & ",width:30">>
+			<</cfdefaultcase>>
+		<</cfswitch>>
 		<<cfset sCodeColumnModel = sCodeColumnModel & "}">>
 	<</cfif>>
 <</cfloop>>
 <</cfsilent>>
 <<cfoutput>>
 <cfsilent>
-<!--- -->
-<fusedoc fuse="$RCSfile: dsp_list_$$objectName$$.cfm,v $" language="ColdFusion 7.01" version="2.0"  >
-	<responsibilities>
-		This page displays a listing of the $$objectName$$ records from a recordset. 
-		Each record has a link for viewing, deleting, and editing the selected $$objectName$$ record.
-	</responsibilities>
-	<properties>
-		<history author="Kevin Roche" email="kevin@objectiveinternet.com" date="$$dateFormat(now(),'dd-mmm-yyyy')$$" role="Architect" type="Create" />
-		<property name="copyright" value="(c)$$year(now())$$ Objective Internet Limited." />
-		<property name="licence" value="See licence.txt" />
-		<property name="version" value="$Revision$" />
-		<property name="lastupdated" value="$Date$$DateFormat(now(),'yyyy/mm/dd')$$ $$ TimeFormat(now(),'HH:mm:ss')$$ $" />
-		<property name="updatedby" value="$Author$" />
-	</properties>
-	<io>
-		<in>
-			<string name="self" scope="request" />
-			<string name="XFA.Display" scope="variables" comments="link to view a record" />
-			<string name="XFA.Edit" scope="variables" comments="link to edit a record" />
-			<string name="XFA.Add" scope="variables" comments="link to add a record" />
-			<string name="XFA.Delete" scope="variables" comments="link to delete a record" />
-			<string name="XFA.Prev" scope="variables" comments="link to next page" />
-			<string name="XFA.Next" scope="variables" comments="link to next page" />
-			
-			<number name="_maxrows" scope="attributes" optional="Yes" comments="Used to limit the display to a number of records." />
-			<number name="_startrow" scope="attributes" optional="Yes" comments="Used to specify the first record to display." />
-			<number name="_totalRowCount" precision="integer" scope="variables" comments="Count of rows in the $$objectName$$ table." />
-			<string name="_listSortByFieldList" default="">
-			
-			<recordset name="q$$objectname$$" primaryKeys="$$lPKFields$$" scope="variables" comments="Recordset containing $$objectName$$ records " >
-			<<cfloop from="1" to="$$ArrayLen(aFields)$$" index="i">>
-				<$$aFields[i].type$$ name="$$aFields[i].alias$$" /><</cfloop>>
-			<<cfloop from="1" to="$$ArrayLen(aJoinedFields)$$" index="i">><<cfif NOT ListFindNoCase(lFields,aJoinedFields[i].alias)>>
-				<$$aJoinedFields[i].type$$ name="$$aJoinedFields[i].alias$$" /><</cfif>><</cfloop>>
-			</recordset>
-			
-			<list name="fieldlist" scope="variables" optional="Yes" 
-				default="$$lAllFields$$" 
-				comments="List of fields to display." />
-		</in>
-		<out>
-			<string name="fuseaction" scope="formOrUrl" />
-			<string name="pkey" scope="formOrUrl" comments="the primary key of the record being viewed, edited or deleted" />
-		</out>
-	</io>
-</fusedoc>
---->
 <cfparam name="XFA.Display">
 <cfparam name="XFA.Update">
 <cfparam name="XFA.Delete">
@@ -133,8 +101,8 @@ $LastChangedRevision$
 
 <!--- Complete list of fields that could be displayed --->
 <cfparam name="variables.fieldlist" default="$$lAllFields$$">
-
 </cfsilent>
+
 <cfoutput>
 <h3>#request.content['__globalmodule__navigation__#request.page.objectName#_listing']#</h3>
 <script type="text/javascript">
@@ -171,7 +139,7 @@ $LastChangedRevision$
 			reader: new Ext.data.JsonReader({totalProperty: 'totalRecords', root: 'data', id: '$$lPKFields$$'},[
 				$$sCodeDataReaderModel$$
 			]),
-			sortInfo: {field:'$$lPKFields$$',direction:'ASC'},
+			sortInfo: {field:'$$sTableSortField$$',direction:'$$sTableSortDirection$$'},
 			remoteSort: true,
 			autoLoad: false
 		});

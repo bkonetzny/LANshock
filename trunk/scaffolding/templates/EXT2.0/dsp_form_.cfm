@@ -69,11 +69,11 @@ $LastChangedRevision$
 	
 	<<cfinclude template="../templates/EXT2.0/includes/form_structure.cfm">>
 	
-	<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/view/dsp_form.$$objectName$$.form_structures.fields.cfm")
-			AND fileExists("../templates/EXT2.0/custom/$$sModule$$/view/dsp_form.$$objectName$$.form_structures.mover.cfm")>>
-		<<cfinclude template="../templates/EXT2.0/custom/$$sModule$$/view/dsp_form.$$objectName$$.form_structures.fields.cfm">>
+	<<cfif fileExists(expandPath('modules/$$sModule$$/scaffolding/view/dsp_form.$$objectName$$.form_structures.fields.cfm'))
+			AND fileExists(expandPath('modules/$$sModule$$/scaffolding/view/dsp_form.$$objectName$$.form_structures.mover.cfm'))>>
+		<<cfinclude template="../../modules/$$sModule$$/scaffolding/view/dsp_form.$$objectName$$.form_structures.fields.cfm">>
 		<<cfinclude template="../templates/EXT2.0/includes/form_structure_mover.cfm">>
-		<<cfinclude template="../templates/EXT2.0/custom/$$sModule$$/view/dsp_form.$$objectName$$.form_structures.mover.cfm">>
+		<<cfinclude template="../../modules/$$sModule$$/scaffolding/view/dsp_form.$$objectName$$.form_structures.mover.cfm">>
 	<</cfif>>
 	
 	<<cfinclude template="../templates/EXT2.0/includes/form_layout.cfm">>

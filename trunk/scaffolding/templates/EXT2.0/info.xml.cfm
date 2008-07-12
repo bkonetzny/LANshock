@@ -10,8 +10,8 @@ $LastChangedRevision$
 
 <<cfset sModule = oMetaData.getModule()>>
 
-<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/info.xml.cfm")>>
-	<<cffile action="read" file="../templates/EXT2.0/custom/$$sModule$$/info.xml.cfm" variable="sFileContent">>
+<<cfif fileExists(expandPath('modules/$$sModule$$/info.xml.cfm'))>>
+	<<cffile action="read" file="../../modules/$$sModule$$/info.xml.cfm" variable="sFileContent">>
 <<cfelse>>
 	<<cfset lTables = oMetaData.getLTableAliases()>>
 	

@@ -32,9 +32,12 @@ $LastChangedRevision$
 		<include circuit="$$sModule$$" template="form/act_form_$$objectName$$" />
 		
 		<include circuit="$$sModule$$" template="form/act_form_loadrelated_$$objectName$$" />
-		<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/raw_files/controller/form/act_form_loadrelated_custom_$$objectName$$.cfm")>>
-			<include circuit="$$sModule$$" template="form/act_form_loadrelated_custom_$$objectName$$" />
+		
+		<!-- snippet 'modules/$$sModule$$/controller/form/snippets/act_form_loadrelated_custom_$$objectName$$.cfm' -->
+		<<cfif fileExists(expandPath('modules/$$sModule$$/controller/form/snippets/act_form_loadrelated_custom_$$objectName$$.cfm'))>>
+			<include circuit="$$sModule$$" template="form/snippets/act_form_loadrelated_custom_$$objectName$$" />
 		<</cfif>>
+		<!-- /snippet -->
 		
 		<include circuit="udfs" template="udf_appendParam" />
 		<include circuit="v_$$sModule$$" template="form/dsp_form_$$objectName$$" />

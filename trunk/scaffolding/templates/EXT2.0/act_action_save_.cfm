@@ -19,17 +19,21 @@ $LastChangedRevision$
 	<cfset aErrors = ArrayNew(1)>
 	<cfset aTranslatedErrors = ArrayNew(1)>
 
-	<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/raw_files/controller/form/act_action_save_prevalidation_$$objectName$$.cfm")>>
-		<cfinclude template="act_action_save_prevalidation_$$objectName$$.cfm">
+	<!--- snippet 'modules/$$sModule$$/controller/form/snippets/act_action_save_prevalidation_$$objectName$$.cfm' --->
+	<<cfif fileExists(expandPath('modules/$$sModule$$/controller/form/snippets/act_action_save_prevalidation_$$objectName$$.cfm'))>>
+		<cfinclude template="snippets/act_action_save_prevalidation_$$objectName$$.cfm">
 	<</cfif>>
+	<!--- /snippet --->
 
 	<<cfloop from="1" to="$$ArrayLen(stFields['aTable'])$$" index="i">>
 		<<cfmodule template="../templates/EXT2.0/rowtypes/rowtype.cfm" rowtype="$$stFields['aTable'][i].formType$$" method="validation_pre">>
 	<</cfloop>>
 
-	<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/raw_files/controller/form/act_action_save_postvalidation_$$objectName$$.cfm")>>
-		<cfinclude template="act_action_save_postvalidation_$$objectName$$.cfm">
+	<!--- snippet 'modules/$$sModule$$/controller/form/snippets/act_action_save_postvalidation_$$objectName$$.cfm' --->
+	<<cfif fileExists(expandPath('modules/$$sModule$$/controller/form/snippets/act_action_save_postvalidation_$$objectName$$.cfm'))>>
+		<cfinclude template="snippets/act_action_save_postvalidation_$$objectName$$.cfm">
 	<</cfif>>
+	<!--- /snippet --->
 
 	<cfparam name="attributes.$$objectName$$_id" default="0">
 	<cfset o$$objectName$$ = application.lanshock.oFactory.load('$$objectName$$','reactorRecord')>
@@ -70,9 +74,12 @@ $LastChangedRevision$
 		<cfset request.layout = "admin">
 		
 		<cfinclude template="act_form_loadrelated_$$objectName$$.cfm">
-		<<cfif fileExists("../templates/EXT2.0/custom/$$sModule$$/raw_files/controller/form/act_form_loadrelated_custom_$$objectName$$.cfm")>>
-			<cfinclude template="act_form_loadrelated_custom_$$objectName$$.cfm">
+		
+		<!--- snippet 'modules/$$sModule$$/controller/form/snippets/act_form_loadrelated_custom_$$objectName$$.cfm' --->
+		<<cfif fileExists(expandPath('modules/$$sModule$$/controller/form/snippets/act_form_loadrelated_custom_$$objectName$$.cfm'))>>
+			<cfinclude template="snippets/act_form_loadrelated_custom_$$objectName$$.cfm">
 		<</cfif>>
+		<!--- /snippet --->
 
 		<cfset aReactorErrors = o$$objectName$$._getErrorCollection().getErrors()>
 		<cfloop from="1" to="#ArrayLen(aReactorErrors)#" index="idx">
