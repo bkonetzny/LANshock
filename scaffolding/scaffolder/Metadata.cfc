@@ -1511,6 +1511,16 @@ limitations under the License.
 		</cfloop>
 		
 		<cfreturn aTables>
+	</cffunction>																						 --->
+	
+	<cffunction name="getTableAttributesFromXML" returntype="struct" output="No"  
+				hint="I return an array containing the fields of the selected table from the XML Configuration.">
+		<cfargument name="table" type="string" required="Yes" hint="I am the name of the table who's fields are to be output.">
+		<cfset var i = 0>
+		<cfset var quotedTable = "'#arguments.table#'">
+		<cfset var xTable = XmlSearch(variables.xScaffoldingConfig,"/scaffolding/objects/object[@name=#quotedTable#]")>
+		
+		<cfreturn xTable[1].XmlAttributes>
 	</cffunction>
 	
 	<cffunction name="getFieldsFromXML" returntype="array" output="No" 
