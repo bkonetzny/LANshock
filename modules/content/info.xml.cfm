@@ -43,7 +43,7 @@
 	<special>
 		<scaffolding>
 			<table name="content_content">
-				<list fields="id,title,user_id,dtchanged,bactive,codename"/>
+				<list fields="id,title,user_id,dtchanged,bactive,codename" sortDefault="title ASC"/>
 				<form fields="id,title,content,bactive,codename">
 					<field name="content" formType="FckEditor"/>
 				</form>

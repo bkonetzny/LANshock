@@ -51,7 +51,7 @@
 			reader: new Ext.data.JsonReader({totalProperty: 'totalRecords', root: 'data', id: 'id'},[
 				{name:'id',mapping:'id'},{name:'codename',mapping:'codename'},{name:'title',mapping:'title'},{name:'user_id',mapping:'user_id'},{name:'dtchanged',mapping:'dtchanged'},{name:'bactive',mapping:'bactive'}
 			]),
-			sortInfo: {field:'id',direction:'ASC'},
+			sortInfo: {field:'title',direction:'ASC'},
 			remoteSort: true,
 			autoLoad: false
 		});
@@ -61,7 +61,7 @@
 	        bbar: new Ext.PagingToolbar({pageSize: 20, store: ds, displayInfo: true}),
 			cm: new xg.ColumnModel([
 	        	sm,
-	        	{id:'id',header:'#jsStringFormat(request.content.content_content_grid_header_id)#',width:30,sortable:true,dataIndex:'id'},{header:'#jsStringFormat(request.content.content_content_grid_header_codename)#',width:30,sortable:true,dataIndex:'codename'},{header:'#jsStringFormat(request.content.content_content_grid_header_title)#',width:30,sortable:true,dataIndex:'title'},{header:'#jsStringFormat(request.content.content_content_grid_header_user_id)#',width:30,sortable:true,dataIndex:'user_id'},{header:'#jsStringFormat(request.content.content_content_grid_header_dtchanged)#',width:30,sortable:true,dataIndex:'dtchanged'},{header:'#jsStringFormat(request.content.content_content_grid_header_bactive)#',width:30,sortable:true,dataIndex:'bactive'},
+	        	{id:'id',header:'#jsStringFormat(request.content.content_content_grid_header_id)#',sortable:true,dataIndex:'id',width:30},{header:'#jsStringFormat(request.content.content_content_grid_header_codename)#',sortable:true,dataIndex:'codename',width:30},{header:'#jsStringFormat(request.content.content_content_grid_header_title)#',sortable:true,dataIndex:'title',width:30},{header:'#jsStringFormat(request.content.content_content_grid_header_user_id)#',sortable:true,dataIndex:'user_id',width:30},{header:'#jsStringFormat(request.content.content_content_grid_header_dtchanged)#',sortable:true,dataIndex:'dtchanged',width:50,renderer:LANshock.Formatters.cfTimeStamp},{header:'#jsStringFormat(request.content.content_content_grid_header_bactive)#',sortable:true,dataIndex:'bactive',width:24,renderer:LANshock.Formatters.formatBoolean},
 	        	action
 	        ]),
 	

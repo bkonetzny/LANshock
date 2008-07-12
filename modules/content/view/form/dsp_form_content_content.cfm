@@ -139,9 +139,9 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="id" id="formrow_EC997CDBB917410BAA2D551B8DD91910" value="#ocontent_content.getid()#" />
+	<input type="hidden" name="id" id="formrow_9219E79E55054E5981DE6AC4E4326910" value="#ocontent_content.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_EC997CDBB917410BAA2D551B8DD91910">#request.content.content_content_rowtype_label_id#</label>
+		<label for="formrow_9219E79E55054E5981DE6AC4E4326910">#request.content.content_content_rowtype_label_id#</label>
 		#Trim(ocontent_content.getid())#
 	</div>
 	</cfif>
@@ -156,8 +156,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_FC7C7539F65B42348E374AAF54E31E51"><em>*</em> #request.content.content_content_rowtype_label_codename#</label>
-		<input type="text" class="textInput" name="codename" id="formrow_FC7C7539F65B42348E374AAF54E31E51" value="#Trim(ocontent_content.getcodename())#"/>
+		<label for="formrow_0EA3488F76ED4CF995C54DF41AED4F7A"><em>*</em> #request.content.content_content_rowtype_label_codename#</label>
+		<input type="text" class="textInput" name="codename" id="formrow_0EA3488F76ED4CF995C54DF41AED4F7A" value="#Trim(ocontent_content.getcodename())#"/>
 	</div>
 				
 			
@@ -170,8 +170,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_6FF8B7F0BF5A44FC998908E4994FB8AC"><em>*</em> #request.content.content_content_rowtype_label_title#</label>
-		<input type="text" class="textInput" name="title" id="formrow_6FF8B7F0BF5A44FC998908E4994FB8AC" value="#Trim(ocontent_content.gettitle())#"/>
+		<label for="formrow_97ACC7851D164727B58385F8A4D55296"><em>*</em> #request.content.content_content_rowtype_label_title#</label>
+		<input type="text" class="textInput" name="title" id="formrow_97ACC7851D164727B58385F8A4D55296" value="#Trim(ocontent_content.gettitle())#"/>
 	</div>
 				
 			
@@ -184,17 +184,17 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_DCDF207CDBEA47959F673A32A08EDCC6"><em>*</em> #request.content.content_content_rowtype_label_content#</label>
-		<textarea name="content" id="formrow_DCDF207CDBEA47959F673A32A08EDCC6">#Trim(ocontent_content.getcontent())#</textarea>
+		<label for="formrow_7946783C875443A0AD417FADAE1863D2"><em>*</em> #request.content.content_content_rowtype_label_content#</label>
+		<textarea name="content" id="formrow_7946783C875443A0AD417FADAE1863D2">#Trim(ocontent_content.getcontent())#</textarea>
 			<script type="text/javascript">
 			<!--
 				var sBasePath = "#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/";
-				var oFCKeditor_formrow_DCDF207CDBEA47959F673A32A08EDCC6 = new FCKeditor('content');
-				oFCKeditor_formrow_DCDF207CDBEA47959F673A32A08EDCC6.BasePath = sBasePath + "fckeditor/";
-				oFCKeditor_formrow_DCDF207CDBEA47959F673A32A08EDCC6.Config['CustomConfigurationsPath'] = sBasePath + "lanshock_fckeditor_config.js";
-				oFCKeditor_formrow_DCDF207CDBEA47959F673A32A08EDCC6.Value = '';
+				var oFCKeditor_formrow_7946783C875443A0AD417FADAE1863D2 = new FCKeditor('content');
+				oFCKeditor_formrow_7946783C875443A0AD417FADAE1863D2.BasePath = sBasePath + "fckeditor/";
+				oFCKeditor_formrow_7946783C875443A0AD417FADAE1863D2.Config['CustomConfigurationsPath'] = sBasePath + "lanshock_fckeditor_config.js";
+				oFCKeditor_formrow_7946783C875443A0AD417FADAE1863D2.Value = '';
 				Ext.onReady(function(){
-					oFCKeditor_formrow_DCDF207CDBEA47959F673A32A08EDCC6.ReplaceTextarea();
+					oFCKeditor_formrow_7946783C875443A0AD417FADAE1863D2.ReplaceTextarea();
 				});
 			//-->
 			</script>
@@ -209,7 +209,7 @@
 					
 
 	
-	<input type="hidden" name="user_id" id="formrow_7413DCCBC2804BEC978D7C4857C16A9A" value="#ocontent_content.getuser_id()#" />
+	<input type="hidden" name="user_id" id="formrow_B8C211EE3A544BC696553AA1E6602CCF" value="#ocontent_content.getuser_id()#" />
 				
 			
 			
@@ -220,7 +220,7 @@
 					
 
 	
-	<input type="hidden" name="dtcreated" id="formrow_D7DFE4CD7A4F4291B85853F5D5ECE6F2" value="#ocontent_content.getdtcreated()#" />
+	<input type="hidden" name="dtcreated" id="formrow_B9163198C7354456BD5C0D0A1C05E482" value="#ocontent_content.getdtcreated()#" />
 				
 			
 			
@@ -231,7 +231,7 @@
 					
 
 	
-	<input type="hidden" name="dtchanged" id="formrow_B5E3546F43514F13889588DBA4DE796C" value="#ocontent_content.getdtchanged()#" />
+	<input type="hidden" name="dtchanged" id="formrow_AFFB1E99D5BF4450BC9D7EEA7A54EDF3" value="#ocontent_content.getdtchanged()#" />
 				
 			
 			
@@ -244,7 +244,7 @@
 	
 	<div class="ctrlHolder">
 		<div>
-			<label for="formrow_E284B3A196594B819993FE5D47ACFFEA" class="inlineLabel"><input type="checkbox" name="bactive" id="formrow_E284B3A196594B819993FE5D47ACFFEA" value="1"<cfif ocontent_content.getbactive()> checked="checked"</cfif>/> <em>*</em>  #request.content.content_content_rowtype_label_bactive#</label>
+			<label for="formrow_320F308A571D4A0AABE326F3DC44F29E" class="inlineLabel"><input type="checkbox" name="bactive" id="formrow_320F308A571D4A0AABE326F3DC44F29E" value="1"<cfif ocontent_content.getbactive()> checked="checked"</cfif>/> <em>*</em>  #request.content.content_content_rowtype_label_bactive#</label>
 		</div>
 	</div>
 				
