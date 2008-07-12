@@ -1,80 +1,4 @@
 <cfsilent>
-<!--- -->
-<fusedoc fuse="$RCSfile: dsp_list_content_content.cfm,v $" language="ColdFusion 7.01" version="2.0"  >
-	<responsibilities>
-		This page displays a listing of the content_content records from a recordset. 
-		Each record has a link for viewing, deleting, and editing the selected content_content record.
-	</responsibilities>
-	<properties>
-		<history author="Kevin Roche" email="kevin@objectiveinternet.com" date="08-Jun-2008" role="Architect" type="Create" />
-		<property name="copyright" value="(c)2008 Objective Internet Limited." />
-		<property name="licence" value="See licence.txt" />
-		<property name="version" value="$Revision: 342 $" />
-		<property name="lastupdated" value="$Date: 2008-05-31 14:36:37 +0200 (Sa, 31 Mai 2008) 2008/06/08 13:09:23 $" />
-		<property name="updatedby" value="$Author: majestixs $" />
-	</properties>
-	<io>
-		<in>
-			<string name="self" scope="request" />
-			<string name="XFA.Display" scope="variables" comments="link to view a record" />
-			<string name="XFA.Edit" scope="variables" comments="link to edit a record" />
-			<string name="XFA.Add" scope="variables" comments="link to add a record" />
-			<string name="XFA.Delete" scope="variables" comments="link to delete a record" />
-			<string name="XFA.Prev" scope="variables" comments="link to next page" />
-			<string name="XFA.Next" scope="variables" comments="link to next page" />
-			
-			<number name="_maxrows" scope="attributes" optional="Yes" comments="Used to limit the display to a number of records." />
-			<number name="_startrow" scope="attributes" optional="Yes" comments="Used to specify the first record to display." />
-			<number name="_totalRowCount" precision="integer" scope="variables" comments="Count of rows in the content_content table." />
-			<string name="_listSortByFieldList" default="">
-			
-			<recordset name="qcontent_content" primaryKeys="id" scope="variables" comments="Recordset containing content_content records " >
-			
-				<numeric name="id" />
-				<string name="title" />
-				<string name="codename" />
-				<string name="content" />
-				<numeric name="user_id" />
-				<date name="dtcreated" />
-				<date name="dtchanged" />
-				<numeric name="bactive" />
-			
-				<string name="name" />
-				<string name="email" />
-				<string name="pwd" />
-				<string name="firstname" />
-				<string name="lastname" />
-				<numeric name="gender" />
-				<string name="status" />
-				<string name="signature" />
-				<string name="homepage" />
-				<string name="internal_note" />
-				<date name="dt_birthdate" />
-				<date name="dt_lastlogin" />
-				<date name="dt_registered" />
-				<string name="language" />
-				<string name="country" />
-				<string name="city" />
-				<string name="street" />
-				<string name="zip" />
-				<numeric name="logincount" />
-				<string name="reset_password_key" />
-				<string name="openid_url" />
-				<string name="geo_latlong" />
-				<numeric name="data_access" />
-			</recordset>
-			
-			<list name="fieldlist" scope="variables" optional="Yes" 
-				default="id,title,codename,content,user_id,dtcreated,dtchanged,bactive,id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong,data_access" 
-				comments="List of fields to display." />
-		</in>
-		<out>
-			<string name="fuseaction" scope="formOrUrl" />
-			<string name="pkey" scope="formOrUrl" comments="the primary key of the record being viewed, edited or deleted" />
-		</out>
-	</io>
-</fusedoc>
---->
 <cfparam name="XFA.Display">
 <cfparam name="XFA.Update">
 <cfparam name="XFA.Delete">
@@ -89,7 +13,7 @@
 <cfset sortParams = appendParam(sortParams,"_Maxrows",attributes._Maxrows)>
 <cfset pageParams = appendParam(sortParams,"_StartRow",attributes._Startrow)>
 <!--- Complete list of fields that could be displayed --->
-<cfparam name="variables.fieldlist" default="id,title,codename,content,user_id,dtcreated,dtchanged,bactive,id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong,data_access">
+<cfparam name="variables.fieldlist" default="id,codename,title,content,user_id,dtcreated,dtchanged,bactive">
 </cfsilent>
 <cfoutput>
 <h3>#request.content['__globalmodule__navigation__#request.page.objectName#_listing']#</h3>
@@ -114,7 +38,7 @@
 		action.on({
 			action:function(grid, record, action, row, col) {
 				if(action == 'icon-edit-record'){
-					window.location.href='#myself##xfa.update#&id=' + grid.getSelectionModel().getSelected().id;
+					window.location.href='#application.lanshock.oHelper.buildUrl('#xfa.update#')#&id=' + grid.getSelectionModel().getSelected().id;
 				}
 				else if(action == 'icon-delete-record'){
 					doDel();
@@ -123,39 +47,30 @@
 		});
 	    	    
 	    var ds = new Ext.data.GroupingStore({
-			proxy: new Ext.data.HttpProxy({
-				url:'#myself##xfa.grid_json#'
-			}),
-			
-			reader: new Ext.data.JsonReader({
-	        	totalProperty: "totalRecords",
-	        	root: 'data',
-				id: 'id'
-			},[
-				{name:'id',mapping:'id'},{name:'title',mapping:'title'},{name:'codename',mapping:'codename'},{name:'user_id',mapping:'user_id'},{name:'dtchanged',mapping:'dtchanged'},{name:'bactive',mapping:'bactive'}
+			proxy: new Ext.data.HttpProxy({url: '#application.lanshock.oHelper.buildUrl('#xfa.grid_json#')#'}),
+			reader: new Ext.data.JsonReader({totalProperty: 'totalRecords', root: 'data', id: 'id'},[
+				{name:'id',mapping:'id'},{name:'codename',mapping:'codename'},{name:'title',mapping:'title'},{name:'user_id',mapping:'user_id'},{name:'dtchanged',mapping:'dtchanged'},{name:'bactive',mapping:'bactive'}
 			]),
-			
-			sortInfo: {field: 'id', direction: 'ASC'},
+			sortInfo: {field:'id',direction:'ASC'},
 			remoteSort: true,
 			autoLoad: false
 		});
-	    
-	    var grid = new xg.GridPanel({
-	        id:'button-grid',
-	        ds: ds,
-	        cm: new xg.ColumnModel([
+		var grid = new xg.GridPanel({
+			id:'button-grid', ds: ds, sm: sm, height: 533, frame: false,
+	        viewConfig: {forceFit: true}, renderTo: Ext.get('grid_content_content'),
+	        bbar: new Ext.PagingToolbar({pageSize: 20, store: ds, displayInfo: true}),
+			cm: new xg.ColumnModel([
 	        	sm,
-	        	{id:'id',header:'#jsStringFormat(request.content.content_content_grid_header_id)#',width:30,sortable:true,dataIndex:'id'},{header:'#jsStringFormat(request.content.content_content_grid_header_title)#',width:30,sortable:true,dataIndex:'title'},{header:'#jsStringFormat(request.content.content_content_grid_header_codename)#',width:30,sortable:true,dataIndex:'codename'},{header:'#jsStringFormat(request.content.content_content_grid_header_user_id)#',width:30,sortable:true,dataIndex:'user_id'},{header:'#jsStringFormat(request.content.content_content_grid_header_dtchanged)#',width:30,sortable:true,dataIndex:'dtchanged'},{header:'#jsStringFormat(request.content.content_content_grid_header_bactive)#',width:30,sortable:true,dataIndex:'bactive'},
+	        	{id:'id',header:'#jsStringFormat(request.content.content_content_grid_header_id)#',width:30,sortable:true,dataIndex:'id'},{header:'#jsStringFormat(request.content.content_content_grid_header_codename)#',width:30,sortable:true,dataIndex:'codename'},{header:'#jsStringFormat(request.content.content_content_grid_header_title)#',width:30,sortable:true,dataIndex:'title'},{header:'#jsStringFormat(request.content.content_content_grid_header_user_id)#',width:30,sortable:true,dataIndex:'user_id'},{header:'#jsStringFormat(request.content.content_content_grid_header_dtchanged)#',width:30,sortable:true,dataIndex:'dtchanged'},{header:'#jsStringFormat(request.content.content_content_grid_header_bactive)#',width:30,sortable:true,dataIndex:'bactive'},
 	        	action
 	        ]),
-	        sm: sm,
 	
 	        // inline toolbars
 	        tbar:[{
 	            text:'#jsStringFormat(request.content.content_content_grid_global_add)#',
 	            tooltip:'#jsStringFormat(request.content.content_content_grid_global_add)#',
 	            iconCls:'add',
-	            handler:function(){window.location.href='#myself##xfa.add#';}
+	            handler:function(){window.location.href='#application.lanshock.oHelper.buildUrl('#xfa.add#')#';}
 	        },'-',{
 	            text:'#jsStringFormat(request.content.content_content_grid_global_delete)#',
 	            tooltip:'#jsStringFormat(request.content.content_content_grid_global_delete)#',
@@ -163,25 +78,12 @@
 	            handler: doDel
 	        }],
 	
-	        height:533,
-	        frame:false,
-	        renderTo: Ext.get('grid_content_content'),
 	        plugins: [action,new Ext.ux.grid.Search({
-				mode:'remote',
-				iconCls:false,
-				dateFormat:'m/d/Y',
-				minLength:1
-			})],
-	        
-	        viewConfig: {
-		        forceFit: true
-		    },
-	        
-	        bbar: new Ext.PagingToolbar({
-	            pageSize: 20,
-	            store: ds,
-	            displayInfo: true
-	        })
+				mode: 'remote',
+				iconCls: false,
+				dateFormat: 'm/d/Y',
+				minLength: 1
+			})]
 	    });
 		
 		ds.load({params:{start: 0, limit: 20}});
@@ -205,7 +107,7 @@
 				jsonData = jsonData + "]";
 				var conn = new Ext.data.Connection();
 				conn.request({
-					url:"#myself##XFA.delete#",
+					url:'#application.lanshock.oHelper.buildUrl('#xfa.delete#')#',
 					params:{jsonData:jsonData}
 				})
 				ds.reload();		

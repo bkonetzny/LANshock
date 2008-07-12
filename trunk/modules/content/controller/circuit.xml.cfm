@@ -74,7 +74,7 @@
 		
 		<set name="attributes._listSortByFieldList" overwrite="false" value="content_content|id|ASC"/>
 		
-		<set name="fieldlist" value="id,title,codename,content,user_id,dtcreated,dtchanged,bactive,id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong,data_access"/>
+		<set name="fieldlist" value="id,codename,title,content,user_id,dtcreated,dtchanged,bactive,"/>
 		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_content" template="list/dsp_list_content_content"/>
 	</fuseaction>
@@ -86,7 +86,7 @@
 		<set name="request.layout" value="json"/>
 		
 		<!-- params by ext.grid -->
-		<include circuit="content" template="act_json_filter"/>
+		<include circuit="content" template="list/act_json_filter_content_content"/>
 		
 		<invoke method="getRecordsForGrid" object="application.lanshock.oFactory.load('content_content','reactorGateway')" returnvariable="request.page.pageContent">
 			<argument name="sortByFieldList" value="content_content|#attributes.sort#|#attributes.dir#"/>
@@ -117,6 +117,9 @@
 		
 		<include circuit="content" template="form/act_form_loadrelated_content_content"/>
 		
+		<!-- snippet 'modules/content/controller/form/snippets/act_form_loadrelated_custom_content_content.cfm' -->
+		
+		<!-- /snippet -->
 		
 		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_content" template="form/dsp_form_content_content"/>

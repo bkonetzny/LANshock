@@ -6,7 +6,7 @@
  |                               http://sourceforge.net/projects/lanshock/ |
  | Released Under the GNU General Public License (v2) (see license.txt)    |
 -->
-<module name="Content Module" version="2.0.0.0" date="2008-06-08" author="LANshock" url="http://www.lanshock.com">
+<module name="Content Module" version="2.0.0.0" date="2008-07-12" author="LANshock" url="http://www.lanshock.com">
 	
 	<general requiresLogin="false"/>
 	
@@ -15,7 +15,7 @@
 	</license>
 	
 	<navigation>
-		<item action="content_content_Listing" permissions="content_content"/>
+		<item action="content_content_listing" permissions="content_content"/>
 	</navigation>
 	
 	<security>
@@ -34,44 +34,20 @@
 			<field name="dtchanged" type="datetime" null="true" default="NULL"/>
 			<field name="bactive" type="boolean" null="false" default="0"/>
 			<pk fields="id"/>
-			<fk field="user_id" mapping="user.id"/>
+			<fk field="user_id" mapping="user.id" type="manyToOne"/>
 			<index name="IDX_codename" fields="codename"/>
 			<index name="IDX_bactive" fields="bactive"/>
 		</table>
 	</database>
 	
 	<special>
-		<reactor>
+		<scaffolding>
 			<table name="content_content">
-				<![CDATA[
-					<hasMany name="user">
-						<relate from="user_id" to="id"/>
-					</hasMany>
-				]]>
+				<list fields="id,title,user_id,dtchanged,bactive,codename"/>
+				<form fields="id,title,content,bactive,codename">
+					<field name="content" formType="FckEditor"/>
+				</form>
 			</table>
-		</reactor>
+		</scaffolding>
 	</special>
-	
-	<scaffolding>
-		<table name="content_content">
-			<list>
-				<field name="id"/>
-				<field name="title"/>
-				<field name="user_id"/>
-				<field name="dtchanged"/>
-				<field name="bactive"/>
-				<field name="codename"/>
-			</list>
-			<form>
-				<field name="id" required="true"/>
-				<field name="title" required="true"/>
-				<field name="content" formType="FckEditor"/>
-				<field alias="user_id" required="true" display="name"/>
-				<field alias="dtcreated" formType="Display"/>
-				<field alias="dtchanged" formType="Display"/>
-				<field alias="bactive" required="true"/>
-				<field alias="codename" required="true"/>
-			</form>
-		</table>
-	</scaffolding>
 </module>
