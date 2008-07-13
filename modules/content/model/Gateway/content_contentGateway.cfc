@@ -145,136 +145,84 @@
 			<cfset QueryRecordset.getWhere().setMode("OR")>
 			
 				<cfif StructKeyExists(arguments.filter,'id')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="integer">
-						<cfcase value="numeric">
+					
+							<cfset bFilterColumn = false>
 							<cfif isNumeric(arguments.filter['id'])>
 								<cfset bFilterColumn = true>
 							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("content_content",'id',arguments.filter['id'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'codename')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="varchar">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['codename'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("content_content",'codename',arguments.filter['codename'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'title')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="varchar">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['title'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("content_content",'title',arguments.filter['title'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'content')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="text">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['content'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("content_content",'content',arguments.filter['content'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'user_id')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="integer">
-						<cfcase value="numeric">
+					
+							<cfset bFilterColumn = false>
 							<cfif isNumeric(arguments.filter['user_id'])>
 								<cfset bFilterColumn = true>
 							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("content_content",'user_id',arguments.filter['user_id'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'dtcreated')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="datetime">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['dtcreated'])>
+					
+							<cfset bFilterColumn = false>
+							<cfif LsIsDate(arguments.filter['dtcreated'])>
 								<cfset bFilterColumn = true>
 							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("content_content",'dtcreated',arguments.filter['dtcreated'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'dtchanged')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="datetime">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['dtchanged'])>
+					
+							<cfset bFilterColumn = false>
+							<cfif LsIsDate(arguments.filter['dtchanged'])>
 								<cfset bFilterColumn = true>
 							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("content_content",'dtchanged',arguments.filter['dtchanged'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'bactive')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="boolean">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['bactive'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+					
+							<cfset bFilterColumn = false>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("content_content",'bactive',arguments.filter['bactive'])>
 					</cfif>

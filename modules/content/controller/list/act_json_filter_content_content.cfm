@@ -1,10 +1,10 @@
 <!---
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
-$HeadURL: https://lanshock.svn.sourceforge.net/svnroot/lanshock/trunk/scaffolding/templates/EXT2.0/act_json_filter.cfm $
-$LastChangedDate: 2008-07-05 14:13:10 +0200 (Sa, 05 Jul 2008) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 379 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 --->
 <cfparam name="attributes.sort" default="id">
 <cfparam name="attributes.dir" default="ASC">
