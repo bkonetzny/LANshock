@@ -8,7 +8,7 @@ $LastChangedDate$
 $LastChangedBy$
 $LastChangedRevision$
 -->
-<module name="Administration" version="2.0.0.0" date="2008-05-31" author="LANshock" url="http://www.lanshock.com">
+<module name="Administration" version="2.0.0.0" date="2008-07-14" author="LANshock" url="http://www.lanshock.com">
 	
 	<general requiresLogin="false"/>
 	
