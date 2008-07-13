@@ -1,12 +1,13 @@
 <cfsetting enablecfoutputonly="Yes">
-<!-------------------------------------------------------------------------+
- | Copyright (C) 2002 - 2005 LANshock.com                                  |
- |                                                                         |
- | lastmodified: 04-06-08                                                  |
- |           by: bkonetzny                                                 |
- |                               http://sourceforge.net/projects/lanshock/ |
- | Released Under the GNU General Public License (v2) (see license.txt)    |
- +------------------------------------------------------------------------->
+<!---
+Copyright (C) by LANshock.com
+Released under the GNU General Public License (v2)
+
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
+--->
 
 <cfif qContent.recordcount>
 	<cfoutput>
