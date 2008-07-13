@@ -180,23 +180,6 @@
 	
 	
 	
-		
-		
-		
-		
-		
-			
-				
-				
-				
-				
-				
-				
-			
-		
-				
-		
-	
 	
 				
 	
@@ -210,15 +193,6 @@
 		
 			
 			
-				
-				
-			
-		
-			
-			
-		
-			
-			
 		
 			
 			
@@ -233,30 +207,6 @@
 			
 				
 				
-			
-		
-			
-			
-				
-				
-			
-		
-			
-			
-				
-				
-			
-		
-			
-			
-		
-			
-			
-		
-			
-			
-		
-			
 			
 		
 			
@@ -294,6 +244,21 @@
 		
 			
 			
+				
+				
+			
+		
+			
+			
+				
+				
+			
+		
+			
+			
+				
+				
+			
 		
 			
 			
@@ -301,7 +266,20 @@
 			
 			
 		
-	
+			
+			
+		
+			
+			
+		
+			
+			
+		
+			
+			
+		
+			
+			
 		
 			
 			
@@ -335,10 +313,10 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="id" id="formrow_0AD9D22552294BCEB5E0BE095A55B591" value="#ouser.getid()#" />
+	<input type="hidden" name="id" id="formrow_EF9B6D61861C471384302F020924523B" value="#ouser.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_0AD9D22552294BCEB5E0BE095A55B591">#request.content.user_rowtype_label_id#</label>
-		#NumberFormat(ouser.getid(),"9.99")#
+		<label for="formrow_EF9B6D61861C471384302F020924523B">#request.content.user_rowtype_label_id#</label>
+		#Trim(ouser.getid())#
 	</div>
 	</cfif>
 				
@@ -352,8 +330,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_44093F13E2F346DB98F25BFC41F7ACA6"><em>*</em> #request.content.user_rowtype_label_name#</label>
-		<input type="text" class="textInput" name="name" id="formrow_44093F13E2F346DB98F25BFC41F7ACA6" value="#Trim(ouser.getname())#"/>
+		<label for="formrow_2780901F37BE43F1AA1C3AC9BA807057"><em>*</em> #request.content.user_rowtype_label_name#</label>
+		<input type="text" class="textInput" name="name" id="formrow_2780901F37BE43F1AA1C3AC9BA807057" value="#Trim(ouser.getname())#"/>
 	</div>
 				
 			
@@ -366,8 +344,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_A0EC92CBEB824E2EBDEBE812D92A61B2"><em>*</em> #request.content.user_rowtype_label_email#</label>
-		<input type="text" class="textInput" name="email" id="formrow_A0EC92CBEB824E2EBDEBE812D92A61B2" value="#Trim(ouser.getemail())#"/>
+		<label for="formrow_E6096B565FEA4137AC5BFB4C60438AE6"><em>*</em> #request.content.user_rowtype_label_email#</label>
+		<input type="text" class="textInput" name="email" id="formrow_E6096B565FEA4137AC5BFB4C60438AE6" value="#Trim(ouser.getemail())#"/>
 	</div>
 				
 			
@@ -380,9 +358,9 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_1A036A33E26B40588265D989B4C56A83"><em>*</em> #request.content.user_rowtype_label_pwd#</label>
-		<input type="password" class="textInput" name="pwd" id="formrow_1A036A33E26B40588265D989B4C56A83" value=""/>
-		<input type="hidden" class="textInput" name="pwd__hidden" id="formrow_1A036A33E26B40588265D989B4C56A83__hidden" value="#Trim(ouser.getpwd())#"/>
+		<label for="formrow_ECC1E6AB047343FB9B67027D4B9C594C"><em>*</em> #request.content.user_rowtype_label_pwd#</label>
+		<input type="password" class="textInput" name="pwd" id="formrow_ECC1E6AB047343FB9B67027D4B9C594C" value=""/>
+		<input type="hidden" class="textInput" name="pwd__hidden" id="formrow_ECC1E6AB047343FB9B67027D4B9C594C__hidden" value="#Trim(ouser.getpwd())#"/>
 	</div>
 				
 			
@@ -395,8 +373,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_9A8BC4ADE11A4E3597AD73E85F64415D"><em>*</em> #request.content.user_rowtype_label_firstname#</label>
-		<input type="text" class="textInput" name="firstname" id="formrow_9A8BC4ADE11A4E3597AD73E85F64415D" value="#Trim(ouser.getfirstname())#"/>
+		<label for="formrow_65FCF3E0D60543E2ABBAD8F9EA75D3F8"><em>*</em> #request.content.user_rowtype_label_firstname#</label>
+		<input type="text" class="textInput" name="firstname" id="formrow_65FCF3E0D60543E2ABBAD8F9EA75D3F8" value="#Trim(ouser.getfirstname())#"/>
 	</div>
 				
 			
@@ -409,8 +387,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_53D78AEDC9FA4842A4D30F0742C94788"><em>*</em> #request.content.user_rowtype_label_lastname#</label>
-		<input type="text" class="textInput" name="lastname" id="formrow_53D78AEDC9FA4842A4D30F0742C94788" value="#Trim(ouser.getlastname())#"/>
+		<label for="formrow_3C46738EAC6340099450A253BDAB7B7D"><em>*</em> #request.content.user_rowtype_label_lastname#</label>
+		<input type="text" class="textInput" name="lastname" id="formrow_3C46738EAC6340099450A253BDAB7B7D" value="#Trim(ouser.getlastname())#"/>
 	</div>
 				
 			
@@ -427,7 +405,7 @@
 		
 			<cfif isDefined("stRelated.gender_custom.qData")>
 				<cfloop query="stRelated.gender_custom.qData">
-					<label for="formrow_562E8E87E8064BC0A7C7F0099EF3DF04_#stRelated.gender_custom.qData.optionvalue#" class="inlineLabel"><input type="radio" name="gender" id="formrow_562E8E87E8064BC0A7C7F0099EF3DF04_#stRelated.gender_custom.qData.optionvalue#" value="#stRelated.gender_custom.qData.optionvalue#"<cfif ouser.getgender() EQ stRelated.gender_custom.qData.optionvalue> checked="checked"</cfif>/>#stRelated.gender_custom.qData.optionname#</label>
+					<label for="formrow_CF570F8CEC904DE69CD39C08FCAAA9BE_#stRelated.gender_custom.qData.optionvalue#" class="inlineLabel"><input type="radio" name="gender" id="formrow_CF570F8CEC904DE69CD39C08FCAAA9BE_#stRelated.gender_custom.qData.optionvalue#" value="#stRelated.gender_custom.qData.optionvalue#"<cfif ouser.getgender() EQ stRelated.gender_custom.qData.optionvalue> checked="checked"</cfif>/>#stRelated.gender_custom.qData.optionname#</label>
 				</cfloop>
 			</cfif>
 		
@@ -443,10 +421,10 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_33363DB600774AB5A168FF6FBB103766"><em>*</em> #request.content.user_rowtype_label_status#</label>
+		<label for="formrow_58F2F7833533462CAAFADE8E95A8DFFE">#request.content.user_rowtype_label_status#</label>
 		
 			<cfif isDefined("stRelated.status_custom.qData")>
-			<select class="selectInput" name="status" id="formrow_33363DB600774AB5A168FF6FBB103766">
+			<select class="selectInput" name="status" id="formrow_58F2F7833533462CAAFADE8E95A8DFFE">
 				<option value=""></option>
 				<cfloop query="stRelated.status_custom.qData">
 					<option value="#stRelated.status_custom.qData.optionvalue#"<cfif ouser.getstatus() EQ stRelated.status_custom.qData.optionvalue> selected="selected"</cfif>>#stRelated.status_custom.qData.optionname#</option>
@@ -469,21 +447,21 @@
 		<cfset ouser.setdt_birthdate(now())>
 	</cfif>
 	<div class="ctrlHolder">
-		<label for="formrow_ADDBF077CB0E477B8C530F5D6C8B42F1">#request.content.user_rowtype_label_dt_birthdate#</label>
-		<div class="divInput" id="divDatePickerADDBF077CB0E477B8C530F5D6C8B42F1"></div>
-		<input type="hidden" name="dt_birthdate" id="formrow_ADDBF077CB0E477B8C530F5D6C8B42F1" value="#LsDateFormat(Trim(ouser.getdt_birthdate()),'YYYY-MM-DD')# #LsTimeFormat(Trim(ouser.getdt_birthdate()),'HH:MM:SS')#"/>
+		<label for="formrow_995F73B8189A472A83AE81DE06912E5C">#request.content.user_rowtype_label_dt_birthdate#</label>
+		<div class="divInput" id="divDatePicker995F73B8189A472A83AE81DE06912E5C"></div>
+		<input type="hidden" name="dt_birthdate" id="formrow_995F73B8189A472A83AE81DE06912E5C" value="#LsDateFormat(Trim(ouser.getdt_birthdate()),'YYYY-MM-DD')# #LsTimeFormat(Trim(ouser.getdt_birthdate()),'HH:MM:SS')#"/>
 		<script type="text/javascript">
 			<!--
-			var myDatePickerADDBF077CB0E477B8C530F5D6C8B42F1 = new Ext.ux.form.DateTime({
+			var myDatePicker995F73B8189A472A83AE81DE06912E5C = new Ext.ux.form.DateTime({
 				handler: function(value){
-					$('##formrow_ADDBF077CB0E477B8C530F5D6C8B42F1').val(value);
+					$('##formrow_995F73B8189A472A83AE81DE06912E5C').val(value);
 				}
 			});
 			Ext.onReady(function(){
-				myDatePickerADDBF077CB0E477B8C530F5D6C8B42F1.render('divDatePickerADDBF077CB0E477B8C530F5D6C8B42F1');
-				var dtADDBF077CB0E477B8C530F5D6C8B42F1 = new Date();
-				dtADDBF077CB0E477B8C530F5D6C8B42F1 = Date.parseDate("#LsDateFormat(Trim(ouser.getdt_birthdate()),'YYYY-MM-DD')# #LsTimeFormat(Trim(ouser.getdt_birthdate()),'HH:MM')#","Y-m-d G:i");
-				myDatePickerADDBF077CB0E477B8C530F5D6C8B42F1.setValue(dtADDBF077CB0E477B8C530F5D6C8B42F1);
+				myDatePicker995F73B8189A472A83AE81DE06912E5C.render('divDatePicker995F73B8189A472A83AE81DE06912E5C');
+				var dt995F73B8189A472A83AE81DE06912E5C = new Date();
+				dt995F73B8189A472A83AE81DE06912E5C = Date.parseDate("#LsDateFormat(Trim(ouser.getdt_birthdate()),'YYYY-MM-DD')# #LsTimeFormat(Trim(ouser.getdt_birthdate()),'HH:MM')#","Y-m-d G:i");
+				myDatePicker995F73B8189A472A83AE81DE06912E5C.setValue(dt995F73B8189A472A83AE81DE06912E5C);
 			});
 			//-->
 		</script>
@@ -498,10 +476,15 @@
 					
 
 	
-	<input type="hidden" name="dt_lastlogin" id="formrow_4BD02AAAAB6E435EA8D8123DF7006F99" value="#Trim(ouser.getdt_lastlogin())#"/>
+	<cfset sValue = Trim(ouser.getdt_lastlogin())>
+	<input type="hidden" name="dt_lastlogin" id="formrow_4018A47734644EAE8DF763C00E3C8D54" value="#Trim(ouser.getdt_lastlogin())#"/>
 	<div class="ctrlHolder">
-		<label for="formrow_4BD02AAAAB6E435EA8D8123DF7006F99">#request.content.user_rowtype_label_dt_lastlogin#</label>
-		#Trim(ouser.getdt_lastlogin())#
+		<label for="formrow_4018A47734644EAE8DF763C00E3C8D54">#request.content.user_rowtype_label_dt_lastlogin#</label>
+		<cfif LsIsDate(sValue)>
+			#session.oUser.DateTimeFormat(sValue)#
+		<cfelse>
+			#sValue#
+		</cfif>
 	</div>
 				
 			
@@ -513,10 +496,35 @@
 					
 
 	
-	<input type="hidden" name="dt_registered" id="formrow_B54DC55E635641E29970502D72BD4A68" value="#Trim(ouser.getdt_registered())#"/>
+	<cfset sValue = Trim(ouser.getdt_registered())>
+	<input type="hidden" name="dt_registered" id="formrow_9DA946FF121E4EBFB71654E069480178" value="#Trim(ouser.getdt_registered())#"/>
 	<div class="ctrlHolder">
-		<label for="formrow_B54DC55E635641E29970502D72BD4A68">#request.content.user_rowtype_label_dt_registered#</label>
-		#Trim(ouser.getdt_registered())#
+		<label for="formrow_9DA946FF121E4EBFB71654E069480178">#request.content.user_rowtype_label_dt_registered#</label>
+		<cfif LsIsDate(sValue)>
+			#session.oUser.DateTimeFormat(sValue)#
+		<cfelse>
+			#sValue#
+		</cfif>
+	</div>
+				
+			
+			
+				
+				
+				
+				
+					
+
+	
+	<cfset sValue = Trim(ouser.getlogincount())>
+	<input type="hidden" name="logincount" id="formrow_9C79E8E07A594EC7ADF0F44C2AEA38A6" value="#Trim(ouser.getlogincount())#"/>
+	<div class="ctrlHolder">
+		<label for="formrow_9C79E8E07A594EC7ADF0F44C2AEA38A6">#request.content.user_rowtype_label_logincount#</label>
+		<cfif LsIsDate(sValue)>
+			#session.oUser.DateTimeFormat(sValue)#
+		<cfelse>
+			#sValue#
+		</cfif>
 	</div>
 				
 			
@@ -529,10 +537,10 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_393E0EA79F5D40D5868C6BA42E64BDAF"><em>*</em> #request.content.user_rowtype_label_language#</label>
+		<label for="formrow_94500BD966EE42829AD4D6622C014E9C">#request.content.user_rowtype_label_language#</label>
 		
 			<cfif isDefined("stRelated.language_custom.qData")>
-			<select class="selectInput" name="language" id="formrow_393E0EA79F5D40D5868C6BA42E64BDAF">
+			<select class="selectInput" name="language" id="formrow_94500BD966EE42829AD4D6622C014E9C">
 				<option value=""></option>
 				<cfloop query="stRelated.language_custom.qData">
 					<option value="#stRelated.language_custom.qData.optionvalue#"<cfif ouser.getlanguage() EQ stRelated.language_custom.qData.optionvalue> selected="selected"</cfif>>#stRelated.language_custom.qData.optionname#</option>
@@ -551,10 +559,9 @@
 					
 
 	
-	<input type="hidden" name="logincount" id="formrow_F7B9A1DE5A264A7F936CE0491CDB2F70" value="#NumberFormat(ouser.getlogincount(),"9.99")#"/>
 	<div class="ctrlHolder">
-		<label for="formrow_F7B9A1DE5A264A7F936CE0491CDB2F70">#request.content.user_rowtype_label_logincount#</label>
-		#NumberFormat(ouser.getlogincount(),"9.99")#
+		<label for="formrow_849CD03E64E64B6F9CEDB0EB9645B050">#request.content.user_rowtype_label_reset_password_key#</label>
+		<input type="text" class="textInput" name="reset_password_key" id="formrow_849CD03E64E64B6F9CEDB0EB9645B050" value="#Trim(ouser.getreset_password_key())#"/>
 	</div>
 				
 			
@@ -566,20 +573,9 @@
 					
 
 	
-	<input type="hidden" name="reset_password_key" id="formrow_97D48ADDA2DB4E8FBC7A9B449CF6BEEB" value="#ouser.getreset_password_key()#" />
-				
-			
-			
-				
-				
-				
-				
-					
-
-	
 	<div class="ctrlHolder">
-		<label for="formrow_ABF6E6008F6F41EDB54DDF86F2416781">#request.content.user_rowtype_label_openid_url#</label>
-		<input type="text" class="textInput" name="openid_url" id="formrow_ABF6E6008F6F41EDB54DDF86F2416781" value="#Trim(ouser.getopenid_url())#"/>
+		<label for="formrow_F1A5D0C66C1A466F81642B963F98430C">#request.content.user_rowtype_label_openid_url#</label>
+		<input type="text" class="textInput" name="openid_url" id="formrow_F1A5D0C66C1A466F81642B963F98430C" value="#Trim(ouser.getopenid_url())#"/>
 	</div>
 				
 			
@@ -593,42 +589,9 @@
 	
 	<div class="ctrlHolder">
 		<div>
-			<label for="formrow_474B8671E232462D8E9B150CA821AEC3" class="inlineLabel"><input type="checkbox" name="data_access" id="formrow_474B8671E232462D8E9B150CA821AEC3" value="1"<cfif ouser.getdata_access()> checked="checked"</cfif>/> <em>*</em>  #request.content.user_rowtype_label_data_access#</label>
+			<label for="formrow_41777DEA03DD4BE2AA46F5EBDF26C008" class="inlineLabel"><input type="checkbox" name="data_access" id="formrow_41777DEA03DD4BE2AA46F5EBDF26C008" value="1"<cfif ouser.getdata_access()> checked="checked"</cfif>/> <em>*</em>  #request.content.user_rowtype_label_data_access#</label>
 		</div>
 	</div>
-				
-			
-			
-		
-			</fieldset>
-		
-	
-	
-	
-		
-			<fieldset class="inlineLabels">
-				<legend>aManyToMany</legend>
-		
-			
-				
-				
-				
-				
-					
-
-	
-	
-		<cfset lRelcore_security_users_roles_rel = ouser.getcore_security_users_roles_reliterator().getValueList('role_id')>
-		<div class="ctrlHolder">
-			<label for="formrow_C28597C79F1842B991ACE2A0BA2F5539">core_security_users_roles_rel</label>
-			<select class="selectInput" name="core_security_users_roles_rel" id="formrow_C28597C79F1842B991ACE2A0BA2F5539" multiple="multiple" size="6">
-				<option value=""></option>
-				<cfloop query="stRelated.stManyToMany.core_security_users_roles_rel.qData">
-					<option value="#stRelated.stManyToMany.core_security_users_roles_rel.qData.optionvalue#"<cfif ListFind(lRelcore_security_users_roles_rel,stRelated.stManyToMany.core_security_users_roles_rel.qData.optionvalue)> selected="selected"</cfif>>#stRelated.stManyToMany.core_security_users_roles_rel.qData.optionname#</option>
-				</cfloop>
-			</select>
-		</div>
-	
 				
 			
 			
@@ -651,8 +614,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_CB7666B12C034C9E86D3F5279ECAB743"><em>*</em> #request.content.user_rowtype_label_country#</label>
-		<input type="text" class="textInput" name="country" id="formrow_CB7666B12C034C9E86D3F5279ECAB743" value="#Trim(ouser.getcountry())#"/>
+		<label for="formrow_B8FEE2E906E04217924C347D14BFE8AF">#request.content.user_rowtype_label_country#</label>
+		<input type="text" class="textInput" name="country" id="formrow_B8FEE2E906E04217924C347D14BFE8AF" value="#Trim(ouser.getcountry())#"/>
 	</div>
 				
 			
@@ -665,8 +628,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_79EE0284240240AFA7B37A8292CF8988"><em>*</em> #request.content.user_rowtype_label_city#</label>
-		<input type="text" class="textInput" name="city" id="formrow_79EE0284240240AFA7B37A8292CF8988" value="#Trim(ouser.getcity())#"/>
+		<label for="formrow_AF3253551C464C6382559BDB2B8902ED">#request.content.user_rowtype_label_city#</label>
+		<input type="text" class="textInput" name="city" id="formrow_AF3253551C464C6382559BDB2B8902ED" value="#Trim(ouser.getcity())#"/>
 	</div>
 				
 			
@@ -679,8 +642,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_688402CC92ED4313B5E877055FACBBCE"><em>*</em> #request.content.user_rowtype_label_street#</label>
-		<input type="text" class="textInput" name="street" id="formrow_688402CC92ED4313B5E877055FACBBCE" value="#Trim(ouser.getstreet())#"/>
+		<label for="formrow_AD84E04200254C828C681B5C8E1EA22D">#request.content.user_rowtype_label_street#</label>
+		<input type="text" class="textInput" name="street" id="formrow_AD84E04200254C828C681B5C8E1EA22D" value="#Trim(ouser.getstreet())#"/>
 	</div>
 				
 			
@@ -693,8 +656,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_691D1515EE9A4432A384245EC74FA443"><em>*</em> #request.content.user_rowtype_label_zip#</label>
-		<input type="text" class="textInput" name="zip" id="formrow_691D1515EE9A4432A384245EC74FA443" value="#Trim(ouser.getzip())#"/>
+		<label for="formrow_A37472ED7B774DC19731FAFAD9166CB8">#request.content.user_rowtype_label_zip#</label>
+		<input type="text" class="textInput" name="zip" id="formrow_A37472ED7B774DC19731FAFAD9166CB8" value="#Trim(ouser.getzip())#"/>
 	</div>
 				
 			
@@ -707,8 +670,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_F3068B681F4E4F98B4AC9298E217A893">#request.content.user_rowtype_label_internal_note#</label>
-		<textarea name="internal_note" id="formrow_F3068B681F4E4F98B4AC9298E217A893">#Trim(ouser.getinternal_note())#</textarea>
+		<label for="formrow_F0B83DDB2C5B490C83A01A7B9B47A122">#request.content.user_rowtype_label_internal_note#</label>
+		<textarea name="internal_note" id="formrow_F0B83DDB2C5B490C83A01A7B9B47A122">#Trim(ouser.getinternal_note())#</textarea>
 	</div>
 				
 			
@@ -721,65 +684,48 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_6926C223F44A4C8D8590F9A7BE38A5A5">#request.content.user_rowtype_label_signature#</label>
-		<textarea name="signature" id="formrow_6926C223F44A4C8D8590F9A7BE38A5A5">#Trim(ouser.getsignature())#</textarea>
-	</div>
-				
-			
-			
-				
-				
-				
-				
-					
-
-	
-	<div class="ctrlHolder">
-		<label for="formrow_EA8590651CE74A029F3E1C0032E93C7C"><em>*</em> #request.content.user_rowtype_label_homepage#</label>
-		<input type="text" class="textInput" name="homepage" id="formrow_EA8590651CE74A029F3E1C0032E93C7C" value="#Trim(ouser.gethomepage())#"/>
-	</div>
-				
-			
-			
-				
-				
-				
-				
-					
-
-	
-	<div class="ctrlHolder">
-		<label for="formrow_0F892026062E4CF4B2AA23153BAC9913">#request.content.user_rowtype_label_geo_latlong#</label>
-		<input type="text" class="textInput" name="geo_latlong" id="formrow_0F892026062E4CF4B2AA23153BAC9913" value="#Trim(ouser.getgeo_latlong())#"/>
-		<cfif len(application.lanshock.settings.google_maps_key)>
-			<p class="formHint">
-				<div id="formrow_0F892026062E4CF4B2AA23153BAC9913_map" style="width: 100%; height: 300px;"></div>
-			</p>
-			<script type="text/javascript" src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=test"></script>
+		<label for="formrow_80475EEB355E4014A42EF53795BF6029">#request.content.user_rowtype_label_signature#</label>
+		<textarea name="signature" id="formrow_80475EEB355E4014A42EF53795BF6029">#Trim(ouser.getsignature())#</textarea>
 			<script type="text/javascript">
-				<!--
-				$(document).ready(function() {
-					if (GBrowserIsCompatible()) {
-						function OnMapClicked_0F892026062E4CF4B2AA23153BAC9913(oGLatLng){
-							map_0F892026062E4CF4B2AA23153BAC9913.clearOverlays();
-							map_0F892026062E4CF4B2AA23153BAC9913.addOverlay(new GMarker(oGLatLng));
-							$('##formrow_0F892026062E4CF4B2AA23153BAC9913').val(oGLatLng.lat()+','+oGLatLng.lng());
-						}
-						var map_0F892026062E4CF4B2AA23153BAC9913 = new GMap2(document.getElementById("formrow_0F892026062E4CF4B2AA23153BAC9913_map"));
-						map_0F892026062E4CF4B2AA23153BAC9913.addControl(new GLargeMapControl());
-						map_0F892026062E4CF4B2AA23153BAC9913.addControl(new GMapTypeControl());
-						<cfif len(Trim(ouser.getgeo_latlong()))>
-							map_0F892026062E4CF4B2AA23153BAC9913.setCenter(new GLatLng(#Trim(ouser.getgeo_latlong())#),6,G_HYBRID_MAP);
-							map_0F892026062E4CF4B2AA23153BAC9913.addOverlay(new GMarker(new GLatLng(#Trim(ouser.getgeo_latlong())#)));
-						<cfelse>
-							map_0F892026062E4CF4B2AA23153BAC9913.setCenter(new GLatLng(0,0),1,G_HYBRID_MAP);
-						</cfif>
-						GEvent.addListener(map_0F892026062E4CF4B2AA23153BAC9913,"click",function(overlay,oGLatLng){if(oGLatLng){OnMapClicked_0F892026062E4CF4B2AA23153BAC9913(oGLatLng);}});
-					}
+			<!--
+				var sBasePath = "#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/";
+				var oFCKeditor_formrow_80475EEB355E4014A42EF53795BF6029 = new FCKeditor('signature');
+				oFCKeditor_formrow_80475EEB355E4014A42EF53795BF6029.BasePath = sBasePath + "fckeditor/";
+				oFCKeditor_formrow_80475EEB355E4014A42EF53795BF6029.Config['CustomConfigurationsPath'] = sBasePath + "lanshock_fckeditor_config.js";
+				oFCKeditor_formrow_80475EEB355E4014A42EF53795BF6029.Value = '';
+				Ext.onReady(function(){
+					oFCKeditor_formrow_80475EEB355E4014A42EF53795BF6029.ReplaceTextarea();
 				});
-				//-->
+			//-->
 			</script>
-		</cfif>
+	</div>
+				
+			
+			
+				
+				
+				
+				
+					
+
+	
+	<div class="ctrlHolder">
+		<label for="formrow_16CB0C1BDA1E4C3AAAD6D41A4A285F68">#request.content.user_rowtype_label_homepage#</label>
+		<input type="text" class="textInput" name="homepage" id="formrow_16CB0C1BDA1E4C3AAAD6D41A4A285F68" value="#Trim(ouser.gethomepage())#"/>
+	</div>
+				
+			
+			
+				
+				
+				
+				
+					
+
+	
+	<div class="ctrlHolder">
+		<label for="formrow_0980F8EA10D04A989B4560C85344C4B6">#request.content.user_rowtype_label_geo_latlong#</label>
+		<input type="text" class="textInput" name="geo_latlong" id="formrow_0980F8EA10D04A989B4560C85344C4B6" value="#Trim(ouser.getgeo_latlong())#"/>
 	</div>
 				
 			

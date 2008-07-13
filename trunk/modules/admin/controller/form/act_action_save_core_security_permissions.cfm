@@ -1,6 +1,11 @@
 <cfset aErrors = ArrayNew(1)>
 	<cfset aTranslatedErrors = ArrayNew(1)>
+	<!--- snippet 'modules/admin/controller/form/snippets/act_action_save_prevalidation_core_security_permissions.cfm' --->
 	
+	<!--- /snippet --->
+	
+		
+
 	
 		
 
@@ -8,10 +13,9 @@
 		
 
 	
-		
-
+	<!--- snippet 'modules/admin/controller/form/snippets/act_action_save_postvalidation_core_security_permissions.cfm' --->
 	
-	
+	<!--- /snippet --->
 	<cfparam name="attributes.core_security_permissions_id" default="0">
 	<cfset ocore_security_permissions = application.lanshock.oFactory.load('core_security_permissions','reactorRecord')>
 	<cfif variables.mode EQ 'insert'>
@@ -39,6 +43,9 @@
 		
 		<cfinclude template="act_form_loadrelated_core_security_permissions.cfm">
 		
+		<!--- snippet 'modules/admin/controller/form/snippets/act_form_loadrelated_custom_core_security_permissions.cfm' --->
+		
+		<!--- /snippet --->
 		<cfset aReactorErrors = ocore_security_permissions._getErrorCollection().getErrors()>
 		<cfloop from="1" to="#ArrayLen(aReactorErrors)#" index="idx">
 			<cfset ArrayAppend(aErrors,aReactorErrors[idx])>

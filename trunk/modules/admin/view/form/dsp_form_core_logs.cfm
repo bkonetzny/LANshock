@@ -79,6 +79,11 @@
 				
 				
 			
+				
+				
+				
+				
+			
 		
 				
 		
@@ -106,9 +111,26 @@
 					
 
 	
+	<cfif mode EQ "edit">
+	<input type="hidden" name="id" id="formrow_FE432593E36245B4AD77D24B87B0D564" value="#ocore_logs.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_3D1E432B0E5C49129F4B0BEA561CA6D4"><em>*</em> #request.content.core_logs_rowtype_label_id#</label>
-		<input type="text" class="textInput" name="id" id="formrow_3D1E432B0E5C49129F4B0BEA561CA6D4" value="#NumberFormat(ocore_logs.getid(),"9")#"/>
+		<label for="formrow_FE432593E36245B4AD77D24B87B0D564">#request.content.core_logs_rowtype_label_id#</label>
+		#Trim(ocore_logs.getid())#
+	</div>
+	</cfif>
+				
+			
+			
+				
+				
+				
+				
+					
+
+	
+	<div class="ctrlHolder">
+		<label for="formrow_BC9DA5353E8F4CD2B35DEB1B8F577252"><em>*</em> #request.content.core_logs_rowtype_label_logname#</label>
+		<input type="text" class="textInput" name="logname" id="formrow_BC9DA5353E8F4CD2B35DEB1B8F577252" value="#Trim(ocore_logs.getlogname())#"/>
 	</div>
 				
 			
@@ -121,8 +143,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_B6D108868A7C4ACD8F9DE9EC849580EA"><em>*</em> #request.content.core_logs_rowtype_label_logname#</label>
-		<textarea name="logname" id="formrow_B6D108868A7C4ACD8F9DE9EC849580EA">#Trim(ocore_logs.getlogname())#</textarea>
+		<label for="formrow_48C35EDF264F440DB2D5E3F7833C10B9"><em>*</em> #request.content.core_logs_rowtype_label_level#</label>
+		<input type="text" class="textInput" name="level" id="formrow_48C35EDF264F440DB2D5E3F7833C10B9" value="#Trim(ocore_logs.getlevel())#"/>
 	</div>
 				
 			
@@ -135,8 +157,41 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_644ABE6B1BCB4675909822E34E6AFF73"><em>*</em> #request.content.core_logs_rowtype_label_level#</label>
-		<textarea name="level" id="formrow_644ABE6B1BCB4675909822E34E6AFF73">#Trim(ocore_logs.getlevel())#</textarea>
+		<label for="formrow_76388ECE75994DCAB667B1C4749BF3E3"><em>*</em> #request.content.core_logs_rowtype_label_data#</label>
+		<textarea name="data" id="formrow_76388ECE75994DCAB667B1C4749BF3E3">#Trim(ocore_logs.getdata())#</textarea>
+	</div>
+				
+			
+			
+				
+				
+				
+				
+					
+
+	
+	<cfif NOT isDate(Trim(ocore_logs.gettimestamp()))>
+		<cfset ocore_logs.settimestamp(now())>
+	</cfif>
+	<div class="ctrlHolder">
+		<label for="formrow_8EB07AE5F9844EDF9571F3067730581B">#request.content.core_logs_rowtype_label_timestamp#</label>
+		<div class="divInput" id="divDatePicker8EB07AE5F9844EDF9571F3067730581B"></div>
+		<input type="hidden" name="timestamp" id="formrow_8EB07AE5F9844EDF9571F3067730581B" value="#LsDateFormat(Trim(ocore_logs.gettimestamp()),'YYYY-MM-DD')# #LsTimeFormat(Trim(ocore_logs.gettimestamp()),'HH:MM:SS')#"/>
+		<script type="text/javascript">
+			<!--
+			var myDatePicker8EB07AE5F9844EDF9571F3067730581B = new Ext.ux.form.DateTime({
+				handler: function(value){
+					$('##formrow_8EB07AE5F9844EDF9571F3067730581B').val(value);
+				}
+			});
+			Ext.onReady(function(){
+				myDatePicker8EB07AE5F9844EDF9571F3067730581B.render('divDatePicker8EB07AE5F9844EDF9571F3067730581B');
+				var dt8EB07AE5F9844EDF9571F3067730581B = new Date();
+				dt8EB07AE5F9844EDF9571F3067730581B = Date.parseDate("#LsDateFormat(Trim(ocore_logs.gettimestamp()),'YYYY-MM-DD')# #LsTimeFormat(Trim(ocore_logs.gettimestamp()),'HH:MM')#","Y-m-d G:i");
+				myDatePicker8EB07AE5F9844EDF9571F3067730581B.setValue(dt8EB07AE5F9844EDF9571F3067730581B);
+			});
+			//-->
+		</script>
 	</div>
 				
 			
@@ -149,22 +204,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_B19EBC3E737B4085A880CAC7DB8CB7F6"><em>*</em> #request.content.core_logs_rowtype_label_data#</label>
-		<textarea name="data" id="formrow_B19EBC3E737B4085A880CAC7DB8CB7F6">#Trim(ocore_logs.getdata())#</textarea>
-	</div>
-				
-			
-			
-				
-				
-				
-				
-					
-	
-	
-	<div class="ctrlHolder">
-		<label for="formrow_C97F6EE40C8344389488D0287115B95F">#request.content.core_logs_rowtype_label_timestamp#</label>
-		Unknown field type "Time"
+		<label for="formrow_1B3E071001E9450E952CDA709FF56D75"><em>*</em> #request.content.core_logs_rowtype_label_userid#</label>
+		<input type="text" class="textInput" name="userid" id="formrow_1B3E071001E9450E952CDA709FF56D75" value="#Trim(ocore_logs.getuserid())#"/>
 	</div>
 				
 			

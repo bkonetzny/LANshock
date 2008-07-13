@@ -107,9 +107,9 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="module" id="formrow_8C7745B9F29C4B61BE3A05A9F1C17840" value="#ocore_navigation.getmodule()#" />
+	<input type="hidden" name="module" id="formrow_359C8BF58D6D4CDF8FA8E6DB023C8813" value="#ocore_navigation.getmodule()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_8C7745B9F29C4B61BE3A05A9F1C17840">#request.content.core_navigation_rowtype_label_module#</label>
+		<label for="formrow_359C8BF58D6D4CDF8FA8E6DB023C8813">#request.content.core_navigation_rowtype_label_module#</label>
 		#Trim(ocore_navigation.getmodule())#
 	</div>
 	</cfif>
@@ -124,9 +124,9 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="action" id="formrow_644A2FA708B14DE4BD5900611147D263" value="#ocore_navigation.getaction()#" />
+	<input type="hidden" name="action" id="formrow_232751FC716546249D502DB0CB85F7E7" value="#ocore_navigation.getaction()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_644A2FA708B14DE4BD5900611147D263">#request.content.core_navigation_rowtype_label_action#</label>
+		<label for="formrow_232751FC716546249D502DB0CB85F7E7">#request.content.core_navigation_rowtype_label_action#</label>
 		#Trim(ocore_navigation.getaction())#
 	</div>
 	</cfif>
@@ -141,8 +141,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_01F2626464B44CA3B445E62EFCC72251"><em>*</em> #request.content.core_navigation_rowtype_label_permissions#</label>
-		<input type="text" class="textInput" name="permissions" id="formrow_01F2626464B44CA3B445E62EFCC72251" value="#Trim(ocore_navigation.getpermissions())#"/>
+		<label for="formrow_924DAEDAABDB48D5B055F47579979AAE"><em>*</em> #request.content.core_navigation_rowtype_label_level#</label>
+		<input type="text" class="textInput" name="level" id="formrow_924DAEDAABDB48D5B055F47579979AAE" value="#Trim(ocore_navigation.getlevel())#"/>
 	</div>
 				
 			
@@ -155,8 +155,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_297E85948384420EB8075CC86D7830F7"><em>*</em> #request.content.core_navigation_rowtype_label_level#</label>
-		<input type="text" class="textInput" name="level" id="formrow_297E85948384420EB8075CC86D7830F7" value="#NumberFormat(ocore_navigation.getlevel(),"9")#"/>
+		<label for="formrow_AD39842D025D461B91C545B1C9A8ECA7"><em>*</em> #request.content.core_navigation_rowtype_label_sortorder#</label>
+		<input type="text" class="textInput" name="sortorder" id="formrow_AD39842D025D461B91C545B1C9A8ECA7" value="#Trim(ocore_navigation.getsortorder())#"/>
 	</div>
 				
 			
@@ -169,8 +169,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_F697EF9F8ADC4567AC073C31C98E80A2"><em>*</em> #request.content.core_navigation_rowtype_label_sortorder#</label>
-		<input type="text" class="textInput" name="sortorder" id="formrow_F697EF9F8ADC4567AC073C31C98E80A2" value="#NumberFormat(ocore_navigation.getsortorder(),"9")#"/>
+		<label for="formrow_3888B5C8E9664C72ADB722D1CBEA50A7"><em>*</em> #request.content.core_navigation_rowtype_label_permissions#</label>
+		<input type="text" class="textInput" name="permissions" id="formrow_3888B5C8E9664C72ADB722D1CBEA50A7" value="#Trim(ocore_navigation.getpermissions())#"/>
 	</div>
 				
 			

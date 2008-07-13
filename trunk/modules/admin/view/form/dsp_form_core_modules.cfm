@@ -102,22 +102,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_510DC7D174674F58BD9ABC31A8D08094"><em>*</em> #request.content.core_modules_rowtype_label_version#</label>
-		<textarea name="version" id="formrow_510DC7D174674F58BD9ABC31A8D08094">#Trim(ocore_modules.getversion())#</textarea>
-	</div>
-				
-			
-			
-				
-				
-				
-				
-					
-	
-	
-	<div class="ctrlHolder">
-		<label for="formrow_B55A5448EA92430EB241E2D7408A96DC">#request.content.core_modules_rowtype_label_date#</label>
-		Unknown field type "Date"
+		<label for="formrow_7A10FFFFE1F846609AA4BECD330B0C89"><em>*</em> #request.content.core_modules_rowtype_label_name#</label>
+		<input type="text" class="textInput" name="name" id="formrow_7A10FFFFE1F846609AA4BECD330B0C89" value="#Trim(ocore_modules.getname())#"/>
 	</div>
 				
 			
@@ -130,8 +116,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_75EAF2342FDB410BB681CC161B23E798"><em>*</em> #request.content.core_modules_rowtype_label_name#</label>
-		<textarea name="name" id="formrow_75EAF2342FDB410BB681CC161B23E798">#Trim(ocore_modules.getname())#</textarea>
+		<label for="formrow_A99BB5B9CCC648568F409DD85913D465"><em>*</em> #request.content.core_modules_rowtype_label_version#</label>
+		<input type="text" class="textInput" name="version" id="formrow_A99BB5B9CCC648568F409DD85913D465" value="#Trim(ocore_modules.getversion())#"/>
 	</div>
 				
 			
@@ -143,10 +129,46 @@
 					
 
 	
+	<cfif NOT isDate(Trim(ocore_modules.getdate()))>
+		<cfset ocore_modules.setdate(now())>
+	</cfif>
 	<div class="ctrlHolder">
-		<label for="formrow_B3E5836828DE4046BFE5E7844176702D"><em>*</em> #request.content.core_modules_rowtype_label_folder#</label>
-		<textarea name="folder" id="formrow_B3E5836828DE4046BFE5E7844176702D">#Trim(ocore_modules.getfolder())#</textarea>
+		<label for="formrow_81E6662A34F744CDA03C1407902A297C">#request.content.core_modules_rowtype_label_date#</label>
+		<div class="divInput" id="divDatePicker81E6662A34F744CDA03C1407902A297C"></div>
+		<input type="hidden" name="date" id="formrow_81E6662A34F744CDA03C1407902A297C" value="#LsDateFormat(Trim(ocore_modules.getdate()),'YYYY-MM-DD')# #LsTimeFormat(Trim(ocore_modules.getdate()),'HH:MM:SS')#"/>
+		<script type="text/javascript">
+			<!--
+			var myDatePicker81E6662A34F744CDA03C1407902A297C = new Ext.ux.form.DateTime({
+				handler: function(value){
+					$('##formrow_81E6662A34F744CDA03C1407902A297C').val(value);
+				}
+			});
+			Ext.onReady(function(){
+				myDatePicker81E6662A34F744CDA03C1407902A297C.render('divDatePicker81E6662A34F744CDA03C1407902A297C');
+				var dt81E6662A34F744CDA03C1407902A297C = new Date();
+				dt81E6662A34F744CDA03C1407902A297C = Date.parseDate("#LsDateFormat(Trim(ocore_modules.getdate()),'YYYY-MM-DD')# #LsTimeFormat(Trim(ocore_modules.getdate()),'HH:MM')#","Y-m-d G:i");
+				myDatePicker81E6662A34F744CDA03C1407902A297C.setValue(dt81E6662A34F744CDA03C1407902A297C);
+			});
+			//-->
+		</script>
 	</div>
+				
+			
+			
+				
+				
+				
+				
+					
+
+	
+	<cfif mode EQ "edit">
+	<input type="hidden" name="folder" id="formrow_CD02FF824664408BAB28F8B248E5F1E7" value="#ocore_modules.getfolder()#" />
+	<div class="ctrlHolder">
+		<label for="formrow_CD02FF824664408BAB28F8B248E5F1E7">#request.content.core_modules_rowtype_label_folder#</label>
+		#Trim(ocore_modules.getfolder())#
+	</div>
+	</cfif>
 				
 			
 			

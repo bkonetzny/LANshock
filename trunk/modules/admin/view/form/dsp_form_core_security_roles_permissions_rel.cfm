@@ -76,30 +76,6 @@
 	
 	
 	
-		
-		
-		
-		
-		
-			
-				
-				
-				
-				
-				
-				
-			
-				
-				
-				
-				
-				
-				
-			
-		
-				
-		
-	
 				
 	
 	
@@ -120,9 +96,26 @@
 					
 
 	
+	<cfif mode EQ "edit">
+	<input type="hidden" name="id" id="formrow_A2C7D5ADF7234A98A1A7A4728F701330" value="#ocore_security_roles_permissions_rel.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_EEA9B61B24604589928AF82506215698"><em>*</em> #request.content.core_security_roles_permissions_rel_rowtype_label_permission_id#</label>
-		<input type="text" class="textInput" name="permission_id" id="formrow_EEA9B61B24604589928AF82506215698" value="#NumberFormat(ocore_security_roles_permissions_rel.getpermission_id(),"9.99")#"/>
+		<label for="formrow_A2C7D5ADF7234A98A1A7A4728F701330">#request.content.core_security_roles_permissions_rel_rowtype_label_id#</label>
+		#Trim(ocore_security_roles_permissions_rel.getid())#
+	</div>
+	</cfif>
+				
+			
+			
+				
+				
+				
+				
+					
+
+	
+	<div class="ctrlHolder">
+		<label for="formrow_29CBDAF023254B358492698CBA30EA5C"><em>*</em> #request.content.core_security_roles_permissions_rel_rowtype_label_role_id#</label>
+		<input type="text" class="textInput" name="role_id" id="formrow_29CBDAF023254B358492698CBA30EA5C" value="#Trim(ocore_security_roles_permissions_rel.getrole_id())#"/>
 	</div>
 				
 			
@@ -135,64 +128,9 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_9977C6BC2511483B8C06A4DA69246304"><em>*</em> #request.content.core_security_roles_permissions_rel_rowtype_label_role_id#</label>
-		<input type="text" class="textInput" name="role_id" id="formrow_9977C6BC2511483B8C06A4DA69246304" value="#NumberFormat(ocore_security_roles_permissions_rel.getrole_id(),"9.99")#"/>
+		<label for="formrow_FA071DF3F68B408BBE68F108D6D7B0A6"><em>*</em> #request.content.core_security_roles_permissions_rel_rowtype_label_permission_id#</label>
+		<input type="text" class="textInput" name="permission_id" id="formrow_FA071DF3F68B408BBE68F108D6D7B0A6" value="#Trim(ocore_security_roles_permissions_rel.getpermission_id())#"/>
 	</div>
-				
-			
-			
-				
-				
-				
-				
-					
-
-	
-	<div class="ctrlHolder">
-		<label for="formrow_049C028EA4D040349A4DD2343CC77FBC"><em>*</em> #request.content.core_security_roles_permissions_rel_rowtype_label_id#</label>
-		<input type="text" class="textInput" name="id" id="formrow_049C028EA4D040349A4DD2343CC77FBC" value="#NumberFormat(ocore_security_roles_permissions_rel.getid(),"9")#"/>
-	</div>
-				
-			
-			
-		
-			</fieldset>
-		
-	
-	
-	
-		
-			<fieldset class="inlineLabels">
-				<legend>aOneToMany</legend>
-		
-			
-				
-				
-				
-				
-					
-
-	
-	
-		<div class="ctrlHolder">
-			attributes.stFieldData.links[1].name is not defined!
-		</div>
-	
-				
-			
-			
-				
-				
-				
-				
-					
-
-	
-	
-		<div class="ctrlHolder">
-			attributes.stFieldData.links[1].name is not defined!
-		</div>
-	
 				
 			
 			

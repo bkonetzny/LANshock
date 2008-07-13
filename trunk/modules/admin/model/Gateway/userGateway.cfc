@@ -23,7 +23,7 @@
 		<cfif NOT StructIsEmpty(arguments.stFilter)>
 	
 			<cfif StructKeyExists(arguments.stFilter,'stJoins')>
-				<cfset Query.returnObjectFields("user","id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong,data_access")>
+				<cfset Query.returnObjectFields("user","id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,logincount,language,geo_latlong,country,city,street,zip,reset_password_key,openid_url,data_access")>
 				
 				<cfloop collection="#arguments.stFilter.stJoins#" item="idx">
 					<cfset idx = lCase(idx)>
@@ -139,408 +139,231 @@
 			<cfset QueryRecordset.getWhere().setMode("OR")>
 			
 				<cfif StructKeyExists(arguments.filter,'id')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="numeric">
-						<cfcase value="numeric">
+					
+							<cfset bFilterColumn = false>
 							<cfif isNumeric(arguments.filter['id'])>
 								<cfset bFilterColumn = true>
 							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("user",'id',arguments.filter['id'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'name')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['name'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("user",'name',arguments.filter['name'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'email')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['email'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("user",'email',arguments.filter['email'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'pwd')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['pwd'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("user",'pwd',arguments.filter['pwd'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'firstname')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['firstname'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("user",'firstname',arguments.filter['firstname'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'lastname')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['lastname'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("user",'lastname',arguments.filter['lastname'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'gender')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="numeric">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['gender'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+					
+							<cfset bFilterColumn = false>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("user",'gender',arguments.filter['gender'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'status')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['status'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("user",'status',arguments.filter['status'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'signature')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['signature'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("user",'signature',arguments.filter['signature'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'homepage')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['homepage'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("user",'homepage',arguments.filter['homepage'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'internal_note')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['internal_note'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("user",'internal_note',arguments.filter['internal_note'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'dt_birthdate')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="date">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['dt_birthdate'])>
+					
+							<cfset bFilterColumn = false>
+							<cfif LsIsDate(arguments.filter['dt_birthdate'])>
 								<cfset bFilterColumn = true>
 							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("user",'dt_birthdate',arguments.filter['dt_birthdate'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'dt_lastlogin')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="date">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['dt_lastlogin'])>
+					
+							<cfset bFilterColumn = false>
+							<cfif LsIsDate(arguments.filter['dt_lastlogin'])>
 								<cfset bFilterColumn = true>
 							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("user",'dt_lastlogin',arguments.filter['dt_lastlogin'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'dt_registered')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="date">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['dt_registered'])>
+					
+							<cfset bFilterColumn = false>
+							<cfif LsIsDate(arguments.filter['dt_registered'])>
 								<cfset bFilterColumn = true>
 							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("user",'dt_registered',arguments.filter['dt_registered'])>
 					</cfif>
 				</cfif>
 			
-				<cfif StructKeyExists(arguments.filter,'language')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['language'])>
+				<cfif StructKeyExists(arguments.filter,'logincount')>
+					
+							<cfset bFilterColumn = false>
+							<cfif isNumeric(arguments.filter['logincount'])>
 								<cfset bFilterColumn = true>
 							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+						
+					<cfif bFilterColumn>
+						<cfset QueryRecordset.getWhere().isLike("user",'logincount',arguments.filter['logincount'])>
+					</cfif>
+				</cfif>
+			
+				<cfif StructKeyExists(arguments.filter,'language')>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("user",'language',arguments.filter['language'])>
 					</cfif>
 				</cfif>
 			
-				<cfif StructKeyExists(arguments.filter,'country')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['country'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+				<cfif StructKeyExists(arguments.filter,'geo_latlong')>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
+					<cfif bFilterColumn>
+						<cfset QueryRecordset.getWhere().isLike("user",'geo_latlong',arguments.filter['geo_latlong'])>
+					</cfif>
+				</cfif>
+			
+				<cfif StructKeyExists(arguments.filter,'country')>
+					
+							<cfset bFilterColumn = true>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("user",'country',arguments.filter['country'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'city')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['city'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("user",'city',arguments.filter['city'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'street')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['street'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("user",'street',arguments.filter['street'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'zip')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['zip'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("user",'zip',arguments.filter['zip'])>
 					</cfif>
 				</cfif>
 			
-				<cfif StructKeyExists(arguments.filter,'logincount')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="numeric">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['logincount'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
-					<cfif bFilterColumn>
-						<cfset QueryRecordset.getWhere().isLike("user",'logincount',arguments.filter['logincount'])>
-					</cfif>
-				</cfif>
-			
 				<cfif StructKeyExists(arguments.filter,'reset_password_key')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['reset_password_key'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("user",'reset_password_key',arguments.filter['reset_password_key'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'openid_url')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['openid_url'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("user",'openid_url',arguments.filter['openid_url'])>
 					</cfif>
 				</cfif>
 			
-				<cfif StructKeyExists(arguments.filter,'geo_latlong')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['geo_latlong'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
-					<cfif bFilterColumn>
-						<cfset QueryRecordset.getWhere().isLike("user",'geo_latlong',arguments.filter['geo_latlong'])>
-					</cfif>
-				</cfif>
-			
 				<cfif StructKeyExists(arguments.filter,'data_access')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="numeric">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['data_access'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+					
+							<cfset bFilterColumn = false>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("user",'data_access',arguments.filter['data_access'])>
 					</cfif>
@@ -606,7 +429,7 @@
 	<cffunction name="deleteByIDlist" access="remote" output="false" returntype="void" hint="I delete the selected N records">
 		<cfargument name="jsonData" default="" type="string" required="No" Hint="I am the json data to delete"/>
 		
-		<cfset var oJSON = CreateObject('component','#application.lanshock.oRuntime.getEnvironment().sComponentPath#core._utils.json.json')>
+		<cfset var oJSON = application.lanshock.oFactory.load('lanshock.core._utils.json.json')>
 		<cfset var aResult = oJSON.decode(data=arguments.jsonData)>
 		<cfset var idx = ''>
 		<cfloop from="1" to="#ArrayLen(aResult)#" index="idx">

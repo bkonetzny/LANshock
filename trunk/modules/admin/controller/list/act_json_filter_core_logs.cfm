@@ -14,7 +14,6 @@ $LastChangedRevision$
 <cfparam name="attributes.query" default="">
 <cfset stFilters = StructNew()>
 <cfset lFilterFields = reReplaceNoCase(attributes.fields,'[\[""\]]*','','ALL')>
-		
 <cfloop list="#lFilterFields#" index="idxFilters">
 	<cfset stFilters[idxFilters] = attributes.query>
 </cfloop>

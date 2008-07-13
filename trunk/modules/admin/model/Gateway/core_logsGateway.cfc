@@ -19,7 +19,7 @@
 		<cfif NOT StructIsEmpty(arguments.stFilter)>
 	
 			<cfif StructKeyExists(arguments.stFilter,'stJoins')>
-				<cfset Query.returnObjectFields("core_logs","id,logname,level,data,timestamp")>
+				<cfset Query.returnObjectFields("core_logs","id,logname,level,data,timestamp,userid")>
 				
 				<cfloop collection="#arguments.stFilter.stJoins#" item="idx">
 					<cfset idx = lCase(idx)>
@@ -124,10 +124,10 @@
 				</cfif>
 			</cfloop>
 			<!--- Get the Primary Keys of the records we want to skip --->
-			<cfset QuerySkip.returnObjectFields("core_logs","timestamp") />
+			<cfset QuerySkip.returnObjectFields("core_logs","id") />
 			<cfset QuerySkip.setMaxrows(arguments.startrow) />
 			<cfset qSkip = getByQuery(QuerySkip) />
-			<cfset where.isNotIn("core_logs","timestamp",valuelist(qSkip.timestamp)) />
+			<cfset where.isNotIn("core_logs","id",valuelist(qSkip.id)) />
 		</cfif>
 	  
 	  
@@ -135,87 +135,65 @@
 			<cfset QueryRecordset.getWhere().setMode("OR")>
 			
 				<cfif StructKeyExists(arguments.filter,'id')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="numeric">
-						<cfcase value="numeric">
+					
+							<cfset bFilterColumn = false>
 							<cfif isNumeric(arguments.filter['id'])>
 								<cfset bFilterColumn = true>
 							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("core_logs",'id',arguments.filter['id'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'logname')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['logname'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("core_logs",'logname',arguments.filter['logname'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'level')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['level'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("core_logs",'level',arguments.filter['level'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'data')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['data'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("core_logs",'data',arguments.filter['data'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'timestamp')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="date">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['timestamp'])>
+					
+							<cfset bFilterColumn = false>
+							<cfif LsIsDate(arguments.filter['timestamp'])>
 								<cfset bFilterColumn = true>
 							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("core_logs",'timestamp',arguments.filter['timestamp'])>
+					</cfif>
+				</cfif>
+			
+				<cfif StructKeyExists(arguments.filter,'userid')>
+					
+							<cfset bFilterColumn = false>
+							<cfif isNumeric(arguments.filter['userid'])>
+								<cfset bFilterColumn = true>
+							</cfif>
+						
+					<cfif bFilterColumn>
+						<cfset QueryRecordset.getWhere().isLike("core_logs",'userid',arguments.filter['userid'])>
 					</cfif>
 				</cfif>
 			
@@ -235,7 +213,7 @@
 		
 		
 		<!--- return only fields on list --->
-		<cfset QueryRecordset.returnObjectFields("core_logs","id,logname,level,data,timestamp")>
+		<cfset QueryRecordset.returnObjectFields("core_logs","id,logname,level,data,timestamp,userid")>
 		
 		<!--- Return the query --->
 		<cfreturn getByQuery(QueryRecordset) />
@@ -262,7 +240,7 @@
 		<cfif len(variables.sOptionNameCode)>
 			<cfset QueryRecordset.setFieldExpression("core_logs",variables.sOptionNameField,variables.sOptionNameCode)>
 		</cfif>
-		<cfset QueryRecordset.setFieldAlias("core_logs","timestamp","optionvalue")>
+		<cfset QueryRecordset.setFieldAlias("core_logs","id","optionvalue")>
 		<cfset QueryRecordset.setFieldAlias("core_logs",variables.sOptionNameField,"optionname")>
 		<cfset QueryRecordset.returnObjectFields("core_logs","optionvalue,optionname")>
 		
@@ -279,7 +257,7 @@
 	<cffunction name="deleteByIDlist" access="remote" output="false" returntype="void" hint="I delete the selected N records">
 		<cfargument name="jsonData" default="" type="string" required="No" Hint="I am the json data to delete"/>
 		
-		<cfset var oJSON = CreateObject('component','#application.lanshock.oRuntime.getEnvironment().sComponentPath#core._utils.json.json')>
+		<cfset var oJSON = application.lanshock.oFactory.load('lanshock.core._utils.json.json')>
 		<cfset var aResult = oJSON.decode(data=arguments.jsonData)>
 		<cfset var idx = ''>
 		<cfloop from="1" to="#ArrayLen(aResult)#" index="idx">
@@ -292,12 +270,12 @@
 		
 		<!--- Get the recordcount for the table --->
 		<!--- There is a bug in Reactor which requires that the count field must be named the same as a real field in the table. --->
-		<cfset QueryCount.returnObjectFields("core_logs","timestamp") />
-		<cfset QueryCount.setFieldExpression("core_logs","timestamp","COUNT(*)","CF_SQL_INTEGER") />
+		<cfset QueryCount.returnObjectFields("core_logs","id") />
+		<cfset QueryCount.setFieldExpression("core_logs","id","COUNT(*)","CF_SQL_INTEGER") />
 		<cfset qCount = getByQuery(QueryCount) />
 		
 		<!--- Return the recordcount --->
-		<cfreturn qCount.timestamp />
+		<cfreturn qCount.id />
 	</cffunction>
 <!--- End of gatewayCustom code generated by fusebox scaffolder. --->
 </cfcomponent>

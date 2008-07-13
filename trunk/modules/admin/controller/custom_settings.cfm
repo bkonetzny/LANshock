@@ -3,10 +3,10 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL: https://svn.sourceforge.net/svnroot/lanshock/trunk/core/admin/act_start.cfm $
-$LastChangedDate: 2006-10-23 00:59:26 +0200 (Mo, 23 Okt 2006) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 56 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 --->
 
 <cffunction name="byteConvert" access="public" returntype="string" output="false">
@@ -107,6 +107,38 @@ $LastChangedRevision: 56 $
 	<cfset sResult = NumberFormat(iDays,'00') & ':' & NumberFormat(iHours,'00') & ':' & NumberFormat(iMinutes,'00') & ':' & NumberFormat(iSeconds,'00')>
 
 	<cfreturn sResult>
+</cffunction>
+
+<cffunction name="directoryCopy" access="public" returntype="void" output="false">
+	<!---
+	Copies a directory.
+	
+	@param source      Source directory. (Required)
+	@param destination      Destination directory. (Required)
+	@param nameConflict      What to do when a conflict occurs (skip, overwrite, makeunique). Defaults to overwrite. (Optional)
+	@return Returns nothing.
+	@author Joe Rinehart (joe.rinehart@gmail.com)
+	@version 1, July 27, 2005
+	--->
+    <cfargument name="source" required="true" type="string">
+    <cfargument name="destination" required="true" type="string">
+    <cfargument name="nameconflict" required="true" default="overwrite">
+
+    <cfset var qContents = "" />
+    
+    <cfif NOT directoryExists(arguments.destination)>
+        <cfdirectory action="create" directory="#arguments.destination#" mode="777">
+    </cfif>
+    
+    <cfdirectory action="list" directory="#arguments.source#" name="qContents">
+	
+    <cfloop query="qContents">
+        <cfif qContents.type EQ "file">
+            <cffile action="copy" source="#arguments.source#/#qContents.name#" destination="#arguments.destination#/#qContents.name#" nameconflict="#arguments.nameConflict#">
+        <cfelseif qContents.type EQ "dir">
+            <cfset directoryCopy(arguments.source & '/' & qContents.name, arguments.destination & '/' & qContents.name) />
+        </cfif>
+    </cfloop>
 </cffunction>
 
 <cfsetting enablecfoutputonly="No">

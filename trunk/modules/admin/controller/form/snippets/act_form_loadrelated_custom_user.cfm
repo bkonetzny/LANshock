@@ -8,6 +8,9 @@
 
 <cfset stRelated.status_custom.qData = QueryNew('optionname,optionvalue')>
 <cfset QueryAddRow(stRelated.status_custom.qData)>
+<cfset QuerySetCell(stRelated.status_custom.qData,'optionname','locked')>
+<cfset QuerySetCell(stRelated.status_custom.qData,'optionvalue','locked')>
+<cfset QueryAddRow(stRelated.status_custom.qData)>
 <cfset QuerySetCell(stRelated.status_custom.qData,'optionname','new')>
 <cfset QuerySetCell(stRelated.status_custom.qData,'optionvalue','new')>
 <cfset QueryAddRow(stRelated.status_custom.qData)>

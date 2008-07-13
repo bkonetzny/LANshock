@@ -96,9 +96,26 @@
 					
 
 	
+	<cfif mode EQ "edit">
+	<input type="hidden" name="id" id="formrow_F99457DAE7B74B3D913A92B3D700A50A" value="#ocore_security_permissions.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_893B8D5BB3A449569BDE0E48111C5FF6"><em>*</em> #request.content.core_security_permissions_rowtype_label_id#</label>
-		<input type="text" class="textInput" name="id" id="formrow_893B8D5BB3A449569BDE0E48111C5FF6" value="#NumberFormat(ocore_security_permissions.getid(),"9.99")#"/>
+		<label for="formrow_F99457DAE7B74B3D913A92B3D700A50A">#request.content.core_security_permissions_rowtype_label_id#</label>
+		#Trim(ocore_security_permissions.getid())#
+	</div>
+	</cfif>
+				
+			
+			
+				
+				
+				
+				
+					
+
+	
+	<div class="ctrlHolder">
+		<label for="formrow_C64B25FE31F04B6ABA8C3D5DB7B4696E"><em>*</em> #request.content.core_security_permissions_rowtype_label_name#</label>
+		<input type="text" class="textInput" name="name" id="formrow_C64B25FE31F04B6ABA8C3D5DB7B4696E" value="#Trim(ocore_security_permissions.getname())#"/>
 	</div>
 				
 			
@@ -111,22 +128,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_E09130A2F6D645299D3226EB5214FFCD"><em>*</em> #request.content.core_security_permissions_rowtype_label_name#</label>
-		<input type="text" class="textInput" name="name" id="formrow_E09130A2F6D645299D3226EB5214FFCD" value="#Trim(ocore_security_permissions.getname())#"/>
-	</div>
-				
-			
-			
-				
-				
-				
-				
-					
-
-	
-	<div class="ctrlHolder">
-		<label for="formrow_93561AB4322C4A83BB49E9E8BD2E0652"><em>*</em> #request.content.core_security_permissions_rowtype_label_module#</label>
-		<input type="text" class="textInput" name="module" id="formrow_93561AB4322C4A83BB49E9E8BD2E0652" value="#Trim(ocore_security_permissions.getmodule())#"/>
+		<label for="formrow_AB336216FD2F4A7C973D1D1609FB9347"><em>*</em> #request.content.core_security_permissions_rowtype_label_module#</label>
+		<input type="text" class="textInput" name="module" id="formrow_AB336216FD2F4A7C973D1D1609FB9347" value="#Trim(ocore_security_permissions.getmodule())#"/>
 	</div>
 				
 			
