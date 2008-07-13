@@ -165,17 +165,26 @@ $LastChangedRevision$
 			<cfset QueryRecordset.getWhere().setMode("OR")>
 			<<cfloop from="1" to="$$ArrayLen(aFields)$$" index="idx">>
 				<cfif StructKeyExists(arguments.filter,'$$aFields[idx].alias$$')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="$$aFields[idx].type$$">
-						<cfcase value="integer">
+					<<cfswitch expression="$$aFields[idx].type$$">>
+						<<cfcase value="integer">>
+							<cfset bFilterColumn = false>
 							<cfif isNumeric(arguments.filter['$$aFields[idx].alias$$'])>
 								<cfset bFilterColumn = true>
 							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+						<</cfcase>>
+						<<cfcase value="datetime">>
+							<cfset bFilterColumn = false>
+							<cfif LsIsDate(arguments.filter['$$aFields[idx].alias$$'])>
+								<cfset bFilterColumn = true>
+							</cfif>
+						<</cfcase>>
+						<<cfcase value="varchar,text">>
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						<</cfcase>>
+						<<cfdefaultcase>>
+							<cfset bFilterColumn = false>
+						<</cfdefaultcase>>
+					<</cfswitch>>
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("$$objectName$$",'$$aFields[idx].alias$$',arguments.filter['$$aFields[idx].alias$$'])>
 					</cfif>
