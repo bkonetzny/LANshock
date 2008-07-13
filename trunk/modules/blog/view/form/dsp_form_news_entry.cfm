@@ -79,8 +79,24 @@
 				
 				
 			
+		
+				
+		
+	
+	
+		
+		
+		
+		
+		
+			
 				
 				
+				
+				
+				
+						
+					
 				
 				
 			
@@ -100,23 +116,8 @@
 				
 				
 				
-				
-			
-		
-				
-		
-	
-	
-		
-		
-		
-		
-		
-			
-				
-				
-				
-				
+						
+					
 				
 				
 			
@@ -146,10 +147,10 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="id" id="formrow_34DC170C2FC34611AC0C8B1CEF92DFD6" value="#onews_entry.getid()#" />
+	<input type="hidden" name="id" id="formrow_08BC21EA09D64CA7ADB8E993B84E5C72" value="#onews_entry.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_34DC170C2FC34611AC0C8B1CEF92DFD6">#request.content.news_entry_rowtype_label_id#</label>
-		#NumberFormat(onews_entry.getid(),"9.99")#
+		<label for="formrow_08BC21EA09D64CA7ADB8E993B84E5C72">#request.content.news_entry_rowtype_label_id#</label>
+		#Trim(onews_entry.getid())#
 	</div>
 	</cfif>
 				
@@ -163,15 +164,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_AD69F65A4A5B4A0A8026959438C6A97C"><em>*</em> #request.content.news_entry_rowtype_label_author#</label>
-		
-			<select class="selectInput" name="author" id="formrow_AD69F65A4A5B4A0A8026959438C6A97C">
-				<option value=""></option>
-				<cfloop query="stRelated.stManyToOne.user.qData">
-					<option value="#stRelated.stManyToOne.user.qData.optionvalue#"<cfif onews_entry.getauthor() EQ stRelated.stManyToOne.user.qData.optionvalue> selected="selected"</cfif>>#stRelated.stManyToOne.user.qData.optionname#</option>
-				</cfloop>
-			</select>
-		
+		<label for="formrow_028BF9C3992E445F88D4802A58CBE122"><em>*</em> #request.content.news_entry_rowtype_label_title#</label>
+		<input type="text" class="textInput" name="title" id="formrow_028BF9C3992E445F88D4802A58CBE122" value="#Trim(onews_entry.gettitle())#"/>
 	</div>
 				
 			
@@ -184,31 +178,17 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_69BFC8171B2647A698EF591B1EB93A40"><em>*</em> #request.content.news_entry_rowtype_label_title#</label>
-		<input type="text" class="textInput" name="title" id="formrow_69BFC8171B2647A698EF591B1EB93A40" value="#Trim(onews_entry.gettitle())#"/>
-	</div>
-				
-			
-			
-				
-				
-				
-				
-					
-
-	
-	<div class="ctrlHolder">
-		<label for="formrow_6507FEA3B63740379179D92B5FEB15F8"><em>*</em> #request.content.news_entry_rowtype_label_text#</label>
-		<textarea name="text" id="formrow_6507FEA3B63740379179D92B5FEB15F8">#Trim(onews_entry.gettext())#</textarea>
+		<label for="formrow_C3B1C851353644899D34724D07DE7B98"><em>*</em> #request.content.news_entry_rowtype_label_text#</label>
+		<textarea name="text" id="formrow_C3B1C851353644899D34724D07DE7B98">#Trim(onews_entry.gettext())#</textarea>
 			<script type="text/javascript">
 			<!--
 				var sBasePath = "#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/";
-				var oFCKeditor_formrow_6507FEA3B63740379179D92B5FEB15F8 = new FCKeditor('text');
-				oFCKeditor_formrow_6507FEA3B63740379179D92B5FEB15F8.BasePath = sBasePath + "fckeditor/";
-				oFCKeditor_formrow_6507FEA3B63740379179D92B5FEB15F8.Config['CustomConfigurationsPath'] = sBasePath + "lanshock_fckeditor_config.js";
-				oFCKeditor_formrow_6507FEA3B63740379179D92B5FEB15F8.Value = '';
+				var oFCKeditor_formrow_C3B1C851353644899D34724D07DE7B98 = new FCKeditor('text');
+				oFCKeditor_formrow_C3B1C851353644899D34724D07DE7B98.BasePath = sBasePath + "fckeditor/";
+				oFCKeditor_formrow_C3B1C851353644899D34724D07DE7B98.Config['CustomConfigurationsPath'] = sBasePath + "lanshock_fckeditor_config.js";
+				oFCKeditor_formrow_C3B1C851353644899D34724D07DE7B98.Value = '';
 				Ext.onReady(function(){
-					oFCKeditor_formrow_6507FEA3B63740379179D92B5FEB15F8.ReplaceTextarea();
+					oFCKeditor_formrow_C3B1C851353644899D34724D07DE7B98.ReplaceTextarea();
 				});
 			//-->
 			</script>
@@ -227,21 +207,23 @@
 		<cfset onews_entry.setdate(now())>
 	</cfif>
 	<div class="ctrlHolder">
-		<label for="formrow_C7FEEE49EAD44F808BC1BED7FEC68EC4">#request.content.news_entry_rowtype_label_date#</label>
-		<div id="divDatePickerC7FEEE49EAD44F808BC1BED7FEC68EC4"></div>
-		<input type="hidden" name="date" id="formrow_C7FEEE49EAD44F808BC1BED7FEC68EC4" value="#LsDateFormat(Trim(onews_entry.getdate()),'YYYY-MM-DD')# #LsTimeFormat(Trim(onews_entry.getdate()),'HH:MM:SS')#"/>
+		<label for="formrow_56EBA5703FD24521BE232FD78BEE9FE3">#request.content.news_entry_rowtype_label_date#</label>
+		<div class="divInput" id="divDatePicker56EBA5703FD24521BE232FD78BEE9FE3"></div>
+		<input type="hidden" name="date" id="formrow_56EBA5703FD24521BE232FD78BEE9FE3" value="#LsDateFormat(Trim(onews_entry.getdate()),'YYYY-MM-DD')# #LsTimeFormat(Trim(onews_entry.getdate()),'HH:MM:SS')#"/>
 		<script type="text/javascript">
-			var myDatePickerC7FEEE49EAD44F808BC1BED7FEC68EC4 = new Ext.ux.form.DateTime({
+			<!--
+			var myDatePicker56EBA5703FD24521BE232FD78BEE9FE3 = new Ext.ux.form.DateTime({
 				handler: function(value){
-					$('##formrow_C7FEEE49EAD44F808BC1BED7FEC68EC4').val(value);
+					$('##formrow_56EBA5703FD24521BE232FD78BEE9FE3').val(value);
 				}
 			});
 			Ext.onReady(function(){
-				myDatePickerC7FEEE49EAD44F808BC1BED7FEC68EC4.render('divDatePickerC7FEEE49EAD44F808BC1BED7FEC68EC4');
-				var dtC7FEEE49EAD44F808BC1BED7FEC68EC4 = new Date();
-				dtC7FEEE49EAD44F808BC1BED7FEC68EC4 = Date.parseDate("#LsDateFormat(Trim(onews_entry.getdate()),'YYYY-MM-DD')# #LsTimeFormat(Trim(onews_entry.getdate()),'HH:MM')#","Y-m-d G:i");
-				myDatePickerC7FEEE49EAD44F808BC1BED7FEC68EC4.setValue(dtC7FEEE49EAD44F808BC1BED7FEC68EC4);
+				myDatePicker56EBA5703FD24521BE232FD78BEE9FE3.render('divDatePicker56EBA5703FD24521BE232FD78BEE9FE3');
+				var dt56EBA5703FD24521BE232FD78BEE9FE3 = new Date();
+				dt56EBA5703FD24521BE232FD78BEE9FE3 = Date.parseDate("#LsDateFormat(Trim(onews_entry.getdate()),'YYYY-MM-DD')# #LsTimeFormat(Trim(onews_entry.getdate()),'HH:MM')#","Y-m-d G:i");
+				myDatePicker56EBA5703FD24521BE232FD78BEE9FE3.setValue(dt56EBA5703FD24521BE232FD78BEE9FE3);
 			});
+			//-->
 		</script>
 	</div>
 				
@@ -255,8 +237,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_192687426D4C4C248D864368A52EAD7E">#request.content.news_entry_rowtype_label_mp3url#</label>
-		<input type="text" class="textInput" name="mp3url" id="formrow_192687426D4C4C248D864368A52EAD7E" value="#Trim(onews_entry.getmp3url())#"/>
+		<label for="formrow_CEDF744499234B2BB359630213C2EDBF">#request.content.news_entry_rowtype_label_mp3url#</label>
+		<input type="text" class="textInput" name="mp3url" id="formrow_CEDF744499234B2BB359630213C2EDBF" value="#Trim(onews_entry.getmp3url())#"/>
 	</div>
 				
 			
@@ -279,11 +261,16 @@
 					
 
 	
-	
-		<div class="ctrlHolder">
-			attributes.stFieldData.links[1].name is not defined!
-		</div>
-	
+	<cfset sReluser = onews_entry.getuser().getid()>
+	<div class="ctrlHolder">
+		<label for="formrow_EB9EA727808143C09884623D4D1F3F9B">user</label>
+		<select class="selectInput" name="author" id="formrow_EB9EA727808143C09884623D4D1F3F9B">
+			<option value=""></option>
+			<cfloop query="stRelated.stManyToOne.user.qData">
+				<option value="#stRelated.stManyToOne.user.qData.optionvalue#"<cfif sReluser EQ stRelated.stManyToOne.user.qData.optionvalue> selected="selected"</cfif>>#stRelated.stManyToOne.user.qData.optionname#</option>
+			</cfloop>
+		</select>
+	</div>
 				
 			
 			
@@ -305,18 +292,16 @@
 					
 
 	
-	
-		<cfset lRelnews_entry_category = onews_entry.getnews_entry_categoryiterator().getValueList('category_id')>
-		<div class="ctrlHolder">
-			<label for="formrow_2951CB8408E04038A0063447268E11A3">news_entry_category</label>
-			<select class="selectInput" name="news_entry_category" id="formrow_2951CB8408E04038A0063447268E11A3" multiple="multiple" size="6">
-				<option value=""></option>
-				<cfloop query="stRelated.stManyToMany.news_entry_category.qData">
-					<option value="#stRelated.stManyToMany.news_entry_category.qData.optionvalue#"<cfif ListFind(lRelnews_entry_category,stRelated.stManyToMany.news_entry_category.qData.optionvalue)> selected="selected"</cfif>>#stRelated.stManyToMany.news_entry_category.qData.optionname#</option>
-				</cfloop>
-			</select>
-		</div>
-	
+	<cfset lRelnews_entry_category = onews_entry.getnews_entry_categoryiterator().getValueList('category_id')>
+	<div class="ctrlHolder">
+		<label for="formrow_33658CAEDFEE4C7CBA2EA89355417B15">news_entry_category</label>
+		<select class="selectInput" name="news_entry_category" id="formrow_33658CAEDFEE4C7CBA2EA89355417B15" multiple="multiple" size="6">
+			<option value=""></option>
+			<cfloop query="stRelated.stManyToMany.news_entry_category.qData">
+				<option value="#stRelated.stManyToMany.news_entry_category.qData.optionvalue#"<cfif ListFind(lRelnews_entry_category,stRelated.stManyToMany.news_entry_category.qData.optionvalue)> selected="selected"</cfif>>#stRelated.stManyToMany.news_entry_category.qData.optionname#</option>
+			</cfloop>
+		</select>
+	</div>
 				
 			
 			
@@ -329,7 +314,7 @@
 	<div class="buttonHolder">
 		<button type="submit" class="submitButton" id="btnSave">#request.content.form_save#</button>
 		<button type="reset" class="resetButton" id="btnReset">#request.content.form_reset#</button>
-		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';">#request.content.form_cancel#</button>
+		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';return false;">#request.content.form_cancel#</button>
 	</div>
 </form>
 </cfoutput>

@@ -81,6 +81,9 @@
 				
 				
 				
+						
+					
+				
 				
 			
 		
@@ -109,10 +112,10 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="id" id="formrow_FD02A100E99F41B1A869C0F85764CB67" value="#onews_category.getid()#" />
+	<input type="hidden" name="id" id="formrow_0C2837F238DB4628A7AD1F9C50F084E4" value="#onews_category.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_FD02A100E99F41B1A869C0F85764CB67">#request.content.news_category_rowtype_label_id#</label>
-		#NumberFormat(onews_category.getid(),"9.99")#
+		<label for="formrow_0C2837F238DB4628A7AD1F9C50F084E4">#request.content.news_category_rowtype_label_id#</label>
+		#Trim(onews_category.getid())#
 	</div>
 	</cfif>
 				
@@ -126,8 +129,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_9D785E97561E473789740AFED4434DE2"><em>*</em> #request.content.news_category_rowtype_label_name#</label>
-		<input type="text" class="textInput" name="name" id="formrow_9D785E97561E473789740AFED4434DE2" value="#Trim(onews_category.getname())#"/>
+		<label for="formrow_E8CCEC5C01624D5599630196D3BF1998"><em>*</em> #request.content.news_category_rowtype_label_name#</label>
+		<input type="text" class="textInput" name="name" id="formrow_E8CCEC5C01624D5599630196D3BF1998" value="#Trim(onews_category.getname())#"/>
 	</div>
 				
 			
@@ -150,18 +153,16 @@
 					
 
 	
-	
-		<cfset lRelnews_entry_category = onews_category.getnews_entry_categoryiterator().getValueList('id')>
-		<div class="ctrlHolder">
-			<label for="formrow_2FBC3665FFA045F1839436AE204E5C29">news_entry_category</label>
-			<select class="selectInput" name="news_entry_category" id="formrow_2FBC3665FFA045F1839436AE204E5C29" multiple="multiple" size="6">
-				<option value=""></option>
-				<cfloop query="stRelated.stManyToMany.news_entry_category.qData">
-					<option value="#stRelated.stManyToMany.news_entry_category.qData.optionvalue#"<cfif ListFind(lRelnews_entry_category,stRelated.stManyToMany.news_entry_category.qData.optionvalue)> selected="selected"</cfif>>#stRelated.stManyToMany.news_entry_category.qData.optionname#</option>
-				</cfloop>
-			</select>
-		</div>
-	
+	<cfset lRelnews_entry_category = onews_category.getnews_entry_categoryiterator().getValueList('entry_id')>
+	<div class="ctrlHolder">
+		<label for="formrow_8509CFBB7A18403EA2FF3BB66F04B92D">news_entry_category</label>
+		<select class="selectInput" name="news_entry_category" id="formrow_8509CFBB7A18403EA2FF3BB66F04B92D" multiple="multiple" size="6">
+			<option value=""></option>
+			<cfloop query="stRelated.stManyToMany.news_entry_category.qData">
+				<option value="#stRelated.stManyToMany.news_entry_category.qData.optionvalue#"<cfif ListFind(lRelnews_entry_category,stRelated.stManyToMany.news_entry_category.qData.optionvalue)> selected="selected"</cfif>>#stRelated.stManyToMany.news_entry_category.qData.optionname#</option>
+			</cfloop>
+		</select>
+	</div>
 				
 			
 			
@@ -174,7 +175,7 @@
 	<div class="buttonHolder">
 		<button type="submit" class="submitButton" id="btnSave">#request.content.form_save#</button>
 		<button type="reset" class="resetButton" id="btnReset">#request.content.form_reset#</button>
-		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';">#request.content.form_cancel#</button>
+		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';return false;">#request.content.form_cancel#</button>
 	</div>
 </form>
 </cfoutput>

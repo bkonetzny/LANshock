@@ -3,10 +3,10 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL: https://lanshock.svn.sourceforge.net/svnroot/lanshock/trunk/scaffolding/templates/EXT2.0/custom/blog/raw_files/view/custom/dsp_news.cfm $
-$LastChangedDate: 2008-05-12 14:45:39 +0200 (Mo, 12 Mai 2008) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 295 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 --->
 
 <cfoutput>
