@@ -135,51 +135,30 @@
 			<cfset QueryRecordset.getWhere().setMode("OR")>
 			
 				<cfif StructKeyExists(arguments.filter,'id')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="integer">
-						<cfcase value="numeric">
+					
+							<cfset bFilterColumn = false>
 							<cfif isNumeric(arguments.filter['id'])>
 								<cfset bFilterColumn = true>
 							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("news_ping_url",'id',arguments.filter['id'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'name')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="varchar">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['name'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("news_ping_url",'name',arguments.filter['name'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'url')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="varchar">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['url'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("news_ping_url",'url',arguments.filter['url'])>
 					</cfif>

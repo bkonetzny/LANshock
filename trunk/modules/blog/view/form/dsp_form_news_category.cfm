@@ -112,9 +112,9 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="id" id="formrow_0C2837F238DB4628A7AD1F9C50F084E4" value="#onews_category.getid()#" />
+	<input type="hidden" name="id" id="formrow_80CCC5BEA59E420083CD9D67DD486081" value="#onews_category.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_0C2837F238DB4628A7AD1F9C50F084E4">#request.content.news_category_rowtype_label_id#</label>
+		<label for="formrow_80CCC5BEA59E420083CD9D67DD486081">#request.content.news_category_rowtype_label_id#</label>
 		#Trim(onews_category.getid())#
 	</div>
 	</cfif>
@@ -129,8 +129,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_E8CCEC5C01624D5599630196D3BF1998"><em>*</em> #request.content.news_category_rowtype_label_name#</label>
-		<input type="text" class="textInput" name="name" id="formrow_E8CCEC5C01624D5599630196D3BF1998" value="#Trim(onews_category.getname())#"/>
+		<label for="formrow_F66FFCA108ED4370A5CB5152E839FFFD"><em>*</em> #request.content.news_category_rowtype_label_name#</label>
+		<input type="text" class="textInput" name="name" id="formrow_F66FFCA108ED4370A5CB5152E839FFFD" value="#Trim(onews_category.getname())#"/>
 	</div>
 				
 			
@@ -155,8 +155,8 @@
 	
 	<cfset lRelnews_entry_category = onews_category.getnews_entry_categoryiterator().getValueList('entry_id')>
 	<div class="ctrlHolder">
-		<label for="formrow_8509CFBB7A18403EA2FF3BB66F04B92D">news_entry_category</label>
-		<select class="selectInput" name="news_entry_category" id="formrow_8509CFBB7A18403EA2FF3BB66F04B92D" multiple="multiple" size="6">
+		<label for="formrow_4C1E9437F5964910BA36264304B0BCA0">news_entry_category</label>
+		<select class="selectInput" name="news_entry_category" id="formrow_4C1E9437F5964910BA36264304B0BCA0" multiple="multiple" size="6">
 			<option value=""></option>
 			<cfloop query="stRelated.stManyToMany.news_entry_category.qData">
 				<option value="#stRelated.stManyToMany.news_entry_category.qData.optionvalue#"<cfif ListFind(lRelnews_entry_category,stRelated.stManyToMany.news_entry_category.qData.optionvalue)> selected="selected"</cfif>>#stRelated.stManyToMany.news_entry_category.qData.optionname#</option>

@@ -97,9 +97,9 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="id" id="formrow_7683D06690A74296962328EF22DC1DEF" value="#onews_ping_url.getid()#" />
+	<input type="hidden" name="id" id="formrow_C9436C4F378A4C2D9794DF1216D3766B" value="#onews_ping_url.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_7683D06690A74296962328EF22DC1DEF">#request.content.news_ping_url_rowtype_label_id#</label>
+		<label for="formrow_C9436C4F378A4C2D9794DF1216D3766B">#request.content.news_ping_url_rowtype_label_id#</label>
 		#Trim(onews_ping_url.getid())#
 	</div>
 	</cfif>
@@ -114,8 +114,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_4085A1D7457A4B41BBB2420DD249A27B"><em>*</em> #request.content.news_ping_url_rowtype_label_name#</label>
-		<input type="text" class="textInput" name="name" id="formrow_4085A1D7457A4B41BBB2420DD249A27B" value="#Trim(onews_ping_url.getname())#"/>
+		<label for="formrow_53264387A8024E94BB3D376AC9E9FA91"><em>*</em> #request.content.news_ping_url_rowtype_label_name#</label>
+		<input type="text" class="textInput" name="name" id="formrow_53264387A8024E94BB3D376AC9E9FA91" value="#Trim(onews_ping_url.getname())#"/>
 	</div>
 				
 			
@@ -128,8 +128,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_F1D5A3F164144121B9526E7C03F4BAF8"><em>*</em> #request.content.news_ping_url_rowtype_label_url#</label>
-		<input type="text" class="textInput" name="url" id="formrow_F1D5A3F164144121B9526E7C03F4BAF8" value="#Trim(onews_ping_url.geturl())#"/>
+		<label for="formrow_CE1E90FD4ED44D8F803C46C02000CDA8"><em>*</em> #request.content.news_ping_url_rowtype_label_url#</label>
+		<input type="text" class="textInput" name="url" id="formrow_CE1E90FD4ED44D8F803C46C02000CDA8" value="#Trim(onews_ping_url.geturl())#"/>
 	</div>
 				
 			

@@ -135,119 +135,72 @@
 			<cfset QueryRecordset.getWhere().setMode("OR")>
 			
 				<cfif StructKeyExists(arguments.filter,'id')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="integer">
-						<cfcase value="numeric">
+					
+							<cfset bFilterColumn = false>
 							<cfif isNumeric(arguments.filter['id'])>
 								<cfset bFilterColumn = true>
 							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("news_trackback",'id',arguments.filter['id'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'entry_id')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="integer">
-						<cfcase value="numeric">
+					
+							<cfset bFilterColumn = false>
 							<cfif isNumeric(arguments.filter['entry_id'])>
 								<cfset bFilterColumn = true>
 							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("news_trackback",'entry_id',arguments.filter['entry_id'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'blog_name')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="varchar">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['blog_name'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("news_trackback",'blog_name',arguments.filter['blog_name'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'title')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="varchar">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['title'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("news_trackback",'title',arguments.filter['title'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'text')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="text">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['text'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("news_trackback",'text',arguments.filter['text'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'date')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="datetime">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['date'])>
+					
+							<cfset bFilterColumn = false>
+							<cfif LsIsDate(arguments.filter['date'])>
 								<cfset bFilterColumn = true>
 							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("news_trackback",'date',arguments.filter['date'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'url')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="varchar">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['url'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("news_trackback",'url',arguments.filter['url'])>
 					</cfif>

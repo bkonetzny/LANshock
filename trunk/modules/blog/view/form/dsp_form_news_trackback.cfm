@@ -117,9 +117,9 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="id" id="formrow_AE7923157E66428CB0DE8B42F71691AE" value="#onews_trackback.getid()#" />
+	<input type="hidden" name="id" id="formrow_59E1C607D3884D029F9C4C6AD5F66E05" value="#onews_trackback.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_AE7923157E66428CB0DE8B42F71691AE">#request.content.news_trackback_rowtype_label_id#</label>
+		<label for="formrow_59E1C607D3884D029F9C4C6AD5F66E05">#request.content.news_trackback_rowtype_label_id#</label>
 		#Trim(onews_trackback.getid())#
 	</div>
 	</cfif>
@@ -134,8 +134,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_38700342EF774DA8887206543A6213E7"><em>*</em> #request.content.news_trackback_rowtype_label_entry_id#</label>
-		<input type="text" class="textInput" name="entry_id" id="formrow_38700342EF774DA8887206543A6213E7" value="#Trim(onews_trackback.getentry_id())#"/>
+		<label for="formrow_61BEA65DF73D4C5E8A5E7C1047C2D6A5"><em>*</em> #request.content.news_trackback_rowtype_label_entry_id#</label>
+		<input type="text" class="textInput" name="entry_id" id="formrow_61BEA65DF73D4C5E8A5E7C1047C2D6A5" value="#Trim(onews_trackback.getentry_id())#"/>
 	</div>
 				
 			
@@ -148,8 +148,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_99CF57BEF9614043A2445627F4E9840F"><em>*</em> #request.content.news_trackback_rowtype_label_blog_name#</label>
-		<input type="text" class="textInput" name="blog_name" id="formrow_99CF57BEF9614043A2445627F4E9840F" value="#Trim(onews_trackback.getblog_name())#"/>
+		<label for="formrow_F5A3AF4A87C5433C8632A4ADCD652CEA"><em>*</em> #request.content.news_trackback_rowtype_label_blog_name#</label>
+		<input type="text" class="textInput" name="blog_name" id="formrow_F5A3AF4A87C5433C8632A4ADCD652CEA" value="#Trim(onews_trackback.getblog_name())#"/>
 	</div>
 				
 			
@@ -162,8 +162,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_1D83085578E24C61B112F24ABCC3D9FA"><em>*</em> #request.content.news_trackback_rowtype_label_title#</label>
-		<input type="text" class="textInput" name="title" id="formrow_1D83085578E24C61B112F24ABCC3D9FA" value="#Trim(onews_trackback.gettitle())#"/>
+		<label for="formrow_E5AC7747D6C84AA1AC93E81FDBFC0F54"><em>*</em> #request.content.news_trackback_rowtype_label_title#</label>
+		<input type="text" class="textInput" name="title" id="formrow_E5AC7747D6C84AA1AC93E81FDBFC0F54" value="#Trim(onews_trackback.gettitle())#"/>
 	</div>
 				
 			
@@ -176,8 +176,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_43EC79648D174F3991892FEFA637BE92"><em>*</em> #request.content.news_trackback_rowtype_label_text#</label>
-		<textarea name="text" id="formrow_43EC79648D174F3991892FEFA637BE92">#Trim(onews_trackback.gettext())#</textarea>
+		<label for="formrow_974F68FCD3AF458ABE1B94A3CC255BF8"><em>*</em> #request.content.news_trackback_rowtype_label_text#</label>
+		<textarea name="text" id="formrow_974F68FCD3AF458ABE1B94A3CC255BF8">#Trim(onews_trackback.gettext())#</textarea>
 	</div>
 				
 			
@@ -193,21 +193,21 @@
 		<cfset onews_trackback.setdate(now())>
 	</cfif>
 	<div class="ctrlHolder">
-		<label for="formrow_F5E68C5D9147491CB17D3EA58080F9A2">#request.content.news_trackback_rowtype_label_date#</label>
-		<div class="divInput" id="divDatePickerF5E68C5D9147491CB17D3EA58080F9A2"></div>
-		<input type="hidden" name="date" id="formrow_F5E68C5D9147491CB17D3EA58080F9A2" value="#LsDateFormat(Trim(onews_trackback.getdate()),'YYYY-MM-DD')# #LsTimeFormat(Trim(onews_trackback.getdate()),'HH:MM:SS')#"/>
+		<label for="formrow_438202484AA34F229CFBF158384EB5BF">#request.content.news_trackback_rowtype_label_date#</label>
+		<div class="divInput" id="divDatePicker438202484AA34F229CFBF158384EB5BF"></div>
+		<input type="hidden" name="date" id="formrow_438202484AA34F229CFBF158384EB5BF" value="#LsDateFormat(Trim(onews_trackback.getdate()),'YYYY-MM-DD')# #LsTimeFormat(Trim(onews_trackback.getdate()),'HH:MM:SS')#"/>
 		<script type="text/javascript">
 			<!--
-			var myDatePickerF5E68C5D9147491CB17D3EA58080F9A2 = new Ext.ux.form.DateTime({
+			var myDatePicker438202484AA34F229CFBF158384EB5BF = new Ext.ux.form.DateTime({
 				handler: function(value){
-					$('##formrow_F5E68C5D9147491CB17D3EA58080F9A2').val(value);
+					$('##formrow_438202484AA34F229CFBF158384EB5BF').val(value);
 				}
 			});
 			Ext.onReady(function(){
-				myDatePickerF5E68C5D9147491CB17D3EA58080F9A2.render('divDatePickerF5E68C5D9147491CB17D3EA58080F9A2');
-				var dtF5E68C5D9147491CB17D3EA58080F9A2 = new Date();
-				dtF5E68C5D9147491CB17D3EA58080F9A2 = Date.parseDate("#LsDateFormat(Trim(onews_trackback.getdate()),'YYYY-MM-DD')# #LsTimeFormat(Trim(onews_trackback.getdate()),'HH:MM')#","Y-m-d G:i");
-				myDatePickerF5E68C5D9147491CB17D3EA58080F9A2.setValue(dtF5E68C5D9147491CB17D3EA58080F9A2);
+				myDatePicker438202484AA34F229CFBF158384EB5BF.render('divDatePicker438202484AA34F229CFBF158384EB5BF');
+				var dt438202484AA34F229CFBF158384EB5BF = new Date();
+				dt438202484AA34F229CFBF158384EB5BF = Date.parseDate("#LsDateFormat(Trim(onews_trackback.getdate()),'YYYY-MM-DD')# #LsTimeFormat(Trim(onews_trackback.getdate()),'HH:MM')#","Y-m-d G:i");
+				myDatePicker438202484AA34F229CFBF158384EB5BF.setValue(dt438202484AA34F229CFBF158384EB5BF);
 			});
 			//-->
 		</script>
@@ -223,8 +223,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_B755159758CC4C9AA7C6834A5210F694"><em>*</em> #request.content.news_trackback_rowtype_label_url#</label>
-		<input type="text" class="textInput" name="url" id="formrow_B755159758CC4C9AA7C6834A5210F694" value="#Trim(onews_trackback.geturl())#"/>
+		<label for="formrow_596514DC1B49432796BF774ECB9F1B7F"><em>*</em> #request.content.news_trackback_rowtype_label_url#</label>
+		<input type="text" class="textInput" name="url" id="formrow_596514DC1B49432796BF774ECB9F1B7F" value="#Trim(onews_trackback.geturl())#"/>
 	</div>
 				
 			
