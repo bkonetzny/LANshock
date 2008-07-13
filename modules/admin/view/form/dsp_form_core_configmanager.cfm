@@ -101,9 +101,26 @@
 					
 
 	
+	<cfif mode EQ "edit">
+	<input type="hidden" name="module" id="formrow_7A4ED5BE142A441A936329B805B00A94" value="#ocore_configmanager.getmodule()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_3C2D1CE07F0A47D6A15A6A1D2CF1EF97"><em>*</em> #request.content.core_configmanager_rowtype_label_module#</label>
-		<textarea name="module" id="formrow_3C2D1CE07F0A47D6A15A6A1D2CF1EF97">#Trim(ocore_configmanager.getmodule())#</textarea>
+		<label for="formrow_7A4ED5BE142A441A936329B805B00A94">#request.content.core_configmanager_rowtype_label_module#</label>
+		#Trim(ocore_configmanager.getmodule())#
+	</div>
+	</cfif>
+				
+			
+			
+				
+				
+				
+				
+					
+
+	
+	<div class="ctrlHolder">
+		<label for="formrow_065AC802140E4C1FAB997C9338C71D6B"><em>*</em> #request.content.core_configmanager_rowtype_label_version#</label>
+		<input type="text" class="textInput" name="version" id="formrow_065AC802140E4C1FAB997C9338C71D6B" value="#Trim(ocore_configmanager.getversion())#"/>
 	</div>
 				
 			
@@ -116,8 +133,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_9A19C87A4FA44A9A8B5D25F8D72BFEA0"><em>*</em> #request.content.core_configmanager_rowtype_label_version#</label>
-		<textarea name="version" id="formrow_9A19C87A4FA44A9A8B5D25F8D72BFEA0">#Trim(ocore_configmanager.getversion())#</textarea>
+		<label for="formrow_56C6BCDEDB8D4738A98B7B715D2B8B72"><em>*</em> #request.content.core_configmanager_rowtype_label_data#</label>
+		<textarea name="data" id="formrow_56C6BCDEDB8D4738A98B7B715D2B8B72">#Trim(ocore_configmanager.getdata())#</textarea>
 	</div>
 				
 			
@@ -129,23 +146,28 @@
 					
 
 	
+	<cfif NOT isDate(Trim(ocore_configmanager.getdtlastchanged()))>
+		<cfset ocore_configmanager.setdtlastchanged(now())>
+	</cfif>
 	<div class="ctrlHolder">
-		<label for="formrow_C9EE173494FE4AAEBAF1EE1E2625C05C"><em>*</em> #request.content.core_configmanager_rowtype_label_data#</label>
-		<textarea name="data" id="formrow_C9EE173494FE4AAEBAF1EE1E2625C05C">#Trim(ocore_configmanager.getdata())#</textarea>
-	</div>
-				
-			
-			
-				
-				
-				
-				
-					
-
-	
-	<div class="ctrlHolder">
-		<label for="formrow_53FEA470808C4BE88B9556D9169E727E">#request.content.core_configmanager_rowtype_label_dtlastchanged#</label>
-		<input type="text" class="textInput" name="dtlastchanged" id="formrow_53FEA470808C4BE88B9556D9169E727E" value="#Trim(ocore_configmanager.getdtlastchanged())#"/>
+		<label for="formrow_DB80D332C6C24FF0B23AE968970900BA">#request.content.core_configmanager_rowtype_label_dtlastchanged#</label>
+		<div class="divInput" id="divDatePickerDB80D332C6C24FF0B23AE968970900BA"></div>
+		<input type="hidden" name="dtlastchanged" id="formrow_DB80D332C6C24FF0B23AE968970900BA" value="#LsDateFormat(Trim(ocore_configmanager.getdtlastchanged()),'YYYY-MM-DD')# #LsTimeFormat(Trim(ocore_configmanager.getdtlastchanged()),'HH:MM:SS')#"/>
+		<script type="text/javascript">
+			<!--
+			var myDatePickerDB80D332C6C24FF0B23AE968970900BA = new Ext.ux.form.DateTime({
+				handler: function(value){
+					$('##formrow_DB80D332C6C24FF0B23AE968970900BA').val(value);
+				}
+			});
+			Ext.onReady(function(){
+				myDatePickerDB80D332C6C24FF0B23AE968970900BA.render('divDatePickerDB80D332C6C24FF0B23AE968970900BA');
+				var dtDB80D332C6C24FF0B23AE968970900BA = new Date();
+				dtDB80D332C6C24FF0B23AE968970900BA = Date.parseDate("#LsDateFormat(Trim(ocore_configmanager.getdtlastchanged()),'YYYY-MM-DD')# #LsTimeFormat(Trim(ocore_configmanager.getdtlastchanged()),'HH:MM')#","Y-m-d G:i");
+				myDatePickerDB80D332C6C24FF0B23AE968970900BA.setValue(dtDB80D332C6C24FF0B23AE968970900BA);
+			});
+			//-->
+		</script>
 	</div>
 				
 			

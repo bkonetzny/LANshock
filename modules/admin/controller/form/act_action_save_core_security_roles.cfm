@@ -1,6 +1,11 @@
 <cfset aErrors = ArrayNew(1)>
 	<cfset aTranslatedErrors = ArrayNew(1)>
+	<!--- snippet 'modules/admin/controller/form/snippets/act_action_save_prevalidation_core_security_roles.cfm' --->
 	
+	<!--- /snippet --->
+	
+		
+
 	
 		
 
@@ -8,10 +13,9 @@
 		
 
 	
-		
-
+	<!--- snippet 'modules/admin/controller/form/snippets/act_action_save_postvalidation_core_security_roles.cfm' --->
 	
-	
+	<!--- /snippet --->
 	<cfparam name="attributes.core_security_roles_id" default="0">
 	<cfset ocore_security_roles = application.lanshock.oFactory.load('core_security_roles','reactorRecord')>
 	<cfif variables.mode EQ 'insert'>
@@ -32,34 +36,6 @@
 	
 	
 	<cfif NOT bHasErrors>
-		<cfset ocore_security_roles_permissions_reliterator = ocore_security_roles.getcore_security_roles_permissions_reliterator()>
-		<cfset ocore_security_roles_permissions_reliterator.deleteAll()>
-		<cfif StructKeyExists(attributes,'core_security_roles_permissions_rel')>
-			<cfloop list="#attributes.core_security_roles_permissions_rel#" index="idx">
-				<cfset ocore_security_roles_permissions_reliterator.add(role_id = ocore_security_roles.getid(), permission_id = idx)>
-			</cfloop>
-		</cfif>
-		<cfset ocore_security_roles_permissions_reliterator.validate()>
-		<cfif ocore_security_roles_permissions_reliterator.hasErrors()>
-			<cfset bHasErrors = true>
-		</cfif>
-	</cfif>
-	
-	<cfif NOT bHasErrors>
-		<cfset ocore_security_users_roles_reliterator = ocore_security_roles.getcore_security_users_roles_reliterator()>
-		<cfset ocore_security_users_roles_reliterator.deleteAll()>
-		<cfif StructKeyExists(attributes,'core_security_users_roles_rel')>
-			<cfloop list="#attributes.core_security_users_roles_rel#" index="idx">
-				<cfset ocore_security_users_roles_reliterator.add(role_id = ocore_security_roles.getid(), user_id = idx)>
-			</cfloop>
-		</cfif>
-		<cfset ocore_security_users_roles_reliterator.validate()>
-		<cfif ocore_security_users_roles_reliterator.hasErrors()>
-			<cfset bHasErrors = true>
-		</cfif>
-	</cfif>
-	
-	<cfif NOT bHasErrors>
 		<cfset ocore_security_roles.save()>
 		<cflocation url="#application.lanshock.oHelper.buildUrl('#XFA.Continue#&_listSortByFieldList=#URLEncodedFormat(attributes._listSortByFieldList)#&_startrow=#attributes._Startrow#&_maxrows=#attributes._Maxrows#')#" addtoken="false">
 	<cfelse>
@@ -67,6 +43,9 @@
 		
 		<cfinclude template="act_form_loadrelated_core_security_roles.cfm">
 		
+		<!--- snippet 'modules/admin/controller/form/snippets/act_form_loadrelated_custom_core_security_roles.cfm' --->
+		
+		<!--- /snippet --->
 		<cfset aReactorErrors = ocore_security_roles._getErrorCollection().getErrors()>
 		<cfloop from="1" to="#ArrayLen(aReactorErrors)#" index="idx">
 			<cfset ArrayAppend(aErrors,aReactorErrors[idx])>

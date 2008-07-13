@@ -3,14 +3,16 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL: https://lanshock.svn.sourceforge.net/svnroot/lanshock/trunk/scaffolding/templates/EXT2.0/custom/admin/raw_files/view/custom/dsp_start.cfm $
-$LastChangedDate: 2008-05-12 14:49:49 +0200 (Mo, 12 Mai 2008) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 298 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 --->
 
 <cfoutput>
 	<h3>#request.content.serverdata#</h3>
+	
+	#application.lanshock.oHelper.notificationBox(sMode='global')#
 
 	<h4>#request.content.installed_versions#</h4>
 		
@@ -48,11 +50,11 @@ $LastChangedRevision: 298 $
 			<td>#myfusebox.version.runtime#</td>
 		</tr>
 		<tr>
-			<th>#request.content.coldfusion#</th>
+			<th><!--- #request.content.coldfusion# ---><!--- TODO: $$$ ---> CFML Engine</th>
 			<td>#Server.ColdFusion.ProductName#<cfif StructKeyExists(server,'railo')> (#server.railo.version#)</cfif></td>
 		</tr>
 		<tr>
-			<th>#request.content.coldfusion_version#</th>
+			<th><!--- #request.content.coldfusion_version# ---><!--- TODO: $$$ ---> CFML Version</th>
 			<td>#Server.ColdFusion.ProductVersion# #Server.ColdFusion.ProductLevel#</td>
 		</tr>
 		<cfif len(sServerSoftware)>
@@ -101,6 +103,10 @@ $LastChangedRevision: 298 $
 			<th><!--- TODO: $$$ ---> JVM StreamReader Encoding</th>
 			<td>#oStreamReader.getEncoding()#</td>
 		</tr> --->
+		<tr>
+			<th><!--- TODO: $$$ ---> DB Name</th>
+			<td>#application.lanshock.oRuntime.getEnvironment().sDatasource#</td>
+		</tr>
 		<tr>
 			<th><!--- TODO: $$$ ---> DB Version</th>
 			<td>#sDbVersion#</td>

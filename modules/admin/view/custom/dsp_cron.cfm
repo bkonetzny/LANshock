@@ -3,10 +3,10 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL: https://svn.sourceforge.net/svnroot/lanshock/trunk/core/admin/dsp_cron.cfm $
-$LastChangedDate: 2006-10-23 00:59:26 +0200 (Mo, 23 Okt 2006) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 56 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 --->
 
 <cfoutput>
@@ -36,7 +36,7 @@ $LastChangedRevision: 56 $
 	</cfif>
 	<tr>
 		<th><!--- TODO: $$$ ---> Cron URL</th>
-		<td>#application.lanshock.oRuntime.getEnvironment().sWebPathfull##myself##request.lanshock.settings.modulePrefix.core#cron.run&securityhash=#application.lanshock.settings.security.cron_hashkey#</td>
+		<td>#application.lanshock.oHelper.buildUrl('cron.run&securityhash=#application.applicationname#',true)#</td>
 	</tr>
 </table>
 
@@ -55,14 +55,14 @@ $LastChangedRevision: 56 $
 	</tr>
 	<cfloop query="qCronlist">
 		<tr>
-			<td class="empty"><a href="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&switchtask=#id#&#session.urltoken#"><img src="#stImageDir.general#/status_led_<cfif active EQ 0>red<cfelse>green</cfif>.gif" alt="#active#"></a> <a href="#myself##request.lanshock.settings.modulePrefix.core#cron.run&cron_id=#id#&securityhash=#application.lanshock.settings.security.cron_hashkey#" target="_blank"><!--- TODO: $$$ ---> Run</a></td>
+			<td class="empty"><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&switchtask=#id#')#"><img src="#stImageDir.general#/status_led_<cfif active EQ 0>red<cfelse>green</cfif>.gif" alt="#active#"></a> <a href="#application.lanshock.oHelper.buildUrl('cron.run&cron_id=#id#&securityhash=#application.applicationname#')#" target="_blank"><!--- TODO: $$$ ---> Run</a></td>
 			<td>#module#</td>
 			<td>#action#</td>
 			<td title="Minute Hour Day Month Weekday">#run#</td>
-			<td><cfif isDate(lastrun_dt)>#UDF_DateTimeFormat(lastrun_dt)#<cfelse><!--- TODO: $$$ ---> NEVER</cfif></td>
+			<td><cfif isDate(lastrun_dt)>#session.oUser.DateTimeFormat(lastrun_dt)#<cfelse><!--- TODO: $$$ ---> NEVER</cfif></td>
 			<td>#lastrun_time# seconds</td>
 			<td>#executions#</td>
-			<td><img src="#stImageDir.general#/status_led_<cfif result EQ 'OK'>green<cfelseif NOT len(result)>orange<cfelse>red</cfif>.gif" alt="#replacelist(result,'<,>','&lt;,&gt;')#"></td>
+			<td><img src="#stImageDir.general#/status_led_<cfif result EQ 'OK'>green<cfelseif NOT len(result)>orange<cfelse>red</cfif>.gif"></td>
 		</tr>
 	</cfloop>
 </table>

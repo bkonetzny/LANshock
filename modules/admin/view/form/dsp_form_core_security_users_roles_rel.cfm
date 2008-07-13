@@ -71,30 +71,6 @@
 	
 	
 	
-		
-		
-		
-		
-		
-			
-				
-				
-				
-				
-				
-				
-			
-				
-				
-				
-				
-				
-				
-			
-		
-				
-		
-	
 				
 	
 	
@@ -115,10 +91,13 @@
 					
 
 	
+	<cfif mode EQ "edit">
+	<input type="hidden" name="user_id" id="formrow_469EF475F73E467CBB0238B6C9008464" value="#ocore_security_users_roles_rel.getuser_id()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_7F86A6D2F697463BB8254D12C9E72C18"><em>*</em> #request.content.core_security_users_roles_rel_rowtype_label_role_id#</label>
-		<input type="text" class="textInput" name="role_id" id="formrow_7F86A6D2F697463BB8254D12C9E72C18" value="#NumberFormat(ocore_security_users_roles_rel.getrole_id(),"9")#"/>
+		<label for="formrow_469EF475F73E467CBB0238B6C9008464">#request.content.core_security_users_roles_rel_rowtype_label_user_id#</label>
+		#Trim(ocore_security_users_roles_rel.getuser_id())#
 	</div>
+	</cfif>
 				
 			
 			
@@ -129,51 +108,13 @@
 					
 
 	
+	<cfif mode EQ "edit">
+	<input type="hidden" name="role_id" id="formrow_8A417CE0E5FE4CBAB2BD10FC27C243B8" value="#ocore_security_users_roles_rel.getrole_id()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_3EB4CD3454C340EAB7EE8BD19218481C"><em>*</em> #request.content.core_security_users_roles_rel_rowtype_label_user_id#</label>
-		<input type="text" class="textInput" name="user_id" id="formrow_3EB4CD3454C340EAB7EE8BD19218481C" value="#NumberFormat(ocore_security_users_roles_rel.getuser_id(),"9")#"/>
+		<label for="formrow_8A417CE0E5FE4CBAB2BD10FC27C243B8">#request.content.core_security_users_roles_rel_rowtype_label_role_id#</label>
+		#Trim(ocore_security_users_roles_rel.getrole_id())#
 	</div>
-				
-			
-			
-		
-			</fieldset>
-		
-	
-	
-	
-		
-			<fieldset class="inlineLabels">
-				<legend>aOneToMany</legend>
-		
-			
-				
-				
-				
-				
-					
-
-	
-	
-		<div class="ctrlHolder">
-			attributes.stFieldData.links[1].name is not defined!
-		</div>
-	
-				
-			
-			
-				
-				
-				
-				
-					
-
-	
-	
-		<div class="ctrlHolder">
-			attributes.stFieldData.links[1].name is not defined!
-		</div>
-	
+	</cfif>
 				
 			
 			

@@ -3,10 +3,10 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL: https://lanshock.svn.sourceforge.net/svnroot/lanshock/trunk/scaffolding/templates/EXT2.0/custom/admin/raw_files/controller/custom/act_logviewer.cfm $
-$LastChangedDate: 2008-05-12 14:49:49 +0200 (Mo, 12 Mai 2008) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 298 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 --->
 
 <cfparam name="attributes.logfile" default="">
@@ -18,9 +18,10 @@ $LastChangedRevision: 298 $
 <cfdirectory action="list" directory="#application.lanshock.oRuntime.getEnvironment().sStoragePath#secure/logs/" name="qLogs" filter="*.log" sort="name ASC">
 
 <cfquery name="qCoreLogs" datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" maxrows="50">
-	SELECT *
-	FROM core_logs
-	ORDER BY timestamp DESC
+	SELECT l.*, u.name
+	FROM core_logs l
+	LEFT OUTER JOIN user u ON u.id = l.userid
+	ORDER BY l.timestamp DESC
 	<cfif application.lanshock.oRuntime.getEnvironment().sDatasourceType EQ 'mysql'>
 		LIMIT 50
 	</cfif>

@@ -3,10 +3,10 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL: https://svn.sourceforge.net/svnroot/lanshock/trunk/core/admin/act_cron.cfm $
-$LastChangedDate: 2006-10-23 00:59:26 +0200 (Mo, 23 Okt 2006) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 56 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 --->
 
 <cfparam name="attributes.switchtask" default="">
@@ -19,15 +19,18 @@ $LastChangedRevision: 56 $
 		oObCron.commit();
 	</cfscript>
 	
-	<cflocation url="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#session.urltoken#" addtoken="false">
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" addtoken="false">
 </cfif>
 
-<cfscript>
-	qCronlist = objectBreeze.list('core_cron', 'module ASC, action ASC').getQuery();
-</cfscript>
+<cfset stFilter = StructNew()>
+<cfset stFilter.lSortFields = "module|ASC">
 
-<cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#core.configmanager" method="getConfig" returnvariable="stCronConfig">
-	<cfinvokeargument name="module" value="#application.lanshock.settings.modulePrefix.core#cron">
+<cfinvoke component="#application.lanshock.oFactory.load('core_cron','reactorGateway')#" method="getRecords" returnvariable="qCronlist">
+	<cfinvokeargument name="stFilter" value="#stFilter#">
+</cfinvoke>
+
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.configmanager')#" method="getConfig" returnvariable="stCronConfig">
+	<cfinvokeargument name="module" value="cron">
 </cfinvoke>
 
 <cfsetting enablecfoutputonly="No">

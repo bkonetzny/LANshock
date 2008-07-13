@@ -149,7 +149,7 @@
 		<set name="request.layout" value="json"/>
 		
 		<!-- params by ext.grid -->
-		<include circuit="admin" template="act_json_filter"/>
+		<include circuit="admin" template="list/act_json_filter_core_configmanager"/>
 		
 		<invoke method="getRecordsForGrid" object="application.lanshock.oFactory.load('core_configmanager','reactorGateway')" returnvariable="request.page.pageContent">
 			<argument name="sortByFieldList" value="core_configmanager|#attributes.sort#|#attributes.dir#"/>
@@ -157,23 +157,6 @@
 			<argument name="maxrows" value="#attributes.limit#"/>
 			<argument name="filter" value="#stFilters#"/>
 		</invoke>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_configmanager_Display">
-		<!-- Display: I display the selected core_configmanager record. -->
-		<set name="request.page.subtitle" value="View core_configmanager"/>
-		<set name="request.page.description" value="I display the selected core_configmanager record."/>
-		<xfa name="Edit" value="core_configmanager_Edit_Form"/>
-		<xfa name="Delete" value="core_configmanager_Action_Delete"/>
-		<xfa name="List" value="core_configmanager_Listing"/>
-		<reactor:record alias="core_configmanager" returnvariable="ocore_configmanager"/>
-		
-		<set value="#ocore_configmanager.setlPKFields(attributes.lPKFields)#"/>
-		<invoke method="load" object="ocore_configmanager"/>
-		
-		<set name="fieldlist" value="module,version,data,dtlastchanged,"/>
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include append="true" circuit="v_admin" contentvariable="request.page.pageContent" template="display/dsp_display_core_configmanager"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="core_configmanager_add_form">
@@ -197,6 +180,9 @@
 		
 		<include circuit="admin" template="form/act_form_loadrelated_core_configmanager"/>
 		
+		<!-- snippet 'modules/admin/controller/form/snippets/act_form_loadrelated_custom_core_configmanager.cfm' -->
+		
+		<!-- /snippet -->
 		
 		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_admin" template="form/dsp_form_core_configmanager"/>
@@ -235,6 +221,110 @@
 		</invoke>
 	</fuseaction>
 	
+	<fuseaction access="public" name="core_cron_listing">
+		<lanshock:security area="core_cron"/>
+		
+		<!-- force layout: admin -->
+		<set name="request.layout" value="admin"/>
+		
+		<!-- Listing: I display a list of the records in the core_cron table. -->
+		<set name="request.page.objectName" value="core_cron"/>
+		<set name="request.page.description" value="I display a list of the core_cron records in the table."/>
+		<xfa name="update" value="core_cron_edit_form"/>
+		<xfa name="delete" value="core_cron_delete"/>
+		<xfa name="display" value="core_cron_display"/>
+		<xfa name="add" value="core_cron_add_form"/>
+		<xfa name="grid_json" value="core_cron_grid_json"/>
+		
+		<set name="attributes._maxrows" overwrite="false" value="10"/>
+		<set name="attributes._startrow" overwrite="false" value="1"/>
+		
+		<set name="attributes._listSortByFieldList" overwrite="false" value="core_cron|id|ASC"/>
+		
+		<set name="fieldlist" value="id,active,run,module,action,executions,lastrun_dt,lastrun_time,result,"/>
+		<include circuit="udfs" template="udf_appendParam"/>
+		<include circuit="v_admin" template="list/dsp_list_core_cron"/>
+	</fuseaction>
+	
+	<fuseaction access="public" lanshock:showlayout="none" name="core_cron_grid_json">
+		<lanshock:security area="core_cron"/>
+		
+		<!-- force layout: json -->
+		<set name="request.layout" value="json"/>
+		
+		<!-- params by ext.grid -->
+		<include circuit="admin" template="list/act_json_filter_core_cron"/>
+		
+		<invoke method="getRecordsForGrid" object="application.lanshock.oFactory.load('core_cron','reactorGateway')" returnvariable="request.page.pageContent">
+			<argument name="sortByFieldList" value="core_cron|#attributes.sort#|#attributes.dir#"/>
+			<argument name="startrow" value="#attributes.start#"/>
+			<argument name="maxrows" value="#attributes.limit#"/>
+			<argument name="filter" value="#stFilters#"/>
+		</invoke>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_cron_add_form">
+		<set name="mode" value="insert"/>
+		<xfa name="save" value="core_cron_action_add"/>
+		<do action="core_cron_form"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_cron_edit_form">
+		<set name="mode" value="edit"/>
+		<xfa name="save" value="core_cron_action_update"/>
+		<do action="core_cron_form"/>
+	</fuseaction>
+	
+	<fuseaction access="private" lanshock:includedCircuit="true" name="core_cron_form">
+		<lanshock:security area="core_cron"/>
+		<set name="request.layout" value="admin"/>
+		<xfa name="cancel" value="core_cron_listing"/>
+		
+		<include circuit="admin" template="form/act_form_core_cron"/>
+		
+		<include circuit="admin" template="form/act_form_loadrelated_core_cron"/>
+		
+		<!-- snippet 'modules/admin/controller/form/snippets/act_form_loadrelated_custom_core_cron.cfm' -->
+		
+		<!-- /snippet -->
+		
+		<include circuit="udfs" template="udf_appendParam"/>
+		<include circuit="v_admin" template="form/dsp_form_core_cron"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_cron_action_add">
+		<set name="mode" value="insert"/>
+		<xfa name="save" value="core_cron_action_add"/>
+		<do action="core_cron_action_save"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_cron_action_update">
+		<set name="mode" value="edit"/>
+		<xfa name="save" value="core_cron_action_update"/>
+		<do action="core_cron_action_save"/>
+	</fuseaction>
+	
+	<fuseaction access="private" lanshock:includedCircuit="true" name="core_cron_action_save">
+		<lanshock:security area="core_cron"/>
+		<set name="bHasErrors" value="false"/>
+		<xfa name="continue" value="core_cron_listing"/>
+		<xfa name="cancel" value="core_cron_listing"/>
+		<include circuit="admin" template="form/act_action_save_core_cron"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_cron_delete">
+		<lanshock:security area="core_cron"/>
+		
+		<!-- Delete: I delete the selected core_cron records. -->
+		
+		<!-- force layout: none -->
+		<set name="request.layout" value="none"/>
+		
+		<invoke method="deleteByIDlist" object="application.lanshock.oFactory.load('core_cron','reactorGateway')" returnvariable="request.page.pageContent">
+			<argument name="jsonData" value="#attributes.jsonData#"/>
+		</invoke>
+	</fuseaction>
+	
 	<fuseaction access="public" name="core_logs_listing">
 		<lanshock:security area="core_logs"/>
 		
@@ -253,9 +343,9 @@
 		<set name="attributes._maxrows" overwrite="false" value="10"/>
 		<set name="attributes._startrow" overwrite="false" value="1"/>
 		
-		<set name="attributes._listSortByFieldList" overwrite="false" value="core_logs|timestamp|ASC"/>
+		<set name="attributes._listSortByFieldList" overwrite="false" value="core_logs|id|ASC"/>
 		
-		<set name="fieldlist" value="id,logname,level,data,timestamp,"/>
+		<set name="fieldlist" value="id,logname,level,data,timestamp,userid,"/>
 		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_admin" template="list/dsp_list_core_logs"/>
 	</fuseaction>
@@ -267,7 +357,7 @@
 		<set name="request.layout" value="json"/>
 		
 		<!-- params by ext.grid -->
-		<include circuit="admin" template="act_json_filter"/>
+		<include circuit="admin" template="list/act_json_filter_core_logs"/>
 		
 		<invoke method="getRecordsForGrid" object="application.lanshock.oFactory.load('core_logs','reactorGateway')" returnvariable="request.page.pageContent">
 			<argument name="sortByFieldList" value="core_logs|#attributes.sort#|#attributes.dir#"/>
@@ -275,23 +365,6 @@
 			<argument name="maxrows" value="#attributes.limit#"/>
 			<argument name="filter" value="#stFilters#"/>
 		</invoke>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_logs_Display">
-		<!-- Display: I display the selected core_logs record. -->
-		<set name="request.page.subtitle" value="View core_logs"/>
-		<set name="request.page.description" value="I display the selected core_logs record."/>
-		<xfa name="Edit" value="core_logs_Edit_Form"/>
-		<xfa name="Delete" value="core_logs_Action_Delete"/>
-		<xfa name="List" value="core_logs_Listing"/>
-		<reactor:record alias="core_logs" returnvariable="ocore_logs"/>
-		
-		<set value="#ocore_logs.setlPKFields(attributes.lPKFields)#"/>
-		<invoke method="load" object="ocore_logs"/>
-		
-		<set name="fieldlist" value="id,logname,level,data,timestamp,"/>
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include append="true" circuit="v_admin" contentvariable="request.page.pageContent" template="display/dsp_display_core_logs"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="core_logs_add_form">
@@ -315,6 +388,9 @@
 		
 		<include circuit="admin" template="form/act_form_loadrelated_core_logs"/>
 		
+		<!-- snippet 'modules/admin/controller/form/snippets/act_form_loadrelated_custom_core_logs.cfm' -->
+		
+		<!-- /snippet -->
 		
 		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_admin" template="form/dsp_form_core_logs"/>
@@ -353,478 +429,6 @@
 		</invoke>
 	</fuseaction>
 	
-	<fuseaction access="public" name="core_security_roles_listing">
-		<lanshock:security area="core_security_roles"/>
-		
-		<!-- force layout: admin -->
-		<set name="request.layout" value="admin"/>
-		
-		<!-- Listing: I display a list of the records in the core_security_roles table. -->
-		<set name="request.page.objectName" value="core_security_roles"/>
-		<set name="request.page.description" value="I display a list of the core_security_roles records in the table."/>
-		<xfa name="update" value="core_security_roles_edit_form"/>
-		<xfa name="delete" value="core_security_roles_delete"/>
-		<xfa name="display" value="core_security_roles_display"/>
-		<xfa name="add" value="core_security_roles_add_form"/>
-		<xfa name="grid_json" value="core_security_roles_grid_json"/>
-		
-		<set name="attributes._maxrows" overwrite="false" value="10"/>
-		<set name="attributes._startrow" overwrite="false" value="1"/>
-		
-		<set name="attributes._listSortByFieldList" overwrite="false" value="core_security_roles|id|ASC"/>
-		
-		<set name="fieldlist" value="id,name,module,"/>
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include circuit="v_admin" template="list/dsp_list_core_security_roles"/>
-	</fuseaction>
-	
-	<fuseaction access="public" lanshock:showlayout="none" name="core_security_roles_grid_json">
-		<lanshock:security area="core_security_roles"/>
-		
-		<!-- force layout: json -->
-		<set name="request.layout" value="json"/>
-		
-		<!-- params by ext.grid -->
-		<include circuit="admin" template="act_json_filter"/>
-		
-		<invoke method="getRecordsForGrid" object="application.lanshock.oFactory.load('core_security_roles','reactorGateway')" returnvariable="request.page.pageContent">
-			<argument name="sortByFieldList" value="core_security_roles|#attributes.sort#|#attributes.dir#"/>
-			<argument name="startrow" value="#attributes.start#"/>
-			<argument name="maxrows" value="#attributes.limit#"/>
-			<argument name="filter" value="#stFilters#"/>
-		</invoke>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_roles_Display">
-		<!-- Display: I display the selected core_security_roles record. -->
-		<set name="request.page.subtitle" value="View core_security_roles"/>
-		<set name="request.page.description" value="I display the selected core_security_roles record."/>
-		<xfa name="Edit" value="core_security_roles_Edit_Form"/>
-		<xfa name="Delete" value="core_security_roles_Action_Delete"/>
-		<xfa name="List" value="core_security_roles_Listing"/>
-		<reactor:record alias="core_security_roles" returnvariable="ocore_security_roles"/>
-		
-		<set value="#ocore_security_roles.setlPKFields(attributes.lPKFields)#"/>
-		<invoke method="load" object="ocore_security_roles"/>
-		
-		<set name="fieldlist" value="id,name,module,"/>
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include append="true" circuit="v_admin" contentvariable="request.page.pageContent" template="display/dsp_display_core_security_roles"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_roles_add_form">
-		<set name="mode" value="insert"/>
-		<xfa name="save" value="core_security_roles_action_add"/>
-		<do action="core_security_roles_form"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_roles_edit_form">
-		<set name="mode" value="edit"/>
-		<xfa name="save" value="core_security_roles_action_update"/>
-		<do action="core_security_roles_form"/>
-	</fuseaction>
-	
-	<fuseaction access="private" lanshock:includedCircuit="true" name="core_security_roles_form">
-		<lanshock:security area="core_security_roles"/>
-		<set name="request.layout" value="admin"/>
-		<xfa name="cancel" value="core_security_roles_listing"/>
-		
-		<include circuit="admin" template="form/act_form_core_security_roles"/>
-		
-		<include circuit="admin" template="form/act_form_loadrelated_core_security_roles"/>
-		
-		
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include circuit="v_admin" template="form/dsp_form_core_security_roles"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_roles_action_add">
-		<set name="mode" value="insert"/>
-		<xfa name="save" value="core_security_roles_action_add"/>
-		<do action="core_security_roles_action_save"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_roles_action_update">
-		<set name="mode" value="edit"/>
-		<xfa name="save" value="core_security_roles_action_update"/>
-		<do action="core_security_roles_action_save"/>
-	</fuseaction>
-	
-	<fuseaction access="private" lanshock:includedCircuit="true" name="core_security_roles_action_save">
-		<lanshock:security area="core_security_roles"/>
-		<set name="bHasErrors" value="false"/>
-		<xfa name="continue" value="core_security_roles_listing"/>
-		<xfa name="cancel" value="core_security_roles_listing"/>
-		<include circuit="admin" template="form/act_action_save_core_security_roles"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_roles_delete">
-		<lanshock:security area="core_security_roles"/>
-		
-		<!-- Delete: I delete the selected core_security_roles records. -->
-		
-		<!-- force layout: none -->
-		<set name="request.layout" value="none"/>
-		
-		<invoke method="deleteByIDlist" object="application.lanshock.oFactory.load('core_security_roles','reactorGateway')" returnvariable="request.page.pageContent">
-			<argument name="jsonData" value="#attributes.jsonData#"/>
-		</invoke>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_permissions_listing">
-		<lanshock:security area="core_security_permissions"/>
-		
-		<!-- force layout: admin -->
-		<set name="request.layout" value="admin"/>
-		
-		<!-- Listing: I display a list of the records in the core_security_permissions table. -->
-		<set name="request.page.objectName" value="core_security_permissions"/>
-		<set name="request.page.description" value="I display a list of the core_security_permissions records in the table."/>
-		<xfa name="update" value="core_security_permissions_edit_form"/>
-		<xfa name="delete" value="core_security_permissions_delete"/>
-		<xfa name="display" value="core_security_permissions_display"/>
-		<xfa name="add" value="core_security_permissions_add_form"/>
-		<xfa name="grid_json" value="core_security_permissions_grid_json"/>
-		
-		<set name="attributes._maxrows" overwrite="false" value="10"/>
-		<set name="attributes._startrow" overwrite="false" value="1"/>
-		
-		<set name="attributes._listSortByFieldList" overwrite="false" value="core_security_permissions|id|ASC"/>
-		
-		<set name="fieldlist" value="id,name,module,"/>
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include circuit="v_admin" template="list/dsp_list_core_security_permissions"/>
-	</fuseaction>
-	
-	<fuseaction access="public" lanshock:showlayout="none" name="core_security_permissions_grid_json">
-		<lanshock:security area="core_security_permissions"/>
-		
-		<!-- force layout: json -->
-		<set name="request.layout" value="json"/>
-		
-		<!-- params by ext.grid -->
-		<include circuit="admin" template="act_json_filter"/>
-		
-		<invoke method="getRecordsForGrid" object="application.lanshock.oFactory.load('core_security_permissions','reactorGateway')" returnvariable="request.page.pageContent">
-			<argument name="sortByFieldList" value="core_security_permissions|#attributes.sort#|#attributes.dir#"/>
-			<argument name="startrow" value="#attributes.start#"/>
-			<argument name="maxrows" value="#attributes.limit#"/>
-			<argument name="filter" value="#stFilters#"/>
-		</invoke>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_permissions_Display">
-		<!-- Display: I display the selected core_security_permissions record. -->
-		<set name="request.page.subtitle" value="View core_security_permissions"/>
-		<set name="request.page.description" value="I display the selected core_security_permissions record."/>
-		<xfa name="Edit" value="core_security_permissions_Edit_Form"/>
-		<xfa name="Delete" value="core_security_permissions_Action_Delete"/>
-		<xfa name="List" value="core_security_permissions_Listing"/>
-		<reactor:record alias="core_security_permissions" returnvariable="ocore_security_permissions"/>
-		
-		<set value="#ocore_security_permissions.setlPKFields(attributes.lPKFields)#"/>
-		<invoke method="load" object="ocore_security_permissions"/>
-		
-		<set name="fieldlist" value="id,name,module,"/>
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include append="true" circuit="v_admin" contentvariable="request.page.pageContent" template="display/dsp_display_core_security_permissions"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_permissions_add_form">
-		<set name="mode" value="insert"/>
-		<xfa name="save" value="core_security_permissions_action_add"/>
-		<do action="core_security_permissions_form"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_permissions_edit_form">
-		<set name="mode" value="edit"/>
-		<xfa name="save" value="core_security_permissions_action_update"/>
-		<do action="core_security_permissions_form"/>
-	</fuseaction>
-	
-	<fuseaction access="private" lanshock:includedCircuit="true" name="core_security_permissions_form">
-		<lanshock:security area="core_security_permissions"/>
-		<set name="request.layout" value="admin"/>
-		<xfa name="cancel" value="core_security_permissions_listing"/>
-		
-		<include circuit="admin" template="form/act_form_core_security_permissions"/>
-		
-		<include circuit="admin" template="form/act_form_loadrelated_core_security_permissions"/>
-		
-		
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include circuit="v_admin" template="form/dsp_form_core_security_permissions"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_permissions_action_add">
-		<set name="mode" value="insert"/>
-		<xfa name="save" value="core_security_permissions_action_add"/>
-		<do action="core_security_permissions_action_save"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_permissions_action_update">
-		<set name="mode" value="edit"/>
-		<xfa name="save" value="core_security_permissions_action_update"/>
-		<do action="core_security_permissions_action_save"/>
-	</fuseaction>
-	
-	<fuseaction access="private" lanshock:includedCircuit="true" name="core_security_permissions_action_save">
-		<lanshock:security area="core_security_permissions"/>
-		<set name="bHasErrors" value="false"/>
-		<xfa name="continue" value="core_security_permissions_listing"/>
-		<xfa name="cancel" value="core_security_permissions_listing"/>
-		<include circuit="admin" template="form/act_action_save_core_security_permissions"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_permissions_delete">
-		<lanshock:security area="core_security_permissions"/>
-		
-		<!-- Delete: I delete the selected core_security_permissions records. -->
-		
-		<!-- force layout: none -->
-		<set name="request.layout" value="none"/>
-		
-		<invoke method="deleteByIDlist" object="application.lanshock.oFactory.load('core_security_permissions','reactorGateway')" returnvariable="request.page.pageContent">
-			<argument name="jsonData" value="#attributes.jsonData#"/>
-		</invoke>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_roles_permissions_rel_listing">
-		<lanshock:security area="core_security_roles_permissions_rel"/>
-		
-		<!-- force layout: admin -->
-		<set name="request.layout" value="admin"/>
-		
-		<!-- Listing: I display a list of the records in the core_security_roles_permissions_rel table. -->
-		<set name="request.page.objectName" value="core_security_roles_permissions_rel"/>
-		<set name="request.page.description" value="I display a list of the core_security_roles_permissions_rel records in the table."/>
-		<xfa name="update" value="core_security_roles_permissions_rel_edit_form"/>
-		<xfa name="delete" value="core_security_roles_permissions_rel_delete"/>
-		<xfa name="display" value="core_security_roles_permissions_rel_display"/>
-		<xfa name="add" value="core_security_roles_permissions_rel_add_form"/>
-		<xfa name="grid_json" value="core_security_roles_permissions_rel_grid_json"/>
-		
-		<set name="attributes._maxrows" overwrite="false" value="10"/>
-		<set name="attributes._startrow" overwrite="false" value="1"/>
-		
-		<set name="attributes._listSortByFieldList" overwrite="false" value="core_security_roles_permissions_rel|id|ASC"/>
-		
-		<set name="fieldlist" value="permission_id,role_id,id,"/>
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include circuit="v_admin" template="list/dsp_list_core_security_roles_permissions_rel"/>
-	</fuseaction>
-	
-	<fuseaction access="public" lanshock:showlayout="none" name="core_security_roles_permissions_rel_grid_json">
-		<lanshock:security area="core_security_roles_permissions_rel"/>
-		
-		<!-- force layout: json -->
-		<set name="request.layout" value="json"/>
-		
-		<!-- params by ext.grid -->
-		<include circuit="admin" template="act_json_filter"/>
-		
-		<invoke method="getRecordsForGrid" object="application.lanshock.oFactory.load('core_security_roles_permissions_rel','reactorGateway')" returnvariable="request.page.pageContent">
-			<argument name="sortByFieldList" value="core_security_roles_permissions_rel|#attributes.sort#|#attributes.dir#"/>
-			<argument name="startrow" value="#attributes.start#"/>
-			<argument name="maxrows" value="#attributes.limit#"/>
-			<argument name="filter" value="#stFilters#"/>
-		</invoke>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_roles_permissions_rel_Display">
-		<!-- Display: I display the selected core_security_roles_permissions_rel record. -->
-		<set name="request.page.subtitle" value="View core_security_roles_permissions_rel"/>
-		<set name="request.page.description" value="I display the selected core_security_roles_permissions_rel record."/>
-		<xfa name="Edit" value="core_security_roles_permissions_rel_Edit_Form"/>
-		<xfa name="Delete" value="core_security_roles_permissions_rel_Action_Delete"/>
-		<xfa name="List" value="core_security_roles_permissions_rel_Listing"/>
-		<reactor:record alias="core_security_roles_permissions_rel" returnvariable="ocore_security_roles_permissions_rel"/>
-		
-		<set value="#ocore_security_roles_permissions_rel.setlPKFields(attributes.lPKFields)#"/>
-		<invoke method="load" object="ocore_security_roles_permissions_rel"/>
-		
-		<set name="fieldlist" value="permission_id,role_id,id,"/>
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include append="true" circuit="v_admin" contentvariable="request.page.pageContent" template="display/dsp_display_core_security_roles_permissions_rel"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_roles_permissions_rel_add_form">
-		<set name="mode" value="insert"/>
-		<xfa name="save" value="core_security_roles_permissions_rel_action_add"/>
-		<do action="core_security_roles_permissions_rel_form"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_roles_permissions_rel_edit_form">
-		<set name="mode" value="edit"/>
-		<xfa name="save" value="core_security_roles_permissions_rel_action_update"/>
-		<do action="core_security_roles_permissions_rel_form"/>
-	</fuseaction>
-	
-	<fuseaction access="private" lanshock:includedCircuit="true" name="core_security_roles_permissions_rel_form">
-		<lanshock:security area="core_security_roles_permissions_rel"/>
-		<set name="request.layout" value="admin"/>
-		<xfa name="cancel" value="core_security_roles_permissions_rel_listing"/>
-		
-		<include circuit="admin" template="form/act_form_core_security_roles_permissions_rel"/>
-		
-		<include circuit="admin" template="form/act_form_loadrelated_core_security_roles_permissions_rel"/>
-		
-		
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include circuit="v_admin" template="form/dsp_form_core_security_roles_permissions_rel"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_roles_permissions_rel_action_add">
-		<set name="mode" value="insert"/>
-		<xfa name="save" value="core_security_roles_permissions_rel_action_add"/>
-		<do action="core_security_roles_permissions_rel_action_save"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_roles_permissions_rel_action_update">
-		<set name="mode" value="edit"/>
-		<xfa name="save" value="core_security_roles_permissions_rel_action_update"/>
-		<do action="core_security_roles_permissions_rel_action_save"/>
-	</fuseaction>
-	
-	<fuseaction access="private" lanshock:includedCircuit="true" name="core_security_roles_permissions_rel_action_save">
-		<lanshock:security area="core_security_roles_permissions_rel"/>
-		<set name="bHasErrors" value="false"/>
-		<xfa name="continue" value="core_security_roles_permissions_rel_listing"/>
-		<xfa name="cancel" value="core_security_roles_permissions_rel_listing"/>
-		<include circuit="admin" template="form/act_action_save_core_security_roles_permissions_rel"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_roles_permissions_rel_delete">
-		<lanshock:security area="core_security_roles_permissions_rel"/>
-		
-		<!-- Delete: I delete the selected core_security_roles_permissions_rel records. -->
-		
-		<!-- force layout: none -->
-		<set name="request.layout" value="none"/>
-		
-		<invoke method="deleteByIDlist" object="application.lanshock.oFactory.load('core_security_roles_permissions_rel','reactorGateway')" returnvariable="request.page.pageContent">
-			<argument name="jsonData" value="#attributes.jsonData#"/>
-		</invoke>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_users_roles_rel_listing">
-		<lanshock:security area="core_security_users_roles_rel"/>
-		
-		<!-- force layout: admin -->
-		<set name="request.layout" value="admin"/>
-		
-		<!-- Listing: I display a list of the records in the core_security_users_roles_rel table. -->
-		<set name="request.page.objectName" value="core_security_users_roles_rel"/>
-		<set name="request.page.description" value="I display a list of the core_security_users_roles_rel records in the table."/>
-		<xfa name="update" value="core_security_users_roles_rel_edit_form"/>
-		<xfa name="delete" value="core_security_users_roles_rel_delete"/>
-		<xfa name="display" value="core_security_users_roles_rel_display"/>
-		<xfa name="add" value="core_security_users_roles_rel_add_form"/>
-		<xfa name="grid_json" value="core_security_users_roles_rel_grid_json"/>
-		
-		<set name="attributes._maxrows" overwrite="false" value="10"/>
-		<set name="attributes._startrow" overwrite="false" value="1"/>
-		
-		<set name="attributes._listSortByFieldList" overwrite="false" value="core_security_users_roles_rel|user_id|ASC"/>
-		
-		<set name="fieldlist" value="role_id,user_id,"/>
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include circuit="v_admin" template="list/dsp_list_core_security_users_roles_rel"/>
-	</fuseaction>
-	
-	<fuseaction access="public" lanshock:showlayout="none" name="core_security_users_roles_rel_grid_json">
-		<lanshock:security area="core_security_users_roles_rel"/>
-		
-		<!-- force layout: json -->
-		<set name="request.layout" value="json"/>
-		
-		<!-- params by ext.grid -->
-		<include circuit="admin" template="act_json_filter"/>
-		
-		<invoke method="getRecordsForGrid" object="application.lanshock.oFactory.load('core_security_users_roles_rel','reactorGateway')" returnvariable="request.page.pageContent">
-			<argument name="sortByFieldList" value="core_security_users_roles_rel|#attributes.sort#|#attributes.dir#"/>
-			<argument name="startrow" value="#attributes.start#"/>
-			<argument name="maxrows" value="#attributes.limit#"/>
-			<argument name="filter" value="#stFilters#"/>
-		</invoke>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_users_roles_rel_Display">
-		<!-- Display: I display the selected core_security_users_roles_rel record. -->
-		<set name="request.page.subtitle" value="View core_security_users_roles_rel"/>
-		<set name="request.page.description" value="I display the selected core_security_users_roles_rel record."/>
-		<xfa name="Edit" value="core_security_users_roles_rel_Edit_Form"/>
-		<xfa name="Delete" value="core_security_users_roles_rel_Action_Delete"/>
-		<xfa name="List" value="core_security_users_roles_rel_Listing"/>
-		<reactor:record alias="core_security_users_roles_rel" returnvariable="ocore_security_users_roles_rel"/>
-		
-		<set value="#ocore_security_users_roles_rel.setlPKFields(attributes.lPKFields)#"/>
-		<invoke method="load" object="ocore_security_users_roles_rel"/>
-		
-		<set name="fieldlist" value="role_id,user_id,"/>
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include append="true" circuit="v_admin" contentvariable="request.page.pageContent" template="display/dsp_display_core_security_users_roles_rel"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_users_roles_rel_add_form">
-		<set name="mode" value="insert"/>
-		<xfa name="save" value="core_security_users_roles_rel_action_add"/>
-		<do action="core_security_users_roles_rel_form"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_users_roles_rel_edit_form">
-		<set name="mode" value="edit"/>
-		<xfa name="save" value="core_security_users_roles_rel_action_update"/>
-		<do action="core_security_users_roles_rel_form"/>
-	</fuseaction>
-	
-	<fuseaction access="private" lanshock:includedCircuit="true" name="core_security_users_roles_rel_form">
-		<lanshock:security area="core_security_users_roles_rel"/>
-		<set name="request.layout" value="admin"/>
-		<xfa name="cancel" value="core_security_users_roles_rel_listing"/>
-		
-		<include circuit="admin" template="form/act_form_core_security_users_roles_rel"/>
-		
-		<include circuit="admin" template="form/act_form_loadrelated_core_security_users_roles_rel"/>
-		
-		
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include circuit="v_admin" template="form/dsp_form_core_security_users_roles_rel"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_users_roles_rel_action_add">
-		<set name="mode" value="insert"/>
-		<xfa name="save" value="core_security_users_roles_rel_action_add"/>
-		<do action="core_security_users_roles_rel_action_save"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_users_roles_rel_action_update">
-		<set name="mode" value="edit"/>
-		<xfa name="save" value="core_security_users_roles_rel_action_update"/>
-		<do action="core_security_users_roles_rel_action_save"/>
-	</fuseaction>
-	
-	<fuseaction access="private" lanshock:includedCircuit="true" name="core_security_users_roles_rel_action_save">
-		<lanshock:security area="core_security_users_roles_rel"/>
-		<set name="bHasErrors" value="false"/>
-		<xfa name="continue" value="core_security_users_roles_rel_listing"/>
-		<xfa name="cancel" value="core_security_users_roles_rel_listing"/>
-		<include circuit="admin" template="form/act_action_save_core_security_users_roles_rel"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_security_users_roles_rel_delete">
-		<lanshock:security area="core_security_users_roles_rel"/>
-		
-		<!-- Delete: I delete the selected core_security_users_roles_rel records. -->
-		
-		<!-- force layout: none -->
-		<set name="request.layout" value="none"/>
-		
-		<invoke method="deleteByIDlist" object="application.lanshock.oFactory.load('core_security_users_roles_rel','reactorGateway')" returnvariable="request.page.pageContent">
-			<argument name="jsonData" value="#attributes.jsonData#"/>
-		</invoke>
-	</fuseaction>
-	
 	<fuseaction access="public" name="core_modules_listing">
 		<lanshock:security area="core_modules"/>
 		
@@ -845,7 +449,7 @@
 		
 		<set name="attributes._listSortByFieldList" overwrite="false" value="core_modules|folder|ASC"/>
 		
-		<set name="fieldlist" value="version,date,name,folder,"/>
+		<set name="fieldlist" value="name,version,date,folder,"/>
 		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_admin" template="list/dsp_list_core_modules"/>
 	</fuseaction>
@@ -857,7 +461,7 @@
 		<set name="request.layout" value="json"/>
 		
 		<!-- params by ext.grid -->
-		<include circuit="admin" template="act_json_filter"/>
+		<include circuit="admin" template="list/act_json_filter_core_modules"/>
 		
 		<invoke method="getRecordsForGrid" object="application.lanshock.oFactory.load('core_modules','reactorGateway')" returnvariable="request.page.pageContent">
 			<argument name="sortByFieldList" value="core_modules|#attributes.sort#|#attributes.dir#"/>
@@ -865,23 +469,6 @@
 			<argument name="maxrows" value="#attributes.limit#"/>
 			<argument name="filter" value="#stFilters#"/>
 		</invoke>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_modules_Display">
-		<!-- Display: I display the selected core_modules record. -->
-		<set name="request.page.subtitle" value="View core_modules"/>
-		<set name="request.page.description" value="I display the selected core_modules record."/>
-		<xfa name="Edit" value="core_modules_Edit_Form"/>
-		<xfa name="Delete" value="core_modules_Action_Delete"/>
-		<xfa name="List" value="core_modules_Listing"/>
-		<reactor:record alias="core_modules" returnvariable="ocore_modules"/>
-		
-		<set value="#ocore_modules.setlPKFields(attributes.lPKFields)#"/>
-		<invoke method="load" object="ocore_modules"/>
-		
-		<set name="fieldlist" value="version,date,name,folder,"/>
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include append="true" circuit="v_admin" contentvariable="request.page.pageContent" template="display/dsp_display_core_modules"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="core_modules_add_form">
@@ -905,6 +492,9 @@
 		
 		<include circuit="admin" template="form/act_form_loadrelated_core_modules"/>
 		
+		<!-- snippet 'modules/admin/controller/form/snippets/act_form_loadrelated_custom_core_modules.cfm' -->
+		
+		<!-- /snippet -->
 		
 		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_admin" template="form/dsp_form_core_modules"/>
@@ -963,7 +553,7 @@
 		
 		<set name="attributes._listSortByFieldList" overwrite="false" value="core_navigation|action|ASC"/>
 		
-		<set name="fieldlist" value="module,action,permissions,level,sortorder,"/>
+		<set name="fieldlist" value="module,action,level,sortorder,permissions,"/>
 		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_admin" template="list/dsp_list_core_navigation"/>
 	</fuseaction>
@@ -975,7 +565,7 @@
 		<set name="request.layout" value="json"/>
 		
 		<!-- params by ext.grid -->
-		<include circuit="admin" template="act_json_filter"/>
+		<include circuit="admin" template="list/act_json_filter_core_navigation"/>
 		
 		<invoke method="getRecordsForGrid" object="application.lanshock.oFactory.load('core_navigation','reactorGateway')" returnvariable="request.page.pageContent">
 			<argument name="sortByFieldList" value="core_navigation|#attributes.sort#|#attributes.dir#"/>
@@ -983,23 +573,6 @@
 			<argument name="maxrows" value="#attributes.limit#"/>
 			<argument name="filter" value="#stFilters#"/>
 		</invoke>
-	</fuseaction>
-	
-	<fuseaction access="public" name="core_navigation_Display">
-		<!-- Display: I display the selected core_navigation record. -->
-		<set name="request.page.subtitle" value="View core_navigation"/>
-		<set name="request.page.description" value="I display the selected core_navigation record."/>
-		<xfa name="Edit" value="core_navigation_Edit_Form"/>
-		<xfa name="Delete" value="core_navigation_Action_Delete"/>
-		<xfa name="List" value="core_navigation_Listing"/>
-		<reactor:record alias="core_navigation" returnvariable="ocore_navigation"/>
-		
-		<set value="#ocore_navigation.setlPKFields(attributes.lPKFields)#"/>
-		<invoke method="load" object="ocore_navigation"/>
-		
-		<set name="fieldlist" value="module,action,permissions,level,sortorder,"/>
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include append="true" circuit="v_admin" contentvariable="request.page.pageContent" template="display/dsp_display_core_navigation"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="core_navigation_add_form">
@@ -1023,6 +596,9 @@
 		
 		<include circuit="admin" template="form/act_form_loadrelated_core_navigation"/>
 		
+		<!-- snippet 'modules/admin/controller/form/snippets/act_form_loadrelated_custom_core_navigation.cfm' -->
+		
+		<!-- /snippet -->
 		
 		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_admin" template="form/dsp_form_core_navigation"/>
@@ -1061,6 +637,422 @@
 		</invoke>
 	</fuseaction>
 	
+	<fuseaction access="public" name="core_security_permissions_listing">
+		<lanshock:security area="core_security_permissions"/>
+		
+		<!-- force layout: admin -->
+		<set name="request.layout" value="admin"/>
+		
+		<!-- Listing: I display a list of the records in the core_security_permissions table. -->
+		<set name="request.page.objectName" value="core_security_permissions"/>
+		<set name="request.page.description" value="I display a list of the core_security_permissions records in the table."/>
+		<xfa name="update" value="core_security_permissions_edit_form"/>
+		<xfa name="delete" value="core_security_permissions_delete"/>
+		<xfa name="display" value="core_security_permissions_display"/>
+		<xfa name="add" value="core_security_permissions_add_form"/>
+		<xfa name="grid_json" value="core_security_permissions_grid_json"/>
+		
+		<set name="attributes._maxrows" overwrite="false" value="10"/>
+		<set name="attributes._startrow" overwrite="false" value="1"/>
+		
+		<set name="attributes._listSortByFieldList" overwrite="false" value="core_security_permissions|id|ASC"/>
+		
+		<set name="fieldlist" value="id,name,module,"/>
+		<include circuit="udfs" template="udf_appendParam"/>
+		<include circuit="v_admin" template="list/dsp_list_core_security_permissions"/>
+	</fuseaction>
+	
+	<fuseaction access="public" lanshock:showlayout="none" name="core_security_permissions_grid_json">
+		<lanshock:security area="core_security_permissions"/>
+		
+		<!-- force layout: json -->
+		<set name="request.layout" value="json"/>
+		
+		<!-- params by ext.grid -->
+		<include circuit="admin" template="list/act_json_filter_core_security_permissions"/>
+		
+		<invoke method="getRecordsForGrid" object="application.lanshock.oFactory.load('core_security_permissions','reactorGateway')" returnvariable="request.page.pageContent">
+			<argument name="sortByFieldList" value="core_security_permissions|#attributes.sort#|#attributes.dir#"/>
+			<argument name="startrow" value="#attributes.start#"/>
+			<argument name="maxrows" value="#attributes.limit#"/>
+			<argument name="filter" value="#stFilters#"/>
+		</invoke>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_permissions_add_form">
+		<set name="mode" value="insert"/>
+		<xfa name="save" value="core_security_permissions_action_add"/>
+		<do action="core_security_permissions_form"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_permissions_edit_form">
+		<set name="mode" value="edit"/>
+		<xfa name="save" value="core_security_permissions_action_update"/>
+		<do action="core_security_permissions_form"/>
+	</fuseaction>
+	
+	<fuseaction access="private" lanshock:includedCircuit="true" name="core_security_permissions_form">
+		<lanshock:security area="core_security_permissions"/>
+		<set name="request.layout" value="admin"/>
+		<xfa name="cancel" value="core_security_permissions_listing"/>
+		
+		<include circuit="admin" template="form/act_form_core_security_permissions"/>
+		
+		<include circuit="admin" template="form/act_form_loadrelated_core_security_permissions"/>
+		
+		<!-- snippet 'modules/admin/controller/form/snippets/act_form_loadrelated_custom_core_security_permissions.cfm' -->
+		
+		<!-- /snippet -->
+		
+		<include circuit="udfs" template="udf_appendParam"/>
+		<include circuit="v_admin" template="form/dsp_form_core_security_permissions"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_permissions_action_add">
+		<set name="mode" value="insert"/>
+		<xfa name="save" value="core_security_permissions_action_add"/>
+		<do action="core_security_permissions_action_save"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_permissions_action_update">
+		<set name="mode" value="edit"/>
+		<xfa name="save" value="core_security_permissions_action_update"/>
+		<do action="core_security_permissions_action_save"/>
+	</fuseaction>
+	
+	<fuseaction access="private" lanshock:includedCircuit="true" name="core_security_permissions_action_save">
+		<lanshock:security area="core_security_permissions"/>
+		<set name="bHasErrors" value="false"/>
+		<xfa name="continue" value="core_security_permissions_listing"/>
+		<xfa name="cancel" value="core_security_permissions_listing"/>
+		<include circuit="admin" template="form/act_action_save_core_security_permissions"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_permissions_delete">
+		<lanshock:security area="core_security_permissions"/>
+		
+		<!-- Delete: I delete the selected core_security_permissions records. -->
+		
+		<!-- force layout: none -->
+		<set name="request.layout" value="none"/>
+		
+		<invoke method="deleteByIDlist" object="application.lanshock.oFactory.load('core_security_permissions','reactorGateway')" returnvariable="request.page.pageContent">
+			<argument name="jsonData" value="#attributes.jsonData#"/>
+		</invoke>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_roles_listing">
+		<lanshock:security area="core_security_roles"/>
+		
+		<!-- force layout: admin -->
+		<set name="request.layout" value="admin"/>
+		
+		<!-- Listing: I display a list of the records in the core_security_roles table. -->
+		<set name="request.page.objectName" value="core_security_roles"/>
+		<set name="request.page.description" value="I display a list of the core_security_roles records in the table."/>
+		<xfa name="update" value="core_security_roles_edit_form"/>
+		<xfa name="delete" value="core_security_roles_delete"/>
+		<xfa name="display" value="core_security_roles_display"/>
+		<xfa name="add" value="core_security_roles_add_form"/>
+		<xfa name="grid_json" value="core_security_roles_grid_json"/>
+		
+		<set name="attributes._maxrows" overwrite="false" value="10"/>
+		<set name="attributes._startrow" overwrite="false" value="1"/>
+		
+		<set name="attributes._listSortByFieldList" overwrite="false" value="core_security_roles|id|ASC"/>
+		
+		<set name="fieldlist" value="id,name,module,"/>
+		<include circuit="udfs" template="udf_appendParam"/>
+		<include circuit="v_admin" template="list/dsp_list_core_security_roles"/>
+	</fuseaction>
+	
+	<fuseaction access="public" lanshock:showlayout="none" name="core_security_roles_grid_json">
+		<lanshock:security area="core_security_roles"/>
+		
+		<!-- force layout: json -->
+		<set name="request.layout" value="json"/>
+		
+		<!-- params by ext.grid -->
+		<include circuit="admin" template="list/act_json_filter_core_security_roles"/>
+		
+		<invoke method="getRecordsForGrid" object="application.lanshock.oFactory.load('core_security_roles','reactorGateway')" returnvariable="request.page.pageContent">
+			<argument name="sortByFieldList" value="core_security_roles|#attributes.sort#|#attributes.dir#"/>
+			<argument name="startrow" value="#attributes.start#"/>
+			<argument name="maxrows" value="#attributes.limit#"/>
+			<argument name="filter" value="#stFilters#"/>
+		</invoke>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_roles_add_form">
+		<set name="mode" value="insert"/>
+		<xfa name="save" value="core_security_roles_action_add"/>
+		<do action="core_security_roles_form"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_roles_edit_form">
+		<set name="mode" value="edit"/>
+		<xfa name="save" value="core_security_roles_action_update"/>
+		<do action="core_security_roles_form"/>
+	</fuseaction>
+	
+	<fuseaction access="private" lanshock:includedCircuit="true" name="core_security_roles_form">
+		<lanshock:security area="core_security_roles"/>
+		<set name="request.layout" value="admin"/>
+		<xfa name="cancel" value="core_security_roles_listing"/>
+		
+		<include circuit="admin" template="form/act_form_core_security_roles"/>
+		
+		<include circuit="admin" template="form/act_form_loadrelated_core_security_roles"/>
+		
+		<!-- snippet 'modules/admin/controller/form/snippets/act_form_loadrelated_custom_core_security_roles.cfm' -->
+		
+		<!-- /snippet -->
+		
+		<include circuit="udfs" template="udf_appendParam"/>
+		<include circuit="v_admin" template="form/dsp_form_core_security_roles"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_roles_action_add">
+		<set name="mode" value="insert"/>
+		<xfa name="save" value="core_security_roles_action_add"/>
+		<do action="core_security_roles_action_save"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_roles_action_update">
+		<set name="mode" value="edit"/>
+		<xfa name="save" value="core_security_roles_action_update"/>
+		<do action="core_security_roles_action_save"/>
+	</fuseaction>
+	
+	<fuseaction access="private" lanshock:includedCircuit="true" name="core_security_roles_action_save">
+		<lanshock:security area="core_security_roles"/>
+		<set name="bHasErrors" value="false"/>
+		<xfa name="continue" value="core_security_roles_listing"/>
+		<xfa name="cancel" value="core_security_roles_listing"/>
+		<include circuit="admin" template="form/act_action_save_core_security_roles"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_roles_delete">
+		<lanshock:security area="core_security_roles"/>
+		
+		<!-- Delete: I delete the selected core_security_roles records. -->
+		
+		<!-- force layout: none -->
+		<set name="request.layout" value="none"/>
+		
+		<invoke method="deleteByIDlist" object="application.lanshock.oFactory.load('core_security_roles','reactorGateway')" returnvariable="request.page.pageContent">
+			<argument name="jsonData" value="#attributes.jsonData#"/>
+		</invoke>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_roles_permissions_rel_listing">
+		<lanshock:security area="core_security_roles_permissions_rel"/>
+		
+		<!-- force layout: admin -->
+		<set name="request.layout" value="admin"/>
+		
+		<!-- Listing: I display a list of the records in the core_security_roles_permissions_rel table. -->
+		<set name="request.page.objectName" value="core_security_roles_permissions_rel"/>
+		<set name="request.page.description" value="I display a list of the core_security_roles_permissions_rel records in the table."/>
+		<xfa name="update" value="core_security_roles_permissions_rel_edit_form"/>
+		<xfa name="delete" value="core_security_roles_permissions_rel_delete"/>
+		<xfa name="display" value="core_security_roles_permissions_rel_display"/>
+		<xfa name="add" value="core_security_roles_permissions_rel_add_form"/>
+		<xfa name="grid_json" value="core_security_roles_permissions_rel_grid_json"/>
+		
+		<set name="attributes._maxrows" overwrite="false" value="10"/>
+		<set name="attributes._startrow" overwrite="false" value="1"/>
+		
+		<set name="attributes._listSortByFieldList" overwrite="false" value="core_security_roles_permissions_rel|id|ASC"/>
+		
+		<set name="fieldlist" value="id,role_id,permission_id,"/>
+		<include circuit="udfs" template="udf_appendParam"/>
+		<include circuit="v_admin" template="list/dsp_list_core_security_roles_permissions_rel"/>
+	</fuseaction>
+	
+	<fuseaction access="public" lanshock:showlayout="none" name="core_security_roles_permissions_rel_grid_json">
+		<lanshock:security area="core_security_roles_permissions_rel"/>
+		
+		<!-- force layout: json -->
+		<set name="request.layout" value="json"/>
+		
+		<!-- params by ext.grid -->
+		<include circuit="admin" template="list/act_json_filter_core_security_roles_permissions_rel"/>
+		
+		<invoke method="getRecordsForGrid" object="application.lanshock.oFactory.load('core_security_roles_permissions_rel','reactorGateway')" returnvariable="request.page.pageContent">
+			<argument name="sortByFieldList" value="core_security_roles_permissions_rel|#attributes.sort#|#attributes.dir#"/>
+			<argument name="startrow" value="#attributes.start#"/>
+			<argument name="maxrows" value="#attributes.limit#"/>
+			<argument name="filter" value="#stFilters#"/>
+		</invoke>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_roles_permissions_rel_add_form">
+		<set name="mode" value="insert"/>
+		<xfa name="save" value="core_security_roles_permissions_rel_action_add"/>
+		<do action="core_security_roles_permissions_rel_form"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_roles_permissions_rel_edit_form">
+		<set name="mode" value="edit"/>
+		<xfa name="save" value="core_security_roles_permissions_rel_action_update"/>
+		<do action="core_security_roles_permissions_rel_form"/>
+	</fuseaction>
+	
+	<fuseaction access="private" lanshock:includedCircuit="true" name="core_security_roles_permissions_rel_form">
+		<lanshock:security area="core_security_roles_permissions_rel"/>
+		<set name="request.layout" value="admin"/>
+		<xfa name="cancel" value="core_security_roles_permissions_rel_listing"/>
+		
+		<include circuit="admin" template="form/act_form_core_security_roles_permissions_rel"/>
+		
+		<include circuit="admin" template="form/act_form_loadrelated_core_security_roles_permissions_rel"/>
+		
+		<!-- snippet 'modules/admin/controller/form/snippets/act_form_loadrelated_custom_core_security_roles_permissions_rel.cfm' -->
+		
+		<!-- /snippet -->
+		
+		<include circuit="udfs" template="udf_appendParam"/>
+		<include circuit="v_admin" template="form/dsp_form_core_security_roles_permissions_rel"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_roles_permissions_rel_action_add">
+		<set name="mode" value="insert"/>
+		<xfa name="save" value="core_security_roles_permissions_rel_action_add"/>
+		<do action="core_security_roles_permissions_rel_action_save"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_roles_permissions_rel_action_update">
+		<set name="mode" value="edit"/>
+		<xfa name="save" value="core_security_roles_permissions_rel_action_update"/>
+		<do action="core_security_roles_permissions_rel_action_save"/>
+	</fuseaction>
+	
+	<fuseaction access="private" lanshock:includedCircuit="true" name="core_security_roles_permissions_rel_action_save">
+		<lanshock:security area="core_security_roles_permissions_rel"/>
+		<set name="bHasErrors" value="false"/>
+		<xfa name="continue" value="core_security_roles_permissions_rel_listing"/>
+		<xfa name="cancel" value="core_security_roles_permissions_rel_listing"/>
+		<include circuit="admin" template="form/act_action_save_core_security_roles_permissions_rel"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_roles_permissions_rel_delete">
+		<lanshock:security area="core_security_roles_permissions_rel"/>
+		
+		<!-- Delete: I delete the selected core_security_roles_permissions_rel records. -->
+		
+		<!-- force layout: none -->
+		<set name="request.layout" value="none"/>
+		
+		<invoke method="deleteByIDlist" object="application.lanshock.oFactory.load('core_security_roles_permissions_rel','reactorGateway')" returnvariable="request.page.pageContent">
+			<argument name="jsonData" value="#attributes.jsonData#"/>
+		</invoke>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_users_roles_rel_listing">
+		<lanshock:security area="core_security_users_roles_rel"/>
+		
+		<!-- force layout: admin -->
+		<set name="request.layout" value="admin"/>
+		
+		<!-- Listing: I display a list of the records in the core_security_users_roles_rel table. -->
+		<set name="request.page.objectName" value="core_security_users_roles_rel"/>
+		<set name="request.page.description" value="I display a list of the core_security_users_roles_rel records in the table."/>
+		<xfa name="update" value="core_security_users_roles_rel_edit_form"/>
+		<xfa name="delete" value="core_security_users_roles_rel_delete"/>
+		<xfa name="display" value="core_security_users_roles_rel_display"/>
+		<xfa name="add" value="core_security_users_roles_rel_add_form"/>
+		<xfa name="grid_json" value="core_security_users_roles_rel_grid_json"/>
+		
+		<set name="attributes._maxrows" overwrite="false" value="10"/>
+		<set name="attributes._startrow" overwrite="false" value="1"/>
+		
+		<set name="attributes._listSortByFieldList" overwrite="false" value="core_security_users_roles_rel|role_id|ASC"/>
+		
+		<set name="fieldlist" value="user_id,role_id,"/>
+		<include circuit="udfs" template="udf_appendParam"/>
+		<include circuit="v_admin" template="list/dsp_list_core_security_users_roles_rel"/>
+	</fuseaction>
+	
+	<fuseaction access="public" lanshock:showlayout="none" name="core_security_users_roles_rel_grid_json">
+		<lanshock:security area="core_security_users_roles_rel"/>
+		
+		<!-- force layout: json -->
+		<set name="request.layout" value="json"/>
+		
+		<!-- params by ext.grid -->
+		<include circuit="admin" template="list/act_json_filter_core_security_users_roles_rel"/>
+		
+		<invoke method="getRecordsForGrid" object="application.lanshock.oFactory.load('core_security_users_roles_rel','reactorGateway')" returnvariable="request.page.pageContent">
+			<argument name="sortByFieldList" value="core_security_users_roles_rel|#attributes.sort#|#attributes.dir#"/>
+			<argument name="startrow" value="#attributes.start#"/>
+			<argument name="maxrows" value="#attributes.limit#"/>
+			<argument name="filter" value="#stFilters#"/>
+		</invoke>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_users_roles_rel_add_form">
+		<set name="mode" value="insert"/>
+		<xfa name="save" value="core_security_users_roles_rel_action_add"/>
+		<do action="core_security_users_roles_rel_form"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_users_roles_rel_edit_form">
+		<set name="mode" value="edit"/>
+		<xfa name="save" value="core_security_users_roles_rel_action_update"/>
+		<do action="core_security_users_roles_rel_form"/>
+	</fuseaction>
+	
+	<fuseaction access="private" lanshock:includedCircuit="true" name="core_security_users_roles_rel_form">
+		<lanshock:security area="core_security_users_roles_rel"/>
+		<set name="request.layout" value="admin"/>
+		<xfa name="cancel" value="core_security_users_roles_rel_listing"/>
+		
+		<include circuit="admin" template="form/act_form_core_security_users_roles_rel"/>
+		
+		<include circuit="admin" template="form/act_form_loadrelated_core_security_users_roles_rel"/>
+		
+		<!-- snippet 'modules/admin/controller/form/snippets/act_form_loadrelated_custom_core_security_users_roles_rel.cfm' -->
+		
+		<!-- /snippet -->
+		
+		<include circuit="udfs" template="udf_appendParam"/>
+		<include circuit="v_admin" template="form/dsp_form_core_security_users_roles_rel"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_users_roles_rel_action_add">
+		<set name="mode" value="insert"/>
+		<xfa name="save" value="core_security_users_roles_rel_action_add"/>
+		<do action="core_security_users_roles_rel_action_save"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_users_roles_rel_action_update">
+		<set name="mode" value="edit"/>
+		<xfa name="save" value="core_security_users_roles_rel_action_update"/>
+		<do action="core_security_users_roles_rel_action_save"/>
+	</fuseaction>
+	
+	<fuseaction access="private" lanshock:includedCircuit="true" name="core_security_users_roles_rel_action_save">
+		<lanshock:security area="core_security_users_roles_rel"/>
+		<set name="bHasErrors" value="false"/>
+		<xfa name="continue" value="core_security_users_roles_rel_listing"/>
+		<xfa name="cancel" value="core_security_users_roles_rel_listing"/>
+		<include circuit="admin" template="form/act_action_save_core_security_users_roles_rel"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="core_security_users_roles_rel_delete">
+		<lanshock:security area="core_security_users_roles_rel"/>
+		
+		<!-- Delete: I delete the selected core_security_users_roles_rel records. -->
+		
+		<!-- force layout: none -->
+		<set name="request.layout" value="none"/>
+		
+		<invoke method="deleteByIDlist" object="application.lanshock.oFactory.load('core_security_users_roles_rel','reactorGateway')" returnvariable="request.page.pageContent">
+			<argument name="jsonData" value="#attributes.jsonData#"/>
+		</invoke>
+	</fuseaction>
+	
 	<fuseaction access="public" name="user_listing">
 		<lanshock:security area="user"/>
 		
@@ -1081,7 +1073,7 @@
 		
 		<set name="attributes._listSortByFieldList" overwrite="false" value="user|id|ASC"/>
 		
-		<set name="fieldlist" value="id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong,data_access,"/>
+		<set name="fieldlist" value="id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,logincount,language,geo_latlong,country,city,street,zip,reset_password_key,openid_url,data_access,"/>
 		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_admin" template="list/dsp_list_user"/>
 	</fuseaction>
@@ -1093,7 +1085,7 @@
 		<set name="request.layout" value="json"/>
 		
 		<!-- params by ext.grid -->
-		<include circuit="admin" template="act_json_filter"/>
+		<include circuit="admin" template="list/act_json_filter_user"/>
 		
 		<invoke method="getRecordsForGrid" object="application.lanshock.oFactory.load('user','reactorGateway')" returnvariable="request.page.pageContent">
 			<argument name="sortByFieldList" value="user|#attributes.sort#|#attributes.dir#"/>
@@ -1101,23 +1093,6 @@
 			<argument name="maxrows" value="#attributes.limit#"/>
 			<argument name="filter" value="#stFilters#"/>
 		</invoke>
-	</fuseaction>
-	
-	<fuseaction access="public" name="user_Display">
-		<!-- Display: I display the selected user record. -->
-		<set name="request.page.subtitle" value="View user"/>
-		<set name="request.page.description" value="I display the selected user record."/>
-		<xfa name="Edit" value="user_Edit_Form"/>
-		<xfa name="Delete" value="user_Action_Delete"/>
-		<xfa name="List" value="user_Listing"/>
-		<reactor:record alias="user" returnvariable="ouser"/>
-		
-		<set value="#ouser.setlPKFields(attributes.lPKFields)#"/>
-		<invoke method="load" object="ouser"/>
-		
-		<set name="fieldlist" value="id,name,email,pwd,firstname,lastname,gender,status,signature,homepage,internal_note,dt_birthdate,dt_lastlogin,dt_registered,language,country,city,street,zip,logincount,reset_password_key,openid_url,geo_latlong,data_access,"/>
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include append="true" circuit="v_admin" contentvariable="request.page.pageContent" template="display/dsp_display_user"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="user_add_form">
@@ -1141,8 +1116,11 @@
 		
 		<include circuit="admin" template="form/act_form_loadrelated_user"/>
 		
-			<include circuit="admin" template="form/act_form_loadrelated_custom_user"/>
+		<!-- snippet 'modules/admin/controller/form/snippets/act_form_loadrelated_custom_user.cfm' -->
 		
+			<include circuit="admin" template="form/snippets/act_form_loadrelated_custom_user"/>
+		
+		<!-- /snippet -->
 		
 		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_admin" template="form/dsp_form_user"/>

@@ -3,17 +3,17 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL: https://lanshock.svn.sourceforge.net/svnroot/lanshock/trunk/scaffolding/templates/EXT2.0/custom/admin/raw_files/controller/custom/act_core_config_profilesettings.cfm $
-$LastChangedDate: 2008-05-12 14:49:49 +0200 (Mo, 12 Mai 2008) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 298 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 --->
 
 <cfparam name="attributes.form_submitted" default="false">
 <cfparam name="aError" default="#ArrayNew(1)#">
 	
 <!--- get config --->
-<cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#core.configmanager" method="getConfig" returnvariable="stModuleConfigNew">
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.configmanager')#" method="getConfig" returnvariable="stModuleConfigNew">
 	<cfinvokeargument name="module" value="user">
 </cfinvoke>
 
@@ -29,12 +29,12 @@ $LastChangedRevision: 298 $
 	<cfset stModuleConfigNew.settings.registration_active = attributes.registration_active>
 	
 	<!--- set config --->
-	<cfinvoke component="#application.lanshock.oRuntime.getEnvironment().sComponentPath#core.configmanager" method="setConfig">
+	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.configmanager')#" method="setConfig">
 		<cfinvokeargument name="module" value="user">
 		<cfinvokeargument name="data" value="#stModuleConfigNew#">
 	</cfinvoke>
 	
-	<cflocation url="#myself##myfusebox.thiscircuit#.core_config&#session.urltoken#" addtoken="false">
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.core_config')#" addtoken="false">
 </cfif>
 
 <cfsetting enablecfoutputonly="No">

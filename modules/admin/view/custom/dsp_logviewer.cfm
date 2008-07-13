@@ -3,10 +3,10 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL: https://lanshock.svn.sourceforge.net/svnroot/lanshock/trunk/scaffolding/templates/EXT2.0/custom/admin/raw_files/view/custom/dsp_logviewer.cfm $
-$LastChangedDate: 2008-05-12 14:49:49 +0200 (Mo, 12 Mai 2008) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 298 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 --->
 
 <cfoutput>
@@ -33,13 +33,11 @@ $LastChangedRevision: 298 $
 	<table class="list">
 		<tr>
 			<th>#request.content.log_file#</th>
-			<th>$$$ Level</th>
 			<th>$$$ Message</th>
-			<th>$$$ Timestamp</th>
+			<th>$$$ User</th>
 		</tr>
 		<cfloop query="qCoreLogs">
 			<tr>
-				<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&logfile=#qCoreLogs.logname#.log')#" target="_blank">#qCoreLogs.logname#</a></td>
 				<td><cfswitch expression="#qCoreLogs.level#">
 						<cfcase value="error">
 							<img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/delete.png" alt="#qCoreLogs.level#" title="#qCoreLogs.level#" />
@@ -53,9 +51,11 @@ $LastChangedRevision: 298 $
 						<cfcase value="debug">
 							<img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/con.png" alt="#qCoreLogs.level#" title="#qCoreLogs.level#" />
 						</cfcase>
-					</cfswitch></td>
+					</cfswitch> <a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&logfile=#qCoreLogs.logname#.log')#" target="_blank">#qCoreLogs.logname#</a>
+					<br/>#session.oUser.DateTimeFormat(qCoreLogs.timestamp)#
+				</td>
 				<td>#qCoreLogs.data#</td>
-				<td>#session.oUser.DateTimeFormat(qCoreLogs.timestamp)#</td>
+				<td><a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#qCoreLogs.userid#')#">#qCoreLogs.name#</td>
 			</tr>
 		</cfloop>
 	</table>

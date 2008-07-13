@@ -23,7 +23,7 @@
 		<cfif NOT StructIsEmpty(arguments.stFilter)>
 	
 			<cfif StructKeyExists(arguments.stFilter,'stJoins')>
-				<cfset Query.returnObjectFields("core_security_roles_permissions_rel","permission_id,role_id,id")>
+				<cfset Query.returnObjectFields("core_security_roles_permissions_rel","id,role_id,permission_id")>
 				
 				<cfloop collection="#arguments.stFilter.stJoins#" item="idx">
 					<cfset idx = lCase(idx)>
@@ -138,54 +138,39 @@
 		<cfif isStruct(arguments.filter)>
 			<cfset QueryRecordset.getWhere().setMode("OR")>
 			
-				<cfif StructKeyExists(arguments.filter,'permission_id')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="numeric">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['permission_id'])>
+				<cfif StructKeyExists(arguments.filter,'id')>
+					
+							<cfset bFilterColumn = false>
+							<cfif isNumeric(arguments.filter['id'])>
 								<cfset bFilterColumn = true>
 							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
-						<cfset QueryRecordset.getWhere().isLike("core_security_roles_permissions_rel",'permission_id',arguments.filter['permission_id'])>
+						<cfset QueryRecordset.getWhere().isLike("core_security_roles_permissions_rel",'id',arguments.filter['id'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'role_id')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="numeric">
-						<cfcase value="numeric">
+					
+							<cfset bFilterColumn = false>
 							<cfif isNumeric(arguments.filter['role_id'])>
 								<cfset bFilterColumn = true>
 							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("core_security_roles_permissions_rel",'role_id',arguments.filter['role_id'])>
 					</cfif>
 				</cfif>
 			
-				<cfif StructKeyExists(arguments.filter,'id')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="numeric">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['id'])>
+				<cfif StructKeyExists(arguments.filter,'permission_id')>
+					
+							<cfset bFilterColumn = false>
+							<cfif isNumeric(arguments.filter['permission_id'])>
 								<cfset bFilterColumn = true>
 							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
-						<cfset QueryRecordset.getWhere().isLike("core_security_roles_permissions_rel",'id',arguments.filter['id'])>
+						<cfset QueryRecordset.getWhere().isLike("core_security_roles_permissions_rel",'permission_id',arguments.filter['permission_id'])>
 					</cfif>
 				</cfif>
 			
@@ -205,7 +190,7 @@
 		
 		
 		<!--- return only fields on list --->
-		<cfset QueryRecordset.returnObjectFields("core_security_roles_permissions_rel","permission_id,role_id,id")>
+		<cfset QueryRecordset.returnObjectFields("core_security_roles_permissions_rel","id,role_id,permission_id")>
 		
 		<!--- Return the query --->
 		<cfreturn getByQuery(QueryRecordset) />
@@ -249,7 +234,7 @@
 	<cffunction name="deleteByIDlist" access="remote" output="false" returntype="void" hint="I delete the selected N records">
 		<cfargument name="jsonData" default="" type="string" required="No" Hint="I am the json data to delete"/>
 		
-		<cfset var oJSON = CreateObject('component','#application.lanshock.oRuntime.getEnvironment().sComponentPath#core._utils.json.json')>
+		<cfset var oJSON = application.lanshock.oFactory.load('lanshock.core._utils.json.json')>
 		<cfset var aResult = oJSON.decode(data=arguments.jsonData)>
 		<cfset var idx = ''>
 		<cfloop from="1" to="#ArrayLen(aResult)#" index="idx">

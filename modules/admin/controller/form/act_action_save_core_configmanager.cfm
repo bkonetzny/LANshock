@@ -1,12 +1,8 @@
 <cfset aErrors = ArrayNew(1)>
 	<cfset aTranslatedErrors = ArrayNew(1)>
+	<!--- snippet 'modules/admin/controller/form/snippets/act_action_save_prevalidation_core_configmanager.cfm' --->
 	
-	
-		
-
-	
-		
-
+	<!--- /snippet --->
 	
 		
 
@@ -14,7 +10,15 @@
 		
 
 	
+		
+
 	
+		
+
+	
+	<!--- snippet 'modules/admin/controller/form/snippets/act_action_save_postvalidation_core_configmanager.cfm' --->
+	
+	<!--- /snippet --->
 	<cfparam name="attributes.core_configmanager_id" default="0">
 	<cfset ocore_configmanager = application.lanshock.oFactory.load('core_configmanager','reactorRecord')>
 	<cfif variables.mode EQ 'insert'>
@@ -44,6 +48,9 @@
 		
 		<cfinclude template="act_form_loadrelated_core_configmanager.cfm">
 		
+		<!--- snippet 'modules/admin/controller/form/snippets/act_form_loadrelated_custom_core_configmanager.cfm' --->
+		
+		<!--- /snippet --->
 		<cfset aReactorErrors = ocore_configmanager._getErrorCollection().getErrors()>
 		<cfloop from="1" to="#ArrayLen(aReactorErrors)#" index="idx">
 			<cfset ArrayAppend(aErrors,aReactorErrors[idx])>

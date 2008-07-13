@@ -1,12 +1,8 @@
 <cfset aErrors = ArrayNew(1)>
 	<cfset aTranslatedErrors = ArrayNew(1)>
+	<!--- snippet 'modules/admin/controller/form/snippets/act_action_save_prevalidation_core_modules.cfm' --->
 	
-	
-		
-
-	
-		
-	
+	<!--- /snippet --->
 	
 		
 
@@ -14,19 +10,27 @@
 		
 
 	
+		
+
 	
+		
+
+	
+	<!--- snippet 'modules/admin/controller/form/snippets/act_action_save_postvalidation_core_modules.cfm' --->
+	
+	<!--- /snippet --->
 	<cfparam name="attributes.core_modules_id" default="0">
 	<cfset ocore_modules = application.lanshock.oFactory.load('core_modules','reactorRecord')>
 	<cfif variables.mode EQ 'insert'>
 		
+		<cfset ocore_modules.setname(attributes.name)>
 		<cfset ocore_modules.setversion(attributes.version)>
 		<cfset ocore_modules.setdate(attributes.date)>
-		<cfset ocore_modules.setname(attributes.name)>
 	<cfelse>
 		
+		<cfset ocore_modules.setname(attributes.name)>
 		<cfset ocore_modules.setversion(attributes.version)>
 		<cfset ocore_modules.setdate(attributes.date)>
-		<cfset ocore_modules.setname(attributes.name)>
 		<cfset ocore_modules.setfolder(attributes.folder)>
 	</cfif>
 	
@@ -44,6 +48,9 @@
 		
 		<cfinclude template="act_form_loadrelated_core_modules.cfm">
 		
+		<!--- snippet 'modules/admin/controller/form/snippets/act_form_loadrelated_custom_core_modules.cfm' --->
+		
+		<!--- /snippet --->
 		<cfset aReactorErrors = ocore_modules._getErrorCollection().getErrors()>
 		<cfloop from="1" to="#ArrayLen(aReactorErrors)#" index="idx">
 			<cfset ArrayAppend(aErrors,aReactorErrors[idx])>

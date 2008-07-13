@@ -75,30 +75,6 @@
 	
 	
 	
-		
-		
-		
-		
-		
-			
-				
-				
-				
-				
-				
-				
-			
-				
-				
-				
-				
-				
-				
-			
-		
-				
-		
-	
 	
 				
 	
@@ -121,10 +97,10 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="id" id="formrow_7EC128104CCE4633A535FCDE27F651E6" value="#ocore_security_roles.getid()#" />
+	<input type="hidden" name="id" id="formrow_DF70D8891FE1477F8BF9971814CE5CEB" value="#ocore_security_roles.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_7EC128104CCE4633A535FCDE27F651E6">#request.content.core_security_roles_rowtype_label_id#</label>
-		#NumberFormat(ocore_security_roles.getid(),"9.99")#
+		<label for="formrow_DF70D8891FE1477F8BF9971814CE5CEB">#request.content.core_security_roles_rowtype_label_id#</label>
+		#Trim(ocore_security_roles.getid())#
 	</div>
 	</cfif>
 				
@@ -138,8 +114,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_EAF46ECCC28540C49409D59082179047"><em>*</em> #request.content.core_security_roles_rowtype_label_name#</label>
-		<input type="text" class="textInput" name="name" id="formrow_EAF46ECCC28540C49409D59082179047" value="#Trim(ocore_security_roles.getname())#"/>
+		<label for="formrow_AEB2A9C3B8D74092A24DA492BBAABB44"><em>*</em> #request.content.core_security_roles_rowtype_label_name#</label>
+		<input type="text" class="textInput" name="name" id="formrow_AEB2A9C3B8D74092A24DA492BBAABB44" value="#Trim(ocore_security_roles.getname())#"/>
 	</div>
 				
 			
@@ -151,62 +127,10 @@
 					
 
 	
-	<input type="hidden" name="module" id="formrow_9D248148A17340AAA0D0734391512375" value="#ocore_security_roles.getmodule()#" />
-				
-			
-			
-		
-			</fieldset>
-		
-	
-	
-	
-		
-			<fieldset class="inlineLabels">
-				<legend>aManyToMany</legend>
-		
-			
-				
-				
-				
-				
-					
-
-	
-	
-		<cfset lRelcore_security_roles_permissions_rel = ocore_security_roles.getcore_security_roles_permissions_reliterator().getValueList('permission_id')>
-		<div class="ctrlHolder">
-			<label for="formrow_4A772A06AA5F4CE190DD31D0503D095C">core_security_roles_permissions_rel</label>
-			<select class="selectInput" name="core_security_roles_permissions_rel" id="formrow_4A772A06AA5F4CE190DD31D0503D095C" multiple="multiple" size="6">
-				<option value=""></option>
-				<cfloop query="stRelated.stManyToMany.core_security_roles_permissions_rel.qData">
-					<option value="#stRelated.stManyToMany.core_security_roles_permissions_rel.qData.optionvalue#"<cfif ListFind(lRelcore_security_roles_permissions_rel,stRelated.stManyToMany.core_security_roles_permissions_rel.qData.optionvalue)> selected="selected"</cfif>>#stRelated.stManyToMany.core_security_roles_permissions_rel.qData.optionname#</option>
-				</cfloop>
-			</select>
-		</div>
-	
-				
-			
-			
-				
-				
-				
-				
-					
-
-	
-	
-		<cfset lRelcore_security_users_roles_rel = ocore_security_roles.getcore_security_users_roles_reliterator().getValueList('user_id')>
-		<div class="ctrlHolder">
-			<label for="formrow_2650D3F79D6740378A3CA6D2AD583939">core_security_users_roles_rel</label>
-			<select class="selectInput" name="core_security_users_roles_rel" id="formrow_2650D3F79D6740378A3CA6D2AD583939" multiple="multiple" size="6">
-				<option value=""></option>
-				<cfloop query="stRelated.stManyToMany.core_security_users_roles_rel.qData">
-					<option value="#stRelated.stManyToMany.core_security_users_roles_rel.qData.optionvalue#"<cfif ListFind(lRelcore_security_users_roles_rel,stRelated.stManyToMany.core_security_users_roles_rel.qData.optionvalue)> selected="selected"</cfif>>#stRelated.stManyToMany.core_security_users_roles_rel.qData.optionname#</option>
-				</cfloop>
-			</select>
-		</div>
-	
+	<div class="ctrlHolder">
+		<label for="formrow_886F856C4BC345AEA10E6BBC9DD7A7DE">#request.content.core_security_roles_rowtype_label_module#</label>
+		<input type="text" class="textInput" name="module" id="formrow_886F856C4BC345AEA10E6BBC9DD7A7DE" value="#Trim(ocore_security_roles.getmodule())#"/>
+	</div>
 				
 			
 			

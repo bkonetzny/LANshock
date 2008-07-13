@@ -14,8 +14,8 @@
 <cfoutput>
 <script type="text/javascript">
 <!--
-	function validate(myform, XFA){
-		$('##btnSave').disabled = true;
+	function validate(){
+		$('##btnSave').attr('disabled','disabled');
 		return true;
 	};
 //-->
@@ -28,7 +28,7 @@
 </cfif>
 <cfif isDefined("aTranslatedErrors") AND ArrayLen(aTranslatedErrors)>
 	<div class="errorBox">
-		#request.content.error#
+		<h3>#request.content.error#</h3>
 		<ul>
 			<cfloop index="i" from="1" to="#arrayLen(aTranslatedErrors)#">
 				<li>#aTranslatedErrors[i]#</li>
@@ -126,9 +126,27 @@
 					
 
 	
+	<cfif mode EQ "edit">
+	<input type="hidden" name="id" id="formrow_00B6C661182B4F1D91EDC6361301A6A3" value="#ocore_cron.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_6DDF28BBCD1D401392260BD2112E7225">#request.content.core_cron_rowtype_label_executions#</label>
-		<input type="text" class="textInput" name="executions" id="formrow_6DDF28BBCD1D401392260BD2112E7225" value="#NumberFormat(ocore_cron.getexecutions(),"9.99")#"/>
+		<label for="formrow_00B6C661182B4F1D91EDC6361301A6A3">#request.content.core_cron_rowtype_label_id#</label>
+		#Trim(ocore_cron.getid())#
+	</div>
+	</cfif>
+				
+			
+			
+				
+				
+				
+				
+					
+
+	
+	<div class="ctrlHolder">
+		<div>
+			<label for="formrow_6FE647D8AA3C4A8D8BC8FF9E16C92198" class="inlineLabel"><input type="checkbox" name="active" id="formrow_6FE647D8AA3C4A8D8BC8FF9E16C92198" value="1"<cfif ocore_cron.getactive()> checked="checked"</cfif>/> <em>*</em>  #request.content.core_cron_rowtype_label_active#</label>
+		</div>
 	</div>
 				
 			
@@ -141,8 +159,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_6D2FCF59C8E24595B38BF524FDC39EF1">#request.content.core_cron_rowtype_label_id#</label>
-		<input type="text" class="textInput" name="id" id="formrow_6D2FCF59C8E24595B38BF524FDC39EF1" value="#NumberFormat(ocore_cron.getid(),"9.99")#"/>
+		<label for="formrow_C7843490336D400AB793154A98B0868C">#request.content.core_cron_rowtype_label_run#</label>
+		<input type="text" class="textInput" name="run" id="formrow_C7843490336D400AB793154A98B0868C" value="#Trim(ocore_cron.getrun())#"/>
 	</div>
 				
 			
@@ -155,8 +173,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_1CC6FA35F7584A978CA133A2F5E66C28">#request.content.core_cron_rowtype_label_lastrun_dt#</label>
-		<input type="text" class="textInput" name="lastrun_dt" id="formrow_1CC6FA35F7584A978CA133A2F5E66C28" value="#Trim(ocore_cron.getlastrun_dt())#"/>
+		<label for="formrow_2D41C8A68DA84D18B305203A9D13460F">#request.content.core_cron_rowtype_label_module#</label>
+		<input type="text" class="textInput" name="module" id="formrow_2D41C8A68DA84D18B305203A9D13460F" value="#Trim(ocore_cron.getmodule())#"/>
 	</div>
 				
 			
@@ -169,8 +187,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_6598C227DF1F4D4189A6EAD58183F24C">#request.content.core_cron_rowtype_label_active#</label>
-		<input type="text" class="textInput" name="active" id="formrow_6598C227DF1F4D4189A6EAD58183F24C" value="#NumberFormat(ocore_cron.getactive(),"9.99")#"/>
+		<label for="formrow_043F2DF84D50445DAD41ACECFC8A9AD2">#request.content.core_cron_rowtype_label_action#</label>
+		<input type="text" class="textInput" name="action" id="formrow_043F2DF84D50445DAD41ACECFC8A9AD2" value="#Trim(ocore_cron.getaction())#"/>
 	</div>
 				
 			
@@ -182,9 +200,15 @@
 					
 
 	
+	<cfset sValue = Trim(ocore_cron.getexecutions())>
+	<input type="hidden" name="executions" id="formrow_80CFA59BDB7049B18F56C04D0797CF4E" value="#Trim(ocore_cron.getexecutions())#"/>
 	<div class="ctrlHolder">
-		<label for="formrow_8E6C0B296ECD48F58149033715798EE5">#request.content.core_cron_rowtype_label_action#</label>
-		<textarea name="action" id="formrow_8E6C0B296ECD48F58149033715798EE5">#Trim(ocore_cron.getaction())#</textarea>
+		<label for="formrow_80CFA59BDB7049B18F56C04D0797CF4E">#request.content.core_cron_rowtype_label_executions#</label>
+		<cfif LsIsDate(sValue)>
+			#session.oUser.DateTimeFormat(sValue)#
+		<cfelse>
+			#sValue#
+		</cfif>
 	</div>
 				
 			
@@ -196,9 +220,15 @@
 					
 
 	
+	<cfset sValue = Trim(ocore_cron.getlastrun_dt())>
+	<input type="hidden" name="lastrun_dt" id="formrow_7409872AF3B44F6F8A3F8802BE8BA51D" value="#Trim(ocore_cron.getlastrun_dt())#"/>
 	<div class="ctrlHolder">
-		<label for="formrow_2EBBDC87CEC04E179DCB67FCD5DEF023">#request.content.core_cron_rowtype_label_module#</label>
-		<textarea name="module" id="formrow_2EBBDC87CEC04E179DCB67FCD5DEF023">#Trim(ocore_cron.getmodule())#</textarea>
+		<label for="formrow_7409872AF3B44F6F8A3F8802BE8BA51D">#request.content.core_cron_rowtype_label_lastrun_dt#</label>
+		<cfif LsIsDate(sValue)>
+			#session.oUser.DateTimeFormat(sValue)#
+		<cfelse>
+			#sValue#
+		</cfif>
 	</div>
 				
 			
@@ -210,9 +240,15 @@
 					
 
 	
+	<cfset sValue = Trim(ocore_cron.getlastrun_time())>
+	<input type="hidden" name="lastrun_time" id="formrow_D0CA895C92ED4A3CAE7BB01237C16536" value="#Trim(ocore_cron.getlastrun_time())#"/>
 	<div class="ctrlHolder">
-		<label for="formrow_8B83D4CFEC154FC48B8CF1049EFBDA46">#request.content.core_cron_rowtype_label_result#</label>
-		<textarea name="result" id="formrow_8B83D4CFEC154FC48B8CF1049EFBDA46">#Trim(ocore_cron.getresult())#</textarea>
+		<label for="formrow_D0CA895C92ED4A3CAE7BB01237C16536">#request.content.core_cron_rowtype_label_lastrun_time#</label>
+		<cfif LsIsDate(sValue)>
+			#session.oUser.DateTimeFormat(sValue)#
+		<cfelse>
+			#sValue#
+		</cfif>
 	</div>
 				
 			
@@ -224,23 +260,15 @@
 					
 
 	
+	<cfset sValue = Trim(ocore_cron.getresult())>
+	<input type="hidden" name="result" id="formrow_774CEECB1EB74125ADC184886040C412" value="#Trim(ocore_cron.getresult())#"/>
 	<div class="ctrlHolder">
-		<label for="formrow_1BD213E2397C4F9D8565CDF0D455D443">#request.content.core_cron_rowtype_label_run#</label>
-		<textarea name="run" id="formrow_1BD213E2397C4F9D8565CDF0D455D443">#Trim(ocore_cron.getrun())#</textarea>
-	</div>
-				
-			
-			
-				
-				
-				
-				
-					
-
-	
-	<div class="ctrlHolder">
-		<label for="formrow_545EDC2895A24CA5A2103AEC36F8F1E8">#request.content.core_cron_rowtype_label_lastrun_time#</label>
-		<input type="text" class="textInput" name="lastrun_time" id="formrow_545EDC2895A24CA5A2103AEC36F8F1E8" value="#NumberFormat(ocore_cron.getlastrun_time(),"9.99")#"/>
+		<label for="formrow_774CEECB1EB74125ADC184886040C412">#request.content.core_cron_rowtype_label_result#</label>
+		<cfif LsIsDate(sValue)>
+			#session.oUser.DateTimeFormat(sValue)#
+		<cfelse>
+			#sValue#
+		</cfif>
 	</div>
 				
 			
@@ -254,7 +282,7 @@
 	<div class="buttonHolder">
 		<button type="submit" class="submitButton" id="btnSave">#request.content.form_save#</button>
 		<button type="reset" class="resetButton" id="btnReset">#request.content.form_reset#</button>
-		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';">#request.content.form_cancel#</button>
+		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';return false;">#request.content.form_cancel#</button>
 	</div>
 </form>
 </cfoutput>

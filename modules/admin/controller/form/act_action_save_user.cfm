@@ -1,6 +1,8 @@
 <cfset aErrors = ArrayNew(1)>
 	<cfset aTranslatedErrors = ArrayNew(1)>
+	<!--- snippet 'modules/admin/controller/form/snippets/act_action_save_prevalidation_user.cfm' --->
 	
+	<!--- /snippet --->
 	
 		
 
@@ -88,9 +90,11 @@
 		<cfset attributes.data_access = 0>
 	</cfif>
 	
+	<!--- snippet 'modules/admin/controller/form/snippets/act_action_save_postvalidation_user.cfm' --->
 	
-		<cfinclude template="act_action_save_postvalidation_user.cfm">
+		<cfinclude template="snippets/act_action_save_postvalidation_user.cfm">
 	
+	<!--- /snippet --->
 	<cfparam name="attributes.user_id" default="0">
 	<cfset ouser = application.lanshock.oFactory.load('user','reactorRecord')>
 	<cfif variables.mode EQ 'insert'>
@@ -108,15 +112,15 @@
 		<cfset ouser.setdt_birthdate(attributes.dt_birthdate)>
 		<cfset ouser.setdt_lastlogin(attributes.dt_lastlogin)>
 		<cfset ouser.setdt_registered(attributes.dt_registered)>
+		<cfset ouser.setlogincount(attributes.logincount)>
 		<cfset ouser.setlanguage(attributes.language)>
+		<cfset ouser.setgeo_latlong(attributes.geo_latlong)>
 		<cfset ouser.setcountry(attributes.country)>
 		<cfset ouser.setcity(attributes.city)>
 		<cfset ouser.setstreet(attributes.street)>
 		<cfset ouser.setzip(attributes.zip)>
-		<cfset ouser.setlogincount(attributes.logincount)>
 		<cfset ouser.setreset_password_key(attributes.reset_password_key)>
 		<cfset ouser.setopenid_url(attributes.openid_url)>
-		<cfset ouser.setgeo_latlong(attributes.geo_latlong)>
 		<cfset ouser.setdata_access(attributes.data_access)>
 	<cfelse>
 		
@@ -134,15 +138,15 @@
 		<cfset ouser.setdt_birthdate(attributes.dt_birthdate)>
 		<cfset ouser.setdt_lastlogin(attributes.dt_lastlogin)>
 		<cfset ouser.setdt_registered(attributes.dt_registered)>
+		<cfset ouser.setlogincount(attributes.logincount)>
 		<cfset ouser.setlanguage(attributes.language)>
+		<cfset ouser.setgeo_latlong(attributes.geo_latlong)>
 		<cfset ouser.setcountry(attributes.country)>
 		<cfset ouser.setcity(attributes.city)>
 		<cfset ouser.setstreet(attributes.street)>
 		<cfset ouser.setzip(attributes.zip)>
-		<cfset ouser.setlogincount(attributes.logincount)>
 		<cfset ouser.setreset_password_key(attributes.reset_password_key)>
 		<cfset ouser.setopenid_url(attributes.openid_url)>
-		<cfset ouser.setgeo_latlong(attributes.geo_latlong)>
 		<cfset ouser.setdata_access(attributes.data_access)>
 	</cfif>
 	
@@ -153,20 +157,6 @@
 	
 	
 	<cfif NOT bHasErrors>
-		<cfset ocore_security_users_roles_reliterator = ouser.getcore_security_users_roles_reliterator()>
-		<cfset ocore_security_users_roles_reliterator.deleteAll()>
-		<cfif StructKeyExists(attributes,'core_security_users_roles_rel')>
-			<cfloop list="#attributes.core_security_users_roles_rel#" index="idx">
-				<cfset ocore_security_users_roles_reliterator.add(user_id = ouser.getid(), role_id = idx)>
-			</cfloop>
-		</cfif>
-		<cfset ocore_security_users_roles_reliterator.validate()>
-		<cfif ocore_security_users_roles_reliterator.hasErrors()>
-			<cfset bHasErrors = true>
-		</cfif>
-	</cfif>
-	
-	<cfif NOT bHasErrors>
 		<cfset ouser.save()>
 		<cflocation url="#application.lanshock.oHelper.buildUrl('#XFA.Continue#&_listSortByFieldList=#URLEncodedFormat(attributes._listSortByFieldList)#&_startrow=#attributes._Startrow#&_maxrows=#attributes._Maxrows#')#" addtoken="false">
 	<cfelse>
@@ -174,8 +164,11 @@
 		
 		<cfinclude template="act_form_loadrelated_user.cfm">
 		
-			<cfinclude template="act_form_loadrelated_custom_user.cfm">
+		<!--- snippet 'modules/admin/controller/form/snippets/act_form_loadrelated_custom_user.cfm' --->
 		
+			<cfinclude template="snippets/act_form_loadrelated_custom_user.cfm">
+		
+		<!--- /snippet --->
 		<cfset aReactorErrors = ouser._getErrorCollection().getErrors()>
 		<cfloop from="1" to="#ArrayLen(aReactorErrors)#" index="idx">
 			<cfset ArrayAppend(aErrors,aReactorErrors[idx])>

@@ -19,7 +19,7 @@
 		<cfif NOT StructIsEmpty(arguments.stFilter)>
 	
 			<cfif StructKeyExists(arguments.stFilter,'stJoins')>
-				<cfset Query.returnObjectFields("core_navigation","module,action,permissions,level,sortorder")>
+				<cfset Query.returnObjectFields("core_navigation","module,action,level,sortorder,permissions")>
 				
 				<cfloop collection="#arguments.stFilter.stJoins#" item="idx">
 					<cfset idx = lCase(idx)>
@@ -135,87 +135,53 @@
 			<cfset QueryRecordset.getWhere().setMode("OR")>
 			
 				<cfif StructKeyExists(arguments.filter,'module')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['module'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("core_navigation",'module',arguments.filter['module'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'action')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['action'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
+					
 							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("core_navigation",'action',arguments.filter['action'])>
 					</cfif>
 				</cfif>
 			
-				<cfif StructKeyExists(arguments.filter,'permissions')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="string">
-						<cfcase value="numeric">
-							<cfif isNumeric(arguments.filter['permissions'])>
-								<cfset bFilterColumn = true>
-							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
-					<cfif bFilterColumn>
-						<cfset QueryRecordset.getWhere().isLike("core_navigation",'permissions',arguments.filter['permissions'])>
-					</cfif>
-				</cfif>
-			
 				<cfif StructKeyExists(arguments.filter,'level')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="numeric">
-						<cfcase value="numeric">
+					
+							<cfset bFilterColumn = false>
 							<cfif isNumeric(arguments.filter['level'])>
 								<cfset bFilterColumn = true>
 							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("core_navigation",'level',arguments.filter['level'])>
 					</cfif>
 				</cfif>
 			
 				<cfif StructKeyExists(arguments.filter,'sortorder')>
-					<cfset bFilterColumn = false>
-					<cfswitch expression="numeric">
-						<cfcase value="numeric">
+					
+							<cfset bFilterColumn = false>
 							<cfif isNumeric(arguments.filter['sortorder'])>
 								<cfset bFilterColumn = true>
 							</cfif>
-						</cfcase>
-						<cfdefaultcase>
-							<cfset bFilterColumn = true>
-						</cfdefaultcase>
-					</cfswitch>
+						
 					<cfif bFilterColumn>
 						<cfset QueryRecordset.getWhere().isLike("core_navigation",'sortorder',arguments.filter['sortorder'])>
+					</cfif>
+				</cfif>
+			
+				<cfif StructKeyExists(arguments.filter,'permissions')>
+					
+							<cfset bFilterColumn = true>
+						
+					<cfif bFilterColumn>
+						<cfset QueryRecordset.getWhere().isLike("core_navigation",'permissions',arguments.filter['permissions'])>
 					</cfif>
 				</cfif>
 			
@@ -235,7 +201,7 @@
 		
 		
 		<!--- return only fields on list --->
-		<cfset QueryRecordset.returnObjectFields("core_navigation","module,action,permissions,level,sortorder")>
+		<cfset QueryRecordset.returnObjectFields("core_navigation","module,action,level,sortorder,permissions")>
 		
 		<!--- Return the query --->
 		<cfreturn getByQuery(QueryRecordset) />
@@ -279,7 +245,7 @@
 	<cffunction name="deleteByIDlist" access="remote" output="false" returntype="void" hint="I delete the selected N records">
 		<cfargument name="jsonData" default="" type="string" required="No" Hint="I am the json data to delete"/>
 		
-		<cfset var oJSON = CreateObject('component','#application.lanshock.oRuntime.getEnvironment().sComponentPath#core._utils.json.json')>
+		<cfset var oJSON = application.lanshock.oFactory.load('lanshock.core._utils.json.json')>
 		<cfset var aResult = oJSON.decode(data=arguments.jsonData)>
 		<cfset var idx = ''>
 		<cfloop from="1" to="#ArrayLen(aResult)#" index="idx">
