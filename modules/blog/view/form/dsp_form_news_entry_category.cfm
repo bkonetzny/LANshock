@@ -127,9 +127,9 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="id" id="formrow_C515816BC6F34112AE4EE29D982BD3A3" value="#onews_entry_category.getid()#" />
+	<input type="hidden" name="id" id="formrow_5E359A26B1E641D39B0A775FAC76D168" value="#onews_entry_category.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_C515816BC6F34112AE4EE29D982BD3A3">#request.content.news_entry_category_rowtype_label_id#</label>
+		<label for="formrow_5E359A26B1E641D39B0A775FAC76D168">#request.content.news_entry_category_rowtype_label_id#</label>
 		#Trim(onews_entry_category.getid())#
 	</div>
 	</cfif>
@@ -144,8 +144,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_2CB281148E524EA9ADDBB1697870C8F0"><em>*</em> #request.content.news_entry_category_rowtype_label_entry_id#</label>
-		<input type="text" class="textInput" name="entry_id" id="formrow_2CB281148E524EA9ADDBB1697870C8F0" value="#Trim(onews_entry_category.getentry_id())#"/>
+		<label for="formrow_963980C228304623B9444E6C746115F4"><em>*</em> #request.content.news_entry_category_rowtype_label_entry_id#</label>
+		<input type="text" class="textInput" name="entry_id" id="formrow_963980C228304623B9444E6C746115F4" value="#Trim(onews_entry_category.getentry_id())#"/>
 	</div>
 				
 			
@@ -158,8 +158,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_C47D73F780554830B32F7395F78090CF"><em>*</em> #request.content.news_entry_category_rowtype_label_category_id#</label>
-		<input type="text" class="textInput" name="category_id" id="formrow_C47D73F780554830B32F7395F78090CF" value="#Trim(onews_entry_category.getcategory_id())#"/>
+		<label for="formrow_EA2DBB98F0A0469C89E16F77025C6444"><em>*</em> #request.content.news_entry_category_rowtype_label_category_id#</label>
+		<input type="text" class="textInput" name="category_id" id="formrow_EA2DBB98F0A0469C89E16F77025C6444" value="#Trim(onews_entry_category.getcategory_id())#"/>
 	</div>
 				
 			

@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module name="blog Module" version="2.0.0.0" date="2008-03-31" author="LANshock" url="http://www.lanshock.com">
+<!--
+Copyright (C) by LANshock.com
+Released under the GNU General Public License (v2)
+
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
+-->
+<module name="Blog" version="2.0.0.0" date="2008-07-14" author="LANshock" url="http://www.lanshock.com">
 	
 	<general requiresLogin="false"/>
 	
@@ -10,11 +19,11 @@
 	<navigation>
 		<item action="archive"/>
 		<item action="categories"/>
-		<item action="news_entry_Listing" permissions="news_entry"/>
-		<!-- <item action="news_trackback_Listing" reqstatus="admin"/> -->
-		<item action="news_category_Listing" permissions="news_category"/>
-		<!-- <item action="news_entry_category_Listing" reqstatus="admin"/> -->
-		<!-- <item action="news_ping_url_Listing" permissions="news_ping_url"/> -->
+		<item action="news_entry_listing" permissions="news_entry"/>
+		<!-- <item action="news_trackback_listing" reqstatus="admin"/> -->
+		<item action="news_category_listing" permissions="news_category"/>
+		<!-- <item action="news_entry_category_listing" reqstatus="admin"/> -->
+		<!-- <item action="news_ping_url_listing" permissions="news_ping_url"/> -->
 	</navigation>
 	
 	<security>
