@@ -3,10 +3,10 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL: https://svn.sourceforge.net/svnroot/lanshock/trunk/core/mail/dsp_message_dialog_confirm.cfm $
-$LastChangedDate: 2006-10-23 00:48:53 +0200 (Mo, 23 Okt 2006) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 55 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 --->
 
 <cfhtmlhead text='<title>#request.content.message_has_been_sent#</title>'>
