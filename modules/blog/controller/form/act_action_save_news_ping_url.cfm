@@ -1,6 +1,11 @@
 <cfset aErrors = ArrayNew(1)>
 	<cfset aTranslatedErrors = ArrayNew(1)>
+	<!--- snippet 'modules/blog/controller/form/snippets/act_action_save_prevalidation_news_ping_url.cfm' --->
 	
+	<!--- /snippet --->
+	
+		
+
 	
 		
 
@@ -8,10 +13,9 @@
 		
 
 	
-		
-
+	<!--- snippet 'modules/blog/controller/form/snippets/act_action_save_postvalidation_news_ping_url.cfm' --->
 	
-	
+	<!--- /snippet --->
 	<cfparam name="attributes.news_ping_url_id" default="0">
 	<cfset onews_ping_url = application.lanshock.oFactory.load('news_ping_url','reactorRecord')>
 	<cfif variables.mode EQ 'insert'>
@@ -39,6 +43,9 @@
 		
 		<cfinclude template="act_form_loadrelated_news_ping_url.cfm">
 		
+		<!--- snippet 'modules/blog/controller/form/snippets/act_form_loadrelated_custom_news_ping_url.cfm' --->
+		
+		<!--- /snippet --->
 		<cfset aReactorErrors = onews_ping_url._getErrorCollection().getErrors()>
 		<cfloop from="1" to="#ArrayLen(aReactorErrors)#" index="idx">
 			<cfset ArrayAppend(aErrors,aReactorErrors[idx])>
@@ -53,4 +60,5 @@
 			<cfoutput>#request.page.pageContent#</cfoutput>
 			<cfinclude template="../../view/form/dsp_form_news_ping_url.cfm">
 		</cfsavecontent>
+		<cfoutput>#request.page.pageContent#</cfoutput>
 	</cfif>

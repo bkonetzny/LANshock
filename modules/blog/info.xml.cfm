@@ -32,7 +32,8 @@
 			<field name="date" type="datetime" null="true" default="NULL"/>
 			<field name="mp3url" type="varchar" len="255" null="true" default="NULL"/>
 			<pk fields="id"/>
-			<fk field="author" mapping="user.id"/>
+			<fk field="author" type="manyToOne" mapping="user.id"/>
+			<fk field="id" type="manyToMany" mapping="news_entry_category.entry_id"/>
 		</table>
 		<table name="news_trackback">
 			<field name="id" type="integer" len="11" null="false" special="auto_increment"/>
@@ -49,14 +50,15 @@
 			<field name="id" type="integer" len="11" null="false" special="auto_increment"/>
 			<field name="name" type="varchar" len="255" null="false" default=""/>
 			<pk fields="id"/>
+			<fk field="id" type="manyToMany" mapping="news_entry_category.category_id"/>
 		</table>
 		<table name="news_entry_category">
 			<field name="id" type="integer" len="11" null="false" special="auto_increment"/>
 			<field name="entry_id" type="integer" len="11" null="false" default="0"/>
 			<field name="category_id" type="integer" len="11" null="false" default="0"/>
 			<pk fields="id"/>
-			<fk field="entry_id" mapping="news_entry.id"/>
-			<fk field="category_id" mapping="news_category.id"/>
+			<fk field="entry_id" type="oneToMany" mapping="news_entry.id"/>
+			<fk field="category_id" type="oneToMany" mapping="news_category.id"/>
 		</table>
 		<table name="news_ping_url">
 			<field name="id" type="integer" len="11" null="false" special="auto_increment"/>
@@ -71,31 +73,19 @@
 			<table name="news_entry_category" loadFields="false">
 				<![CDATA[
 					<field alias="id" name="id"/>
-					<hasOne name="news_entry">
-				        <relate from="entry_id" to="id"/>
-				    </hasOne>
-				    <hasOne name="news_category">
-				        <relate from="category_id" to="id"/>
-				    </hasOne>
-				]]>
-			</table>
-			<table name="news_entry">
-				<![CDATA[
-					<hasMany name="news_category">
-						<link name="news_entry_category" from="news_entry" to="news_category" />
-					</hasMany>
-				    <hasOne name="user">
-				        <relate from="author" to="id"/>
-				    </hasOne>
-				]]>
-			</table>
-			<table name="news_category">
-				<![CDATA[
-					<hasMany name="news_entry">
-						<link name="news_entry_category" from="news_category" to="news_entry" />
-					</hasMany>
 				]]>
 			</table>
 		</reactor>
+		<scaffolding>
+			<table name="news_entry">
+				<list fields="id,title,author,date" sortDefault="date DESC"/>
+				<form fields="id,author,date,title,text,mp3url">
+					<field name="text" formType="FckEditor"/>
+				</form>
+			</table>
+			<table name="news_category">
+				<list sortDefault="name ASC"/>
+			</table>
+		</scaffolding>
 	</special>
 </module>

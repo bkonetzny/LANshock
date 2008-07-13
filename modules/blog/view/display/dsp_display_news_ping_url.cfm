@@ -8,9 +8,9 @@
 		<history author="Kevin Roche" email="kevin@objectiveinternet.com" date="06-May-2008" role="Architect" type="Create" />
 		<property name="copyright" value="(c)2008 Objective Internet Limited." />
 		<property name="licence" value="See licence.txt" />
-		<property name="version" value="$Revision: 205 $" />
-		<property name="lastupdated" value="$Date: 2008-03-09 12:47:41 +0100 (So, 09 Mrz 2008) 2008/05/06 21:06:04 $" />
-		<property name="updatedby" value="$Author: majestixs $" />
+		<property name="version" value="$Revision$" />
+		<property name="lastupdated" value="$Date$" />
+		<property name="updatedby" value="$Author$" />
 	</properties>
 	<io>
 		<in>

@@ -1,6 +1,11 @@
 <cfset aErrors = ArrayNew(1)>
 	<cfset aTranslatedErrors = ArrayNew(1)>
+	<!--- snippet 'modules/blog/controller/form/snippets/act_action_save_prevalidation_news_entry_category.cfm' --->
 	
+	<!--- /snippet --->
+	
+		
+
 	
 		
 
@@ -8,16 +13,15 @@
 		
 
 	
-		
-
+	<!--- snippet 'modules/blog/controller/form/snippets/act_action_save_postvalidation_news_entry_category.cfm' --->
 	
-	
+	<!--- /snippet --->
 	<cfparam name="attributes.news_entry_category_id" default="0">
 	<cfset onews_entry_category = application.lanshock.oFactory.load('news_entry_category','reactorRecord')>
 	<cfif variables.mode EQ 'insert'>
 		
-		<cfset onews_entry_category.setid(attributes.id)>
 		<cfset onews_entry_category.setentry_id(attributes.entry_id)>
+		<cfset onews_entry_category.setcategory_id(attributes.category_id)>
 	<cfelse>
 		
 		<cfset onews_entry_category.setid(attributes.id)>
@@ -39,6 +43,9 @@
 		
 		<cfinclude template="act_form_loadrelated_news_entry_category.cfm">
 		
+		<!--- snippet 'modules/blog/controller/form/snippets/act_form_loadrelated_custom_news_entry_category.cfm' --->
+		
+		<!--- /snippet --->
 		<cfset aReactorErrors = onews_entry_category._getErrorCollection().getErrors()>
 		<cfloop from="1" to="#ArrayLen(aReactorErrors)#" index="idx">
 			<cfset ArrayAppend(aErrors,aReactorErrors[idx])>
@@ -53,4 +60,5 @@
 			<cfoutput>#request.page.pageContent#</cfoutput>
 			<cfinclude template="../../view/form/dsp_form_news_entry_category.cfm">
 		</cfsavecontent>
+		<cfoutput>#request.page.pageContent#</cfoutput>
 	</cfif>

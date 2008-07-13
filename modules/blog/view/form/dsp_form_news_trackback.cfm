@@ -116,53 +116,11 @@
 					
 
 	
-	<div class="ctrlHolder">
-		<label for="formrow_FF036E2F2E084245B1E706442A939030"><em>*</em> #request.content.news_trackback_rowtype_label_blog_name#</label>
-		<input type="text" class="textInput" name="blog_name" id="formrow_FF036E2F2E084245B1E706442A939030" value="#Trim(onews_trackback.getblog_name())#"/>
-	</div>
-				
-			
-			
-				
-				
-				
-				
-					
-
-	
-	<div class="ctrlHolder">
-		<label for="formrow_863AA37D0E5447CB8DF923FBF9AED2C5">#request.content.news_trackback_rowtype_label_date#</label>
-		<input type="text" class="textInput" name="date" id="formrow_863AA37D0E5447CB8DF923FBF9AED2C5" value="#Trim(onews_trackback.getdate())#"/>
-	</div>
-				
-			
-			
-				
-				
-				
-				
-					
-
-	
-	<div class="ctrlHolder">
-		<label for="formrow_70C9C77D21744339A879206E1A7AAB8F"><em>*</em> #request.content.news_trackback_rowtype_label_entry_id#</label>
-		<input type="text" class="textInput" name="entry_id" id="formrow_70C9C77D21744339A879206E1A7AAB8F" value="#NumberFormat(onews_trackback.getentry_id(),"9.99")#"/>
-	</div>
-				
-			
-			
-				
-				
-				
-				
-					
-
-	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="id" id="formrow_DB3BE83CFD23471EB8870FFEE0CD8143" value="#onews_trackback.getid()#" />
+	<input type="hidden" name="id" id="formrow_AE7923157E66428CB0DE8B42F71691AE" value="#onews_trackback.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_DB3BE83CFD23471EB8870FFEE0CD8143">#request.content.news_trackback_rowtype_label_id#</label>
-		#NumberFormat(onews_trackback.getid(),"9.99")#
+		<label for="formrow_AE7923157E66428CB0DE8B42F71691AE">#request.content.news_trackback_rowtype_label_id#</label>
+		#Trim(onews_trackback.getid())#
 	</div>
 	</cfif>
 				
@@ -176,8 +134,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_26128A44C6B547F4BD05700513B7AE80"><em>*</em> #request.content.news_trackback_rowtype_label_text#</label>
-		<textarea name="text" id="formrow_26128A44C6B547F4BD05700513B7AE80">#Trim(onews_trackback.gettext())#</textarea>
+		<label for="formrow_38700342EF774DA8887206543A6213E7"><em>*</em> #request.content.news_trackback_rowtype_label_entry_id#</label>
+		<input type="text" class="textInput" name="entry_id" id="formrow_38700342EF774DA8887206543A6213E7" value="#Trim(onews_trackback.getentry_id())#"/>
 	</div>
 				
 			
@@ -190,8 +148,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_F8476951506241CAA56E8CABB8DDCE52"><em>*</em> #request.content.news_trackback_rowtype_label_title#</label>
-		<input type="text" class="textInput" name="title" id="formrow_F8476951506241CAA56E8CABB8DDCE52" value="#Trim(onews_trackback.gettitle())#"/>
+		<label for="formrow_99CF57BEF9614043A2445627F4E9840F"><em>*</em> #request.content.news_trackback_rowtype_label_blog_name#</label>
+		<input type="text" class="textInput" name="blog_name" id="formrow_99CF57BEF9614043A2445627F4E9840F" value="#Trim(onews_trackback.getblog_name())#"/>
 	</div>
 				
 			
@@ -204,8 +162,69 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_353E4E003C21444D830AC9A32B55E48B"><em>*</em> #request.content.news_trackback_rowtype_label_url#</label>
-		<input type="text" class="textInput" name="url" id="formrow_353E4E003C21444D830AC9A32B55E48B" value="#Trim(onews_trackback.geturl())#"/>
+		<label for="formrow_1D83085578E24C61B112F24ABCC3D9FA"><em>*</em> #request.content.news_trackback_rowtype_label_title#</label>
+		<input type="text" class="textInput" name="title" id="formrow_1D83085578E24C61B112F24ABCC3D9FA" value="#Trim(onews_trackback.gettitle())#"/>
+	</div>
+				
+			
+			
+				
+				
+				
+				
+					
+
+	
+	<div class="ctrlHolder">
+		<label for="formrow_43EC79648D174F3991892FEFA637BE92"><em>*</em> #request.content.news_trackback_rowtype_label_text#</label>
+		<textarea name="text" id="formrow_43EC79648D174F3991892FEFA637BE92">#Trim(onews_trackback.gettext())#</textarea>
+	</div>
+				
+			
+			
+				
+				
+				
+				
+					
+
+	
+	<cfif NOT isDate(Trim(onews_trackback.getdate()))>
+		<cfset onews_trackback.setdate(now())>
+	</cfif>
+	<div class="ctrlHolder">
+		<label for="formrow_F5E68C5D9147491CB17D3EA58080F9A2">#request.content.news_trackback_rowtype_label_date#</label>
+		<div class="divInput" id="divDatePickerF5E68C5D9147491CB17D3EA58080F9A2"></div>
+		<input type="hidden" name="date" id="formrow_F5E68C5D9147491CB17D3EA58080F9A2" value="#LsDateFormat(Trim(onews_trackback.getdate()),'YYYY-MM-DD')# #LsTimeFormat(Trim(onews_trackback.getdate()),'HH:MM:SS')#"/>
+		<script type="text/javascript">
+			<!--
+			var myDatePickerF5E68C5D9147491CB17D3EA58080F9A2 = new Ext.ux.form.DateTime({
+				handler: function(value){
+					$('##formrow_F5E68C5D9147491CB17D3EA58080F9A2').val(value);
+				}
+			});
+			Ext.onReady(function(){
+				myDatePickerF5E68C5D9147491CB17D3EA58080F9A2.render('divDatePickerF5E68C5D9147491CB17D3EA58080F9A2');
+				var dtF5E68C5D9147491CB17D3EA58080F9A2 = new Date();
+				dtF5E68C5D9147491CB17D3EA58080F9A2 = Date.parseDate("#LsDateFormat(Trim(onews_trackback.getdate()),'YYYY-MM-DD')# #LsTimeFormat(Trim(onews_trackback.getdate()),'HH:MM')#","Y-m-d G:i");
+				myDatePickerF5E68C5D9147491CB17D3EA58080F9A2.setValue(dtF5E68C5D9147491CB17D3EA58080F9A2);
+			});
+			//-->
+		</script>
+	</div>
+				
+			
+			
+				
+				
+				
+				
+					
+
+	
+	<div class="ctrlHolder">
+		<label for="formrow_B755159758CC4C9AA7C6834A5210F694"><em>*</em> #request.content.news_trackback_rowtype_label_url#</label>
+		<input type="text" class="textInput" name="url" id="formrow_B755159758CC4C9AA7C6834A5210F694" value="#Trim(onews_trackback.geturl())#"/>
 	</div>
 				
 			
@@ -219,7 +238,7 @@
 	<div class="buttonHolder">
 		<button type="submit" class="submitButton" id="btnSave">#request.content.form_save#</button>
 		<button type="reset" class="resetButton" id="btnReset">#request.content.form_reset#</button>
-		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';">#request.content.form_cancel#</button>
+		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';return false;">#request.content.form_cancel#</button>
 	</div>
 </form>
 </cfoutput>

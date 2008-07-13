@@ -87,12 +87,18 @@
 				
 				
 				
+						
+					
+				
 				
 			
 				
 				
 				
 				
+				
+						
+					
 				
 				
 			
@@ -121,10 +127,10 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="id" id="formrow_7AE30490608742C49D62103F4E76566D" value="#onews_entry_category.getid()#" />
+	<input type="hidden" name="id" id="formrow_C515816BC6F34112AE4EE29D982BD3A3" value="#onews_entry_category.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_7AE30490608742C49D62103F4E76566D">#request.content.news_entry_category_rowtype_label_id#</label>
-		#NumberFormat(onews_entry_category.getid(),"9.99")#
+		<label for="formrow_C515816BC6F34112AE4EE29D982BD3A3">#request.content.news_entry_category_rowtype_label_id#</label>
+		#Trim(onews_entry_category.getid())#
 	</div>
 	</cfif>
 				
@@ -138,8 +144,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_E81F337EB6614DE69322C0AB8AF77EFD"><em>*</em> #request.content.news_entry_category_rowtype_label_entry_id#</label>
-		<input type="text" class="textInput" name="entry_id" id="formrow_E81F337EB6614DE69322C0AB8AF77EFD" value="#NumberFormat(onews_entry_category.getentry_id(),"9.99")#"/>
+		<label for="formrow_2CB281148E524EA9ADDBB1697870C8F0"><em>*</em> #request.content.news_entry_category_rowtype_label_entry_id#</label>
+		<input type="text" class="textInput" name="entry_id" id="formrow_2CB281148E524EA9ADDBB1697870C8F0" value="#Trim(onews_entry_category.getentry_id())#"/>
 	</div>
 				
 			
@@ -152,8 +158,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_295A2F3F6B7A4017BE3D708599A7ACC9"><em>*</em> #request.content.news_entry_category_rowtype_label_category_id#</label>
-		<input type="text" class="textInput" name="category_id" id="formrow_295A2F3F6B7A4017BE3D708599A7ACC9" value="#NumberFormat(onews_entry_category.getcategory_id(),"9.99")#"/>
+		<label for="formrow_C47D73F780554830B32F7395F78090CF"><em>*</em> #request.content.news_entry_category_rowtype_label_category_id#</label>
+		<input type="text" class="textInput" name="category_id" id="formrow_C47D73F780554830B32F7395F78090CF" value="#Trim(onews_entry_category.getcategory_id())#"/>
 	</div>
 				
 			
@@ -178,7 +184,7 @@
 	
 	
 		<div class="ctrlHolder">
-			attributes.stFieldData.links[1].name is not defined!
+			OneToMany: attributes.stFieldData.links[1].name is not defined!
 		</div>
 	
 				
@@ -193,7 +199,7 @@
 	
 	
 		<div class="ctrlHolder">
-			attributes.stFieldData.links[1].name is not defined!
+			OneToMany: attributes.stFieldData.links[1].name is not defined!
 		</div>
 	
 				
@@ -208,7 +214,7 @@
 	<div class="buttonHolder">
 		<button type="submit" class="submitButton" id="btnSave">#request.content.form_save#</button>
 		<button type="reset" class="resetButton" id="btnReset">#request.content.form_reset#</button>
-		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';">#request.content.form_cancel#</button>
+		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';return false;">#request.content.form_cancel#</button>
 	</div>
 </form>
 </cfoutput>

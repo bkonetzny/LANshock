@@ -97,10 +97,10 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="id" id="formrow_C176363FAA7149DFAF6C6E0DE86D24E7" value="#onews_ping_url.getid()#" />
+	<input type="hidden" name="id" id="formrow_7683D06690A74296962328EF22DC1DEF" value="#onews_ping_url.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_C176363FAA7149DFAF6C6E0DE86D24E7">#request.content.news_ping_url_rowtype_label_id#</label>
-		#NumberFormat(onews_ping_url.getid(),"9.99")#
+		<label for="formrow_7683D06690A74296962328EF22DC1DEF">#request.content.news_ping_url_rowtype_label_id#</label>
+		#Trim(onews_ping_url.getid())#
 	</div>
 	</cfif>
 				
@@ -114,8 +114,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_8FCB4DC2969D4074901028A70D02146B"><em>*</em> #request.content.news_ping_url_rowtype_label_name#</label>
-		<input type="text" class="textInput" name="name" id="formrow_8FCB4DC2969D4074901028A70D02146B" value="#Trim(onews_ping_url.getname())#"/>
+		<label for="formrow_4085A1D7457A4B41BBB2420DD249A27B"><em>*</em> #request.content.news_ping_url_rowtype_label_name#</label>
+		<input type="text" class="textInput" name="name" id="formrow_4085A1D7457A4B41BBB2420DD249A27B" value="#Trim(onews_ping_url.getname())#"/>
 	</div>
 				
 			
@@ -128,8 +128,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_81A4581BAE9F43D99FB29C101649098A"><em>*</em> #request.content.news_ping_url_rowtype_label_url#</label>
-		<input type="text" class="textInput" name="url" id="formrow_81A4581BAE9F43D99FB29C101649098A" value="#Trim(onews_ping_url.geturl())#"/>
+		<label for="formrow_F1D5A3F164144121B9526E7C03F4BAF8"><em>*</em> #request.content.news_ping_url_rowtype_label_url#</label>
+		<input type="text" class="textInput" name="url" id="formrow_F1D5A3F164144121B9526E7C03F4BAF8" value="#Trim(onews_ping_url.geturl())#"/>
 	</div>
 				
 			
@@ -143,7 +143,7 @@
 	<div class="buttonHolder">
 		<button type="submit" class="submitButton" id="btnSave">#request.content.form_save#</button>
 		<button type="reset" class="resetButton" id="btnReset">#request.content.form_reset#</button>
-		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';">#request.content.form_cancel#</button>
+		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';return false;">#request.content.form_cancel#</button>
 	</div>
 </form>
 </cfoutput>
