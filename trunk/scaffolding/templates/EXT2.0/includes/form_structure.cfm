@@ -26,7 +26,18 @@
 				<cfset stFieldData = stFields[idxRelation][i]>
 				<cfparam name="stFieldData.required" default="false">
 				<cfset stFieldData.uuid = replace(CreateUUID(),'-','','ALL')>
-				<cfset stFieldData.formType = "select_manytomany">
+				
+				<cfswitch expression="#idxRelation#">
+					<cfcase value="aManyToOne">
+						<cfset stFieldData.formType = "select_manytoone">
+					</cfcase>
+					<cfcase value="aManyToMany">
+						<cfset stFieldData.formType = "select_manytomany">
+					</cfcase>
+					<cfcase value="aOneToMany">
+						<cfset stFieldData.formType = "select_onetomany">
+					</cfcase>
+				</cfswitch>
 				
 				<cfset ArrayAppend(stFieldGroupData.aFields,stFieldData)>
 			</cfloop>
