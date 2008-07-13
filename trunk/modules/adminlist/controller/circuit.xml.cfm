@@ -4,10 +4,10 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL: https://svn.sourceforge.net/svnroot/lanshock/trunk/core/user/circuit.xml.cfm $
-$LastChangedDate: 2006-11-03 22:48:03 +0100 (Fr, 03 Nov 2006) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 75 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 -->
 
 <circuit xmlns:lanshock="lanshock/">
@@ -15,8 +15,8 @@ $LastChangedRevision: 75 $
 	<prefuseaction>
 		<lanshock:fuseaction>
 			<set name="request.page" value="#structNew()#"/>
-			<lanshock:i18n load="modules/user/i18n/lang.properties" returnvariable="request.content"/>
-			<include circuit="user" template="settings"/>
+			<lanshock:i18n load="modules/adminlist/i18n/lang.properties" returnvariable="request.content"/>
+			<include circuit="adminlist" template="settings"/>
 		</lanshock:fuseaction>
 	</prefuseaction>
 	
