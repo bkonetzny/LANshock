@@ -57,7 +57,7 @@ $LastChangedRevision$
 		<cfset o$$aManyToMany[i].name$$iterator.deleteAll()>
 		<cfif StructKeyExists(attributes,'$$aManyToMany[i].name$$')>
 			<cfloop list="#attributes.$$aManyToMany[i].name$$#" index="idx">
-				<cfset o$$aManyToMany[i].name$$iterator.add($$aManyToMany[i].links[1].to$$ = o$$objectName$$.get$$lPKFields$$(), $$aManyToMany[i].links[1].name$$ = idx)>
+				<cfset o$$aManyToMany[i].name$$iterator.add($$aManyToMany[i].links[1].from$$ = o$$objectName$$.get$$lPKFields$$(), $$aManyToMany[i].links[1].to$$ = idx)>
 			</cfloop>
 		</cfif>
 		<cfset o$$aManyToMany[i].name$$iterator.validate()>
