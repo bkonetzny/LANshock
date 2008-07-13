@@ -14,6 +14,15 @@ $LastChangedRevision$
 <<cfset stFields.aManyToOne = oMetaData.getRelationshipsFromXML(objectName,"manyToOne")>>
 <<cfset stFields.aManyToMany = oMetaData.getRelationshipsFromXML(objectName,"manyToMany")>>
 <<cfset stFields.aOneToMany = oMetaData.getRelationshipsFromXML(objectName,"oneToMany")>>
+<<cfset lExcludeFields = ''>>
+<<cfloop from="1" to="$$ArrayLen(stFields.aManyToOne)$$" index="idx">>
+	<<cfset lExcludeFields = ListAppend(lExcludeFields,stFields.aManyToOne[idx].links[1].from)>>
+<</cfloop>>
+<<cfloop from="$$ArrayLen(stFields.aTable)$$" to="1" step="-1" index="idx">>
+	<<cfif ListFind(lExcludeFields,stFields.aTable[idx].name)>>
+		<<cfset ArrayDeleteAt(stFields.aTable,idx)>>
+	<</cfif>>
+<</cfloop>>
 <<cfoutput>>
 <cfsilent>
 
