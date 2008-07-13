@@ -167,7 +167,7 @@ $LastChangedRevision$
 				<cfif StructKeyExists(arguments.filter,'$$aFields[idx].alias$$')>
 					<cfset bFilterColumn = false>
 					<cfswitch expression="$$aFields[idx].type$$">
-						<cfcase value="numeric">
+						<cfcase value="integer">
 							<cfif isNumeric(arguments.filter['$$aFields[idx].alias$$'])>
 								<cfset bFilterColumn = true>
 							</cfif>
