@@ -2,10 +2,10 @@
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
 
-$HeadURL: https://lanshock.svn.sourceforge.net/svnroot/lanshock/trunk/core/frameworks/reactor.cfc $
-$LastChangedDate: 2008-07-03 00:14:20 +0200 (Do, 03 Jul 2008) $
-$LastChangedBy: majestixs $
-$LastChangedRevision: 360 $
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
 --->
 
 <cfcomponent>
