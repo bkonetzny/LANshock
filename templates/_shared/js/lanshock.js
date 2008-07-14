@@ -12,7 +12,8 @@ LANshock = {
 	properties:{
 		self:"",
 		myself:"",
-		sessionUrlToken:""
+		sessionUrlToken:"",
+		sWebPath:""
 	},
 	getVars:function(){
 		return LANshock.properties;
@@ -31,5 +32,26 @@ LANshock = {
 	userSendMessage:function(iUserID){
 		var sUrl = this.getVar('myself')+'mail.message_dialog/user_id='+iUserID+'/'+this.getVar('sessionUrlToken');
 		this.openWindow(sUrl,"NewMessage",300,300);
-	}
+	},
+	Formatters:{}
 }
+
+LANshock.Formatters.formatBoolean = function(value){
+	if(value) return '<img src="'+LANshock.getVar('sWebPath')+'templates/_shared/images/famfamfam/icons/bullet_green.png" alt=""/>';
+	else return '<img src="'+LANshock.getVar('sWebPath')+'templates/_shared/images/famfamfam/icons/bullet_red.png" alt=""/>';
+};
+
+LANshock.Formatters.cfTimeStamp = function(value){
+	if(value){
+		var aMatches = value.match("([0-9]{4,4})-([0-9]{2,2})-([0-9]{2,2}) ([0-9]{2,2}):([0-9]{2,2}):([0-9]{2,2})"); 
+		var dtDateTime = new Date();
+		dtDateTime.setYear(aMatches[1]);
+		dtDateTime.setMonth(aMatches[2]-1);
+		dtDateTime.setDate(aMatches[3]);
+		dtDateTime.setHours(aMatches[4]);
+		dtDateTime.setMinutes(aMatches[5]);
+		dtDateTime.setSeconds(aMatches[6]);
+		return Ext.util.Format.date(dtDateTime,"d.m.y, h:m");
+	} 
+	else return '-';
+};
