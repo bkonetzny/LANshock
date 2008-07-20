@@ -40,9 +40,9 @@ $LastChangedRevision$
 		<cfset application.lanshock.oSessionmanager.checkSession()>
 		
 		<cfif len(session.lang)>
-			<cfset SetLocale(UCase(application.lanshock.settings.language))>
-		<cfelse>
 			<cfset SetLocale(session.lang)>
+		<cfelse>
+			<cfset SetLocale(UCase(application.lanshock.settings.language))>
 		</cfif>
 		<cfset request.ProcessTime_Part1 = GetTickCount()>
 		
