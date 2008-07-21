@@ -68,12 +68,11 @@ $LastChangedRevision$
 </cfif>
 
 <!--- Start of the form --->
-<form id="frmAddEdit" action="#self#" method="post" class="uniForm" onsubmit="javascript: return validate();">
+<form id="frmAddEdit" action="#application.lanshock.oHelper.buildUrl('#xfa.save#')#" method="post" class="uniForm" onsubmit="javascript: return validate();">
 	<div class="hidden">
-		<input type="hidden" name="fuseaction" value="#XFA.save#" />
-		<input type="hidden" name="_listSortByFieldList" value="#attributes._listSortByFieldList#" />
+		<!---<input type="hidden" name="_listSortByFieldList" value="#attributes._listSortByFieldList#" />
 		<input type="hidden" name="_Maxrows" value="#attributes._Maxrows#" />
-		<input type="hidden" name="_StartRow" value="#attributes._StartRow#" />
+		<input type="hidden" name="_StartRow" value="#attributes._StartRow#" />--->
 	</div>
 	
 	<<cfinclude template="../templates/EXT2.0/includes/form_structure.cfm">>
@@ -90,7 +89,7 @@ $LastChangedRevision$
 	<div class="buttonHolder">
 		<button type="submit" class="submitButton" id="btnSave">#request.content.form_save#</button>
 		<button type="reset" class="resetButton" id="btnReset">#request.content.form_reset#</button>
-		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';return false;">#request.content.form_cancel#</button>
+		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#jsStringFormat(application.lanshock.oHelper.buildUrl('#xfa.cancel#'))#<!---&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#--->';return false;">#request.content.form_cancel#</button>
 	</div>
 </form>
 </cfoutput>
