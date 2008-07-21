@@ -61,8 +61,20 @@ $LastChangedRevision$
 						<cfcase value="isEqual">
 							<cfset Where.isEqual(sCurrentTable,sCurrentField,arguments.stFilter.stFields[idx].value)>
 						</cfcase>
+						<cfcase value="isNotEqual">
+							<cfset Where.isNotEqual(sCurrentTable,sCurrentField,arguments.stFilter.stFields[idx].value)>
+						</cfcase>
 						<cfcase value="isLike">
 							<cfset Where.isLike(sCurrentTable,sCurrentField,arguments.stFilter.stFields[idx].value)>
+						</cfcase>
+						<cfcase value="isNotLike">
+							<cfset Where.isNotLike(sCurrentTable,sCurrentField,arguments.stFilter.stFields[idx].value)>
+						</cfcase>
+						<cfcase value="isNull">
+							<cfset Where.isNull(sCurrentTable,sCurrentField)>
+						</cfcase>
+						<cfcase value="isNotNull">
+							<cfset Where.isNotNull(sCurrentTable,sCurrentField)>
 						</cfcase>
 					</cfswitch>
 				</cfloop>
