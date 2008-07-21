@@ -42,7 +42,7 @@ $LastChangedRevision$
 	<cffunction name="drop" output="false" returntype="void">
 		<cfargument name="sKey" type="string" required="true">
 		
-		<cfset StructKeyDelete(variables.stCache,arguments.sKey)>
+		<cfset StructDelete(variables.stCache,arguments.sKey)>
 	</cffunction>
 
 	<cffunction name="dropAll" output="false" returntype="void">
