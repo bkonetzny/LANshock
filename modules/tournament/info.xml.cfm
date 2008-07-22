@@ -7,7 +7,7 @@ $LastChangedDate$
 $LastChangedBy$
 $LastChangedRevision$
 -->
-<module name="Tournament System" version="2.0.0.0" date="2008-06-08" author="LANshock" url="http://www.lanshock.com">
+<module name="Tournament System" version="2.0.0.0" date="2008-07-22" author="LANshock" url="http://www.lanshock.com">
 	
 	<general requiresLogin="false"/>
 	
@@ -18,8 +18,8 @@ $LastChangedRevision$
 	<navigation>
 		<item action="tournaments"/>
 		<item action="timetable"/>
-		<item action="rankings"/>
-		<item action="mytournaments"/>
+		<!-- <item action="rankings"/>
+		<item action="mytournaments"/> -->
 		<item action="management" permissions="manage"/>
 		<item action="export" permissions="export"/>
 		<item action="tournament_season_listing" permissions="tournament_season"/>
@@ -280,19 +280,19 @@ $LastChangedRevision$
 		</reactor>
 		<scaffolding>
 			<table name="tournament_season">
-				<list fields="id,name,event_id,dt_start,dt_end" sortDefault="name DESC"/>
+				<list fields="id,name,event_id,dt_start,dt_end" sortDefault="name ASC"/>
 				<form>
 					<field name="description" formType="FckEditor"/>
 				</form>
 			</table>
 			<table name="tournament_group">
-				<list fields="id,name,season_id,maxsignups" sortDefault="name DESC"/>
+				<list fields="id,name,season_id,maxsignups" sortDefault="name ASC"/>
 				<form>
 					<field name="description" formType="FckEditor"/>
 				</form>
 			</table>
 			<table name="tournament_tournament">
-				<list fields="id,name,type,status,starttime" sortDefault="name DESC"/>
+				<list fields="id,name,type,status,starttime" sortDefault="name ASC"/>
 				<form>
 					<field name="type" formType="Select"/>
 					<field name="status" formType="Select"/>
@@ -303,7 +303,7 @@ $LastChangedRevision$
 				</form>
 			</table>
 			<table name="tournament_team">
-				<list fields="id,name,tournamentid,leaderid" sortDefault="name DESC"/>
+				<list fields="id,name,tournamentid,leaderid" sortDefault="name ASC"/>
 			</table>
 		</scaffolding>
 	</special>

@@ -1,0 +1,1 @@
+<cfset lFieldsMove = "maxteams,teamsize,teamsubstitute,pausetime,matchtime,matchcount,export_league,export_league_data">

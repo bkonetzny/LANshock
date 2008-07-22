@@ -41,8 +41,7 @@ $LastChangedRevision: 72 $
 <h3>#qTournament.name#</h3>
 
 <cfif len(qTournament.image)>
-	<img src="#application.lanshock.oHelper.UDF_Module('webPath')#icons/#qTournament.image#" vspace="2"><br>
-	<span class="text_big">#qTournament.name#</span>
+	<img src="#application.lanshock.oHelper.UDF_Module('webPath')#images/icons/#qTournament.image#" vspace="2"><br>
 </cfif>
 
 <cfif len(qTournament.infotext)>
@@ -52,9 +51,10 @@ $LastChangedRevision: 72 $
 <table class="vlist">
 	<tr>
 		<th>#request.content.tournament_status#</th>
-		<td>#request.content['tournament_status_' & qTournament.status]#
-			<cfif session.oUser.checkPermissions('manage')>
-				<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.tournament_changestatus&tournamentid=#qTournament.id#')#">#request.content.tournament_changestatus#</a>
+		<td><cfif NOT session.oUser.checkPermissions('manage')>
+				#request.content['tournament_status_' & qTournament.status]#
+			<cfelse>
+				<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.tournament_changestatus&tournamentid=#qTournament.id#')#">#request.content['tournament_status_' & qTournament.status]#</a>
 			</cfif></td>
 	</tr>
 	<tr>
@@ -97,35 +97,6 @@ $LastChangedRevision: 72 $
 		</cfif>
 	</cfif>
 </table>
-
-<cfif session.oUser.checkPermissions('manage')>
-	<ul class="options">
-		<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.tournament_changestatus&tournamentid=#qTournament.id#')#">#request.content.tournaments_changestatus_headline#</a></li>
-		<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.tournaments_edit_settings&id=#qTournament.id#')#">#request.content.edit_tournament#</a></li>
-	</ul>
-
-	<cfif qTournament.status EQ "signup">
-		<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.teams')#" method="post" class="uniForm">
-			<div class="hidden">
-				<input type="hidden" name="form_submitted_dummyteams" value="true"/>
-				<input type="hidden" name="tournamentid" value="#qTournament.id#"/>
-			</div>
-			
-			<fieldset class="inlineLabels">
-				<legend><strong>DEBUG: </strong>Delete Current Teams -> Create Dummy Teams</legend>
-				
-				<div class="ctrlHolder">
-					<label for="dummyteams"><em>*</em> Maximum Teams</label>
-					<input type="text" class="textInput" name="dummyteams" id="dummyteams" value="#qTournament.maxteams#"/>
-				</div>
-	
-			</fieldset>
-			<div class="buttonHolder">
-				<button type="submit" class="submitButton">#request.content.form_save#</button>
-			</div>
-		</form>
-	</cfif>
-</cfif>
 
 <!--- <cfif len(ladminids)>
 	<table>

@@ -10,7 +10,7 @@ $LastChangedRevision$
 --->
 
 <cfset stFilter = StructNew()>
-<cfset stFilter.lSortFields = "name|DESC">
+<cfset stFilter.lSortFields = "name|ASC">
 
 <cfinvoke component="#application.lanshock.oFactory.load('tournament_group','reactorGateway')#" method="getRecords" returnvariable="qGroups">
 	<cfinvokeargument name="stFilter" value="#stFilter#">
@@ -19,7 +19,7 @@ $LastChangedRevision$
 <!--- <cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.tournaments')#" method="getTournaments" returnvariable="qTournaments"> --->
 
 <cfset stFilter = StructNew()>
-<cfset stFilter.lSortFields = "name|DESC">
+<cfset stFilter.lSortFields = "name|ASC">
 
 <cfinvoke component="#application.lanshock.oFactory.load('tournament_tournament','reactorGateway')#" method="getRecords" returnvariable="qTournaments">
 	<cfinvokeargument name="stFilter" value="#stFilter#">

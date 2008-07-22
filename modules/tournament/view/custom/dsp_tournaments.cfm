@@ -16,7 +16,6 @@ $LastChangedRevision$
 	<p>#request.content.coins_user_amount_avaible# <strong>#iUserCoins#</strong> / #stModuleConfig.coinsystem_usercoins#</p>
 </cfif>
 
-
 <cfloop query="qGroups">
 	<cfparam name="aUserGroupIDs[id]" default="0">
 	<h4>#qGroups.name#</h4>
