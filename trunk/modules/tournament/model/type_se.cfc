@@ -207,6 +207,8 @@ $LastChangedRevision$
 		<cfset var iTeam1ID = 0>
 		<cfset var iTeam2ID = 0>
 		
+		<cfset calculateMatches_Wildcard(arguments.tournamentid)>
+		
 		<cfset stFilter = StructNew()>
 		<cfset stFilter.stFields.tournamentid = StructNew()>
 		<cfset stFilter.stFields.tournamentid.mode = 'isEqual'>
@@ -246,7 +248,7 @@ $LastChangedRevision$
 			<cfif qIdTeam1.recordcount>
 				<cfif qIdTeam1.winner EQ 'team1'>
 					<cfset iTeam1ID = qIdTeam1.team1>
-				<cfelse>
+				<cfelseif qIdTeam1.winner EQ 'team2'>
 					<cfset iTeam1ID = qIdTeam1.team2>
 				</cfif>
 			</cfif>
@@ -254,7 +256,7 @@ $LastChangedRevision$
 			<cfif qIdTeam2.recordcount>
 				<cfif qIdTeam2.winner EQ 'team1'>
 					<cfset iTeam2ID = qIdTeam2.team1>
-				<cfelse>
+				<cfelseif qIdTeam2.winner EQ 'team2'>
 					<cfset iTeam2ID = qIdTeam2.team2>
 				</cfif>
 			</cfif>
@@ -273,8 +275,58 @@ $LastChangedRevision$
 								status=sStatus)>
 		</cfloop>
 	</cffunction>
+	
+	<cffunction name="calculateMatches_Wildcard" access="private" returntype="void" output="false">
+		<cfargument name="tournamentid" required="true" type="numeric">
 
-	<cffunction name="createMatch" access="public" returntype="boolean" output="false">
+		<cfset var stFilter = StructNew()>
+		<cfset var qMatches = 0>
+		
+		<cfset stFilter = StructNew()>
+		<cfset stFilter.stFields.tournamentid = StructNew()>
+		<cfset stFilter.stFields.tournamentid.mode = 'isEqual'>
+		<cfset stFilter.stFields.tournamentid.value = arguments.tournamentid>
+		<cfset stFilter.stFields.status = StructNew()>
+		<cfset stFilter.stFields.status.mode = 'isEqual'>
+		<cfset stFilter.stFields.status.value = 'play'>
+		<cfset stFilter.stFields.team1 = StructNew()>
+		<cfset stFilter.stFields.team1.mode = 'isNull'>
+		
+		<cfinvoke component="#application.lanshock.oFactory.load('tournament_type_se_match','reactorGateway')#" method="getRecords" returnvariable="qMatches">
+			<cfinvokeargument name="stFilter" value="#stFilter#">
+		</cfinvoke>
+		
+		<cfloop query="qMatches">
+			<cfset updateMatch(tournamentid=arguments.tournamentid,
+								matchid=qMatches.id,
+								winner='team2',
+								status='done')>
+		</cfloop>
+		
+		<cfset stFilter = StructNew()>
+		<cfset stFilter.stFields.tournamentid = StructNew()>
+		<cfset stFilter.stFields.tournamentid.mode = 'isEqual'>
+		<cfset stFilter.stFields.tournamentid.value = arguments.tournamentid>
+		<cfset stFilter.stFields.status = StructNew()>
+		<cfset stFilter.stFields.status.mode = 'isEqual'>
+		<cfset stFilter.stFields.status.value = 'play'>
+		<cfset stFilter.stFields.team2 = StructNew()>
+		<cfset stFilter.stFields.team2.mode = 'isNull'>
+		
+		<cfinvoke component="#application.lanshock.oFactory.load('tournament_type_se_match','reactorGateway')#" method="getRecords" returnvariable="qMatches">
+			<cfinvokeargument name="stFilter" value="#stFilter#">
+		</cfinvoke>
+		
+		<cfloop query="qMatches">
+			<cfset updateMatch(tournamentid=arguments.tournamentid,
+								matchid=qMatches.id,
+								winner='team1',
+								status='done')>
+		</cfloop>
+		
+	</cffunction>
+
+	<cffunction name="createMatch" access="public" returntype="void" output="false">
 		<cfargument name="tournamentid" required="true" type="numeric">
 		<cfargument name="col" required="true" type="numeric">
 		<cfargument name="row" required="true" type="numeric">
@@ -287,8 +339,39 @@ $LastChangedRevision$
 					'empty')
 		</cfquery>
 
-		<cfreturn true>
+	</cffunction>
+	
+	<cffunction name="createAllMatches" access="public" returntype="void" output="false">
+		<cfargument name="tournamentid" required="true" type="numeric">
 		
+		<cfset var iTeams = 0>
+		<cfset var iBrackets = 0>
+		<cfset var iRowCount = 0>
+		<cfset var col = 0>
+		<cfset var row = 0>
+		<cfset var qTournament = 0>
+		
+		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.tournaments')#" method="getTournamentData" returnvariable="qTournament">
+			<cfinvokeargument name="id" value="#arguments.tournamentid#">
+		</cfinvoke>
+		
+		<cfset iTeams = 2^Ceiling(LogN(qTournament.currentteams,2))>
+		<cfset iBrackets = iTeams>
+		
+		<cfloop condition="#iBrackets# GTE 2">
+			<cfset iRowCount = iRowCount + 1>
+			<cfset iBrackets = iBrackets / 2>
+		</cfloop>
+			
+		<cfset iBrackets = iTeams / 2>
+		
+		<cfloop from="1" to="#iRowCount#" index="col">
+			<cfloop from="1" to="#iBrackets#" index="row">
+				<cfset createMatch(tournamentid=arguments.tournamentid,col=col,row=row)>
+			</cfloop>
+			<cfset iBrackets = iBrackets / 2>
+		</cfloop>
+
 	</cffunction>
 
 	<cffunction name="updateMatch" access="public" returntype="boolean" output="false">
@@ -304,12 +387,17 @@ $LastChangedRevision$
 		<cfargument name="checkedby_teamid" required="false" type="numeric" default="0">
 		<cfargument name="checkedby_admin" required="false" type="numeric" default="0">
 		
-		<cfif arguments.status EQ 'reset'>
+		<cfif arguments.status EQ 'reset'
+			OR arguments.status EQ 'clear'>
 		
 			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 				UPDATE tournament_type_se_match
 				SET status = 'play',
 					winner = '',
+					<cfif arguments.status EQ 'clear'>
+						team1 = NULL,
+						team2 = NULL,
+					</cfif>
 					submittedby_userid = NULL,
 					submittedby_teamid = NULL,
 					submittedby_dt = NULL,
@@ -445,12 +533,9 @@ $LastChangedRevision$
 		<cfset stFilter.stFields.tournamentid = StructNew()>
 		<cfset stFilter.stFields.tournamentid.mode = 'isEqual'>
 		<cfset stFilter.stFields.tournamentid.value = arguments.tournamentid>
-		<cfset stFilter.stFields.team1 = StructNew()>
-		<cfset stFilter.stFields.team1.mode = 'isNotEqual'>
-		<cfset stFilter.stFields.team1.value = ''>
-		<cfset stFilter.stFields.team2 = StructNew()>
-		<cfset stFilter.stFields.team2.mode = 'isNotEqual'>
-		<cfset stFilter.stFields.team2.value = ''>
+		<cfset stFilter.stFields.status = StructNew()>
+		<cfset stFilter.stFields.status.mode = 'isEqual'>
+		<cfset stFilter.stFields.status.value = 'done'>
 		
 		<cfinvoke component="#application.lanshock.oFactory.load('tournament_type_se_match','reactorGateway')#" method="getRecords" returnvariable="qMatches">
 			<cfinvokeargument name="stFilter" value="#stFilter#">
@@ -546,7 +631,7 @@ $LastChangedRevision$
 			<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_se')#" method="updateMatch">
 				<cfinvokeargument name="tournamentid" value="#arguments.tournamentid#">
 				<cfinvokeargument name="matchid" value="#qMatchesFirstRound.id#">
-				<cfinvokeargument name="status" value="reset">
+				<cfinvokeargument name="status" value="clear">
 			</cfinvoke>
 			
 			<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_se')#" method="updateMatch">

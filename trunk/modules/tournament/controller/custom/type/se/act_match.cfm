@@ -9,143 +9,97 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 72 $
 --->
 
-<cfparam name="attributes.markteam" default="">
-<cfif session.oUser.checkPermissions('manage')>
-	<cfparam name="attributes.showstatus" default="false">
-<cfelse>
-	<cfset attributes.showstatus = false>
-</cfif>
-<cfparam name="attributes.reset_matches" default="false">
-<cfparam name="attributes.randomize_first_round" default="false">
-<cfparam name="attributes.calculateMatches" default="false">
+<cfset sCacheKey = 'module:tournament:#attributes.tournamentid#:matchview'>
 
-<cfif attributes.calculateMatches>
-	<cfinvoke component="#application.lanshock.oFactory.load(bCache=false,sObject='lanshock.modules.tournament.model.type_se')#" method="calculateMatches" returnvariable="aStatus">
-		<cfinvokeargument name="tournamentid" value="#attributes.tournamentid#">
+<cfif session.oUser.checkPermissions('manage')>
+	<cfparam name="attributes.reset_matches" default="false">
+	<cfparam name="attributes.randomize_first_round" default="false">
+	<cfparam name="attributes.calculateMatches" default="false">
+
+	<cfif attributes.calculateMatches>
+		<cfset application.lanshock.oCache.drop(sCacheKey)>
+		
+		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_se')#" method="calculateMatches">
+			<cfinvokeargument name="tournamentid" value="#attributes.tournamentid#">
+		</cfinvoke>
+		
+		<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&tournamentid=#attributes.tournamentid#')#" addtoken="false">
+	</cfif>
+	
+	<cfif qTournament.status EQ 'warmup'>
+		
+		<cfif attributes.reset_matches>
+			<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_se')#" method="resetAllMatches">
+				<cfinvokeargument name="tournamentid" value="#qTournament.id#">
+			</cfinvoke>
+
+			<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_se')#" method="createAllMatches">
+				<cfinvokeargument name="tournamentid" value="#attributes.tournamentid#">
+			</cfinvoke>
+			
+			<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&tournamentid=#attributes.tournamentid#')#" addtoken="false">
+		</cfif>
+		
+		<cfif attributes.randomize_first_round>
+			<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_se')#" method="randomizeFirstRound">
+				<cfinvokeargument name="tournamentid" value="#qTournament.id#">
+			</cfinvoke>
+			
+			<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&tournamentid=#attributes.tournamentid#')#" addtoken="false">
+		</cfif>
+	
+	</cfif>
+</cfif>
+
+<cfif NOT application.lanshock.oCache.exists(sCacheKey)>
+
+	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_se')#" method="getMatches" returnvariable="qMatches">
+		<cfinvokeargument name="tournamentid" value="#qTournament.id#">
 	</cfinvoke>
 	
-	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&tournamentid=#attributes.tournamentid#')#" addtoken="false">
-</cfif>
-
-<cfif qTournament.status EQ 'warmup'>
+	<cfset stHtmlMatches = StructNew()>
 	
-	<cfif attributes.reset_matches>
-		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_se')#" method="resetAllMatches">
-			<cfinvokeargument name="tournamentid" value="#qTournament.id#">
-		</cfinvoke>
-		
-		<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&tournamentid=#attributes.tournamentid#')#" addtoken="false">
-	</cfif>
+	<cfloop query="qMatches">
 	
-	<cfif attributes.randomize_first_round>
-		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_se')#" method="randomizeFirstRound">
-			<cfinvokeargument name="tournamentid" value="#qTournament.id#">
-		</cfinvoke>
+		<cfset sClass = 'match_status_open'>
+		<cfif len(checkedby_admin) OR qMatches.status EQ 'done'>
+			<cfset sClass = 'match_status_checked'>
+		<cfelseif len(submittedby_dt) OR len(checkedby_dt)>
+			<cfset sClass = 'match_status_submitted'>
+		</cfif>
+		<cfset bShowLink = false>
+		<cfif qTournament.status NEQ 'signup' AND (status NEQ 'empty' OR session.oUser.checkPermissions('manage'))>
+			<cfset bShowLink = true>
+		</cfif>
 		
-		<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&tournamentid=#attributes.tournamentid#')#" addtoken="false">
-	</cfif>
-
-</cfif>
-
-<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_se')#" method="getMatches" returnvariable="qMatches">
-	<cfinvokeargument name="tournamentid" value="#qTournament.id#">
-</cfinvoke>
-
-<cfsavecontent variable="HtmlBox">
-	<cfoutput>
-		#request.content.unknown_team#<br>
-		#request.content.versus_short#<br>
-		#request.content.unknown_team#
-	</cfoutput>
-</cfsavecontent>
-
-<cfset stHtmlMatches = StructNew()>
-<cfset stHtmlMatches['blank'] = HtmlBox>
-
-<cfloop query="qMatches">
-
-	<cfscript>
-		sTeamPre = '';
-		sTeamPost = '';
-				
-		if(len(team1_name)){
-			if(len(team1_name) GT 12) sTeamname = '#left(team1_name,12)#...';
-			else sTeamname = team1_name;
-			
-			if(winner EQ 'team1'){
-				if(attributes.markteam EQ team1){
-					sTeamPre = '<strong><span style="color: red;">';
-					sTeamPost = '</span></strong>';
-				}
-				else{
-					sTeamPre = '<strong>';
-					sTeamPost = '</strong>';
-				}
-			}
-			else if(attributes.markteam EQ team1){
-				sTeamPre = '<span style="color: red;">';
-				sTeamPost = '</span>';
-			}
-		}
-		else{
-			sTeamName = request.content.unknown_team;
-		}
+		<cfset bHasTeam1 = false>
+		<cfif len(qMatches.team1_name)>
+			<cfset bHasTeam1 = true>
+		</cfif>
+		<cfset bHasTeam2 = false>
+		<cfif len(qMatches.team2_name)>
+			<cfset bHasTeam2 = true>
+		</cfif>
 		
-		sTeam2Pre = '';
-		sTeam2Post = '';
-				
-		if(len(team2_name)){
-			if(len(team2_name) GT 12) sTeam2Name = '#left(team2_name,12)#...';
-			else sTeam2Name = team2_name;
-			
-			if(winner EQ 'team2'){
-				if(attributes.markteam EQ team2){
-					sTeam2Pre = '<strong><span style="color: red;">';
-					sTeam2Post = '</span></strong>';
-				}
-				else{
-					sTeam2Pre = '<strong>';
-					sTeam2Post = '</strong>';
-				}
-			}
-			else if(attributes.markteam EQ team2){
-				sTeam2Pre = '<span style="color: red;">';
-				sTeam2Post = '</span>';
-			}
-		}
-		else{
-			sTeam2Name = request.content.unknown_team;
-		}
-	</cfscript>
-	
-	<cfsavecontent variable="HtmlBox">
-		<cfoutput>
-			<cfif attributes.showstatus>
-				<cfscript>
-					if(len(checkedby_admin)) statuscolor = '##67C72E'; // green
-					else if(len(submittedby_dt) OR len(checkedby_dt)) statuscolor = '##EDB42E'; // orange
-					else statuscolor = '##EA6C0F'; // red
-				</cfscript>
-				<div style="background-color: #statuscolor#">
-			</cfif>
-			<cfif qTournament.status NEQ 'signup' AND (status NEQ 'empty' OR session.oUser.checkPermissions('manage'))>
-				<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.matchdetails&tournamentid=#qTournament.id#&matchid=#id#')#">
-			</cfif>
-			<span title="#team1_name#">#sTeamPre##sTeamName##sTeamPost#</span><br>
-			#request.content.versus_short#<br>
-			<span title="#team2_name#">#sTeam2Pre##sTeam2Name##sTeam2Post#</span>
-			<cfif qTournament.status NEQ 'signup' AND (status NEQ 'empty' OR session.oUser.checkPermissions('manage'))>
-				</a>
-			</cfif>
-			<cfif attributes.showstatus>
+		<cfsavecontent variable="HtmlBox">
+			<cfoutput>
+				<div class="#sClass# team_#qMatches.team1#_box team_#qMatches.team2#_box">
+				<cfif bShowLink>
+					<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.matchdetails&tournamentid=#qTournament.id#&matchid=#id#')#">
+				</cfif>
+				<span class="team_name team_#qMatches.team1#<cfif winner EQ 'team1'> team_winner<cfelseif winner EQ 'team2'> team_loser</cfif><cfif NOT bHasTeam1> team_wildcard</cfif>"><cfif bHasTeam1>#qMatches.team1_name#<cfelse>#request.content.unknown_team#</cfif></span>
+				<span class="team_delimiter">#request.content.versus_short#</span>
+				<span class="team_name team_#qMatches.team2#<cfif winner EQ 'team2'> team_winner<cfelseif winner EQ 'team1'> team_loser</cfif><cfif NOT bHasTeam2> team_wildcard</cfif>"><cfif bHasTeam2>#qMatches.team2_name#<cfelse>#request.content.unknown_team#</cfif></span>
+				<cfif bShowLink>
+					</a>
+				</cfif>
 				</div>
-			</cfif>
-		</cfoutput>
-	</cfsavecontent>
+			</cfoutput>
+		</cfsavecontent>
+		
+		<cfset stHtmlMatches['#col#_#row#'] = HtmlBox>
+	</cfloop>
 	
-	<cfscript>
-		stHtmlMatches['#col#_#row#'] = HtmlBox;
-	</cfscript>
-</cfloop>
+</cfif>
 
 <cfsetting enablecfoutputonly="No">

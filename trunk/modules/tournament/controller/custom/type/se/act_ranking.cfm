@@ -9,10 +9,6 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 72 $
 --->
 
-<cfinvoke component="#application.lanshock.oFactory.load(bCache=false,sObject='lanshock.modules.tournament.model.type_se')#" method="calculateRanking">
-	<cfinvokeargument name="tournamentid" value="#qTournament.id#">
-</cfinvoke>
-
 <cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_se')#" method="getRanking" returnvariable="qRanking">
 	<cfinvokeargument name="tournamentid" value="#qTournament.id#">
 </cfinvoke>
