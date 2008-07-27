@@ -44,6 +44,7 @@ RemoveFormat		: "Fjern format",
 InsertLinkLbl		: "Lenke",
 InsertLink			: "Sett inn/Rediger lenke",
 RemoveLink			: "Fjern lenke",
+VisitLink			: "Open Link",	//MISSING
 Anchor				: "Sett inn/Rediger anker",
 AnchorDelete		: "Remove Anchor",	//MISSING
 InsertImageLbl		: "Bilde",
@@ -72,6 +73,9 @@ BlockJustify		: "Blokkjuster",
 DecreaseIndent		: "Senk nivå",
 IncreaseIndent		: "Øk nivå",
 Blockquote			: "Blockquote",	//MISSING
+CreateDiv			: "Create Div Container",	//MISSING
+EditDiv				: "Edit Div Container",	//MISSING
+DeleteDiv			: "Remove Div Container",	//MISSING
 Undo				: "Angre",
 Redo				: "Gjør om",
 NumberedListLbl		: "Numrert liste",
@@ -157,6 +161,7 @@ UnknownToolbarSet	: "Verktøylinjesett \"%1\" finnes ikke",
 NoActiveX			: "Din nettleser's sikkerhetsinstillinger kan begrense noen av funksjonene i redigeringsverktøyet. Du må aktivere \"Kjør ActiveXkontroller og plugins\". Du kan oppleve feil og advarsler om manglende funksjoner",
 BrowseServerBlocked : "Kunne ikke åpne dialogboksen for filarkiv. Pass på at du har slått av popupstoppere.",
 DialogBlocked		: "Kunne ikke åpne dialogboksen. Pass på at du har slått av popupstoppere.",
+VisitLinkBlocked	: "It was not possible to open a new window. Make sure all popup blockers are disabled.",	//MISSING
 
 // Dialogs
 DlgBtnOK			: "OK",
@@ -511,5 +516,11 @@ DlgAboutAboutTab	: "Om",
 DlgAboutBrowserInfoTab	: "Nettleserinfo",
 DlgAboutLicenseTab	: "Lisens",
 DlgAboutVersion		: "versjon",
-DlgAboutInfo		: "For further information go to"	//MISSING
+DlgAboutInfo		: "For further information go to",	//MISSING
+
+// Div Dialog
+DlgDivGeneralTab	: "General",	//MISSING
+DlgDivAdvancedTab	: "Advanced",	//MISSING
+DlgDivStyle		: "Style",	//MISSING
+DlgDivInlineStyle	: "Inline Style"	//MISSING
 };

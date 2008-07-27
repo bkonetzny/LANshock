@@ -44,6 +44,7 @@ RemoveFormat		: "Elimina Format",
 InsertLinkLbl		: "Enllaç",
 InsertLink			: "Insereix/Edita enllaç",
 RemoveLink			: "Elimina enllaç",
+VisitLink			: "Open Link",	//MISSING
 Anchor				: "Insereix/Edita àncora",
 AnchorDelete		: "Elimina àncora",
 InsertImageLbl		: "Imatge",
@@ -72,6 +73,9 @@ BlockJustify		: "Justificat",
 DecreaseIndent		: "Redueix el sagnat",
 IncreaseIndent		: "Augmenta el sagnat",
 Blockquote			: "Bloc de cita",
+CreateDiv			: "Create Div Container",	//MISSING
+EditDiv				: "Edit Div Container",	//MISSING
+DeleteDiv			: "Remove Div Container",	//MISSING
 Undo				: "Desfés",
 Redo				: "Refés",
 NumberedListLbl		: "Llista numerada",
@@ -157,6 +161,7 @@ UnknownToolbarSet	: "Conjunt de barra d'eines \"%1\" inexistent",
 NoActiveX			: "Les preferències del navegador poden limitar algunes funcions d'aquest editor. Cal habilitar l'opció \"Executa controls ActiveX i plug-ins\". Poden sorgir errors i poden faltar algunes funcions.",
 BrowseServerBlocked : "El visualitzador de recursos no s'ha pogut obrir. Assegura't de que els bloquejos de finestres emergents estan desactivats.",
 DialogBlocked		: "No ha estat possible obrir una finestra de diàleg. Assegura't de que els bloquejos de finestres emergents estan desactivats.",
+VisitLinkBlocked	: "It was not possible to open a new window. Make sure all popup blockers are disabled.",	//MISSING
 
 // Dialogs
 DlgBtnOK			: "D'acord",
@@ -511,5 +516,11 @@ DlgAboutAboutTab	: "Quant a",
 DlgAboutBrowserInfoTab	: "Informació del navegador",
 DlgAboutLicenseTab	: "Llicència",
 DlgAboutVersion		: "versió",
-DlgAboutInfo		: "Per a més informació aneu a"
+DlgAboutInfo		: "Per a més informació aneu a",
+
+// Div Dialog
+DlgDivGeneralTab	: "General",	//MISSING
+DlgDivAdvancedTab	: "Advanced",	//MISSING
+DlgDivStyle		: "Style",	//MISSING
+DlgDivInlineStyle	: "Inline Style"	//MISSING
 };
