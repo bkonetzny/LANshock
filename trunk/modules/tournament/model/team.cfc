@@ -25,7 +25,7 @@ $LastChangedRevision$
 		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qTeams">
 			SELECT t.id, t.leaderid, t.autoacceptids, t.leagueid, u.name AS leadername, u.email, <cfif qTournament.teamsize EQ 1>u.name<cfelse>t.name</cfif>
 			FROM tournament_team t
-			LEFT JOIN user u ON t.leaderid = u.id
+			INNER JOIN user u ON t.leaderid = u.id
 			WHERE t.tournamentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.tournamentid#">
 			ORDER BY t.name ASC, leadername ASC
 		</cfquery>
@@ -71,7 +71,7 @@ $LastChangedRevision$
 			SELECT t.leaderid, t.autoacceptids, t.leagueid, <cfif qTournament.teamsize EQ 1>u.name<cfelse>t.name</cfif>
 			FROM tournament_team t
 			<cfif qTournament.teamsize EQ 1>
-				LEFT JOIN user u ON t.leaderid = u.id
+				INNER JOIN user u ON t.leaderid = u.id
 			</cfif> 
 			WHERE t.id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.teamid#">
 			AND t.tournamentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.tournamentid#">
@@ -80,9 +80,11 @@ $LastChangedRevision$
 		<cfif qTeams.recordcount>
 		
 			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qPlayers">
-				SELECT id, userid, status
-				FROM tournament_player
-				WHERE teamid = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.teamid#">
+				SELECT p.id, p.userid, p.status, u.name, u.firstname, u.lastname
+				FROM tournament_player p
+				INNER JOIN user u ON p.userid = u.id
+				WHERE p.teamid = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.teamid#">
+				ORDER BY p.status ASC
 			</cfquery>
 		
 			<cfset stTeam.id = arguments.teamid>
@@ -108,7 +110,7 @@ $LastChangedRevision$
 		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qTeamCurrentUser">
 			SELECT t.id, t.name
 			FROM tournament_team t
-			LEFT JOIN tournament_player p ON t.id = p.teamid AND p.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.userid#">
+			INNER JOIN tournament_player p ON t.id = p.teamid AND p.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.userid#">
 			WHERE t.tournamentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.tournamentid#">
 		</cfquery>
 		
@@ -180,40 +182,42 @@ $LastChangedRevision$
 		
 	</cffunction>
 
-	<cffunction name="joinTeam" access="public" returntype="boolean" output="false">
+	<cffunction name="joinTeam" access="public" returntype="void" output="false">
+		<cfargument name="tournamentid" required="true" type="numeric">
 		<cfargument name="teamid" required="true" type="numeric">
 		<cfargument name="userid" required="true" type="numeric">
 	
-		<cfset var status = "awaiting_authorisation">
+		<cfset var sStatus = "awaiting_authorisation">
+		<cfset var stTeam = StructNew()>
 	
 		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.team')#" method="getTeamData" returnvariable="stTeam">
+			<cfinvokeargument name="tournamentid" value="#arguments.tournamentid#">
 			<cfinvokeargument name="teamid" value="#arguments.teamid#">
 		</cfinvoke>
 		
-		<cfset queryobject = stTeam.players>
-		
-		<cfif NOT ListFind(ValueList(queryobject.userid),arguments.userid)>
+		<cfif NOT ListFind(ValueList(stTeam.players.userid),arguments.userid)>
 		
 			<cfif ListFind(stTeam.autoacceptids,arguments.userid)>
-				<cfset status = "ready">
+				<cfset sStatus = "ready">
 			</cfif>
 	
 			<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 				INSERT INTO tournament_player (userid, teamid, status)
 				VALUES (<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.userid#">,
 						<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.teamid#">,
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#status#">)
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#sStatus#">)
 			</cfquery>
 		
 		</cfif>
 		
-		<cfreturn true>
-		
 	</cffunction>
 
-	<cffunction name="leaveTeam" access="public" returntype="boolean" output="false">
+	<cffunction name="leaveTeam" access="public" returntype="void" output="false">
+		<cfargument name="tournamentid" required="true" type="numeric">
 		<cfargument name="teamid" required="true" type="numeric">
 		<cfargument name="userid" required="true" type="numeric">
+
+		<cfset var stTeam = StructNew()>
 
 		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 			DELETE FROM tournament_player
@@ -222,6 +226,7 @@ $LastChangedRevision$
 		</cfquery>
 	
 		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.team')#" method="getTeamData" returnvariable="stTeam">
+			<cfinvokeargument name="tournamentid" value="#arguments.tournamentid#">
 			<cfinvokeargument name="teamid" value="#arguments.teamid#">
 		</cfinvoke>
 		
@@ -233,11 +238,9 @@ $LastChangedRevision$
 		
 		</cfif>
 		
-		<cfreturn true>
-		
 	</cffunction>
 
-	<cffunction name="removeTeam" access="public" returntype="boolean" output="false">
+	<cffunction name="removeTeam" access="public" returntype="void" output="false">
 		<cfargument name="teamid" required="true" type="numeric">
 		
 		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
@@ -249,8 +252,6 @@ $LastChangedRevision$
 			DELETE FROM tournament_team
 			WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.teamid#">
 		</cfquery>
-		
-		<cfreturn true>
 		
 	</cffunction>
 

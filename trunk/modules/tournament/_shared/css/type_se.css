@@ -1,0 +1,39 @@
+table.match_plan {width: auto; padding: 0px; margin: 0px; border: 0px;}
+table.match_plan td {padding: 0px; margin: 0px; border: 0px;}
+table.match {margin:0px; padding:0px; width:116px; font-size:10px; line-height:8px;}
+
+tr.match_container td {height: 50px;}
+tr.match_container td.match_box {background-color: #ccc; width: 100px; height: 48px; text-align: center; border: 1px solid #fff;}
+td.decorator {width: 8px; text-align: right;}
+
+.match_plan * a {text-decoration: none;}
+.team_name {display: block; height: 12px; white-space:nowrap; width: 86px; overflow:hidden;}
+.team_delimiter {display: block; color: white; text-align: center;}
+.team_wildcard, .team_unknown {display: block; color: white; text-align: center; font-style: italic;}
+
+.match_box div{
+	height: 48px;
+	line-height: 12px;
+	overflow: hidden;
+}
+
+.match_box div a{
+	height: 43px;
+	display: block;
+	padding-top: 5px;
+	padding-left: 5px;
+	text-align: left;
+}
+
+.match_status_open_marker {border: 1px solid red;}
+.match_status_submitted_marker {border: 1px solid orange;}
+.match_status_checked_marker {border: 1px solid green;}
+
+.team_winner {font-weight: bold; color: green;}
+/*.team_loser {color: red;}*/
+
+.team_marker {background-color: green; color: white; font-weight: bold;}
+.team_marker_box {background-color: orange;}
+
+.stats_win {color: green;}
+.stats_lose {color: red;}

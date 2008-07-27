@@ -23,30 +23,36 @@ $LastChangedRevision$
 	</div>
 </cfif>
 
-<table>
-	<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.signup&tournamentid=#attributes.tournamentid#')#" method="post">
-	<input type="hidden" name="form_submitted" value="true">
-	<cfif qTournament.teamsize NEQ 1>
-		<tr>
-			<td colspan="2">#request.content.team_name#<br>
-				<input type="text" name="name" maxlength="255" value="#HTMLEditFormat(attributes.name)#"></td>
-		</tr>
-	</cfif>
-	<cfif len(qTournament.export_league)>
-		<tr>
-			<td colspan="2">#request.content['team_id_' & qTournament.export_league]#<br>
-				<input type="text" name="leagueid" maxlength="255" value="#HTMLEditFormat(attributes.leagueid)#"></td>
-		</tr>
-	</cfif>
-	<tr>
-		<td><input type="checkbox" name="rules_accepted" id="rules_accepted" value="true"></td>
-		<td><label for="rules_accepted">#request.content.i_accept_the_rules#</label></td>
-	</tr>
-	<tr>
-		<td colspan="2"><input type="Submit" value="#request.content.signup_submit#"> <input type="button" value="#request.content.form_cancel#" onClick="javascript:document.location.href('#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.teams&tournamentid=#attributes.tournamentid#')#')"></td>
-	</tr>
-	</form>
-</table>
+<form class="uniForm" action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post">
+	<div class="hidden">
+		<input type="hidden" name="form_submitted" value="true"/>
+		<input type="hidden" name="tournamentid" value="#attributes.tournamentid#"/>
+	</div>
+	
+	<fieldset class="inlineLabels">
+		<legend>#request.content.signup_headline#</legend>
+		<cfif qTournament.teamsize NEQ 1>
+			<div class="ctrlHolder">
+				<label for="name"><em>*</em> #request.content.team_name#</label>
+				<input type="text" class="textInput" name="name" id="name" value="#HTMLEditFormat(attributes.name)#" maxlength="20"/>
+			</div>
+		</cfif>
+		<cfif len(qTournament.export_league)>
+			<div class="ctrlHolder">
+				<label for="leagueid">#request.content['team_id_' & qTournament.export_league]#</label>
+				<input type="text" class="textInput" name="leagueid" id="leagueid" value="#HTMLEditFormat(attributes.leagueid)#" maxlength="20"/>
+			</div>
+		</cfif>
+		<div class="ctrlHolder">
+			<label for="rules_accepted" class="inlineLabel"><input type="checkbox" name="rules_accepted" id="rules_accepted" value="true"/> <em>*</em> #request.content.i_accept_the_rules#</label>
+		</div>
+	</fieldset>
+
+	<div class="buttonHolder">
+		<button type="submit" class="submitButton">#request.content.form_save#</button>
+		<button type="cancel" class="cancelButton" onclick="javascript:document.location.href('#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.teams&tournamentid=#attributes.tournamentid#')#');return false;">#request.content.form_cancel#</button>
+	</div>
+</form>
 </cfoutput>
 
 <cfsetting enablecfoutputonly="No">

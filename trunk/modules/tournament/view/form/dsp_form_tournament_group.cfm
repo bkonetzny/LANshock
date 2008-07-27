@@ -121,9 +121,9 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="id" id="formrow_3E1944AC80F24EEAA2A64BC4F363AC85" value="#otournament_group.getid()#" />
+	<input type="hidden" name="id" id="formrow_A9B2E3AC0DD54BA080E0ED40FFCEE52D" value="#otournament_group.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_3E1944AC80F24EEAA2A64BC4F363AC85">#request.content.tournament_group_rowtype_label_id#</label>
+		<label for="formrow_A9B2E3AC0DD54BA080E0ED40FFCEE52D">#request.content.tournament_group_rowtype_label_id#</label>
 		#Trim(otournament_group.getid())#
 	</div>
 	</cfif>
@@ -138,8 +138,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_1A39D99494C243228031C744DE0C3B5E"><em>*</em> #request.content.tournament_group_rowtype_label_name#</label>
-		<input type="text" class="textInput" name="name" id="formrow_1A39D99494C243228031C744DE0C3B5E" value="#Trim(otournament_group.getname())#"/>
+		<label for="formrow_5BAD90393CC44561849CCCFD5E86CC3E"><em>*</em> #request.content.tournament_group_rowtype_label_name#</label>
+		<input type="text" class="textInput" name="name" id="formrow_5BAD90393CC44561849CCCFD5E86CC3E" value="#Trim(otournament_group.getname())#"/>
 	</div>
 				
 			
@@ -152,17 +152,17 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_E76F033BA7DC4D1DA9BC6D8E2439D462"><em>*</em> #request.content.tournament_group_rowtype_label_description#</label>
-		<textarea name="description" id="formrow_E76F033BA7DC4D1DA9BC6D8E2439D462">#Trim(otournament_group.getdescription())#</textarea>
+		<label for="formrow_03741793EF704879997BF32183CD97A8"><em>*</em> #request.content.tournament_group_rowtype_label_description#</label>
+		<textarea name="description" id="formrow_03741793EF704879997BF32183CD97A8">#Trim(otournament_group.getdescription())#</textarea>
 			<script type="text/javascript">
 			<!--
 				var sBasePath = "#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/";
-				var oFCKeditor_formrow_E76F033BA7DC4D1DA9BC6D8E2439D462 = new FCKeditor('description');
-				oFCKeditor_formrow_E76F033BA7DC4D1DA9BC6D8E2439D462.BasePath = sBasePath + "fckeditor/";
-				oFCKeditor_formrow_E76F033BA7DC4D1DA9BC6D8E2439D462.Config['CustomConfigurationsPath'] = sBasePath + "lanshock_fckeditor_config.js";
-				oFCKeditor_formrow_E76F033BA7DC4D1DA9BC6D8E2439D462.Value = '';
+				var oFCKeditor_formrow_03741793EF704879997BF32183CD97A8 = new FCKeditor('description');
+				oFCKeditor_formrow_03741793EF704879997BF32183CD97A8.BasePath = sBasePath + "fckeditor/";
+				oFCKeditor_formrow_03741793EF704879997BF32183CD97A8.Config['CustomConfigurationsPath'] = sBasePath + "lanshock_fckeditor_config.js";
+				oFCKeditor_formrow_03741793EF704879997BF32183CD97A8.Value = '';
 				Ext.onReady(function(){
-					oFCKeditor_formrow_E76F033BA7DC4D1DA9BC6D8E2439D462.ReplaceTextarea();
+					oFCKeditor_formrow_03741793EF704879997BF32183CD97A8.ReplaceTextarea();
 				});
 			//-->
 			</script>
@@ -178,8 +178,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_4B11A8EBE85649C0BC56B7A61FA41B8E">#request.content.tournament_group_rowtype_label_maxsignups#</label>
-		<input type="text" class="textInput" name="maxsignups" id="formrow_4B11A8EBE85649C0BC56B7A61FA41B8E" value="#Trim(otournament_group.getmaxsignups())#"/>
+		<label for="formrow_D660E88CA9F14BD4A4C18B5BA8322919">#request.content.tournament_group_rowtype_label_maxsignups#</label>
+		<input type="text" class="textInput" name="maxsignups" id="formrow_D660E88CA9F14BD4A4C18B5BA8322919" value="#Trim(otournament_group.getmaxsignups())#"/>
 	</div>
 				
 			
@@ -204,8 +204,8 @@
 	
 	<cfset sReltournament_season = otournament_group.gettournament_season().getid()>
 	<div class="ctrlHolder">
-		<label for="formrow_FCA08F857C54404CB642A753A8CDADFE">tournament_season</label>
-		<select class="selectInput" name="season_id" id="formrow_FCA08F857C54404CB642A753A8CDADFE">
+		<label for="formrow_727E2D0F51E345568057452194840C34">tournament_season</label>
+		<select class="selectInput" name="season_id" id="formrow_727E2D0F51E345568057452194840C34">
 			<option value=""></option>
 			<cfloop query="stRelated.stManyToOne.tournament_season.qData">
 				<option value="#stRelated.stManyToOne.tournament_season.qData.optionvalue#"<cfif sReltournament_season EQ stRelated.stManyToOne.tournament_season.qData.optionvalue> selected="selected"</cfif>>#stRelated.stManyToOne.tournament_season.qData.optionname#</option>

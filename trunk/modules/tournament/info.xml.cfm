@@ -7,7 +7,7 @@ $LastChangedDate$
 $LastChangedBy$
 $LastChangedRevision$
 -->
-<module name="Tournament System" version="2.0.0.0" date="2008-07-22" author="LANshock" url="http://www.lanshock.com">
+<module name="Tournament System" version="2.0.0.0" date="2008-07-27" author="LANshock" url="http://www.lanshock.com">
 	
 	<general requiresLogin="false"/>
 	
@@ -27,9 +27,6 @@ $LastChangedRevision$
 		<item action="tournament_team_listing" permissions="tournament_team"/>
 		<item action="tournament_player_listing" permissions="tournament_player"/>
 		<item action="tournament_tournament_listing" permissions="tournament_tournament"/>
-		<!-- <item action="tournament_type_se_match_listing" permissions="tournament_type_se_match"/>
-		<item action="tournament_type_se_result_listing" permissions="tournament_type_se_result"/>
-		<item action="tournament_type_se_ranking_listing" permissions="tournament_type_se_ranking"/> -->
 	</navigation>
 	
 	<security>
@@ -104,7 +101,7 @@ $LastChangedRevision$
 			<fk field="teamid" type="manyToOne" mapping="tournament_team.id"/>
 			<fk field="userid" type="manyToOne" mapping="user.id"/>
 		</table>
-		<table name="tournament_type_se_match">
+		<table name="tournament_match">
 			<field name="id" type="integer" len="10" null="false" special="auto_increment"/>
 			<field name="tournamentid" type="integer" len="10" null="true" default="NULL"/>
 			<field name="status" type="varchar" len="255" null="true" default="NULL"/>
@@ -122,79 +119,39 @@ $LastChangedRevision$
 			<field name="checkedby_admin" type="integer" len="10" null="true" default="NULL"/>
 			<field name="checkedby_admin_dt" type="datetime" null="true" default="NULL"/>
 			<pk fields="id"/>
-			<fk field="tournamentid" mapping="tournament_tournaments.id"/>
+			<fk field="tournamentid" type="manyToOne" mapping="tournament_tournament.id"/>
 			<fk field="team1" mapping="tournament_teams.id"/>
 			<fk field="team2" mapping="tournament_teams.id"/>
 			<fk field="submittedby_userid" mapping="user.id"/>
-			<fk field="submittedby_teamid" mapping="tournament_teams.id"/>
+			<fk field="submittedby_teamid" mapping="tournament_team.id"/>
 			<fk field="checkedby_userid" mapping="user.id"/>
-			<fk field="checkedby_teamid" mapping="tournament_teams.id"/>
+			<fk field="checkedby_teamid" mapping="tournament_team.id"/>
 			<fk field="checkedby_admin" mapping="user.id"/>
+			<fk field="id" type="oneToMany" mapping="tournament_type_se_result.matchid"/>
 		</table>
-		<table name="tournament_type_se_result">
+		<table name="tournament_result">
 			<field name="id" type="integer" len="10" null="false" special="auto_increment"/>
 			<field name="matchid" type="integer" len="10" null="false" default="0"/>
 			<field name="team1_result" type="integer" len="10" null="false" default="0"/>
 			<field name="team2_result" type="integer" len="10" null="false" default="0"/>
 			<pk fields="id"/>
-			<fk field="matchid" mapping="tournament_type_se_matches.id"/>
+			<fk field="matchid" type="manyToOne" mapping="tournament_type_se_match.id"/>
 		</table>
-		<table name="tournament_type_se_ranking">
+		<table name="tournament_ranking">
 			<field name="id" type="integer" len="11" null="false" special="auto_increment"/>
 			<field name="tournamentid" type="integer" len="11" null="false" default="0"/>
 			<field name="teamid" type="integer" len="11" null="false" default="0"/>
 			<field name="pos" type="integer" len="11" null="false" default="0"/>
+			<field name="stats_win" type="integer" len="11" null="false" default="0"/>
+			<field name="stats_lose" type="integer" len="11" null="false" default="0"/>
+			<field name="points_win" type="integer" len="11" null="false" default="0"/>
+			<field name="points_lose" type="integer" len="11" null="false" default="0"/>
 			<pk fields="id"/>
-			<fk field="tournamentid" mapping="tournament_tournaments.id"/>
-			<fk field="teamid" mapping="tournament_teams.id"/>
+			<fk field="tournamentid" type="manyToOne" mapping="tournament_tournament.id"/>
+			<fk field="teamid" type="manyToOne" mapping="tournament_team.id"/>
 			<index name="IDX_pos" fields="pos"/>
 		</table>
 		<!-- 
-		<table name="tournament_type_de_matches">
-			<field name="id" type="integer" len="10" null="false" special="auto_increment"/>
-			<field name="tournamentid" type="integer" len="10" null="false" default="0"/>
-			<field name="status" type="varchar" len="255" null="false" default=""/>
-			<field name="row" type="integer" len="10" null="false" default="0"/>
-			<field name="col" type="integer" len="10" null="false" default="0"/>
-			<field name="team1" type="integer" len="10" null="false" default="0"/>
-			<field name="team2" type="integer" len="10" null="false" default="0"/>
-			<field name="winner" type="varchar" len="255" null="false" default=""/>
-			<field name="submittedby_userid" type="integer" len="10" null="true" default="NULL"/>
-			<field name="submittedby_teamid" type="integer" len="10" null="true" default="NULL"/>
-			<field name="submittedby_dt" type="datetime" null="true" default="NULL"/>
-			<field name="checkedby_userid" type="integer" len="10" null="true" default="NULL"/>
-			<field name="checkedby_teamid" type="integer" len="10" null="true" default="NULL"/>
-			<field name="checkedby_dt" type="datetime" null="true" default="NULL"/>
-			<field name="checkedby_admin" type="integer" len="10" null="true" default="NULL"/>
-			<field name="checkedby_admin_dt" type="datetime" null="true" default="NULL"/>
-			<pk fields="id"/>
-			<fk field="tournamentid" mapping="tournament_tournaments.id"/>
-			<fk field="team1" mapping="tournament_teams.id"/>
-			<fk field="team2" mapping="tournament_teams.id"/>
-			<fk field="submittedby_userid" mapping="user.id"/>
-			<fk field="submittedby_teamid" mapping="tournament_teams.id"/>
-			<fk field="checkedby_userid" mapping="user.id"/>
-			<fk field="checkedby_teamid" mapping="tournament_teams.id"/>
-			<fk field="checkedby_admin" mapping="user.id"/>
-		</table>
-		<table name="tournament_type_de_results">
-			<field name="id" type="integer" len="10" null="false" special="auto_increment"/>
-			<field name="matchid" type="integer" len="10" null="false" default="0"/>
-			<field name="team1_result" type="integer" len="10" null="false" default="0"/>
-			<field name="team2_result" type="integer" len="10" null="false" default="0"/>
-			<pk fields="id"/>
-			<fk field="matchid" mapping="tournament_type_de_matches.id"/>
-		</table>
-		<table name="tournament_type_de_ranking">
-			<field name="id" type="integer" len="11" null="false" special="auto_increment"/>
-			<field name="tournamentid" type="integer" len="11" null="false" default="0"/>
-			<field name="teamid" type="integer" len="11" null="false" default="0"/>
-			<field name="pos" type="integer" len="11" null="false" default="0"/>
-			<pk fields="id"/>
-			<fk field="tournamentid" mapping="tournament_tournaments.id"/>
-			<fk field="teamid" mapping="tournament_teams.id"/>
-			<index name="IDX_pos" fields="pos"/>
-		</table>
 		<table name="tournament_type_group_matches">
 			<field name="id" type="integer" len="10" null="false" special="auto_increment"/>
 			<field name="tournamentid" type="integer" len="10" null="false" default="0"/>

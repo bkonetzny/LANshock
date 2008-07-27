@@ -23,25 +23,29 @@ $LastChangedRevision$
 	</div>
 </cfif>
 
-<table align="center">
-	<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.team_join')#" method="post">
-	<input type="hidden" name="form_submitted" value="true">
-	<input type="hidden" name="tournamentid" value="#attributes.tournamentid#">
-	<input type="hidden" name="teamid" value="#stTeam.id#">
-	<cfif ListFind(stTeam.autoacceptids, session.userid)>
-		<tr>
-			<td colspan="2">#request.content.team_join_autojoin_found#</td>
-		</tr>
-	</cfif>
-	<tr>
-		<td><input type="checkbox" name="join_accepted" id="join_accepted" value="true"></td>
-		<td><label for="join_accepted">#request.content.i_accept_join#</label></td>
-	</tr>
-	<tr>
-		<td colspan="2" align="center"><input type="Submit" value="#request.content.team_join_submit#"> <input type="button" value="#request.content.form_cancel#" onClick="javascript:document.location.href('#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.teams&tournamentid=#attributes.tournamentid#')#')"></td>
-	</tr>
-	</form>
-</table>
+<cfif ListFind(stTeam.autoacceptids, session.userid)>
+	<p>#request.content.team_join_autojoin_found#</p>
+</cfif>
+
+<form class="uniForm" action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post">
+	<div class="hidden">
+		<input type="hidden" name="form_submitted" value="true"/>
+		<input type="hidden" name="tournamentid" value="#attributes.tournamentid#"/>
+		<input type="hidden" name="teamid" value="#stTeam.id#"/>
+	</div>
+	
+	<fieldset class="inlineLabels">
+		<legend>#request.content.team_join_headline# #stTeam.name#</legend>
+		<div class="ctrlHolder">
+			<label for="join_accepted" class="inlineLabel"><input type="checkbox" name="join_accepted" id="join_accepted" value="true"/> <em>*</em> #request.content.i_accept_join#</label>
+		</div>
+	</fieldset>
+
+	<div class="buttonHolder">
+		<button type="submit" class="submitButton">#request.content.team_join_submit#</button>
+		<button type="cancel" class="cancelButton" onclick="javascript:document.location.href('#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.teams&tournamentid=#attributes.tournamentid#')#');return false;">#request.content.form_cancel#</button>
+	</div>
+</form>
 </cfoutput>
 
 <cfsetting enablecfoutputonly="No">

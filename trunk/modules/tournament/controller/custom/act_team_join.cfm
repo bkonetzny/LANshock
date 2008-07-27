@@ -75,6 +75,7 @@ $LastChangedRevision$
 	<cfif NOT ArrayLen(aError)>
 
 		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.team')#" method="joinTeam">
+			<cfinvokeargument name="tournamentid" value="#attributes.tournamentid#">
 			<cfinvokeargument name="teamid" value="#attributes.teamid#">
 			<cfinvokeargument name="userid" value="#session.userid#">
 		</cfinvoke>

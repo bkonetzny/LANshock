@@ -288,6 +288,110 @@
 		</invoke>
 	</fuseaction>
 	
+	<fuseaction access="public" name="tournament_match_listing">
+		<lanshock:security area="tournament_match"/>
+		
+		<!-- force layout: admin -->
+		<set name="request.layout" value="admin"/>
+		
+		<!-- Listing: I display a list of the records in the tournament_match table. -->
+		<set name="request.page.objectName" value="tournament_match"/>
+		<set name="request.page.description" value="I display a list of the tournament_match records in the table."/>
+		<xfa name="update" value="tournament_match_edit_form"/>
+		<xfa name="delete" value="tournament_match_delete"/>
+		<xfa name="display" value="tournament_match_display"/>
+		<xfa name="add" value="tournament_match_add_form"/>
+		<xfa name="grid_json" value="tournament_match_grid_json"/>
+		
+		<set name="attributes._maxrows" overwrite="false" value="10"/>
+		<set name="attributes._startrow" overwrite="false" value="1"/>
+		
+		<set name="attributes._listSortByFieldList" overwrite="false" value="tournament_match|id|ASC"/>
+		
+		<set name="fieldlist" value="id,tournamentid,status,row,col,team1,team2,winner,submittedby_userid,submittedby_teamid,submittedby_dt,checkedby_userid,checkedby_teamid,checkedby_dt,checkedby_admin,checkedby_admin_dt,"/>
+		<include circuit="udfs" template="udf_appendParam"/>
+		<include circuit="v_tournament" template="list/dsp_list_tournament_match"/>
+	</fuseaction>
+	
+	<fuseaction access="public" lanshock:showlayout="none" name="tournament_match_grid_json">
+		<lanshock:security area="tournament_match"/>
+		
+		<!-- force layout: json -->
+		<set name="request.layout" value="json"/>
+		
+		<!-- params by ext.grid -->
+		<include circuit="tournament" template="list/act_json_filter_tournament_match"/>
+		
+		<invoke method="getRecordsForGrid" object="application.lanshock.oFactory.load('tournament_match','reactorGateway')" returnvariable="request.page.pageContent">
+			<argument name="sortByFieldList" value="tournament_match|#attributes.sort#|#attributes.dir#"/>
+			<argument name="startrow" value="#attributes.start#"/>
+			<argument name="maxrows" value="#attributes.limit#"/>
+			<argument name="filter" value="#stFilters#"/>
+		</invoke>
+	</fuseaction>
+	
+	<fuseaction access="public" name="tournament_match_add_form">
+		<set name="mode" value="insert"/>
+		<xfa name="save" value="tournament_match_action_add"/>
+		<do action="tournament_match_form"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="tournament_match_edit_form">
+		<set name="mode" value="edit"/>
+		<xfa name="save" value="tournament_match_action_update"/>
+		<do action="tournament_match_form"/>
+	</fuseaction>
+	
+	<fuseaction access="private" lanshock:includedCircuit="true" name="tournament_match_form">
+		<lanshock:security area="tournament_match"/>
+		<set name="request.layout" value="admin"/>
+		<xfa name="cancel" value="tournament_match_listing"/>
+		
+		<include circuit="tournament" template="form/act_form_tournament_match"/>
+		
+		<include circuit="tournament" template="form/act_form_loadrelated_tournament_match"/>
+		
+		<!-- snippet 'modules/tournament/controller/form/snippets/act_form_loadrelated_custom_tournament_match.cfm' -->
+		
+		<!-- /snippet -->
+		
+		<include circuit="udfs" template="udf_appendParam"/>
+		<include circuit="v_tournament" template="form/dsp_form_tournament_match"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="tournament_match_action_add">
+		<set name="mode" value="insert"/>
+		<xfa name="save" value="tournament_match_action_add"/>
+		<do action="tournament_match_action_save"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="tournament_match_action_update">
+		<set name="mode" value="edit"/>
+		<xfa name="save" value="tournament_match_action_update"/>
+		<do action="tournament_match_action_save"/>
+	</fuseaction>
+	
+	<fuseaction access="private" lanshock:includedCircuit="true" name="tournament_match_action_save">
+		<lanshock:security area="tournament_match"/>
+		<set name="bHasErrors" value="false"/>
+		<xfa name="continue" value="tournament_match_listing"/>
+		<xfa name="cancel" value="tournament_match_listing"/>
+		<include circuit="tournament" template="form/act_action_save_tournament_match"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="tournament_match_delete">
+		<lanshock:security area="tournament_match"/>
+		
+		<!-- Delete: I delete the selected tournament_match records. -->
+		
+		<!-- force layout: none -->
+		<set name="request.layout" value="none"/>
+		
+		<invoke method="deleteByIDlist" object="application.lanshock.oFactory.load('tournament_match','reactorGateway')" returnvariable="request.page.pageContent">
+			<argument name="jsonData" value="#attributes.jsonData#"/>
+		</invoke>
+	</fuseaction>
+	
 	<fuseaction access="public" name="tournament_player_listing">
 		<lanshock:security area="tournament_player"/>
 		
@@ -388,6 +492,214 @@
 		<set name="request.layout" value="none"/>
 		
 		<invoke method="deleteByIDlist" object="application.lanshock.oFactory.load('tournament_player','reactorGateway')" returnvariable="request.page.pageContent">
+			<argument name="jsonData" value="#attributes.jsonData#"/>
+		</invoke>
+	</fuseaction>
+	
+	<fuseaction access="public" name="tournament_ranking_listing">
+		<lanshock:security area="tournament_ranking"/>
+		
+		<!-- force layout: admin -->
+		<set name="request.layout" value="admin"/>
+		
+		<!-- Listing: I display a list of the records in the tournament_ranking table. -->
+		<set name="request.page.objectName" value="tournament_ranking"/>
+		<set name="request.page.description" value="I display a list of the tournament_ranking records in the table."/>
+		<xfa name="update" value="tournament_ranking_edit_form"/>
+		<xfa name="delete" value="tournament_ranking_delete"/>
+		<xfa name="display" value="tournament_ranking_display"/>
+		<xfa name="add" value="tournament_ranking_add_form"/>
+		<xfa name="grid_json" value="tournament_ranking_grid_json"/>
+		
+		<set name="attributes._maxrows" overwrite="false" value="10"/>
+		<set name="attributes._startrow" overwrite="false" value="1"/>
+		
+		<set name="attributes._listSortByFieldList" overwrite="false" value="tournament_ranking|id|ASC"/>
+		
+		<set name="fieldlist" value="id,tournamentid,teamid,pos,stats_win,stats_lose,points_win,points_lose,"/>
+		<include circuit="udfs" template="udf_appendParam"/>
+		<include circuit="v_tournament" template="list/dsp_list_tournament_ranking"/>
+	</fuseaction>
+	
+	<fuseaction access="public" lanshock:showlayout="none" name="tournament_ranking_grid_json">
+		<lanshock:security area="tournament_ranking"/>
+		
+		<!-- force layout: json -->
+		<set name="request.layout" value="json"/>
+		
+		<!-- params by ext.grid -->
+		<include circuit="tournament" template="list/act_json_filter_tournament_ranking"/>
+		
+		<invoke method="getRecordsForGrid" object="application.lanshock.oFactory.load('tournament_ranking','reactorGateway')" returnvariable="request.page.pageContent">
+			<argument name="sortByFieldList" value="tournament_ranking|#attributes.sort#|#attributes.dir#"/>
+			<argument name="startrow" value="#attributes.start#"/>
+			<argument name="maxrows" value="#attributes.limit#"/>
+			<argument name="filter" value="#stFilters#"/>
+		</invoke>
+	</fuseaction>
+	
+	<fuseaction access="public" name="tournament_ranking_add_form">
+		<set name="mode" value="insert"/>
+		<xfa name="save" value="tournament_ranking_action_add"/>
+		<do action="tournament_ranking_form"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="tournament_ranking_edit_form">
+		<set name="mode" value="edit"/>
+		<xfa name="save" value="tournament_ranking_action_update"/>
+		<do action="tournament_ranking_form"/>
+	</fuseaction>
+	
+	<fuseaction access="private" lanshock:includedCircuit="true" name="tournament_ranking_form">
+		<lanshock:security area="tournament_ranking"/>
+		<set name="request.layout" value="admin"/>
+		<xfa name="cancel" value="tournament_ranking_listing"/>
+		
+		<include circuit="tournament" template="form/act_form_tournament_ranking"/>
+		
+		<include circuit="tournament" template="form/act_form_loadrelated_tournament_ranking"/>
+		
+		<!-- snippet 'modules/tournament/controller/form/snippets/act_form_loadrelated_custom_tournament_ranking.cfm' -->
+		
+		<!-- /snippet -->
+		
+		<include circuit="udfs" template="udf_appendParam"/>
+		<include circuit="v_tournament" template="form/dsp_form_tournament_ranking"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="tournament_ranking_action_add">
+		<set name="mode" value="insert"/>
+		<xfa name="save" value="tournament_ranking_action_add"/>
+		<do action="tournament_ranking_action_save"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="tournament_ranking_action_update">
+		<set name="mode" value="edit"/>
+		<xfa name="save" value="tournament_ranking_action_update"/>
+		<do action="tournament_ranking_action_save"/>
+	</fuseaction>
+	
+	<fuseaction access="private" lanshock:includedCircuit="true" name="tournament_ranking_action_save">
+		<lanshock:security area="tournament_ranking"/>
+		<set name="bHasErrors" value="false"/>
+		<xfa name="continue" value="tournament_ranking_listing"/>
+		<xfa name="cancel" value="tournament_ranking_listing"/>
+		<include circuit="tournament" template="form/act_action_save_tournament_ranking"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="tournament_ranking_delete">
+		<lanshock:security area="tournament_ranking"/>
+		
+		<!-- Delete: I delete the selected tournament_ranking records. -->
+		
+		<!-- force layout: none -->
+		<set name="request.layout" value="none"/>
+		
+		<invoke method="deleteByIDlist" object="application.lanshock.oFactory.load('tournament_ranking','reactorGateway')" returnvariable="request.page.pageContent">
+			<argument name="jsonData" value="#attributes.jsonData#"/>
+		</invoke>
+	</fuseaction>
+	
+	<fuseaction access="public" name="tournament_result_listing">
+		<lanshock:security area="tournament_result"/>
+		
+		<!-- force layout: admin -->
+		<set name="request.layout" value="admin"/>
+		
+		<!-- Listing: I display a list of the records in the tournament_result table. -->
+		<set name="request.page.objectName" value="tournament_result"/>
+		<set name="request.page.description" value="I display a list of the tournament_result records in the table."/>
+		<xfa name="update" value="tournament_result_edit_form"/>
+		<xfa name="delete" value="tournament_result_delete"/>
+		<xfa name="display" value="tournament_result_display"/>
+		<xfa name="add" value="tournament_result_add_form"/>
+		<xfa name="grid_json" value="tournament_result_grid_json"/>
+		
+		<set name="attributes._maxrows" overwrite="false" value="10"/>
+		<set name="attributes._startrow" overwrite="false" value="1"/>
+		
+		<set name="attributes._listSortByFieldList" overwrite="false" value="tournament_result|id|ASC"/>
+		
+		<set name="fieldlist" value="id,matchid,team1_result,team2_result,"/>
+		<include circuit="udfs" template="udf_appendParam"/>
+		<include circuit="v_tournament" template="list/dsp_list_tournament_result"/>
+	</fuseaction>
+	
+	<fuseaction access="public" lanshock:showlayout="none" name="tournament_result_grid_json">
+		<lanshock:security area="tournament_result"/>
+		
+		<!-- force layout: json -->
+		<set name="request.layout" value="json"/>
+		
+		<!-- params by ext.grid -->
+		<include circuit="tournament" template="list/act_json_filter_tournament_result"/>
+		
+		<invoke method="getRecordsForGrid" object="application.lanshock.oFactory.load('tournament_result','reactorGateway')" returnvariable="request.page.pageContent">
+			<argument name="sortByFieldList" value="tournament_result|#attributes.sort#|#attributes.dir#"/>
+			<argument name="startrow" value="#attributes.start#"/>
+			<argument name="maxrows" value="#attributes.limit#"/>
+			<argument name="filter" value="#stFilters#"/>
+		</invoke>
+	</fuseaction>
+	
+	<fuseaction access="public" name="tournament_result_add_form">
+		<set name="mode" value="insert"/>
+		<xfa name="save" value="tournament_result_action_add"/>
+		<do action="tournament_result_form"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="tournament_result_edit_form">
+		<set name="mode" value="edit"/>
+		<xfa name="save" value="tournament_result_action_update"/>
+		<do action="tournament_result_form"/>
+	</fuseaction>
+	
+	<fuseaction access="private" lanshock:includedCircuit="true" name="tournament_result_form">
+		<lanshock:security area="tournament_result"/>
+		<set name="request.layout" value="admin"/>
+		<xfa name="cancel" value="tournament_result_listing"/>
+		
+		<include circuit="tournament" template="form/act_form_tournament_result"/>
+		
+		<include circuit="tournament" template="form/act_form_loadrelated_tournament_result"/>
+		
+		<!-- snippet 'modules/tournament/controller/form/snippets/act_form_loadrelated_custom_tournament_result.cfm' -->
+		
+		<!-- /snippet -->
+		
+		<include circuit="udfs" template="udf_appendParam"/>
+		<include circuit="v_tournament" template="form/dsp_form_tournament_result"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="tournament_result_action_add">
+		<set name="mode" value="insert"/>
+		<xfa name="save" value="tournament_result_action_add"/>
+		<do action="tournament_result_action_save"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="tournament_result_action_update">
+		<set name="mode" value="edit"/>
+		<xfa name="save" value="tournament_result_action_update"/>
+		<do action="tournament_result_action_save"/>
+	</fuseaction>
+	
+	<fuseaction access="private" lanshock:includedCircuit="true" name="tournament_result_action_save">
+		<lanshock:security area="tournament_result"/>
+		<set name="bHasErrors" value="false"/>
+		<xfa name="continue" value="tournament_result_listing"/>
+		<xfa name="cancel" value="tournament_result_listing"/>
+		<include circuit="tournament" template="form/act_action_save_tournament_result"/>
+	</fuseaction>
+	
+	<fuseaction access="public" name="tournament_result_delete">
+		<lanshock:security area="tournament_result"/>
+		
+		<!-- Delete: I delete the selected tournament_result records. -->
+		
+		<!-- force layout: none -->
+		<set name="request.layout" value="none"/>
+		
+		<invoke method="deleteByIDlist" object="application.lanshock.oFactory.load('tournament_result','reactorGateway')" returnvariable="request.page.pageContent">
 			<argument name="jsonData" value="#attributes.jsonData#"/>
 		</invoke>
 	</fuseaction>
@@ -692,327 +1004,15 @@
 		<xfa name="cancel" value="tournament_tournament_listing"/>
 		<include circuit="tournament" template="form/act_action_save_tournament_tournament"/>
 	</fuseaction>
-	
-	<fuseaction access="public" name="tournament_tournament_delete">
+	<fuseaction name="tournament_tournament_delete" access="public">
 		<lanshock:security area="tournament_tournament"/>
 		
 		<!-- Delete: I delete the selected tournament_tournament records. -->
 		
 		<!-- force layout: none -->
-		<set name="request.layout" value="none"/>
-		
-		<invoke method="deleteByIDlist" object="application.lanshock.oFactory.load('tournament_tournament','reactorGateway')" returnvariable="request.page.pageContent">
-			<argument name="jsonData" value="#attributes.jsonData#"/>
-		</invoke>
-	</fuseaction>
-	
-	<fuseaction access="public" name="tournament_type_se_match_listing">
-		<lanshock:security area="tournament_type_se_match"/>
-		
-		<!-- force layout: admin -->
-		<set name="request.layout" value="admin"/>
-		
-		<!-- Listing: I display a list of the records in the tournament_type_se_match table. -->
-		<set name="request.page.objectName" value="tournament_type_se_match"/>
-		<set name="request.page.description" value="I display a list of the tournament_type_se_match records in the table."/>
-		<xfa name="update" value="tournament_type_se_match_edit_form"/>
-		<xfa name="delete" value="tournament_type_se_match_delete"/>
-		<xfa name="display" value="tournament_type_se_match_display"/>
-		<xfa name="add" value="tournament_type_se_match_add_form"/>
-		<xfa name="grid_json" value="tournament_type_se_match_grid_json"/>
-		
-		<set name="attributes._maxrows" overwrite="false" value="10"/>
-		<set name="attributes._startrow" overwrite="false" value="1"/>
-		
-		<set name="attributes._listSortByFieldList" overwrite="false" value="tournament_type_se_match|id|ASC"/>
-		
-		<set name="fieldlist" value="id,tournamentid,status,row,col,team1,team2,winner,submittedby_userid,submittedby_teamid,submittedby_dt,checkedby_userid,checkedby_teamid,checkedby_dt,checkedby_admin,checkedby_admin_dt,"/>
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include circuit="v_tournament" template="list/dsp_list_tournament_type_se_match"/>
-	</fuseaction>
-	
-	<fuseaction access="public" lanshock:showlayout="none" name="tournament_type_se_match_grid_json">
-		<lanshock:security area="tournament_type_se_match"/>
-		
-		<!-- force layout: json -->
-		<set name="request.layout" value="json"/>
-		
-		<!-- params by ext.grid -->
-		<include circuit="tournament" template="list/act_json_filter_tournament_type_se_match"/>
-		
-		<invoke method="getRecordsForGrid" object="application.lanshock.oFactory.load('tournament_type_se_match','reactorGateway')" returnvariable="request.page.pageContent">
-			<argument name="sortByFieldList" value="tournament_type_se_match|#attributes.sort#|#attributes.dir#"/>
-			<argument name="startrow" value="#attributes.start#"/>
-			<argument name="maxrows" value="#attributes.limit#"/>
-			<argument name="filter" value="#stFilters#"/>
-		</invoke>
-	</fuseaction>
-	
-	<fuseaction access="public" name="tournament_type_se_match_add_form">
-		<set name="mode" value="insert"/>
-		<xfa name="save" value="tournament_type_se_match_action_add"/>
-		<do action="tournament_type_se_match_form"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="tournament_type_se_match_edit_form">
-		<set name="mode" value="edit"/>
-		<xfa name="save" value="tournament_type_se_match_action_update"/>
-		<do action="tournament_type_se_match_form"/>
-	</fuseaction>
-	
-	<fuseaction access="private" lanshock:includedCircuit="true" name="tournament_type_se_match_form">
-		<lanshock:security area="tournament_type_se_match"/>
-		<set name="request.layout" value="admin"/>
-		<xfa name="cancel" value="tournament_type_se_match_listing"/>
-		
-		<include circuit="tournament" template="form/act_form_tournament_type_se_match"/>
-		
-		<include circuit="tournament" template="form/act_form_loadrelated_tournament_type_se_match"/>
-		
-		<!-- snippet 'modules/tournament/controller/form/snippets/act_form_loadrelated_custom_tournament_type_se_match.cfm' -->
-		
-		<!-- /snippet -->
-		
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include circuit="v_tournament" template="form/dsp_form_tournament_type_se_match"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="tournament_type_se_match_action_add">
-		<set name="mode" value="insert"/>
-		<xfa name="save" value="tournament_type_se_match_action_add"/>
-		<do action="tournament_type_se_match_action_save"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="tournament_type_se_match_action_update">
-		<set name="mode" value="edit"/>
-		<xfa name="save" value="tournament_type_se_match_action_update"/>
-		<do action="tournament_type_se_match_action_save"/>
-	</fuseaction>
-	
-	<fuseaction access="private" lanshock:includedCircuit="true" name="tournament_type_se_match_action_save">
-		<lanshock:security area="tournament_type_se_match"/>
-		<set name="bHasErrors" value="false"/>
-		<xfa name="continue" value="tournament_type_se_match_listing"/>
-		<xfa name="cancel" value="tournament_type_se_match_listing"/>
-		<include circuit="tournament" template="form/act_action_save_tournament_type_se_match"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="tournament_type_se_match_delete">
-		<lanshock:security area="tournament_type_se_match"/>
-		
-		<!-- Delete: I delete the selected tournament_type_se_match records. -->
-		
-		<!-- force layout: none -->
-		<set name="request.layout" value="none"/>
-		
-		<invoke method="deleteByIDlist" object="application.lanshock.oFactory.load('tournament_type_se_match','reactorGateway')" returnvariable="request.page.pageContent">
-			<argument name="jsonData" value="#attributes.jsonData#"/>
-		</invoke>
-	</fuseaction>
-	
-	<fuseaction access="public" name="tournament_type_se_ranking_listing">
-		<lanshock:security area="tournament_type_se_ranking"/>
-		
-		<!-- force layout: admin -->
-		<set name="request.layout" value="admin"/>
-		
-		<!-- Listing: I display a list of the records in the tournament_type_se_ranking table. -->
-		<set name="request.page.objectName" value="tournament_type_se_ranking"/>
-		<set name="request.page.description" value="I display a list of the tournament_type_se_ranking records in the table."/>
-		<xfa name="update" value="tournament_type_se_ranking_edit_form"/>
-		<xfa name="delete" value="tournament_type_se_ranking_delete"/>
-		<xfa name="display" value="tournament_type_se_ranking_display"/>
-		<xfa name="add" value="tournament_type_se_ranking_add_form"/>
-		<xfa name="grid_json" value="tournament_type_se_ranking_grid_json"/>
-		
-		<set name="attributes._maxrows" overwrite="false" value="10"/>
-		<set name="attributes._startrow" overwrite="false" value="1"/>
-		
-		<set name="attributes._listSortByFieldList" overwrite="false" value="tournament_type_se_ranking|id|ASC"/>
-		
-		<set name="fieldlist" value="id,tournamentid,teamid,pos,"/>
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include circuit="v_tournament" template="list/dsp_list_tournament_type_se_ranking"/>
-	</fuseaction>
-	
-	<fuseaction access="public" lanshock:showlayout="none" name="tournament_type_se_ranking_grid_json">
-		<lanshock:security area="tournament_type_se_ranking"/>
-		
-		<!-- force layout: json -->
-		<set name="request.layout" value="json"/>
-		
-		<!-- params by ext.grid -->
-		<include circuit="tournament" template="list/act_json_filter_tournament_type_se_ranking"/>
-		
-		<invoke method="getRecordsForGrid" object="application.lanshock.oFactory.load('tournament_type_se_ranking','reactorGateway')" returnvariable="request.page.pageContent">
-			<argument name="sortByFieldList" value="tournament_type_se_ranking|#attributes.sort#|#attributes.dir#"/>
-			<argument name="startrow" value="#attributes.start#"/>
-			<argument name="maxrows" value="#attributes.limit#"/>
-			<argument name="filter" value="#stFilters#"/>
-		</invoke>
-	</fuseaction>
-	
-	<fuseaction access="public" name="tournament_type_se_ranking_add_form">
-		<set name="mode" value="insert"/>
-		<xfa name="save" value="tournament_type_se_ranking_action_add"/>
-		<do action="tournament_type_se_ranking_form"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="tournament_type_se_ranking_edit_form">
-		<set name="mode" value="edit"/>
-		<xfa name="save" value="tournament_type_se_ranking_action_update"/>
-		<do action="tournament_type_se_ranking_form"/>
-	</fuseaction>
-	
-	<fuseaction access="private" lanshock:includedCircuit="true" name="tournament_type_se_ranking_form">
-		<lanshock:security area="tournament_type_se_ranking"/>
-		<set name="request.layout" value="admin"/>
-		<xfa name="cancel" value="tournament_type_se_ranking_listing"/>
-		
-		<include circuit="tournament" template="form/act_form_tournament_type_se_ranking"/>
-		
-		<include circuit="tournament" template="form/act_form_loadrelated_tournament_type_se_ranking"/>
-		
-		<!-- snippet 'modules/tournament/controller/form/snippets/act_form_loadrelated_custom_tournament_type_se_ranking.cfm' -->
-		
-		<!-- /snippet -->
-		
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include circuit="v_tournament" template="form/dsp_form_tournament_type_se_ranking"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="tournament_type_se_ranking_action_add">
-		<set name="mode" value="insert"/>
-		<xfa name="save" value="tournament_type_se_ranking_action_add"/>
-		<do action="tournament_type_se_ranking_action_save"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="tournament_type_se_ranking_action_update">
-		<set name="mode" value="edit"/>
-		<xfa name="save" value="tournament_type_se_ranking_action_update"/>
-		<do action="tournament_type_se_ranking_action_save"/>
-	</fuseaction>
-	
-	<fuseaction access="private" lanshock:includedCircuit="true" name="tournament_type_se_ranking_action_save">
-		<lanshock:security area="tournament_type_se_ranking"/>
-		<set name="bHasErrors" value="false"/>
-		<xfa name="continue" value="tournament_type_se_ranking_listing"/>
-		<xfa name="cancel" value="tournament_type_se_ranking_listing"/>
-		<include circuit="tournament" template="form/act_action_save_tournament_type_se_ranking"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="tournament_type_se_ranking_delete">
-		<lanshock:security area="tournament_type_se_ranking"/>
-		
-		<!-- Delete: I delete the selected tournament_type_se_ranking records. -->
-		
-		<!-- force layout: none -->
-		<set name="request.layout" value="none"/>
-		
-		<invoke method="deleteByIDlist" object="application.lanshock.oFactory.load('tournament_type_se_ranking','reactorGateway')" returnvariable="request.page.pageContent">
-			<argument name="jsonData" value="#attributes.jsonData#"/>
-		</invoke>
-	</fuseaction>
-	
-	<fuseaction access="public" name="tournament_type_se_result_listing">
-		<lanshock:security area="tournament_type_se_result"/>
-		
-		<!-- force layout: admin -->
-		<set name="request.layout" value="admin"/>
-		
-		<!-- Listing: I display a list of the records in the tournament_type_se_result table. -->
-		<set name="request.page.objectName" value="tournament_type_se_result"/>
-		<set name="request.page.description" value="I display a list of the tournament_type_se_result records in the table."/>
-		<xfa name="update" value="tournament_type_se_result_edit_form"/>
-		<xfa name="delete" value="tournament_type_se_result_delete"/>
-		<xfa name="display" value="tournament_type_se_result_display"/>
-		<xfa name="add" value="tournament_type_se_result_add_form"/>
-		<xfa name="grid_json" value="tournament_type_se_result_grid_json"/>
-		
-		<set name="attributes._maxrows" overwrite="false" value="10"/>
-		<set name="attributes._startrow" overwrite="false" value="1"/>
-		
-		<set name="attributes._listSortByFieldList" overwrite="false" value="tournament_type_se_result|id|ASC"/>
-		
-		<set name="fieldlist" value="id,matchid,team1_result,team2_result,"/>
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include circuit="v_tournament" template="list/dsp_list_tournament_type_se_result"/>
-	</fuseaction>
-	
-	<fuseaction access="public" lanshock:showlayout="none" name="tournament_type_se_result_grid_json">
-		<lanshock:security area="tournament_type_se_result"/>
-		
-		<!-- force layout: json -->
-		<set name="request.layout" value="json"/>
-		
-		<!-- params by ext.grid -->
-		<include circuit="tournament" template="list/act_json_filter_tournament_type_se_result"/>
-		
-		<invoke method="getRecordsForGrid" object="application.lanshock.oFactory.load('tournament_type_se_result','reactorGateway')" returnvariable="request.page.pageContent">
-			<argument name="sortByFieldList" value="tournament_type_se_result|#attributes.sort#|#attributes.dir#"/>
-			<argument name="startrow" value="#attributes.start#"/>
-			<argument name="maxrows" value="#attributes.limit#"/>
-			<argument name="filter" value="#stFilters#"/>
-		</invoke>
-	</fuseaction>
-	
-	<fuseaction access="public" name="tournament_type_se_result_add_form">
-		<set name="mode" value="insert"/>
-		<xfa name="save" value="tournament_type_se_result_action_add"/>
-		<do action="tournament_type_se_result_form"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="tournament_type_se_result_edit_form">
-		<set name="mode" value="edit"/>
-		<xfa name="save" value="tournament_type_se_result_action_update"/>
-		<do action="tournament_type_se_result_form"/>
-	</fuseaction>
-	
-	<fuseaction access="private" lanshock:includedCircuit="true" name="tournament_type_se_result_form">
-		<lanshock:security area="tournament_type_se_result"/>
-		<set name="request.layout" value="admin"/>
-		<xfa name="cancel" value="tournament_type_se_result_listing"/>
-		
-		<include circuit="tournament" template="form/act_form_tournament_type_se_result"/>
-		
-		<include circuit="tournament" template="form/act_form_loadrelated_tournament_type_se_result"/>
-		
-		<!-- snippet 'modules/tournament/controller/form/snippets/act_form_loadrelated_custom_tournament_type_se_result.cfm' -->
-		
-		<!-- /snippet -->
-		
-		<include circuit="udfs" template="udf_appendParam"/>
-		<include circuit="v_tournament" template="form/dsp_form_tournament_type_se_result"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="tournament_type_se_result_action_add">
-		<set name="mode" value="insert"/>
-		<xfa name="save" value="tournament_type_se_result_action_add"/>
-		<do action="tournament_type_se_result_action_save"/>
-	</fuseaction>
-	
-	<fuseaction access="public" name="tournament_type_se_result_action_update">
-		<set name="mode" value="edit"/>
-		<xfa name="save" value="tournament_type_se_result_action_update"/>
-		<do action="tournament_type_se_result_action_save"/>
-	</fuseaction>
-	
-	<fuseaction access="private" lanshock:includedCircuit="true" name="tournament_type_se_result_action_save">
-		<lanshock:security area="tournament_type_se_result"/>
-		<set name="bHasErrors" value="false"/>
-		<xfa name="continue" value="tournament_type_se_result_listing"/>
-		<xfa name="cancel" value="tournament_type_se_result_listing"/>
-		<include circuit="tournament" template="form/act_action_save_tournament_type_se_result"/>
-	</fuseaction>
-	<fuseaction name="tournament_type_se_result_delete" access="public">
-		<lanshock:security area="tournament_type_se_result"/>
-		
-		<!-- Delete: I delete the selected tournament_type_se_result records. -->
-		
-		<!-- force layout: none -->
 		<set name="request.layout" value="none" />
 		
-		<invoke object="application.lanshock.oFactory.load('tournament_type_se_result','reactorGateway')" method="deleteByIDlist" returnvariable="request.page.pageContent">
+		<invoke object="application.lanshock.oFactory.load('tournament_tournament','reactorGateway')" method="deleteByIDlist" returnvariable="request.page.pageContent">
 			<argument name="jsonData" value="#attributes.jsonData#" />
 		</invoke>
 	</fuseaction>

@@ -69,6 +69,8 @@
 	
 	<!--- snippet 'modules/tournament/controller/form/snippets/act_action_save_postvalidation_tournament_tournament.cfm' --->
 	
+		<cfinclude template="snippets/act_action_save_postvalidation_tournament_tournament.cfm">
+	
 	<!--- /snippet --->
 	<cfparam name="attributes.tournament_tournament_id" default="0">
 	<cfset otournament_tournament = application.lanshock.oFactory.load('tournament_tournament','reactorRecord')>

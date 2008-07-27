@@ -20,13 +20,6 @@ $LastChangedRevision: 72 $
 	<cfinvokeargument name="matchid" value="#attributes.matchid#">
 </cfinvoke>
 
-<cfset stResults = StructNew()>
-<cfloop query="stMatch.results">
-	<cfset stResults[currentrow] = StructNew()>
-	<cfset stResults[currentrow].team1_result = team1_result>
-	<cfset stResults[currentrow].team2_result = team2_result>
-</cfloop>
-
 <cfif attributes.form_submitted>
 	
 	<cfif session.oUser.checkPermissions('manage')>
@@ -67,7 +60,11 @@ $LastChangedRevision: 72 $
 			<cfinvokeargument name="matchid" value="#attributes.matchid#">
 			<cfinvokeargument name="winner" value="#attributes.winner#">
 			<cfif len(attributes.winner)>
-				<cfinvokeargument name="status" value="done">
+				<cfif attributes.winner NEQ 'NULL'>
+					<cfinvokeargument name="status" value="done">
+				<cfelse>
+					<cfinvokeargument name="status" value="admincheck">
+				</cfif>
 			</cfif>
 			<cfinvokeargument name="checkedby_admin" value="#session.userid#">
 		</cfinvoke>
@@ -82,36 +79,35 @@ $LastChangedRevision: 72 $
 		<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&tournamentid=#qTournament.id#&matchid=#attributes.matchid#')#" addtoken="false">
 	</cfif>
 	
-	<cfscript>
-		stResults = StructNew();
-		
-		for(item in attributes){
-			if(ListFirst(item,'_') EQ 'round'){
-				key = ListGetAt(item,2,'_');
-				if(NOT StructKeyExists(stResults,key)) stResults[key] = StructNew();
-				if(ListGetAt(item,3,'_') EQ 'team1') stResults[key].team1_result = attributes[item];
-				if(ListGetAt(item,3,'_') EQ 'team2') stResults[key].team2_result = attributes[item];
-			}
-		}
-	</cfscript>
+	<cfset stResults = StructNew()>
+	<cfloop collection="#attributes#" item="item">
+		<cfif ListFirst(item,'_') EQ 'round'>
+			<cfset sKey = ListGetAt(item,2,'_')>
+			<cfif NOT StructKeyExists(stResults,sKey)>
+				<cfset stResults[sKey] = StructNew()>
+			</cfif>
+			<cfif ListGetAt(item,3,'_') EQ 'team1'>
+				<cfset stResults[sKey].team1_result = attributes[item]>
+			</cfif>
+			<cfif ListGetAt(item,3,'_') EQ 'team2'>
+				<cfset stResults[sKey].team2_result = attributes[item]>
+			</cfif>
+		</cfif>
+	</cfloop>
 	
-	<cfif isDefined("attributes.finish")>
+	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_se')#" method="updateResults">
+		<cfinvokeargument name="matchid" value="#attributes.matchid#">
+		<cfinvokeargument name="results" value="#stResults#">
+	</cfinvoke>
 
-		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_se')#" method="updateResults">
-			<cfinvokeargument name="matchid" value="#attributes.matchid#">
-			<cfinvokeargument name="results" value="#stResults#">
-		</cfinvoke>
+	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_se')#" method="updateMatch">
+		<cfinvokeargument name="tournamentid" value="#qTournament.id#">
+		<cfinvokeargument name="matchid" value="#attributes.matchid#">
+		<cfinvokeargument name="submittedby_userid" value="#session.userid#">
+		<cfinvokeargument name="submittedby_teamid" value="#qTeamCurrentUser.id#">
+	</cfinvoke>
 	
-		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_se')#" method="updateMatch">
-			<cfinvokeargument name="tournamentid" value="#qTournament.id#">
-			<cfinvokeargument name="matchid" value="#attributes.matchid#">
-			<cfinvokeargument name="submittedby_userid" value="#session.userid#">
-			<cfinvokeargument name="submittedby_teamid" value="#qTeamCurrentUser.id#">
-		</cfinvoke>
-		
-		<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&tournamentid=#qTournament.id#&matchid=#attributes.matchid#')#" addtoken="false">
-	
-	</cfif>
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&tournamentid=#qTournament.id#&matchid=#attributes.matchid#')#" addtoken="false">
 	
 <cfelseif attributes.form_submitted5>
 		
@@ -147,21 +143,27 @@ $LastChangedRevision: 72 $
 		</cfinvoke>
 		
 		<cfloop query="qMatches">
-			<cfscript>
-				// get all winners of pre-round
-				if(winner EQ 'team1') lWinners = ListAppend(lWinners,team1);
-				if(winner EQ 'team2') lWinners = ListAppend(lWinners,team2);
-				
-				// get winners of related pre-rounds
-				if(row EQ stMatch.row*2-1){
-					if(winner EQ 'team1') idTeam1 = team1;
-					if(winner EQ 'team2') idTeam1 = team2;
-				}
-				else if(row EQ stMatch.row*2){
-					if(winner EQ 'team1') idTeam2 = team1;
-					if(winner EQ 'team2') idTeam2 = team2;
-				}
-			</cfscript>
+			<!--- get all winners of pre-round --->
+			<cfif qMatches.winner EQ 'team1'>
+				<cfset lWinners = ListAppend(lWinners,qMatches.team1)>
+			<cfelseif qMatches.winner EQ 'team2'>
+				<cfset lWinners = ListAppend(lWinners,qMatches.team2)>
+			</cfif>
+			
+			<!--- get winners of related pre-rounds --->
+			<cfif qMatches.row EQ stMatch.row*2-1>
+				<cfif qMatches.winner EQ 'team1'>
+					<cfset idTeam1 = qMatches.team1>
+				<cfelseif qMatches.winner EQ 'team2'>
+					<cfset idTeam1 = qMatches.team2>
+				</cfif>
+			<cfelseif qMatches.row EQ stMatch.row*2>
+				<cfif qMatches.winner EQ 'team1'>
+					<cfset idTeam2 = qMatches.team1>
+				<cfelseif qMatches.winner EQ 'team2'>
+					<cfset idTeam2 = qMatches.team2>
+				</cfif>
+			</cfif>
 		</cfloop>
 	
 	</cfif>

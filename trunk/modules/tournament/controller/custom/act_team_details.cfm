@@ -18,25 +18,24 @@ $LastChangedRevision$
 	<cfinvokeargument name="teamid" value="#attributes.teamid#">
 </cfinvoke>
 
-<cfset queryobject = stTeam.players>
-<cfquery dbtype="query" name="qPlayers">
-	SELECT id, userid, status
-	FROM queryobject
+<cfif StructIsEmpty(stTeam)>
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.teams&tournamentid=#qTournament.id#')#" addtoken="false">
+</cfif>
+
+<cfset qPlayers = stTeam.players>
+
+<cfquery dbtype="query" name="qPlayersStatus">
+	SELECT DISTINCT COUNT(status) as status_count, status
+	FROM qPlayers
+	GROUP BY status
 </cfquery>
-<cfquery dbtype="query" name="qPlayersReady">
-	SELECT id, userid, status
-	FROM queryobject
-	WHERE status = 'ready'
-</cfquery>
-<cfquery dbtype="query" name="qPlayersWaiting">
-	SELECT id, userid, status
-	FROM queryobject
-	WHERE status = 'waiting'
-</cfquery>
-<cfquery dbtype="query" name="qPlayersAwaitingAuthorisation">
-	SELECT id, userid, status
-	FROM queryobject
-	WHERE status = 'awaiting_authorisation'
-</cfquery>
+
+<cfset stStatus = StructNew()>
+<cfset stStatus.ready = 0>
+<cfset stStatus.waiting = 0>
+<cfset stStatus.awaiting_authorisation = 0>
+<cfloop query="qPlayersStatus">
+	<cfset stStatus[qPlayersStatus.status] = qPlayersStatus.status_count>
+</cfloop>
 
 <cfsetting enablecfoutputonly="No">

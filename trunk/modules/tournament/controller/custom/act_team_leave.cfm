@@ -25,15 +25,16 @@ $LastChangedRevision$
 
 <cfif attributes.form_submitted AND session.userloggedin>
 
-	<cfscript>
-		// validation
-		if(qTournament.status NEQ "signup") ArrayAppend(aError, request.content.error_leave_wrongtournamentstatus);
-		else if(NOT attributes.leave_accepted) ArrayAppend(aError, request.content.error_leave_accept);
-	</cfscript>
+	<cfif qTournament.status NEQ "signup">
+		<cfset ArrayAppend(aError, request.content.error_leave_wrongtournamentstatus)>
+	<cfelseif NOT attributes.leave_accepted>
+		<cfset ArrayAppend(aError, request.content.error_leave_accept)>
+	</cfif>
 	
 	<cfif NOT ArrayLen(aError)>
 
 		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.team')#" method="leaveTeam">
+			<cfinvokeargument name="tournamentid" value="#attributes.tournamentid#">
 			<cfinvokeargument name="teamid" value="#attributes.teamid#">
 			<cfinvokeargument name="userid" value="#session.userid#">
 		</cfinvoke>
