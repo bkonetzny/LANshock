@@ -14,14 +14,15 @@ $LastChangedRevision$
 <cfoutput>
 <h4>#request.content.teams_headline#</h4>
 
-<cfif qTournament.status EQ "signup" AND session.userloggedin AND NOT qTeamCurrentUser.recordcount>
+<cfif qTournament.status EQ "signup" AND session.oUser.isLoggedIn() AND NOT qTeamCurrentUser.recordcount>
 	<ul class="options">
 		<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.signup&tournamentid=#attributes.tournamentid#')#">#request.content.add_a_new_team#</a></li>
+		<li><a href="##" onclick="$('##dummyform').toggle();return false;">Create Dummy Teams</a></li>
 	</ul>
 </cfif>
 
 <cfif qTournament.status EQ "signup">
-	<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.teams')#" method="post" class="uniForm">
+	<form id="dummyform" style="display: none;" action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.teams')#" method="post" class="uniForm">
 		<div class="hidden">
 			<input type="hidden" name="form_submitted_dummyteams" value="true"/>
 			<input type="hidden" name="tournamentid" value="#qTournament.id#"/>
@@ -46,7 +47,7 @@ $LastChangedRevision$
 	<cfif ListLen(lTeams)>
 		<table>
 			<tr>
-				<th>#request.content.teams_team#</th>
+				<th>Team</th>
 				<th>#request.content.teams_members#</th>
 				<th>#request.content.teamleader#</th>
 				<th>#request.content.teams_leaderseat#</th>
@@ -65,7 +66,7 @@ $LastChangedRevision$
 				</cfquery>
 				<tr>
 					<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.team_details&tournamentid=#attributes.tournamentid#&teamid=#stTeams[item].id#')#">#HTMLEditFormat(stTeams[item].name)#</a></td>
-					<td align="center">#qPlayersReady.recordcount# (#qPlayersWaiting.recordcount#)</td>
+					<td align="center">#qPlayersReady.recordcount#<cfif qTournament.teamsubstitute AND qPlayersWaiting.recordcount> (#qPlayersWaiting.recordcount#)</cfif></td>
 					<td><cfif session.userloggedin AND session.userid NEQ stTeams[item].leaderid><a href="javascript:LANshock.userSendMessage(#stTeams[item].leaderid#);"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/email.png" alt=""></a></cfif>
 						<a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#stTeams[item].leaderid#')#">#stTeams[item].leadername#</a></td>
 					<td>

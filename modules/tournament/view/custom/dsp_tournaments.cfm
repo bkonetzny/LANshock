@@ -34,7 +34,7 @@ $LastChangedRevision$
 			<cfif stModuleConfig.coinsystem>
 				<th>#request.content.coins#</th>
 			</cfif>
-			<!--- <th>#request.content.tournament_status#</th> --->
+			<th>#request.content.tournament_status#</th>
 			<th>#request.content.tournament_estimatedstarttime#</th>
 		</tr>
 		<cfloop query="qTournaments">
@@ -53,7 +53,7 @@ $LastChangedRevision$
 					<cfif stModuleConfig.coinsystem>
 						<td align="right">#qTournaments.coins#</td>
 					</cfif>
-					<!--- <td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.matches&tournamentid=#qTournaments.id#')#">#request.content['tournament_status_' & qTournaments.status]#</a></td> --->
+					<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.matches&tournamentid=#qTournaments.id#')#">#request.content['tournament_status_' & qTournaments.status]#</a></td>
 					<td>#session.oUser.DateTimeFormat(qTournaments.starttime)#
 						<cfif DateCompare(qTournaments.starttime,now()) NEQ "-1" AND DateDiff('d',qTournaments.starttime,now()) LTE 31>
 							<br/>#calcRemainingTime(qTournaments.starttime)#

@@ -121,9 +121,9 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="id" id="formrow_5472EABD1D01457D83E5E20FF2A12C6A" value="#otournament_player.getid()#" />
+	<input type="hidden" name="id" id="formrow_B0C2E246306F4098A95A1372D4F42A96" value="#otournament_player.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_5472EABD1D01457D83E5E20FF2A12C6A">#request.content.tournament_player_rowtype_label_id#</label>
+		<label for="formrow_B0C2E246306F4098A95A1372D4F42A96">#request.content.tournament_player_rowtype_label_id#</label>
 		#Trim(otournament_player.getid())#
 	</div>
 	</cfif>
@@ -138,8 +138,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_52A9E89D2CBE49599F1481F1A1AE3FA6">#request.content.tournament_player_rowtype_label_status#</label>
-		<input type="text" class="textInput" name="status" id="formrow_52A9E89D2CBE49599F1481F1A1AE3FA6" value="#Trim(otournament_player.getstatus())#"/>
+		<label for="formrow_4A323C386964407B8C01DD131A737839">#request.content.tournament_player_rowtype_label_status#</label>
+		<input type="text" class="textInput" name="status" id="formrow_4A323C386964407B8C01DD131A737839" value="#Trim(otournament_player.getstatus())#"/>
 	</div>
 				
 			
@@ -164,8 +164,8 @@
 	
 	<cfset sReltournament_team = otournament_player.gettournament_team().getid()>
 	<div class="ctrlHolder">
-		<label for="formrow_319C9AFA194D4CCB8CB7811A59DBE386">tournament_team</label>
-		<select class="selectInput" name="teamid" id="formrow_319C9AFA194D4CCB8CB7811A59DBE386">
+		<label for="formrow_88A4A028E68443BA8D763F546D91E54E">tournament_team</label>
+		<select class="selectInput" name="teamid" id="formrow_88A4A028E68443BA8D763F546D91E54E">
 			<option value=""></option>
 			<cfloop query="stRelated.stManyToOne.tournament_team.qData">
 				<option value="#stRelated.stManyToOne.tournament_team.qData.optionvalue#"<cfif sReltournament_team EQ stRelated.stManyToOne.tournament_team.qData.optionvalue> selected="selected"</cfif>>#stRelated.stManyToOne.tournament_team.qData.optionname#</option>
@@ -184,8 +184,8 @@
 	
 	<cfset sReluser = otournament_player.getuser().getid()>
 	<div class="ctrlHolder">
-		<label for="formrow_199CBEE5616543A0824B2CF190A52A0E">user</label>
-		<select class="selectInput" name="userid" id="formrow_199CBEE5616543A0824B2CF190A52A0E">
+		<label for="formrow_4E83E0EBA3574FE6BE181E9BFB1E5B79">user</label>
+		<select class="selectInput" name="userid" id="formrow_4E83E0EBA3574FE6BE181E9BFB1E5B79">
 			<option value=""></option>
 			<cfloop query="stRelated.stManyToOne.user.qData">
 				<option value="#stRelated.stManyToOne.user.qData.optionvalue#"<cfif sReluser EQ stRelated.stManyToOne.user.qData.optionvalue> selected="selected"</cfif>>#stRelated.stManyToOne.user.qData.optionname#</option>

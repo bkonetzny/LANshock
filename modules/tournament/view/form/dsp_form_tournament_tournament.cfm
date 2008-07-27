@@ -307,9 +307,9 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="id" id="formrow_E42C82A04CE041769FD045A6F0FEE44F" value="#otournament_tournament.getid()#" />
+	<input type="hidden" name="id" id="formrow_2195D97C0E114ACAB93722A069C5D7D4" value="#otournament_tournament.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_E42C82A04CE041769FD045A6F0FEE44F">#request.content.tournament_tournament_rowtype_label_id#</label>
+		<label for="formrow_2195D97C0E114ACAB93722A069C5D7D4">#request.content.tournament_tournament_rowtype_label_id#</label>
 		#Trim(otournament_tournament.getid())#
 	</div>
 	</cfif>
@@ -324,8 +324,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_B822B4B9217546918F89ED60769433F8"><em>*</em> #request.content.tournament_tournament_rowtype_label_name#</label>
-		<input type="text" class="textInput" name="name" id="formrow_B822B4B9217546918F89ED60769433F8" value="#Trim(otournament_tournament.getname())#"/>
+		<label for="formrow_96F97680C07A442F8D1199D33AC3B835"><em>*</em> #request.content.tournament_tournament_rowtype_label_name#</label>
+		<input type="text" class="textInput" name="name" id="formrow_96F97680C07A442F8D1199D33AC3B835" value="#Trim(otournament_tournament.getname())#"/>
 	</div>
 				
 			
@@ -338,9 +338,9 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_A8DCC63F38DF4C1D88E8A8AD491F61CF"><em>*</em> #request.content.tournament_tournament_rowtype_label_type#</label>
+		<label for="formrow_DFF1B0F823F34EA090BE74C2E8D62EF4"><em>*</em> #request.content.tournament_tournament_rowtype_label_type#</label>
 		<cfif isDefined("stRelated.type_custom.qData")>
-		<select class="selectInput" name="type" id="formrow_A8DCC63F38DF4C1D88E8A8AD491F61CF">
+		<select class="selectInput" name="type" id="formrow_DFF1B0F823F34EA090BE74C2E8D62EF4">
 			<cfloop query="stRelated.type_custom.qData">
 				<option value="#stRelated.type_custom.qData.optionvalue#"<cfif otournament_tournament.gettype() EQ stRelated.type_custom.qData.optionvalue> selected="selected"</cfif>>#stRelated.type_custom.qData.optionname#</option>
 			</cfloop>
@@ -358,9 +358,9 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_A71DF92FF8BE414FBCCA71C1004DA957"><em>*</em> #request.content.tournament_tournament_rowtype_label_status#</label>
+		<label for="formrow_54E735142A5541C48B5A7E0317468B2B"><em>*</em> #request.content.tournament_tournament_rowtype_label_status#</label>
 		<cfif isDefined("stRelated.status_custom.qData")>
-		<select class="selectInput" name="status" id="formrow_A71DF92FF8BE414FBCCA71C1004DA957">
+		<select class="selectInput" name="status" id="formrow_54E735142A5541C48B5A7E0317468B2B">
 			<cfloop query="stRelated.status_custom.qData">
 				<option value="#stRelated.status_custom.qData.optionvalue#"<cfif otournament_tournament.getstatus() EQ stRelated.status_custom.qData.optionvalue> selected="selected"</cfif>>#stRelated.status_custom.qData.optionname#</option>
 			</cfloop>
@@ -378,9 +378,9 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_FC35B3C49F9146228C8A7C05DB9C5186"><em>*</em> #request.content.tournament_tournament_rowtype_label_rulefile#</label>
+		<label for="formrow_07B75B40203E4CC590AC34EEE783F744"><em>*</em> #request.content.tournament_tournament_rowtype_label_rulefile#</label>
 		<cfif isDefined("stRelated.rulefile_custom.qData")>
-		<select class="selectInput" name="rulefile" id="formrow_FC35B3C49F9146228C8A7C05DB9C5186">
+		<select class="selectInput" name="rulefile" id="formrow_07B75B40203E4CC590AC34EEE783F744">
 			<cfloop query="stRelated.rulefile_custom.qData">
 				<option value="#stRelated.rulefile_custom.qData.optionvalue#"<cfif otournament_tournament.getrulefile() EQ stRelated.rulefile_custom.qData.optionvalue> selected="selected"</cfif>>#stRelated.rulefile_custom.qData.optionname#</option>
 			</cfloop>
@@ -398,9 +398,9 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_DA0A71B38FC44F4B98B7F7DB7751B6AF"><em>*</em> #request.content.tournament_tournament_rowtype_label_image#</label>
+		<label for="formrow_A85AFED28B5F4CB3A68C6EAC6E6A816F"><em>*</em> #request.content.tournament_tournament_rowtype_label_image#</label>
 		<cfif isDefined("stRelated.image_custom.qData")>
-		<select class="selectInput" name="image" id="formrow_DA0A71B38FC44F4B98B7F7DB7751B6AF">
+		<select class="selectInput" name="image" id="formrow_A85AFED28B5F4CB3A68C6EAC6E6A816F">
 			<cfloop query="stRelated.image_custom.qData">
 				<option value="#stRelated.image_custom.qData.optionvalue#"<cfif otournament_tournament.getimage() EQ stRelated.image_custom.qData.optionvalue> selected="selected"</cfif>>#stRelated.image_custom.qData.optionname#</option>
 			</cfloop>
@@ -418,8 +418,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_A0418B3AE9CE4F3CBB10CCF25681A04C"><em>*</em> #request.content.tournament_tournament_rowtype_label_coins#</label>
-		<input type="text" class="textInput" name="coins" id="formrow_A0418B3AE9CE4F3CBB10CCF25681A04C" value="#Trim(otournament_tournament.getcoins())#"/>
+		<label for="formrow_16C680108CDE4AEEA63E8A1786CA1FE2"><em>*</em> #request.content.tournament_tournament_rowtype_label_coins#</label>
+		<input type="text" class="textInput" name="coins" id="formrow_16C680108CDE4AEEA63E8A1786CA1FE2" value="#Trim(otournament_tournament.getcoins())#"/>
 	</div>
 				
 			
@@ -435,21 +435,21 @@
 		<cfset otournament_tournament.setstarttime(now())>
 	</cfif>
 	<div class="ctrlHolder">
-		<label for="formrow_3A5E9D30181B4EFEAD57C6C7F061C6B2">#request.content.tournament_tournament_rowtype_label_starttime#</label>
-		<div class="divInput" id="divDatePicker3A5E9D30181B4EFEAD57C6C7F061C6B2"></div>
-		<input type="hidden" name="starttime" id="formrow_3A5E9D30181B4EFEAD57C6C7F061C6B2" value="#LsDateFormat(Trim(otournament_tournament.getstarttime()),'YYYY-MM-DD')# #LsTimeFormat(Trim(otournament_tournament.getstarttime()),'HH:MM:SS')#"/>
+		<label for="formrow_59DBA38E1DA34850949F82D8B38336CA">#request.content.tournament_tournament_rowtype_label_starttime#</label>
+		<div class="divInput" id="divDatePicker59DBA38E1DA34850949F82D8B38336CA"></div>
+		<input type="hidden" name="starttime" id="formrow_59DBA38E1DA34850949F82D8B38336CA" value="#LsDateFormat(Trim(otournament_tournament.getstarttime()),'YYYY-MM-DD')# #LsTimeFormat(Trim(otournament_tournament.getstarttime()),'HH:MM:SS')#"/>
 		<script type="text/javascript">
 			<!--
-			var myDatePicker3A5E9D30181B4EFEAD57C6C7F061C6B2 = new Ext.ux.form.DateTime({
+			var myDatePicker59DBA38E1DA34850949F82D8B38336CA = new Ext.ux.form.DateTime({
 				handler: function(value){
-					$('##formrow_3A5E9D30181B4EFEAD57C6C7F061C6B2').val(value);
+					$('##formrow_59DBA38E1DA34850949F82D8B38336CA').val(value);
 				}
 			});
 			Ext.onReady(function(){
-				myDatePicker3A5E9D30181B4EFEAD57C6C7F061C6B2.render('divDatePicker3A5E9D30181B4EFEAD57C6C7F061C6B2');
-				var dt3A5E9D30181B4EFEAD57C6C7F061C6B2 = new Date();
-				dt3A5E9D30181B4EFEAD57C6C7F061C6B2 = Date.parseDate("#LsDateFormat(Trim(otournament_tournament.getstarttime()),'YYYY-MM-DD')# #LsTimeFormat(Trim(otournament_tournament.getstarttime()),'HH:MM')#","Y-m-d G:i");
-				myDatePicker3A5E9D30181B4EFEAD57C6C7F061C6B2.setValue(dt3A5E9D30181B4EFEAD57C6C7F061C6B2);
+				myDatePicker59DBA38E1DA34850949F82D8B38336CA.render('divDatePicker59DBA38E1DA34850949F82D8B38336CA');
+				var dt59DBA38E1DA34850949F82D8B38336CA = new Date();
+				dt59DBA38E1DA34850949F82D8B38336CA = Date.parseDate("#LsDateFormat(Trim(otournament_tournament.getstarttime()),'YYYY-MM-DD')# #LsTimeFormat(Trim(otournament_tournament.getstarttime()),'HH:MM')#","Y-m-d G:i");
+				myDatePicker59DBA38E1DA34850949F82D8B38336CA.setValue(dt59DBA38E1DA34850949F82D8B38336CA);
 			});
 			//-->
 		</script>
@@ -468,21 +468,21 @@
 		<cfset otournament_tournament.setendtime(now())>
 	</cfif>
 	<div class="ctrlHolder">
-		<label for="formrow_2B512523BD2749DF8A4A734A1D69A0B0">#request.content.tournament_tournament_rowtype_label_endtime#</label>
-		<div class="divInput" id="divDatePicker2B512523BD2749DF8A4A734A1D69A0B0"></div>
-		<input type="hidden" name="endtime" id="formrow_2B512523BD2749DF8A4A734A1D69A0B0" value="#LsDateFormat(Trim(otournament_tournament.getendtime()),'YYYY-MM-DD')# #LsTimeFormat(Trim(otournament_tournament.getendtime()),'HH:MM:SS')#"/>
+		<label for="formrow_D26F350AA0CD4EF6A196850E1FA13805">#request.content.tournament_tournament_rowtype_label_endtime#</label>
+		<div class="divInput" id="divDatePickerD26F350AA0CD4EF6A196850E1FA13805"></div>
+		<input type="hidden" name="endtime" id="formrow_D26F350AA0CD4EF6A196850E1FA13805" value="#LsDateFormat(Trim(otournament_tournament.getendtime()),'YYYY-MM-DD')# #LsTimeFormat(Trim(otournament_tournament.getendtime()),'HH:MM:SS')#"/>
 		<script type="text/javascript">
 			<!--
-			var myDatePicker2B512523BD2749DF8A4A734A1D69A0B0 = new Ext.ux.form.DateTime({
+			var myDatePickerD26F350AA0CD4EF6A196850E1FA13805 = new Ext.ux.form.DateTime({
 				handler: function(value){
-					$('##formrow_2B512523BD2749DF8A4A734A1D69A0B0').val(value);
+					$('##formrow_D26F350AA0CD4EF6A196850E1FA13805').val(value);
 				}
 			});
 			Ext.onReady(function(){
-				myDatePicker2B512523BD2749DF8A4A734A1D69A0B0.render('divDatePicker2B512523BD2749DF8A4A734A1D69A0B0');
-				var dt2B512523BD2749DF8A4A734A1D69A0B0 = new Date();
-				dt2B512523BD2749DF8A4A734A1D69A0B0 = Date.parseDate("#LsDateFormat(Trim(otournament_tournament.getendtime()),'YYYY-MM-DD')# #LsTimeFormat(Trim(otournament_tournament.getendtime()),'HH:MM')#","Y-m-d G:i");
-				myDatePicker2B512523BD2749DF8A4A734A1D69A0B0.setValue(dt2B512523BD2749DF8A4A734A1D69A0B0);
+				myDatePickerD26F350AA0CD4EF6A196850E1FA13805.render('divDatePickerD26F350AA0CD4EF6A196850E1FA13805');
+				var dtD26F350AA0CD4EF6A196850E1FA13805 = new Date();
+				dtD26F350AA0CD4EF6A196850E1FA13805 = Date.parseDate("#LsDateFormat(Trim(otournament_tournament.getendtime()),'YYYY-MM-DD')# #LsTimeFormat(Trim(otournament_tournament.getendtime()),'HH:MM')#","Y-m-d G:i");
+				myDatePickerD26F350AA0CD4EF6A196850E1FA13805.setValue(dtD26F350AA0CD4EF6A196850E1FA13805);
 			});
 			//-->
 		</script>
@@ -498,9 +498,9 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_C8CAC39F29264E719423788022BC7BA9"><em>*</em> #request.content.tournament_tournament_rowtype_label_timetable_color#</label>
+		<label for="formrow_3B91E080EA50421E88A0BE5F4C4DF189"><em>*</em> #request.content.tournament_tournament_rowtype_label_timetable_color#</label>
 		<cfif isDefined("stRelated.timetable_color_custom.qData")>
-		<select class="selectInput" name="timetable_color" id="formrow_C8CAC39F29264E719423788022BC7BA9">
+		<select class="selectInput" name="timetable_color" id="formrow_3B91E080EA50421E88A0BE5F4C4DF189">
 			<cfloop query="stRelated.timetable_color_custom.qData">
 				<option value="#stRelated.timetable_color_custom.qData.optionvalue#"<cfif otournament_tournament.gettimetable_color() EQ stRelated.timetable_color_custom.qData.optionvalue> selected="selected"</cfif>>#stRelated.timetable_color_custom.qData.optionname#</option>
 			</cfloop>
@@ -518,8 +518,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_9AB443CF31674E9CB5E24AF5DC1036CE">#request.content.tournament_tournament_rowtype_label_ladminids#</label>
-		<input type="text" class="textInput" name="ladminids" id="formrow_9AB443CF31674E9CB5E24AF5DC1036CE" value="#Trim(otournament_tournament.getladminids())#"/>
+		<label for="formrow_44FF8567761345ED8B64EFD7BC2E2E02">#request.content.tournament_tournament_rowtype_label_ladminids#</label>
+		<input type="text" class="textInput" name="ladminids" id="formrow_44FF8567761345ED8B64EFD7BC2E2E02" value="#Trim(otournament_tournament.getladminids())#"/>
 	</div>
 				
 			
@@ -532,17 +532,17 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_9A7BA75606A84C499803309413149B1D">#request.content.tournament_tournament_rowtype_label_infotext#</label>
-		<textarea name="infotext" id="formrow_9A7BA75606A84C499803309413149B1D">#Trim(otournament_tournament.getinfotext())#</textarea>
+		<label for="formrow_19CA0A6E5A234658AD466CCFB46D308C">#request.content.tournament_tournament_rowtype_label_infotext#</label>
+		<textarea name="infotext" id="formrow_19CA0A6E5A234658AD466CCFB46D308C">#Trim(otournament_tournament.getinfotext())#</textarea>
 			<script type="text/javascript">
 			<!--
 				var sBasePath = "#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/";
-				var oFCKeditor_formrow_9A7BA75606A84C499803309413149B1D = new FCKeditor('infotext');
-				oFCKeditor_formrow_9A7BA75606A84C499803309413149B1D.BasePath = sBasePath + "fckeditor/";
-				oFCKeditor_formrow_9A7BA75606A84C499803309413149B1D.Config['CustomConfigurationsPath'] = sBasePath + "lanshock_fckeditor_config.js";
-				oFCKeditor_formrow_9A7BA75606A84C499803309413149B1D.Value = '';
+				var oFCKeditor_formrow_19CA0A6E5A234658AD466CCFB46D308C = new FCKeditor('infotext');
+				oFCKeditor_formrow_19CA0A6E5A234658AD466CCFB46D308C.BasePath = sBasePath + "fckeditor/";
+				oFCKeditor_formrow_19CA0A6E5A234658AD466CCFB46D308C.Config['CustomConfigurationsPath'] = sBasePath + "lanshock_fckeditor_config.js";
+				oFCKeditor_formrow_19CA0A6E5A234658AD466CCFB46D308C.Value = '';
 				Ext.onReady(function(){
-					oFCKeditor_formrow_9A7BA75606A84C499803309413149B1D.ReplaceTextarea();
+					oFCKeditor_formrow_19CA0A6E5A234658AD466CCFB46D308C.ReplaceTextarea();
 				});
 			//-->
 			</script>
@@ -570,8 +570,8 @@
 	
 	<cfset sReltournament_group = otournament_tournament.gettournament_group().getid()>
 	<div class="ctrlHolder">
-		<label for="formrow_6378747E42F14C5A9F814D18CA5F0961">tournament_group</label>
-		<select class="selectInput" name="groupid" id="formrow_6378747E42F14C5A9F814D18CA5F0961">
+		<label for="formrow_C17EB91A55934F24B757339F53483FF1">tournament_group</label>
+		<select class="selectInput" name="groupid" id="formrow_C17EB91A55934F24B757339F53483FF1">
 			<option value=""></option>
 			<cfloop query="stRelated.stManyToOne.tournament_group.qData">
 				<option value="#stRelated.stManyToOne.tournament_group.qData.optionvalue#"<cfif sReltournament_group EQ stRelated.stManyToOne.tournament_group.qData.optionvalue> selected="selected"</cfif>>#stRelated.stManyToOne.tournament_group.qData.optionname#</option>
@@ -600,8 +600,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_16D4C649BF0645E3BD376F8C35C99131"><em>*</em> #request.content.tournament_tournament_rowtype_label_maxteams#</label>
-		<input type="text" class="textInput" name="maxteams" id="formrow_16D4C649BF0645E3BD376F8C35C99131" value="#Trim(otournament_tournament.getmaxteams())#"/>
+		<label for="formrow_113E654646264283B24B2BE43449E819"><em>*</em> #request.content.tournament_tournament_rowtype_label_maxteams#</label>
+		<input type="text" class="textInput" name="maxteams" id="formrow_113E654646264283B24B2BE43449E819" value="#Trim(otournament_tournament.getmaxteams())#"/>
 	</div>
 				
 			
@@ -614,8 +614,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_46DC4A6A653F4070AD9F8BB5F24ED3A5"><em>*</em> #request.content.tournament_tournament_rowtype_label_teamsize#</label>
-		<input type="text" class="textInput" name="teamsize" id="formrow_46DC4A6A653F4070AD9F8BB5F24ED3A5" value="#Trim(otournament_tournament.getteamsize())#"/>
+		<label for="formrow_8B22C16F6C224FC19315B182D44FE8FF"><em>*</em> #request.content.tournament_tournament_rowtype_label_teamsize#</label>
+		<input type="text" class="textInput" name="teamsize" id="formrow_8B22C16F6C224FC19315B182D44FE8FF" value="#Trim(otournament_tournament.getteamsize())#"/>
 	</div>
 				
 			
@@ -628,8 +628,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_2CF9C55A8AD14D7698754E265896B149"><em>*</em> #request.content.tournament_tournament_rowtype_label_teamsubstitute#</label>
-		<input type="text" class="textInput" name="teamsubstitute" id="formrow_2CF9C55A8AD14D7698754E265896B149" value="#Trim(otournament_tournament.getteamsubstitute())#"/>
+		<label for="formrow_4164399502D84B2C8A18197E282324BD"><em>*</em> #request.content.tournament_tournament_rowtype_label_teamsubstitute#</label>
+		<input type="text" class="textInput" name="teamsubstitute" id="formrow_4164399502D84B2C8A18197E282324BD" value="#Trim(otournament_tournament.getteamsubstitute())#"/>
 	</div>
 				
 			
@@ -653,8 +653,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_77F20F93AA4146879D5933D4445A4D7A"><em>*</em> #request.content.tournament_tournament_rowtype_label_pausetime#</label>
-		<input type="text" class="textInput" name="pausetime" id="formrow_77F20F93AA4146879D5933D4445A4D7A" value="#Trim(otournament_tournament.getpausetime())#"/>
+		<label for="formrow_4EA62A28044A48B585CA74A71F3AB427"><em>*</em> #request.content.tournament_tournament_rowtype_label_pausetime#</label>
+		<input type="text" class="textInput" name="pausetime" id="formrow_4EA62A28044A48B585CA74A71F3AB427" value="#Trim(otournament_tournament.getpausetime())#"/>
 	</div>
 				
 			
@@ -667,8 +667,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_45EC204E6B4140B4931A46B321D62A37"><em>*</em> #request.content.tournament_tournament_rowtype_label_matchtime#</label>
-		<input type="text" class="textInput" name="matchtime" id="formrow_45EC204E6B4140B4931A46B321D62A37" value="#Trim(otournament_tournament.getmatchtime())#"/>
+		<label for="formrow_6AD7FA008EC84E86B58EAA5452FEACB8"><em>*</em> #request.content.tournament_tournament_rowtype_label_matchtime#</label>
+		<input type="text" class="textInput" name="matchtime" id="formrow_6AD7FA008EC84E86B58EAA5452FEACB8" value="#Trim(otournament_tournament.getmatchtime())#"/>
 	</div>
 				
 			
@@ -681,8 +681,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_6E9AACA69C174DA698C098216E9D8E26"><em>*</em> #request.content.tournament_tournament_rowtype_label_matchcount#</label>
-		<input type="text" class="textInput" name="matchcount" id="formrow_6E9AACA69C174DA698C098216E9D8E26" value="#Trim(otournament_tournament.getmatchcount())#"/>
+		<label for="formrow_89C216A96D38472685E97DA934676982"><em>*</em> #request.content.tournament_tournament_rowtype_label_matchcount#</label>
+		<input type="text" class="textInput" name="matchcount" id="formrow_89C216A96D38472685E97DA934676982" value="#Trim(otournament_tournament.getmatchcount())#"/>
 	</div>
 				
 			
@@ -706,8 +706,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_29C7CEA8820F4C909755C72A480FCB78">#request.content.tournament_tournament_rowtype_label_export_league#</label>
-		<input type="text" class="textInput" name="export_league" id="formrow_29C7CEA8820F4C909755C72A480FCB78" value="#Trim(otournament_tournament.getexport_league())#"/>
+		<label for="formrow_16831AC9F0A14E77BB8331E5168D1684">#request.content.tournament_tournament_rowtype_label_export_league#</label>
+		<input type="text" class="textInput" name="export_league" id="formrow_16831AC9F0A14E77BB8331E5168D1684" value="#Trim(otournament_tournament.getexport_league())#"/>
 	</div>
 				
 			
@@ -720,8 +720,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_ADFCAFD840E44ECEBE44AA0C08B5004B">#request.content.tournament_tournament_rowtype_label_export_league_data#</label>
-		<input type="text" class="textInput" name="export_league_data" id="formrow_ADFCAFD840E44ECEBE44AA0C08B5004B" value="#Trim(otournament_tournament.getexport_league_data())#"/>
+		<label for="formrow_2791A0CCACA149BBA58A5C561FF9750D">#request.content.tournament_tournament_rowtype_label_export_league_data#</label>
+		<input type="text" class="textInput" name="export_league_data" id="formrow_2791A0CCACA149BBA58A5C561FF9750D" value="#Trim(otournament_tournament.getexport_league_data())#"/>
 	</div>
 				
 			

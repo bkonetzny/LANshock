@@ -20,88 +20,37 @@ $LastChangedRevision: 72 $
 	
 <cfset iBrackets = iTeams / 2>
 <cfset iDivider = 1>
-<cfset bRefreshView = 0>
 
-<cfoutput>
-	<style>
-		.match_plan * a {text-decoration: none;}
-		.team_name {display: block;}
-		.team_delimiter {display: block; color: white;}
-		.team_wildcard {display: block; color: white;}
-		
-		.match_status_open_marker {border: 1px solid red;}
-		.match_status_submitted_marker {border: 1px solid orange;}
-		.match_status_checked_marker {border: 1px solid green;}
-		.team_winner {font-weight: bold; color: green;}
-		.team_loser {color: red;}
-		.team_marker {background-color: green; color: white; font-weight: bold;}
-		.team_marker_box {background-color: orange;}
-	</style>
-
-	<script type="text/javascript">
-		<cfif session.oUser.checkPermissions('manage')>
-			var bMarkersMatchStatus = false;
-			function showMatchStatus(){
-				if(!bMarkersMatchStatus){
-					$('div.match_status_open').addClass('match_status_open_marker');
-					$('div.match_status_submitted').addClass('match_status_submitted_marker');
-					$('div.match_status_checked').addClass('match_status_checked_marker');
-					bMarkersMatchStatus = true;
-				}
-				else {
-					$('div.match_status_open').removeClass('match_status_open_marker');
-					$('div.match_status_submitted').removeClass('match_status_submitted_marker');
-					$('div.match_status_checked').removeClass('match_status_checked_marker');
-					bMarkersMatchStatus = false;
-				}
-			}
-		</cfif>
-		
-		var bMarkersTeam = false;
-		function markTeam(id){
-			if(!bMarkersTeam){
-				$('span.team_'+id).addClass('team_marker');
-				$('div.team_'+id+'_box').addClass('team_marker_box');
-				bMarkersTeam = true;
-			}
-			else {
-				$('span.team_'+id).removeClass('team_marker');
-				$('div.team_'+id+'_box').removeClass('team_marker_box');
-				bMarkersTeam = false;
-			}
-		}
-	</script>
-	
+<cfoutput>	
 	<h4>#request.content.type_se_match_headline#</h4>
 
-	<cfif qTeamCurrentUser.recordcount OR session.oUser.checkPermissions('manage')>
-	<ul class="options">
-		<cfif session.oUser.checkPermissions('manage')>
-			<cfif qTournament.status EQ 'warmup'>
-				<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&tournamentid=#qTournament.id#&reset_matches=true')#">Reset all matches</a></li>
-				<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&tournamentid=#qTournament.id#&randomize_first_round=true')#">#request.content.type_se_match_randomize_first_round#</a></li>
-			<cfelseif qTournament.status EQ 'playing'>
-				<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&tournamentid=#qTournament.id#&calculateMatches=true')#">Paarungen berechnen</a></li>
+	<cfif session.oUser.checkPermissions('manage')
+			OR (qTeamCurrentUser.recordcount AND NOT ListFindNoCase('signup,warmup',qTournament.status))>
+		<ul class="options">
+			<cfif session.oUser.checkPermissions('manage')>
+				<cfif qTournament.status EQ 'warmup'>
+					<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&tournamentid=#qTournament.id#&randomize_first_round=true')#">#request.content.type_se_match_randomize_first_round#</a></li>
+				<cfelseif qTournament.status EQ 'playing'>
+					<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&tournamentid=#qTournament.id#&calculateMatches=true')#">Paarungen berechnen</a></li>
+				</cfif>
+				<cfif NOT ListFindNoCase('signup,warmup',qTournament.status)>
+					<li><a href="##" onclick="LANshock.Modules.oTournament.oTypeSE.showMatchStatus();return false;">#request.content.type_se_match_markstatus#</a></li>
+				</cfif>
 			</cfif>
-			<li><a href="##" onclick="showMatchStatus();return false;">#request.content.type_se_match_markstatus#</a></li>
-		</cfif>
-		<cfif qTeamCurrentUser.recordcount>
-			<li><a href="##" onclick="markTeam('#qTeamCurrentUser.id#');return false;">#request.content.type_se_match_markteam#</a></li>
-		</cfif>
-	</ul>
+			<cfif qTeamCurrentUser.recordcount AND NOT ListFindNoCase('signup,warmup',qTournament.status)>
+				<li><a href="##" onclick="LANshock.Modules.oTournament.oTypeSE.markTeam('#qTeamCurrentUser.id#');return false;">#request.content.type_se_match_markteam#</a></li>
+			</cfif>
+		</ul>
 	</cfif>
 </cfoutput>
 
-<cfif NOT application.lanshock.oCache.exists(sCacheKey)>
-	<cfsavecontent variable="sMatchTree">
-		<cfoutput>
-		<table cellpadding="0" cellspacing="0" class="match_plan">
-			<tr>
-				<cfloop from="1" to="#iRowCount#" index="col">
-					<td valign="top">
-						<div class="rowheader">
-							#request.content.type_se_match_key_winnerbracket# #col-1#
-						</div>
+<cfif NOT StructIsEmpty(stHtmlMatches)>
+	<cfif NOT application.lanshock.oCache.exists(sCacheKey)>
+		<cfsavecontent variable="sMatchTree">
+			<cfoutput>
+			<table cellpadding="0" cellspacing="0" class="match_plan">
+				<tr>
+					<cfloop from="1" to="#iRowCount#" index="col">
 						<!--- spacersettings --->
 						<cfset top = true>
 						<cfif col LT 3>
@@ -111,63 +60,68 @@ $LastChangedRevision: 72 $
 						<cfelse>
 							<cfset spacerheight = (spacerheight * 2) + 25>
 						</cfif>
-						<table cellpadding="0" cellspacing="0" class="match_row<cfif col MOD 2> match_row_odd<cfelse> match_row_even</cfif>">
-							<tr>
-								<td>
-									<table cellpadding="0" cellspacing="0" class="match">
-										<cfloop from="1" to="#iBrackets#" index="row">
-											<cfif iDivider gt 1>
-												<tr>
-													<td colspan="2" style="height: #spacerheight#px;"></td>
-													<td class="decorator"><cfif not top><img src="#stImageDir.module#/type_se/px.gif" width="1" height="#spacerheight#" alt="" border="0" vspace="0" hspace="0"></cfif></td>
+						<td valign="top">
+							<div class="rowheader">
+								#request.content.type_se_match_key_winnerbracket# #col-1#
+							</div>
+							<table cellpadding="0" cellspacing="0" class="match_row<cfif col MOD 2> match_row_odd<cfelse> match_row_even</cfif>">
+								<tr>
+									<td>
+										<table cellpadding="0" cellspacing="0" class="match">
+											<cfloop from="1" to="#iBrackets#" index="row">
+												<cfif iDivider GT 1>
+													<tr>
+														<td colspan="2" style="height: #spacerheight#px;"></td>
+														<td class="decorator"><cfif NOT top><img src="#stImageDir.module#/type_se/px.gif" width="1" height="#spacerheight#" alt="" border="0" vspace="0" hspace="0"/></cfif></td>
+													</tr>
+												</cfif>
+												<tr class="match_container">
+													<td class="decorator"><cfif iDivider GT 1><img src="#stImageDir.module#/type_se/middle.gif" width="8" height="50" alt="" border="0"/></cfif></td>
+													<td class="match_box match_box_status_">
+														#stHtmlMatches['#col#_#row#']#
+													</td>
+													<td class="decorator"><cfif col NEQ iRowCount><cfif top><img src="#stImageDir.module#/type_se/top_left.gif" width="8" height="50" alt="" border="0"/><cfelse><img src="#stImageDir.module#/type_se/bottom_left.gif" width="8" height="50" alt="" border="0"/></cfif></cfif></td>
 												</tr>
-											</cfif>
-											<tr class="match_container">
-												<td class="decorator"><cfif iDivider gt 1><img src="#stImageDir.module#/type_se/middle.gif" width="8" height="50" alt="" border="0"/></cfif></td>
-												<td class="match_box match_box_status_">
-													#stHtmlMatches['#col#_#row#']#
-												</td>
-												<td class="decorator"><cfif col NEQ iRowCount><cfif top><img src="#stImageDir.module#/type_se/top_left.gif" width="8" height="50" alt="" border="0"/><cfelse><img src="#stImageDir.module#/type_se/bottom_left.gif" width="8" height="50" alt="" border="0"></cfif></cfif></td>
-											</tr>
-											<cfif iDivider gt 1>
-												<tr>
-													<td colspan="2" style="height: #spacerheight#px;"></td>
-													<td class="decorator"><cfif top AND col EQ iRowCount-1><img src="#stImageDir.module#/type_se/px.gif" width="1" height="#spacerheight#" alt=""/></cfif><cfif top AND col NEQ iRowCount-1 AND col NEQ iRowCount><img src="#stImageDir.module#/type_se/px.gif" width="1" height="#spacerheight#" alt=""/></cfif></td>
-												</tr>
-											</cfif>
-											<!--- spacersettings --->
-											<cfif top>
-												<cfset top = false>
-											<cfelse>
-												<cfset top = true>
-											</cfif>
-										</cfloop>
-										<!--- spacersettings --->
-										<cfif iDivider EQ 1>
-											<cfset iDivider = 2>
-										<cfelse>
-											<cfset iDivider = iDivider * 2>
-										</cfif>
-									</table>
-								</td>
-							</tr>
-						</table>
+												<cfif iDivider GT 1>
+													<tr>
+														<td colspan="2" style="height: #spacerheight#px;"></td>
+														<td class="decorator"><cfif top AND col EQ iRowCount-1><img src="#stImageDir.module#/type_se/px.gif" width="1" height="#spacerheight#" alt=""/></cfif><cfif top AND col NEQ iRowCount-1 AND col NEQ iRowCount><img src="#stImageDir.module#/type_se/px.gif" width="1" height="#spacerheight#" alt=""/></cfif></td>
+													</tr>
+												</cfif>
+												<!--- spacersettings --->
+												<cfif top>
+													<cfset top = false>
+												<cfelse>
+													<cfset top = true>
+												</cfif>
+											</cfloop>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</td>
 						<cfset iBrackets = iBrackets / 2>
-					</td>
-				</cfloop>
-			</tr>
-		</table>
-		</cfoutput>
-	</cfsavecontent>
-
-	<cfset application.lanshock.oCache.set(sCacheKey,sMatchTree)>
+						<!--- spacersettings --->
+						<cfif iDivider EQ 1>
+							<cfset iDivider = 2>
+						<cfelse>
+							<cfset iDivider = iDivider * 2>
+						</cfif>
+					</cfloop>
+				</tr>
+			</table>
+			</cfoutput>
+		</cfsavecontent>
+	
+		<cfset application.lanshock.oCache.set(sCacheKey,sMatchTree)>
+	</cfif>
+	
+	<cfoutput>
+		#application.lanshock.oCache.get(sCacheKey)#
+	</cfoutput>
+	
+	<!--- todo: enable caching --->
+	<cfset application.lanshock.oCache.drop(sCacheKey)>
 </cfif>
-
-<cfoutput>
-	#application.lanshock.oCache.get(sCacheKey)#
-</cfoutput>
-
-<!--- todo: enable caching --->
-<cfset application.lanshock.oCache.drop(sCacheKey)>
 
 <cfsetting enablecfoutputonly="No">

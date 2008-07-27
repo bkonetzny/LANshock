@@ -131,9 +131,9 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="id" id="formrow_92501A75209E4AC8A06A4D9FA4F86EA3" value="#otournament_season.getid()#" />
+	<input type="hidden" name="id" id="formrow_05BDDEA2F089446A87601A5FE4C64C07" value="#otournament_season.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_92501A75209E4AC8A06A4D9FA4F86EA3">#request.content.tournament_season_rowtype_label_id#</label>
+		<label for="formrow_05BDDEA2F089446A87601A5FE4C64C07">#request.content.tournament_season_rowtype_label_id#</label>
 		#Trim(otournament_season.getid())#
 	</div>
 	</cfif>
@@ -148,8 +148,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_D9DEB7CC73B3436B97740BCB2D6897D1"><em>*</em> #request.content.tournament_season_rowtype_label_name#</label>
-		<input type="text" class="textInput" name="name" id="formrow_D9DEB7CC73B3436B97740BCB2D6897D1" value="#Trim(otournament_season.getname())#"/>
+		<label for="formrow_5111E2E65A9C45DFBE5273834913FE7F"><em>*</em> #request.content.tournament_season_rowtype_label_name#</label>
+		<input type="text" class="textInput" name="name" id="formrow_5111E2E65A9C45DFBE5273834913FE7F" value="#Trim(otournament_season.getname())#"/>
 	</div>
 				
 			
@@ -162,17 +162,17 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_F5A6A320FB0B4316B7B5EE4F582CFD38"><em>*</em> #request.content.tournament_season_rowtype_label_description#</label>
-		<textarea name="description" id="formrow_F5A6A320FB0B4316B7B5EE4F582CFD38">#Trim(otournament_season.getdescription())#</textarea>
+		<label for="formrow_39DAAB03CF284E69A1236B136423EAE5"><em>*</em> #request.content.tournament_season_rowtype_label_description#</label>
+		<textarea name="description" id="formrow_39DAAB03CF284E69A1236B136423EAE5">#Trim(otournament_season.getdescription())#</textarea>
 			<script type="text/javascript">
 			<!--
 				var sBasePath = "#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/";
-				var oFCKeditor_formrow_F5A6A320FB0B4316B7B5EE4F582CFD38 = new FCKeditor('description');
-				oFCKeditor_formrow_F5A6A320FB0B4316B7B5EE4F582CFD38.BasePath = sBasePath + "fckeditor/";
-				oFCKeditor_formrow_F5A6A320FB0B4316B7B5EE4F582CFD38.Config['CustomConfigurationsPath'] = sBasePath + "lanshock_fckeditor_config.js";
-				oFCKeditor_formrow_F5A6A320FB0B4316B7B5EE4F582CFD38.Value = '';
+				var oFCKeditor_formrow_39DAAB03CF284E69A1236B136423EAE5 = new FCKeditor('description');
+				oFCKeditor_formrow_39DAAB03CF284E69A1236B136423EAE5.BasePath = sBasePath + "fckeditor/";
+				oFCKeditor_formrow_39DAAB03CF284E69A1236B136423EAE5.Config['CustomConfigurationsPath'] = sBasePath + "lanshock_fckeditor_config.js";
+				oFCKeditor_formrow_39DAAB03CF284E69A1236B136423EAE5.Value = '';
 				Ext.onReady(function(){
-					oFCKeditor_formrow_F5A6A320FB0B4316B7B5EE4F582CFD38.ReplaceTextarea();
+					oFCKeditor_formrow_39DAAB03CF284E69A1236B136423EAE5.ReplaceTextarea();
 				});
 			//-->
 			</script>
@@ -188,8 +188,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_F09B48EE2B1444CC9536E3484E4B8D0C">#request.content.tournament_season_rowtype_label_player_coins#</label>
-		<input type="text" class="textInput" name="player_coins" id="formrow_F09B48EE2B1444CC9536E3484E4B8D0C" value="#Trim(otournament_season.getplayer_coins())#"/>
+		<label for="formrow_33486052EDCE464688C138A19692DB62">#request.content.tournament_season_rowtype_label_player_coins#</label>
+		<input type="text" class="textInput" name="player_coins" id="formrow_33486052EDCE464688C138A19692DB62" value="#Trim(otournament_season.getplayer_coins())#"/>
 	</div>
 				
 			
@@ -205,21 +205,21 @@
 		<cfset otournament_season.setdt_start(now())>
 	</cfif>
 	<div class="ctrlHolder">
-		<label for="formrow_E415FC75AF9242CFBE540B7453826738">#request.content.tournament_season_rowtype_label_dt_start#</label>
-		<div class="divInput" id="divDatePickerE415FC75AF9242CFBE540B7453826738"></div>
-		<input type="hidden" name="dt_start" id="formrow_E415FC75AF9242CFBE540B7453826738" value="#LsDateFormat(Trim(otournament_season.getdt_start()),'YYYY-MM-DD')# #LsTimeFormat(Trim(otournament_season.getdt_start()),'HH:MM:SS')#"/>
+		<label for="formrow_38A1CAA7B343434A8F9394C8E1A0DA85">#request.content.tournament_season_rowtype_label_dt_start#</label>
+		<div class="divInput" id="divDatePicker38A1CAA7B343434A8F9394C8E1A0DA85"></div>
+		<input type="hidden" name="dt_start" id="formrow_38A1CAA7B343434A8F9394C8E1A0DA85" value="#LsDateFormat(Trim(otournament_season.getdt_start()),'YYYY-MM-DD')# #LsTimeFormat(Trim(otournament_season.getdt_start()),'HH:MM:SS')#"/>
 		<script type="text/javascript">
 			<!--
-			var myDatePickerE415FC75AF9242CFBE540B7453826738 = new Ext.ux.form.DateTime({
+			var myDatePicker38A1CAA7B343434A8F9394C8E1A0DA85 = new Ext.ux.form.DateTime({
 				handler: function(value){
-					$('##formrow_E415FC75AF9242CFBE540B7453826738').val(value);
+					$('##formrow_38A1CAA7B343434A8F9394C8E1A0DA85').val(value);
 				}
 			});
 			Ext.onReady(function(){
-				myDatePickerE415FC75AF9242CFBE540B7453826738.render('divDatePickerE415FC75AF9242CFBE540B7453826738');
-				var dtE415FC75AF9242CFBE540B7453826738 = new Date();
-				dtE415FC75AF9242CFBE540B7453826738 = Date.parseDate("#LsDateFormat(Trim(otournament_season.getdt_start()),'YYYY-MM-DD')# #LsTimeFormat(Trim(otournament_season.getdt_start()),'HH:MM')#","Y-m-d G:i");
-				myDatePickerE415FC75AF9242CFBE540B7453826738.setValue(dtE415FC75AF9242CFBE540B7453826738);
+				myDatePicker38A1CAA7B343434A8F9394C8E1A0DA85.render('divDatePicker38A1CAA7B343434A8F9394C8E1A0DA85');
+				var dt38A1CAA7B343434A8F9394C8E1A0DA85 = new Date();
+				dt38A1CAA7B343434A8F9394C8E1A0DA85 = Date.parseDate("#LsDateFormat(Trim(otournament_season.getdt_start()),'YYYY-MM-DD')# #LsTimeFormat(Trim(otournament_season.getdt_start()),'HH:MM')#","Y-m-d G:i");
+				myDatePicker38A1CAA7B343434A8F9394C8E1A0DA85.setValue(dt38A1CAA7B343434A8F9394C8E1A0DA85);
 			});
 			//-->
 		</script>
@@ -238,21 +238,21 @@
 		<cfset otournament_season.setdt_end(now())>
 	</cfif>
 	<div class="ctrlHolder">
-		<label for="formrow_006C31B385374EC59ED00D796927972D">#request.content.tournament_season_rowtype_label_dt_end#</label>
-		<div class="divInput" id="divDatePicker006C31B385374EC59ED00D796927972D"></div>
-		<input type="hidden" name="dt_end" id="formrow_006C31B385374EC59ED00D796927972D" value="#LsDateFormat(Trim(otournament_season.getdt_end()),'YYYY-MM-DD')# #LsTimeFormat(Trim(otournament_season.getdt_end()),'HH:MM:SS')#"/>
+		<label for="formrow_6B9ED28FC6EA4A768B8BFE2050FBEF5C">#request.content.tournament_season_rowtype_label_dt_end#</label>
+		<div class="divInput" id="divDatePicker6B9ED28FC6EA4A768B8BFE2050FBEF5C"></div>
+		<input type="hidden" name="dt_end" id="formrow_6B9ED28FC6EA4A768B8BFE2050FBEF5C" value="#LsDateFormat(Trim(otournament_season.getdt_end()),'YYYY-MM-DD')# #LsTimeFormat(Trim(otournament_season.getdt_end()),'HH:MM:SS')#"/>
 		<script type="text/javascript">
 			<!--
-			var myDatePicker006C31B385374EC59ED00D796927972D = new Ext.ux.form.DateTime({
+			var myDatePicker6B9ED28FC6EA4A768B8BFE2050FBEF5C = new Ext.ux.form.DateTime({
 				handler: function(value){
-					$('##formrow_006C31B385374EC59ED00D796927972D').val(value);
+					$('##formrow_6B9ED28FC6EA4A768B8BFE2050FBEF5C').val(value);
 				}
 			});
 			Ext.onReady(function(){
-				myDatePicker006C31B385374EC59ED00D796927972D.render('divDatePicker006C31B385374EC59ED00D796927972D');
-				var dt006C31B385374EC59ED00D796927972D = new Date();
-				dt006C31B385374EC59ED00D796927972D = Date.parseDate("#LsDateFormat(Trim(otournament_season.getdt_end()),'YYYY-MM-DD')# #LsTimeFormat(Trim(otournament_season.getdt_end()),'HH:MM')#","Y-m-d G:i");
-				myDatePicker006C31B385374EC59ED00D796927972D.setValue(dt006C31B385374EC59ED00D796927972D);
+				myDatePicker6B9ED28FC6EA4A768B8BFE2050FBEF5C.render('divDatePicker6B9ED28FC6EA4A768B8BFE2050FBEF5C');
+				var dt6B9ED28FC6EA4A768B8BFE2050FBEF5C = new Date();
+				dt6B9ED28FC6EA4A768B8BFE2050FBEF5C = Date.parseDate("#LsDateFormat(Trim(otournament_season.getdt_end()),'YYYY-MM-DD')# #LsTimeFormat(Trim(otournament_season.getdt_end()),'HH:MM')#","Y-m-d G:i");
+				myDatePicker6B9ED28FC6EA4A768B8BFE2050FBEF5C.setValue(dt6B9ED28FC6EA4A768B8BFE2050FBEF5C);
 			});
 			//-->
 		</script>
@@ -280,8 +280,8 @@
 	
 	<cfset sRelevent_events = otournament_season.getevent_events().getid()>
 	<div class="ctrlHolder">
-		<label for="formrow_C3CC5ABCAD0540A38E0E437825D3D152">event_events</label>
-		<select class="selectInput" name="event_id" id="formrow_C3CC5ABCAD0540A38E0E437825D3D152">
+		<label for="formrow_4CD47E732805442D86A0AB6D270349C4">event_events</label>
+		<select class="selectInput" name="event_id" id="formrow_4CD47E732805442D86A0AB6D270349C4">
 			<option value=""></option>
 			<cfloop query="stRelated.stManyToOne.event_events.qData">
 				<option value="#stRelated.stManyToOne.event_events.qData.optionvalue#"<cfif sRelevent_events EQ stRelated.stManyToOne.event_events.qData.optionvalue> selected="selected"</cfif>>#stRelated.stManyToOne.event_events.qData.optionname#</option>

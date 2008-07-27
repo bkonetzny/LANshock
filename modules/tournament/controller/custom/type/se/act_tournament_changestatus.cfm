@@ -9,17 +9,34 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 72 $
 --->
 
-<cfif sStatusNew EQ 'warmup'
-	AND sStatusOld EQ 'signup'>
+<cfset sRelocate = ''>
+
+<cfif sStatusOld EQ 'signup' AND sStatusNew EQ 'warmup'>
 	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_se')#" method="createAllMatches">
 		<cfinvokeargument name="tournamentid" value="#attributes.tournamentid#">
 	</cfinvoke>
+	
+	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_se')#" method="randomizeFirstRound">
+		<cfinvokeargument name="tournamentid" value="#qTournament.id#">
+	</cfinvoke>
+	
+	<cfset sRelocate = 'matches'>
 </cfif>
 
 <cfif sStatusNew EQ 'done'>
 	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_se')#" method="calculateRanking">
 		<cfinvokeargument name="tournamentid" value="#attributes.tournamentid#">
 	</cfinvoke>
+	
+	<cfset sRelocate = 'ranking'>
+</cfif>
+
+<cfif sStatusNew EQ 'playing'>
+	<cfset sRelocate = 'matches'>
+</cfif>
+
+<cfif len(sRelocate)>
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#sRelocate#&tournamentid=#attributes.tournamentid#')#" addtoken="false">
 </cfif>
 
 <cfsetting enablecfoutputonly="No">
