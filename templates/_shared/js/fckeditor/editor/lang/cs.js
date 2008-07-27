@@ -44,6 +44,7 @@ RemoveFormat		: "Odstranit formátování",
 InsertLinkLbl		: "Odkaz",
 InsertLink			: "Vložit/změnit odkaz",
 RemoveLink			: "Odstranit odkaz",
+VisitLink			: "Open Link",	//MISSING
 Anchor				: "Vložít/změnit záložku",
 AnchorDelete		: "Odstranit kotvu",
 InsertImageLbl		: "Obrázek",
@@ -72,6 +73,9 @@ BlockJustify		: "Zarovnat do bloku",
 DecreaseIndent		: "Zmenšit odsazení",
 IncreaseIndent		: "Zvětšit odsazení",
 Blockquote			: "Citace",
+CreateDiv			: "Create Div Container",	//MISSING
+EditDiv				: "Edit Div Container",	//MISSING
+DeleteDiv			: "Remove Div Container",	//MISSING
 Undo				: "Zpět",
 Redo				: "Znovu",
 NumberedListLbl		: "Číslování",
@@ -157,6 +161,7 @@ UnknownToolbarSet	: "Panel nástrojů \"%1\" neexistuje",
 NoActiveX			: "Nastavení bezpečnosti Vašeho prohlížeče omezuje funkčnost některých jeho možností. Je třeba zapnout volbu \"Spouštět ovládáací prvky ActiveX a moduly plug-in\", jinak nebude možné využívat všechny dosputné schopnosti editoru.",
 BrowseServerBlocked : "Průzkumník zdrojů nelze otevřít. Prověřte, zda nemáte aktivováno blokování popup oken.",
 DialogBlocked		: "Nelze otevřít dialogové okno. Prověřte, zda nemáte aktivováno blokování popup oken.",
+VisitLinkBlocked	: "It was not possible to open a new window. Make sure all popup blockers are disabled.",	//MISSING
 
 // Dialogs
 DlgBtnOK			: "OK",
@@ -511,5 +516,11 @@ DlgAboutAboutTab	: "O aplikaci",
 DlgAboutBrowserInfoTab	: "Informace o prohlížeči",
 DlgAboutLicenseTab	: "Licence",
 DlgAboutVersion		: "verze",
-DlgAboutInfo		: "Více informací získáte na"
+DlgAboutInfo		: "Více informací získáte na",
+
+// Div Dialog
+DlgDivGeneralTab	: "General",	//MISSING
+DlgDivAdvancedTab	: "Advanced",	//MISSING
+DlgDivStyle		: "Style",	//MISSING
+DlgDivInlineStyle	: "Inline Style"	//MISSING
 };

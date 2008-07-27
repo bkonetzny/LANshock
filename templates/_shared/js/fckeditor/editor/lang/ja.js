@@ -44,6 +44,7 @@ RemoveFormat		: "フォーマット削除",
 InsertLinkLbl		: "リンク",
 InsertLink			: "リンク挿入/編集",
 RemoveLink			: "リンク削除",
+VisitLink			: "Open Link",	//MISSING
 Anchor				: "アンカー挿入/編集",
 AnchorDelete		: "アンカー削除",
 InsertImageLbl		: "イメージ",
@@ -72,6 +73,9 @@ BlockJustify		: "両端揃え",
 DecreaseIndent		: "インデント解除",
 IncreaseIndent		: "インデント",
 Blockquote			: "ブロック引用",
+CreateDiv			: "Create Div Container",	//MISSING
+EditDiv				: "Edit Div Container",	//MISSING
+DeleteDiv			: "Remove Div Container",	//MISSING
 Undo				: "元に戻す",
 Redo				: "やり直し",
 NumberedListLbl		: "段落番号",
@@ -157,6 +161,7 @@ UnknownToolbarSet	: "ツールバー設定 \"%1\" 存在しません。",
 NoActiveX			: "エラー、警告メッセージなどが発生した場合、ブラウザーのセキュリティ設定によりエディタのいくつかの機能が制限されている可能性があります。セキュリティ設定のオプションで\"ActiveXコントロールとプラグインの実行\"を有効にするにしてください。",
 BrowseServerBlocked : "サーバーブラウザーを開くことができませんでした。ポップアップ・ブロック機能が無効になっているか確認してください。",
 DialogBlocked		: "ダイアログウィンドウを開くことができませんでした。ポップアップ・ブロック機能が無効になっているか確認してください。",
+VisitLinkBlocked	: "It was not possible to open a new window. Make sure all popup blockers are disabled.",	//MISSING
 
 // Dialogs
 DlgBtnOK			: "OK",
@@ -511,5 +516,11 @@ DlgAboutAboutTab	: "バージョン情報",
 DlgAboutBrowserInfoTab	: "ブラウザ情報",
 DlgAboutLicenseTab	: "ライセンス",
 DlgAboutVersion		: "バージョン",
-DlgAboutInfo		: "より詳しい情報はこちらで"
+DlgAboutInfo		: "より詳しい情報はこちらで",
+
+// Div Dialog
+DlgDivGeneralTab	: "General",	//MISSING
+DlgDivAdvancedTab	: "Advanced",	//MISSING
+DlgDivStyle		: "Style",	//MISSING
+DlgDivInlineStyle	: "Inline Style"	//MISSING
 };

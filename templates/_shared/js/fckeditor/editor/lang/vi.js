@@ -44,6 +44,7 @@ RemoveFormat		: "Xoá Định dạng",
 InsertLinkLbl		: "Liên kết",
 InsertLink			: "Chèn/Sửa Liên kết",
 RemoveLink			: "Xoá Liên kết",
+VisitLink			: "Open Link",	//MISSING
 Anchor				: "Chèn/Sửa Neo",
 AnchorDelete		: "Remove Anchor",	//MISSING
 InsertImageLbl		: "Hình ảnh",
@@ -72,6 +73,9 @@ BlockJustify		: "Canh đều",
 DecreaseIndent		: "Dịch ra ngoài",
 IncreaseIndent		: "Dịch vào trong",
 Blockquote			: "Blockquote",	//MISSING
+CreateDiv			: "Create Div Container",	//MISSING
+EditDiv				: "Edit Div Container",	//MISSING
+DeleteDiv			: "Remove Div Container",	//MISSING
 Undo				: "Khôi phục thao tác",
 Redo				: "Làm lại thao tác",
 NumberedListLbl		: "Danh sách có thứ tự",
@@ -157,6 +161,7 @@ UnknownToolbarSet	: "Thanh công cụ \"%1\" không tồn tại",
 NoActiveX			: "Các thiết lập bảo mật của trình duyệt có thể giới hạn một số chức năng của trình biên tập. Bạn phải bật tùy chọn \"Run ActiveX controls and plug-ins\". Bạn có thể gặp một số lỗi và thấy thiếu đi một số chức năng.",
 BrowseServerBlocked : "Không thể mở được bộ duyệt tài nguyên. Hãy đảm bảo chức năng chặn popup đã bị vô hiệu hóa.",
 DialogBlocked		: "Không thể mở được cửa sổ hộp thoại. Hãy đảm bảo chức năng chặn popup đã bị vô hiệu hóa.",
+VisitLinkBlocked	: "It was not possible to open a new window. Make sure all popup blockers are disabled.",	//MISSING
 
 // Dialogs
 DlgBtnOK			: "Đồng ý",
@@ -511,5 +516,11 @@ DlgAboutAboutTab	: "Giới thiệu",
 DlgAboutBrowserInfoTab	: "Thông tin trình duyệt",
 DlgAboutLicenseTab	: "Giấy phép",
 DlgAboutVersion		: "phiên bản",
-DlgAboutInfo		: "Để biết thêm thông tin, hãy truy cập"
+DlgAboutInfo		: "Để biết thêm thông tin, hãy truy cập",
+
+// Div Dialog
+DlgDivGeneralTab	: "General",	//MISSING
+DlgDivAdvancedTab	: "Advanced",	//MISSING
+DlgDivStyle		: "Style",	//MISSING
+DlgDivInlineStyle	: "Inline Style"	//MISSING
 };

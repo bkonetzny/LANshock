@@ -44,6 +44,7 @@ RemoveFormat		: "הסרת העיצוב",
 InsertLinkLbl		: "קישור",
 InsertLink			: "הוספת/עריכת קישור",
 RemoveLink			: "הסרת הקישור",
+VisitLink			: "Open Link",	//MISSING
 Anchor				: "הוספת/עריכת נקודת עיגון",
 AnchorDelete		: "הסר נקודת עיגון",
 InsertImageLbl		: "תמונה",
@@ -72,6 +73,9 @@ BlockJustify		: "יישור לשוליים",
 DecreaseIndent		: "הקטנת אינדנטציה",
 IncreaseIndent		: "הגדלת אינדנטציה",
 Blockquote			: "בלוק ציטוט",
+CreateDiv			: "Create Div Container",	//MISSING
+EditDiv				: "Edit Div Container",	//MISSING
+DeleteDiv			: "Remove Div Container",	//MISSING
 Undo				: "ביטול צעד אחרון",
 Redo				: "חזרה על צעד אחרון",
 NumberedListLbl		: "רשימה ממוספרת",
@@ -157,6 +161,7 @@ UnknownToolbarSet	: "ערכת סרגל הכלים \"%1\" לא קיימת",
 NoActiveX			: "הגדרות אבטחה של הדפדפן עלולות לגביל את אפשרויות העריכה.יש לאפשר את האופציה \"הרץ פקדים פעילים ותוספות\". תוכל לחוות טעויות וחיווים של אפשרויות שחסרים.",
 BrowseServerBlocked : "לא ניתן לגשת לדפדפן משאבים.אנא וודא שחוסם חלונות הקופצים לא פעיל.",
 DialogBlocked		: "לא היה ניתן לפתוח חלון דיאלוג. אנא וודא שחוסם חלונות קופצים לא פעיל.",
+VisitLinkBlocked	: "It was not possible to open a new window. Make sure all popup blockers are disabled.",	//MISSING
 
 // Dialogs
 DlgBtnOK			: "אישור",
@@ -511,5 +516,11 @@ DlgAboutAboutTab	: "אודות",
 DlgAboutBrowserInfoTab	: "גירסת דפדפן",
 DlgAboutLicenseTab	: "רשיון",
 DlgAboutVersion		: "גירסא",
-DlgAboutInfo		: "מידע נוסף ניתן למצוא כאן:"
+DlgAboutInfo		: "מידע נוסף ניתן למצוא כאן:",
+
+// Div Dialog
+DlgDivGeneralTab	: "General",	//MISSING
+DlgDivAdvancedTab	: "Advanced",	//MISSING
+DlgDivStyle		: "Style",	//MISSING
+DlgDivInlineStyle	: "Inline Style"	//MISSING
 };
