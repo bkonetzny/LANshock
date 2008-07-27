@@ -33,7 +33,8 @@ LANshock = {
 		var sUrl = this.getVar('myself')+'mail.message_dialog/user_id='+iUserID+'/'+this.getVar('sessionUrlToken');
 		this.openWindow(sUrl,"NewMessage",300,300);
 	},
-	Formatters:{}
+	Formatters:{},
+	Modules:{}
 }
 
 LANshock.Formatters.formatBoolean = function(value){
@@ -51,7 +52,7 @@ LANshock.Formatters.cfTimeStamp = function(value){
 		dtDateTime.setHours(aMatches[4]);
 		dtDateTime.setMinutes(aMatches[5]);
 		dtDateTime.setSeconds(aMatches[6]);
-		return Ext.util.Format.date(dtDateTime,"d.m.y, h:m");
+		return Ext.util.Format.date(dtDateTime,"d.m.y, h:i");
 	} 
 	else return '-';
 };
