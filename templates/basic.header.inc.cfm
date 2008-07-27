@@ -22,7 +22,7 @@ $LastChangedRevision$
 	</cfif>
 	<cfif bRequestIncludeJs>
 		<script type="text/javascript" src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/lanshock.js"></script>
-		<script type="text/javascript" src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/jquery/jquery-1.2.3.min.js"></script>
+		<script type="text/javascript" src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/jquery/jquery.min.js"></script>
 		<script type="text/javascript" src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/ext/adapter/jquery/ext-jquery-adapter.js"></script>
 		<cfif bRequestIncludeExt>
 			<script type="text/javascript" src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/ext/ext-all.js"></script>
