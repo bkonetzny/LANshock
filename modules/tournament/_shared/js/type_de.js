@@ -48,3 +48,11 @@ LANshock.Modules.oTournament.oTypeDE.checkResultsForm = function(){
 	if(iErrors == 0) return true;
 	else return false;
 }
+
+LANshock.Modules.oTournament.oTypeDE.sMarkedBracket = '';
+
+LANshock.Modules.oTournament.oTypeDE.markBracket = function(elementId){
+	LANshock.Modules.oTournament.oTypeDE.sMarkedBracket = elementId;
+	$('#'+elementId).addClass('bracket_marker');
+	setTimeout("$('#'+LANshock.Modules.oTournament.oTypeDE.sMarkedBracket).removeClass('bracket_marker')",1000);
+}

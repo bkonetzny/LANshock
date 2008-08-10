@@ -9,7 +9,19 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 72 $
 --->
 
-<cfinvoke component="type_de" method="getRanking" returnvariable="qRanking">
+<cfparam name="attributes.calculateRanking" default="false">
+
+<cfif attributes.calculateRanking AND session.oUser.checkPermissions('manage')>
+
+	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_de')#" method="calculateRanking">
+		<cfinvokeargument name="tournamentid" value="#qTournament.id#">
+	</cfinvoke>
+	
+	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&tournamentid=#attributes.tournamentid#')#" addtoken="false">
+
+</cfif>
+
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_de')#" method="getRanking" returnvariable="qRanking">
 	<cfinvokeargument name="tournamentid" value="#qTournament.id#">
 </cfinvoke>
 

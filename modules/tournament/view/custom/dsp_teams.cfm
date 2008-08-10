@@ -14,14 +14,23 @@ $LastChangedRevision$
 <cfoutput>
 <h4>#request.content.teams_headline#</h4>
 
-<cfif qTournament.status EQ "signup" AND session.oUser.isLoggedIn() AND NOT qTeamCurrentUser.recordcount>
-	<ul class="options">
-		<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.signup&tournamentid=#attributes.tournamentid#')#">#request.content.add_a_new_team#</a></li>
-		<li><a href="##" onclick="$('##dummyform').toggle();return false;">Create Dummy Teams</a></li>
-	</ul>
+<cfif qTournament.status EQ "signup" AND session.oUser.isLoggedIn()>
+	<cfif NOT qTeamCurrentUser.recordcount>
+		<ul class="options">
+			<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.signup&tournamentid=#attributes.tournamentid#')#">#request.content.add_a_new_team#</a></li>
+		</ul>
+	<cfelseif qTeamCurrentUser.recordcount AND qTournament.teamsize EQ 1>
+		<ul class="options">
+			<li><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.team_delete&tournamentid=#attributes.tournamentid#&teamid=#qTeamCurrentUser.id#')#">#request.content.delete_this_team#</a></li>
+		</ul>
+	</cfif>
 </cfif>
 
-<cfif qTournament.status EQ "signup">
+<!--- <cfif session.oUser.checkPermissions('manage') AND qTournament.status EQ "signup">
+	<ul class="options">
+		<li><a href="##" onclick="$('##dummyform').toggle();return false;">Create Dummy Teams</a></li>
+	</ul>
+
 	<form id="dummyform" style="display: none;" action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.teams')#" method="post" class="uniForm">
 		<div class="hidden">
 			<input type="hidden" name="form_submitted_dummyteams" value="true"/>
@@ -41,16 +50,18 @@ $LastChangedRevision$
 			<button type="submit" class="submitButton">#request.content.form_save#</button>
 		</div>
 	</form>
-</cfif>
+</cfif> --->
 
-<cfif qTournament.teamsize GT 1>
-	<cfif ListLen(lTeams)>
+<cfif ListLen(lTeams)>
+	<cfif qTournament.teamsize GT 1>
 		<table>
 			<tr>
 				<th>Team</th>
 				<th>#request.content.teams_members#</th>
 				<th>#request.content.teamleader#</th>
-				<th>#request.content.teams_leaderseat#</th>
+				<cfif isNumeric(qTournament.event_id)>
+					<th>#request.content.teams_leaderseat#</th>
+				</cfif>
 			</tr>
 			<cfloop list="#lTeams#" index="item">
 				<cfset queryobject = stTeams[item].players>
@@ -69,49 +80,43 @@ $LastChangedRevision$
 					<td align="center">#qPlayersReady.recordcount#<cfif qTournament.teamsubstitute AND qPlayersWaiting.recordcount> (#qPlayersWaiting.recordcount#)</cfif></td>
 					<td><cfif session.userloggedin AND session.userid NEQ stTeams[item].leaderid><a href="javascript:LANshock.userSendMessage(#stTeams[item].leaderid#);"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/email.png" alt=""></a></cfif>
 						<a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#stTeams[item].leaderid#')#">#stTeams[item].leadername#</a></td>
-					<td>
-						<cftry>
-							<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.event.model.seatplan')#" method="getSeatLinkDataByUserID" returnvariable="stSeat">
+					<cfif isNumeric(qTournament.event_id)>
+						<td><cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.event.model.seatplan')#" method="getUserEvents" returnvariable="qSeat">
 								<cfinvokeargument name="userid" value="#stTeams[item].leaderid#">
+								<cfinvokeargument name="event_id" value="#qTournament.event_id#">
 							</cfinvoke>
-							<cfif NOT StructIsEmpty(stSeat)>
-								<a href="#application.lanshock.oHelper.buildUrl('#stSeat.linkurl#')#">#stSeat.description#</a>
+							<cfif qSeat.recordcount>
+								<a href="#application.lanshock.oHelper.buildUrl('#qSeat.linkurl#')#">#qSeat.description#</a>
 							<cfelse>
 								#request.content.player_unknown_seat#
-							</cfif>
-							<cfcatch>#request.content.player_unknown_seat#</cfcatch>
-						</cftry></td>
+							</cfif></td>
+					</cfif>
 				</tr>
 			</cfloop>
 		</table>
-	</cfif>
-<cfelse>
-	<cfif qTournament.status EQ "signup" AND session.userloggedin AND qTeamCurrentUser.recordcount>
-		<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.team_delete&tournamentid=#attributes.tournamentid#&teamid=#qTeamCurrentUser.id#')#">#request.content.delete_this_team#</a><br>
-		#request.content.delete_this_team_hint#
-	</cfif>
-	<cfif ListLen(lTeams)>
+	<cfelse>
 		<table>
 			<tr>
 				<th colspan="2">#request.content.teamleader#</th>
-				<th>#request.content.teams_leaderseat#</th>
+				<cfif isNumeric(qTournament.event_id)>
+					<th>#request.content.teams_leaderseat#</th>
+				</cfif>
 			</tr>
 			<cfloop list="#lTeams#" index="item">
 				<tr>
 					<td><a href="#application.lanshock.oHelper.buildUrl('user.userdetails&id=#stTeams[item].leaderid#')#">#stTeams[item].leadername#</a></td>
 					<td align="right"><cfif session.userloggedin AND session.userid NEQ stTeams[item].leaderid><a href="javascript:LANshock.userSendMessage(#stTeams[item].leaderid#);"><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/icons/email.png" alt=""></a><cfelse>&nbsp;</cfif></td>
-					<td>
-						<cftry>
-							<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.event.model.seatplan')#" method="getSeatLinkDataByUserID" returnvariable="stSeat">
+					<cfif isNumeric(qTournament.event_id)>
+						<td><cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.event.model.seatplan')#" method="getUserEvents" returnvariable="qSeat">
 								<cfinvokeargument name="userid" value="#stTeams[item].leaderid#">
+								<cfinvokeargument name="event_id" value="#qTournament.event_id#">
 							</cfinvoke>
-							<cfif NOT StructIsEmpty(stSeat)>
-								<a href="#application.lanshock.oHelper.buildUrl('#stSeat.linkurl#')#">#stSeat.description#</a>
+							<cfif qSeat.recordcount>
+								<a href="#application.lanshock.oHelper.buildUrl('#qSeat.linkurl#')#">#qSeat.description#</a>
 							<cfelse>
 								#request.content.player_unknown_seat#
-							</cfif>
-							<cfcatch>#request.content.player_unknown_seat#</cfcatch>
-						</cftry></td>
+							</cfif></td>
+					</cfif>
 				</tr>
 			</cfloop>
 		</table>

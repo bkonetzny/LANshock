@@ -116,9 +116,9 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="id" id="formrow_8E0BC9F6DD0A4D4DAC69C1D5BB927125" value="#otournament_result.getid()#" />
+	<input type="hidden" name="id" id="formrow_6FE6B63763FC457788DCD71CAA28134E" value="#otournament_result.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_8E0BC9F6DD0A4D4DAC69C1D5BB927125">#request.content.tournament_result_rowtype_label_id#</label>
+		<label for="formrow_6FE6B63763FC457788DCD71CAA28134E">#request.content.tournament_result_rowtype_label_id#</label>
 		#Trim(otournament_result.getid())#
 	</div>
 	</cfif>
@@ -133,8 +133,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_7173535C14624F6E8A6FAE39997CBC3F"><em>*</em> #request.content.tournament_result_rowtype_label_team1_result#</label>
-		<input type="text" class="textInput" name="team1_result" id="formrow_7173535C14624F6E8A6FAE39997CBC3F" value="#Trim(otournament_result.getteam1_result())#"/>
+		<label for="formrow_B12A6EA049F84DCAB3B0C98DC80772EA"><em>*</em> #request.content.tournament_result_rowtype_label_team1_result#</label>
+		<input type="text" class="textInput" name="team1_result" id="formrow_B12A6EA049F84DCAB3B0C98DC80772EA" value="#Trim(otournament_result.getteam1_result())#"/>
 	</div>
 				
 			
@@ -147,8 +147,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_CF7E1E9B029C446C9B404A579D4F4CCB"><em>*</em> #request.content.tournament_result_rowtype_label_team2_result#</label>
-		<input type="text" class="textInput" name="team2_result" id="formrow_CF7E1E9B029C446C9B404A579D4F4CCB" value="#Trim(otournament_result.getteam2_result())#"/>
+		<label for="formrow_E486D79E16B24461AE36BECA5C4C30B5"><em>*</em> #request.content.tournament_result_rowtype_label_team2_result#</label>
+		<input type="text" class="textInput" name="team2_result" id="formrow_E486D79E16B24461AE36BECA5C4C30B5" value="#Trim(otournament_result.getteam2_result())#"/>
 	</div>
 				
 			
@@ -173,8 +173,8 @@
 	
 	<cfset sReltournament_type_se_match = otournament_result.gettournament_type_se_match().getid()>
 	<div class="ctrlHolder">
-		<label for="formrow_DCD7E04EF7D946CB877620D8428817F5">tournament_type_se_match</label>
-		<select class="selectInput" name="matchid" id="formrow_DCD7E04EF7D946CB877620D8428817F5">
+		<label for="formrow_C47F300ED0BA4F2B9D57098103021756">tournament_type_se_match</label>
+		<select class="selectInput" name="matchid" id="formrow_C47F300ED0BA4F2B9D57098103021756">
 			<option value=""></option>
 			<cfloop query="stRelated.stManyToOne.tournament_type_se_match.qData">
 				<option value="#stRelated.stManyToOne.tournament_type_se_match.qData.optionvalue#"<cfif sReltournament_type_se_match EQ stRelated.stManyToOne.tournament_type_se_match.qData.optionvalue> selected="selected"</cfif>>#stRelated.stManyToOne.tournament_type_se_match.qData.optionname#</option>

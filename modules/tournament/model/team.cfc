@@ -54,6 +54,28 @@ $LastChangedRevision$
 		
 	</cffunction>
 
+	<cffunction name="getTournamentTeams" access="public" returntype="query" output="false">
+		<cfargument name="tournamentid" required="true" type="numeric">
+
+		<cfset var qTournament = 0>
+		<cfset var qTeams = 0>
+		
+		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.tournaments')#" method="getTournamentData" returnvariable="qTournament">
+			<cfinvokeargument name="id" value="#arguments.tournamentid#">
+		</cfinvoke>
+	
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qTeams">
+			SELECT t.id, t.leaderid, t.autoacceptids, t.leagueid, u.name AS leadername, u.email, <cfif qTournament.teamsize EQ 1>u.name<cfelse>t.name</cfif>
+			FROM tournament_team t
+			INNER JOIN user u ON t.leaderid = u.id
+			WHERE t.tournamentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.tournamentid#">
+			ORDER BY t.name ASC, leadername ASC
+		</cfquery>
+		
+		<cfreturn qTeams>
+		
+	</cffunction>
+
 	<cffunction name="getTeamData" access="public" returntype="struct" output="false">
 		<cfargument name="tournamentid" required="true" type="numeric">
 		<cfargument name="teamid" required="true" type="numeric">

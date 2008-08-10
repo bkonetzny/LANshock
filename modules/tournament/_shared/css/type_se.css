@@ -6,13 +6,22 @@ tr.match_container td {height: 50px;}
 tr.match_container td.match_box {background-color: #ccc; width: 100px; height: 48px; text-align: center; border: 1px solid #fff;}
 td.decorator {width: 8px; text-align: right;}
 
+.match_plan {
+	background-color: #fff;
+}
+
 .match_plan * a {text-decoration: none;}
 .team_name {display: block; height: 12px; white-space:nowrap; width: 86px; overflow:hidden;}
-.team_delimiter {display: block; color: white; text-align: center;}
+.team_delimiter, .team_delimiter_result {display: block; color: white; text-align: center;}
+.team_delimiter_result {color: #000;}
 .team_wildcard, .team_unknown {display: block; color: white; text-align: center; font-style: italic;}
 
+.match_box_status{
+	border: 1px solid gray;
+}
+
 .match_box div{
-	height: 48px;
+	height: 46px;
 	line-height: 12px;
 	overflow: hidden;
 }

@@ -21,14 +21,77 @@ $LastChangedRevision: 424 $
 		</cfinvoke>
 		
 		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qMatches">
-			SELECT m.*, u1.country AS team1_country, u2.country AS team2_country, <cfif qTournament.teamsize EQ 1>u1.name AS team1_name, u2.name AS team2_name<cfelse>t1.name AS team1_name, t2.name AS team2_name</cfif>
+			SELECT m.*, u1.country AS team1_country, u2.country AS team2_country
+				<cfif qTournament.teamsize EQ 1>
+					, u1.name AS team1_name, u2.name AS team2_name
+				<cfelse>
+					, t1.name AS team1_name, t2.name AS team2_name
+				</cfif>
+				, SUM(r.team1_result) AS team1_result_sum, SUM(r.team2_result) AS team2_result_sum
 			FROM tournament_match m
 			LEFT OUTER JOIN tournament_team t1 ON t1.id = m.team1
 			LEFT OUTER JOIN tournament_team t2 ON t2.id = m.team2
 			LEFT OUTER JOIN user u1 ON t1.leaderid = u1.id
 			LEFT OUTER JOIN user u2 ON t2.leaderid = u2.id
+			LEFT OUTER JOIN tournament_result r ON m.id = r.matchid
 			WHERE m.tournamentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.tournamentid#">
+			GROUP BY m.id
 			ORDER BY m.col, m.row
+		</cfquery>
+		
+		<cfreturn qMatches>
+		
+	</cffunction>
+
+	<cffunction name="getLatestMatches" access="public" returntype="query" output="false">
+		<cfargument name="season_id" required="true" type="numeric">
+		<cfargument name="count" required="false" default="5" type="numeric">
+		
+		<cfset var qMatches = 0>
+		
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qMatches">
+			SELECT m.id, m.tournamentid, m.team1, m.team2, m.winner, u1.country AS team1_country, u2.country AS team2_country, t1.name AS team1_name, t2.name AS team2_name, SUM(r.team1_result) AS team1_result_sum, SUM(r.team2_result) AS team2_result_sum, t.name
+			FROM tournament_match m
+			LEFT OUTER JOIN tournament_team t1 ON t1.id = m.team1
+			LEFT OUTER JOIN tournament_team t2 ON t2.id = m.team2
+			LEFT OUTER JOIN user u1 ON t1.leaderid = u1.id
+			LEFT OUTER JOIN user u2 ON t2.leaderid = u2.id
+			LEFT OUTER JOIN tournament_result r ON m.id = r.matchid
+			INNER JOIN tournament_tournament t ON m.tournamentid = t.id
+			INNER JOIN tournament_group g ON t.groupid = g.id
+			WHERE g.season_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.season_id#">
+			AND m.status = 'done'
+			AND m.winner IS NOT NULL
+			AND m.checkedby_admin_dt IS NOT NULL
+			GROUP BY m.id
+			ORDER BY m.checkedby_admin_dt DESC
+			LIMIT #arguments.count#
+		</cfquery>
+		
+		<cfreturn qMatches>
+		
+	</cffunction>
+
+	<cffunction name="getMatchesByStatus" access="public" returntype="query" output="false">
+		<cfargument name="season_id" required="true" type="numeric">
+		<cfargument name="status" required="true" type="string">
+		
+		<cfset var qMatches = 0>
+		
+		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qMatches">
+			SELECT m.id, m.tournamentid, m.team1, m.team2, m.winner, u1.country AS team1_country, u2.country AS team2_country, t1.name AS team1_name, t2.name AS team2_name, SUM(r.team1_result) AS team1_result_sum, SUM(r.team2_result) AS team2_result_sum, t.name
+			FROM tournament_match m
+			LEFT OUTER JOIN tournament_team t1 ON t1.id = m.team1
+			LEFT OUTER JOIN tournament_team t2 ON t2.id = m.team2
+			LEFT OUTER JOIN user u1 ON t1.leaderid = u1.id
+			LEFT OUTER JOIN user u2 ON t2.leaderid = u2.id
+			LEFT OUTER JOIN tournament_result r ON m.id = r.matchid
+			INNER JOIN tournament_tournament t ON m.tournamentid = t.id
+			INNER JOIN tournament_group g ON t.groupid = g.id
+			WHERE g.season_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.season_id#">
+			AND m.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.status#">
+			GROUP BY m.id
+			ORDER BY t.name ASC, m.tournamentid ASC, m.id ASC
 		</cfquery>
 		
 		<cfreturn qMatches>
@@ -150,13 +213,33 @@ $LastChangedRevision: 424 $
 		<cfargument name="tournamentid" required="true" type="numeric">
 		<cfargument name="col" required="true" type="numeric">
 		<cfargument name="row" required="true" type="numeric">
+		<cfargument name="team1" required="false" type="numeric" default="0">
+		<cfargument name="team2" required="false" type="numeric" default="0">
+		<cfargument name="status" required="false" type="string" default="">
 		
 		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
-			INSERT INTO tournament_match (col,row,tournamentid,status)
+			INSERT INTO tournament_match (col,row,tournamentid,status
+				<cfif arguments.team1 NEQ 0>
+					,team1
+				</cfif>
+				<cfif arguments.team2 NEQ 0>
+					,team2
+				</cfif>
+			)
 			VALUES (<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.col#">,
 					<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.row#">,
 					<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.tournamentid#">,
-					'empty')
+					<cfif len(arguments.status)>
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.status#">
+					<cfelse>
+						'empty'
+					</cfif>
+					<cfif arguments.team1 NEQ 0>
+						,<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.team1#">
+					</cfif>
+					<cfif arguments.team2 NEQ 0>
+						,<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.team2#">
+					</cfif>)
 		</cfquery>
 
 	</cffunction>
@@ -319,8 +402,8 @@ $LastChangedRevision: 424 $
 				<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 					INSERT INTO tournament_result (matchid,team1_result,team2_result)
 					VALUES (<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.matchid#">,
-							<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.results[item].team1_result#">,
-							<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.results[item].team2_result#">)
+							<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.results[idx].team1_result#">,
+							<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.results[idx].team2_result#">)
 				</cfquery>
 			
 			</cfif>

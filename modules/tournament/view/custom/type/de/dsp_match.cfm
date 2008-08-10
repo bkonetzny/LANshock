@@ -118,13 +118,13 @@ $LastChangedRevision: 72 $
 													<cfloop from="1" to="#iBrackets#" index="row">
 														<cfif col NEQ iRowCountL>
 															<tr>
-																<td class="decorator_l"><cfif col MOD 2 AND NOT top><img src="#stImageDir.module#/type_de/px.gif" width="1" height="#spacerheight#" alt="" border="0" vspace="0" hspace="0"/></cfif></td>
+																<td class="decorator_l"><a name="bracket_L_#col#_#row#"><cfif col MOD 2 AND NOT top><img src="#stImageDir.module#/type_de/px.gif" width="1" height="#spacerheight#" alt="" border="0" vspace="0" hspace="0"/></cfif></td>
 																<td colspan="2" style="height: #spacerheight#px;"></td>
 															</tr>
 														</cfif>
 														<tr class="match_container">
 															<td class="decorator_l"><cfif iDivider GT 1><cfif top OR NOT col MOD 2><img src="#stImageDir.module#/type_de/top_right.gif" width="8" height="50" alt="" border="0" vspace="0" hspace="0"/><cfelse><img src="#stImageDir.module#/type_de/bottom_right.gif" width="8" height="50" alt="" border="0"/></cfif></cfif></td>
-															<td class="match_box match_box_status_">
+															<td class="match_box" id="match_box_bracket_L_#col#_#row#">
 																#stHtmlMatches['#col#_#row#']#
 															</td>
 															<td class="decorator"><img src="#stImageDir.module#/type_de/middle.gif" width="8" height="50" alt="" border="0" vspace="0" hspace="0"/></td>
@@ -132,7 +132,7 @@ $LastChangedRevision: 72 $
 														<cfif NOT col MOD 2>
 															<tr>
 																<td class="decorator_l"><img src="#stImageDir.module#/type_de/bottom_right.gif" width="8" height="50" alt="" border="0" vspace="0" hspace="0"/></td>
-																<td colspan="2" style="height: #spacerheight#px;" class="hint_l">#request.content.type_de_match_loser_from# #request.content.type_de_match_key_winnerbracket# #iRowCount-col/2-1#.#iBrackets+1-row#</td>
+																<td colspan="2" style="height: 50px;" class="hint_l"><a href="##bracket_W_#iRowCount-col/2-1#_#iBrackets+1-row#" onclick="LANshock.Modules.oTournament.oTypeDE.markBracket('match_box_bracket_W_#iRowCount-col/2-1#_#iBrackets+1-row#');return true;">#request.content.type_de_match_loser_from# #request.content.type_de_match_key_winnerbracket# #iRowCount-col/2-1#.#iBrackets+1-row#</a></td>
 															</tr>
 														</cfif>
 														<cfif col NEQ iRowCountL>
@@ -201,20 +201,20 @@ $LastChangedRevision: 72 $
 													<cfloop from="1" to="#iBrackets#" index="row">
 														<cfif iDivider gt 1>
 															<tr>
-																<td colspan="2" style="height: #spacerheight#px;" class="hint_matchtitle"><cfif col NEQ iRowCount>#request.content.type_de_match_key_winnerbracket# #col-1#.#row#</cfif></td>
+																<td colspan="2" style="height: #spacerheight#px;" class="hint_matchtitle"><cfif col NEQ iRowCount><a name="bracket_W_#col-1#_#row#">#request.content.type_de_match_key_winnerbracket# #col-1#.#row#</cfif></td>
 																<td class="decorator"><cfif not top><img src="#stImageDir.module#/type_de/px.gif" width="1" height="#spacerheight#" alt="" border="0" vspace="0" hspace="0"/></cfif></td>
 															</tr>
 														</cfif>
 														<tr class="match_container">
 															<td class="decorator"><cfif iRowCountL GT 0><cfif iDivider GT 1><img src="#stImageDir.module#/type_de/middle.gif" width="8" height="50" alt="" border="0" vspace="0" hspace="0"/><cfelseif top><img src="#stImageDir.module#/type_de/top_right.gif" width="8" height="50" alt="" border="0" vspace="0" hspace="0"/><cfelse><img src="#stImageDir.module#/type_de/bottom_right.gif" width="8" height="50" alt="" border="0"/></cfif></cfif></td>
-															<td class="match_box match_box_status_">
+															<td class="match_box" id="match_box_bracket_W_#col-1#_#row#">
 																#stHtmlMatches['#col+iRowCountL#_#row#']#
 															</td>
 															<td class="decorator"><cfif col NEQ iRowCount><cfif top><img src="#stImageDir.module#/type_de/top_left.gif" width="8" height="50" alt="" border="0" vspace="0" hspace="0"/><cfelse><img src="#stImageDir.module#/type_de/bottom_left.gif" width="8" height="50" alt="" border="0"/></cfif></cfif></td>
 														</tr>
 														<cfif col EQ iRowCount-1>
 															<tr>
-																<td colspan="2" style="height: 50px;" class="hint_w">#request.content.type_de_match_winner_from#</td>
+																<td colspan="2" style="height: 50px;" class="hint_w"><a href="##bracket_L_1_1" onclick="LANshock.Modules.oTournament.oTypeDE.markBracket('match_box_bracket_L_1_1');return true;">Gewinner L 1.1</a></td>
 																<td class="decorator"><img src="#stImageDir.module#/type_de/bottom_left.gif" width="8" height="50" alt="" border="0" vspace="0" hspace="0"></td>
 															</tr>
 														</cfif>

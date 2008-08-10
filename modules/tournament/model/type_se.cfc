@@ -110,8 +110,7 @@ $LastChangedRevision$
 				</cfif>
 			</cfif>
 			
-			<cfif isNumeric(iTeam1ID) AND iTeam1ID NEQ 0
-				AND isNumeric(iTeam2ID) AND iTeam2ID NEQ 0>
+			<cfif isNumeric(iTeam1ID) AND isNumeric(iTeam2ID)>
 				<cfset sStatus = 'play'>
 			<cfelse>
 				<cfset sStatus = 'empty'>
@@ -222,7 +221,7 @@ $LastChangedRevision$
 				</cfquery>
 			
 				<cfset stStats.stWin[iWinnerID] = stStats.stWin[iWinnerID] + 1>
-				<cfset stStats.stLose[iLoserID] = stStats.stWin[iLoserID] + 1>
+				<cfset stStats.stLose[iLoserID] = stStats.stLose[iLoserID] + 1>
 				<cfif isNumeric(qPoints.team1_result_sum)>
 					<cfset stStats.stPointWin[qMatches.team1] = stStats.stPointWin[qMatches.team1] + qPoints.team1_result_sum>
 					<cfset stStats.stPointLose[qMatches.team2] = stStats.stPointLose[qMatches.team2] + qPoints.team1_result_sum>
@@ -274,6 +273,7 @@ $LastChangedRevision$
 		<cfset var iTeamsDummy = ''>
 		<cfset var qMatchesFirstRound = 0>
 		<cfset var qTournament = 0>
+		<cfset var iSortCount = 0>
 		
 		<cfset createAllMatches(arguments.tournamentid)>
 		
@@ -298,8 +298,9 @@ $LastChangedRevision$
 			</cfloop>
 		</cfif>
 		
-		<cfloop condition="#FindNoCase('0,0',lTeamIDs)# NEQ 0">
+		<cfloop condition="#iSortCount# LTE 10 AND #FindNoCase('0,0',lTeamIDs)# NEQ 0">
 			<cfset lTeamIDs = ListRandom(lTeamIDs)>
+			<cfset iSortCount = iSortCount + 1>
 		</cfloop>
 		
 		<cfset qMatchesFirstRound = getMatchesByCol(tournamentid=arguments.tournamentid,col=1)>

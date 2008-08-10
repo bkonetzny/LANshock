@@ -131,9 +131,9 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="id" id="formrow_424F32E832E747498BD8CA88AD79A989" value="#otournament_team.getid()#" />
+	<input type="hidden" name="id" id="formrow_804F7A9F149144989C8BA64394DCA9F3" value="#otournament_team.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_424F32E832E747498BD8CA88AD79A989">#request.content.tournament_team_rowtype_label_id#</label>
+		<label for="formrow_804F7A9F149144989C8BA64394DCA9F3">#request.content.tournament_team_rowtype_label_id#</label>
 		#Trim(otournament_team.getid())#
 	</div>
 	</cfif>
@@ -148,8 +148,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_21748DFCE3774408A754148665746AE3"><em>*</em> #request.content.tournament_team_rowtype_label_name#</label>
-		<input type="text" class="textInput" name="name" id="formrow_21748DFCE3774408A754148665746AE3" value="#Trim(otournament_team.getname())#"/>
+		<label for="formrow_861055094C054D87A1C4E46DA40C44F1"><em>*</em> #request.content.tournament_team_rowtype_label_name#</label>
+		<input type="text" class="textInput" name="name" id="formrow_861055094C054D87A1C4E46DA40C44F1" value="#Trim(otournament_team.getname())#"/>
 	</div>
 				
 			
@@ -162,8 +162,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_9767E7AAD02747C2AAC8D4DDC248A4F2">#request.content.tournament_team_rowtype_label_autoacceptids#</label>
-		<input type="text" class="textInput" name="autoacceptids" id="formrow_9767E7AAD02747C2AAC8D4DDC248A4F2" value="#Trim(otournament_team.getautoacceptids())#"/>
+		<label for="formrow_C2BFB21BDA484BA2B46400760007712F">#request.content.tournament_team_rowtype_label_autoacceptids#</label>
+		<input type="text" class="textInput" name="autoacceptids" id="formrow_C2BFB21BDA484BA2B46400760007712F" value="#Trim(otournament_team.getautoacceptids())#"/>
 	</div>
 				
 			
@@ -176,8 +176,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_59A11174320A4B6CB904D0A7D2CF3547">#request.content.tournament_team_rowtype_label_leagueid#</label>
-		<input type="text" class="textInput" name="leagueid" id="formrow_59A11174320A4B6CB904D0A7D2CF3547" value="#Trim(otournament_team.getleagueid())#"/>
+		<label for="formrow_BA7178FBC0F640938CFFE9006758D081">#request.content.tournament_team_rowtype_label_leagueid#</label>
+		<input type="text" class="textInput" name="leagueid" id="formrow_BA7178FBC0F640938CFFE9006758D081" value="#Trim(otournament_team.getleagueid())#"/>
 	</div>
 				
 			
@@ -202,8 +202,8 @@
 	
 	<cfset sReltournament_tournament = otournament_team.gettournament_tournament().getid()>
 	<div class="ctrlHolder">
-		<label for="formrow_671EA972B7B64A6EA51EFD32593AF45A">tournament_tournament</label>
-		<select class="selectInput" name="tournamentid" id="formrow_671EA972B7B64A6EA51EFD32593AF45A">
+		<label for="formrow_C89E4972669847CF8AD094C73CD33743">tournament_tournament</label>
+		<select class="selectInput" name="tournamentid" id="formrow_C89E4972669847CF8AD094C73CD33743">
 			<option value=""></option>
 			<cfloop query="stRelated.stManyToOne.tournament_tournament.qData">
 				<option value="#stRelated.stManyToOne.tournament_tournament.qData.optionvalue#"<cfif sReltournament_tournament EQ stRelated.stManyToOne.tournament_tournament.qData.optionvalue> selected="selected"</cfif>>#stRelated.stManyToOne.tournament_tournament.qData.optionname#</option>
@@ -222,8 +222,8 @@
 	
 	<cfset sReluser = otournament_team.getuser().getid()>
 	<div class="ctrlHolder">
-		<label for="formrow_28D5D66C8B5641F792396CD0669F102C">user</label>
-		<select class="selectInput" name="leaderid" id="formrow_28D5D66C8B5641F792396CD0669F102C">
+		<label for="formrow_2AABB03570524050952923A99EE01CDC">user</label>
+		<select class="selectInput" name="leaderid" id="formrow_2AABB03570524050952923A99EE01CDC">
 			<option value=""></option>
 			<cfloop query="stRelated.stManyToOne.user.qData">
 				<option value="#stRelated.stManyToOne.user.qData.optionvalue#"<cfif sReluser EQ stRelated.stManyToOne.user.qData.optionvalue> selected="selected"</cfif>>#stRelated.stManyToOne.user.qData.optionname#</option>

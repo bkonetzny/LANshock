@@ -11,11 +11,15 @@ $LastChangedRevision: 72 $
 
 <cfset sRelocate = ''>
 
-<cfif sStatusOld EQ 'signup' AND sStatusNew EQ 'warmup'>
-	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_se')#" method="createAllMatches">
-		<cfinvokeargument name="tournamentid" value="#attributes.tournamentid#">
+<cfif sStatusNew EQ 'signup'>
+	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_se')#" method="resetAllMatches">
+		<cfinvokeargument name="tournamentid" value="#qTournament.id#">
 	</cfinvoke>
 	
+	<cfset sRelocate = 'teams'>
+</cfif>
+
+<cfif sStatusOld EQ 'signup' AND sStatusNew EQ 'warmup'>
 	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.type_se')#" method="randomizeFirstRound">
 		<cfinvokeargument name="tournamentid" value="#qTournament.id#">
 	</cfinvoke>

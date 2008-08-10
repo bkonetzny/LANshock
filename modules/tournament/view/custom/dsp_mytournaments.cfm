@@ -12,7 +12,7 @@ $LastChangedRevision$
 <cfoutput>
 <h3>#request.content.mytournaments_headline#</h3>
 
-<cfif session.oUser.checkPermissions('manage')>
+<!--- <cfif session.oUser.checkPermissions('manage')>
 	<h4>Admin bei folgenden Turnieren</h4>
 	
 	<table>
@@ -55,11 +55,10 @@ $LastChangedRevision$
 	
 		<input type="submit" value="#request.content.form_save#">
 	</form>
-</cfif>
+</cfif> --->
 
 <table>
 	<tr>
-		<th class="empty">&nbsp;</th>
 		<th>#request.content.tournament_name#</th>
 		<th>#request.content.data_your_team#</th>
 		<th>#request.content.tournament_type#</th>
@@ -68,16 +67,15 @@ $LastChangedRevision$
 	</tr>
 	<cfloop query="qMyTournaments">
 		<tr>
-			<td class="empty"><cfif len(image)><img src="#application.lanshock.oHelper.UDF_Module('webPath')#icons/#image#"><cfelse><img src="#stImageDir.general#/spacer.gif" width="32" height="32"></cfif></td>
-			<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.teams&tournamentid=#id#')#">#HTMLEditFormat(name)#</a></td>
-			<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.team_details&tournamentid=#id#&teamid=#teamid#')#"><cfif teamsize EQ 1>#playername#<cfelse>#teamname#</cfif></a></td>
-			<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.matches&tournamentid=#id#')#">#request.content['tournament_type_' & type]#</a></td>
-			<td align="center"><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.matches&tournamentid=#id#')#">#request.content['tournament_status_' & status]#</a></td>
-			<td align="center">
-				<cfif day(starttime) EQ day(now()) AND DateCompare(starttime,now()) NEQ "-1">
-					#calcRemainingTime(starttime)#
+			<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.teams&tournamentid=#qMyTournaments.id#')#">#qMyTournaments.name#</a></td>
+			<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.team_details&tournamentid=#qMyTournaments.id#&teamid=#qMyTournaments.teamid#')#"><cfif teamsize EQ 1>#qMyTournaments.playername#<cfelse>#qMyTournaments.teamname#</cfif></a></td>
+			<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.matches&tournamentid=#qMyTournaments.id#')#">#request.content['tournament_type_' & qMyTournaments.type]#</a></td>
+			<td><a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.matches&tournamentid=#qMyTournaments.id#')#">#request.content['tournament_status_' & qMyTournaments.status]#</a></td>
+			<td>
+				<cfif day(qMyTournaments.starttime) EQ day(now()) AND DateCompare(qMyTournaments.starttime,now()) NEQ "-1">
+					#calcRemainingTime(qMyTournaments.starttime)#
 				</cfif>
-				#session.oUser.DateTimeFormat(starttime)#</td>
+				#session.oUser.DateTimeFormat(qMyTournaments.starttime)#</td>
 		</tr>
 	</cfloop>
 </table>
