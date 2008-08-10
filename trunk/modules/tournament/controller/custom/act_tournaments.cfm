@@ -9,21 +9,21 @@ $LastChangedBy$
 $LastChangedRevision$
 --->
 
-<cfset stFilter = StructNew()>
+<!--- <cfset stFilter = StructNew()>
 <cfset stFilter.lSortFields = "name|ASC">
 
 <cfinvoke component="#application.lanshock.oFactory.load('tournament_group','reactorGateway')#" method="getRecords" returnvariable="qGroups">
 	<cfinvokeargument name="stFilter" value="#stFilter#">
-</cfinvoke>
+</cfinvoke> --->
 
-<!--- <cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.tournaments')#" method="getTournaments" returnvariable="qTournaments"> --->
+<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.tournaments')#" method="getTournaments" returnvariable="qTournaments">
 
-<cfset stFilter = StructNew()>
+<!--- <cfset stFilter = StructNew()>
 <cfset stFilter.lSortFields = "name|ASC">
 
 <cfinvoke component="#application.lanshock.oFactory.load('tournament_tournament','reactorGateway')#" method="getRecords" returnvariable="qTournaments">
 	<cfinvokeargument name="stFilter" value="#stFilter#">
-</cfinvoke>
+</cfinvoke> --->
 
 <cfif session.userloggedin>
 	<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.tournaments')#" method="getUserTournaments" returnvariable="qUserTournaments">

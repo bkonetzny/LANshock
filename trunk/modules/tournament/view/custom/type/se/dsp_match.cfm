@@ -77,7 +77,7 @@ $LastChangedRevision: 72 $
 												</cfif>
 												<tr class="match_container">
 													<td class="decorator"><cfif iDivider GT 1><img src="#stImageDir.module#/type_se/middle.gif" width="8" height="50" alt="" border="0"/></cfif></td>
-													<td class="match_box match_box_status_">
+													<td class="match_box">
 														#stHtmlMatches['#col#_#row#']#
 													</td>
 													<td class="decorator"><cfif col NEQ iRowCount><cfif top><img src="#stImageDir.module#/type_se/top_left.gif" width="8" height="50" alt="" border="0"/><cfelse><img src="#stImageDir.module#/type_se/bottom_left.gif" width="8" height="50" alt="" border="0"/></cfif></cfif></td>

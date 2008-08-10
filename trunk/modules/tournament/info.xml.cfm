@@ -7,7 +7,7 @@ $LastChangedDate$
 $LastChangedBy$
 $LastChangedRevision$
 -->
-<module name="Tournament System" version="2.0.0.0" date="2008-07-27" author="LANshock" url="http://www.lanshock.com">
+<module name="Tournament System" version="2.0.0.0" date="2008-08-10" author="LANshock" url="http://www.lanshock.com">
 	
 	<general requiresLogin="false"/>
 	
@@ -18,14 +18,15 @@ $LastChangedRevision$
 	<navigation>
 		<item action="tournaments"/>
 		<item action="timetable"/>
+		<item action="mytournaments"/>
 		<!-- <item action="rankings"/>
-		<item action="mytournaments"/> -->
 		<item action="management" permissions="manage"/>
-		<item action="export" permissions="export"/>
+		<item action="export" permissions="export"/> -->
+		<item action="match_overview" permissions="manage"/>
 		<item action="tournament_season_listing" permissions="tournament_season"/>
 		<item action="tournament_group_listing" permissions="tournament_group"/>
-		<item action="tournament_team_listing" permissions="tournament_team"/>
-		<item action="tournament_player_listing" permissions="tournament_player"/>
+		<!-- <item action="tournament_team_listing" permissions="tournament_team"/>
+		<item action="tournament_player_listing" permissions="tournament_player"/> -->
 		<item action="tournament_tournament_listing" permissions="tournament_tournament"/>
 	</navigation>
 	

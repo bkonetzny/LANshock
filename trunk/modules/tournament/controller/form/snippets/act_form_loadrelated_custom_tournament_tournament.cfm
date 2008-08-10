@@ -13,19 +13,33 @@
 <cfset QuerySetCell(stRelated.type_custom.qData,'optionname',request.content.tournament_type_de)>
 <cfset QuerySetCell(stRelated.type_custom.qData,'optionvalue','de')>
 <cfset QueryAddRow(stRelated.type_custom.qData)>
+<cfset QuerySetCell(stRelated.type_custom.qData,'optionname',request.content.tournament_type_rr)>
+<cfset QuerySetCell(stRelated.type_custom.qData,'optionvalue','rr')>
+<cfset QueryAddRow(stRelated.type_custom.qData)>
+<cfset QuerySetCell(stRelated.type_custom.qData,'optionname',request.content.tournament_type_drr)>
+<cfset QuerySetCell(stRelated.type_custom.qData,'optionvalue','drr')>
+<!--- <cfset QueryAddRow(stRelated.type_custom.qData)>
 <cfset QuerySetCell(stRelated.type_custom.qData,'optionname',request.content.tournament_type_group)>
 <cfset QuerySetCell(stRelated.type_custom.qData,'optionvalue','group')>
 <cfset QueryAddRow(stRelated.type_custom.qData)>
 <cfset QuerySetCell(stRelated.type_custom.qData,'optionname','Custom Ranking')>
-<cfset QuerySetCell(stRelated.type_custom.qData,'optionvalue','customranking')>
+<cfset QuerySetCell(stRelated.type_custom.qData,'optionvalue','customranking')> --->
 
-<cfdirectory action="list" directory="#sStorageRules#" name="qRules" sort="name ASC">
+<cfdirectory action="list" directory="#sStorageRules#" recurse="true" name="qRules" sort="name ASC">
 
-<cfquery dbtype="query" name="stRelated.rulefile_custom.qData">
-	SELECT name AS optionname, name AS optionvalue
+<cfquery dbtype="query" name="qRules">
+	SELECT *
 	FROM qRules
-	ORDER BY optionname
+	WHERE type != 'dir'
+	ORDER BY directory
 </cfquery>
+
+<cfset stRelated.rulefile_custom.qData = QueryNew('optionname,optionvalue')>
+<cfloop query="qRules">
+	<cfset QueryAddRow(stRelated.rulefile_custom.qData)>
+	<cfset QuerySetCell(stRelated.rulefile_custom.qData,'optionname',ListLast(qRules.directory,'\/') & '/' & qRules.name)>
+	<cfset QuerySetCell(stRelated.rulefile_custom.qData,'optionvalue',ListLast(qRules.directory,'\/') & '/' & qRules.name)>
+</cfloop>
 
 <cfdirectory action="list" directory="#application.lanshock.oHelper.UDF_Module('absPath')#/images/icons" recurse="true" name="qIcons" sort="name ASC">
 

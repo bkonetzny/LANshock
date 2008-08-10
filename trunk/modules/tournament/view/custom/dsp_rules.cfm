@@ -13,22 +13,19 @@ $LastChangedRevision$
 <h4>#request.content.rules_headline#</h4>
 
 <cfif len(qTournament.rulefile)>
-	<cfscript>
-		if(ListLen(qTournament.rulefile,'/') EQ 2){
-			sDirectory = ListFirst(qTournament.rulefile,'/');
-			sFile = ListLast(qTournament.rulefile,'/');
-		}
-		else{
-			sDirectory = '';
-			sFile = qTournament.rulefile;
-		}
-		sFileExt = ListLast(sFile,'.');
-		sFileName = ListDeleteAt(sFile,ListLen(sFile,'.'),'.');
-		sFileUrlEncoded = sDirectory & '/' & UrlEncodedFormat(sFileName) & '.' & ListLast(sFileExt);
-	</cfscript>
-	<iframe src="#application.lanshock.oHelper.UDF_Module('webStoragePathPublic')#rules#sFileUrlEncoded#" width="100%" height="600" frameborder="0"></iframe>
+	<cfif ListLen(qTournament.rulefile,'/') EQ 2>
+		<cfset sDirectory = ListFirst(qTournament.rulefile,'/')>
+		<cfset sFile = ListLast(qTournament.rulefile,'/')>
+	<cfelse>
+		<cfset sDirectory = ''>
+		<cfset sFile = qTournament.rulefile>
+	</cfif>
+	<cfset sFileExt = ListLast(sFile,'.')>
+	<cfset sFileName = ListDeleteAt(sFile,ListLen(sFile,'.'),'.')>
+	<cfset sFileUrlEncoded = sDirectory & '/' & UrlEncodedFormat(sFileName) & '.' & ListLast(sFileExt)>
+	<iframe src="#application.lanshock.oHelper.UDF_Module('webStoragePathPublic')#rules/#sFileUrlEncoded#" width="100%" height="600" frameborder="0"></iframe>
 <cfelse>
-#request.content.rules_norules#
+	#request.content.rules_norules#
 </cfif>
 </cfoutput>
 

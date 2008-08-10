@@ -85,6 +85,8 @@ $LastChangedRevision$
 		<cfset var iBrackets = 0>
 		<cfset var iRowCount = 0>
 		<cfset var iRowCountL = 0>
+		<cfset var qMaxRow = 0>
+		<cfset var qMaxCol = 0>
 		
 		<cfset calculateMatches_Wildcard(arguments.tournamentid)>
 		
@@ -136,8 +138,14 @@ $LastChangedRevision$
 				AND winner != ''
 				AND status = 'done'
 			</cfquery>
+	
+			<cfquery name="qMaxCol" datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
+				SELECT MAX(col) AS max_col
+				FROM tournament_match
+				WHERE tournamentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.tournamentid#">
+			</cfquery>
 			
-			<cfif qMatches.col EQ iRowCountL*2>
+			<cfif qMatches.col EQ qMaxCol.max_col>
 				<cfset qMatchesPre = getMatchesByCol(arguments.tournamentid,1)>
 				<cfquery dbtype="query" name="qIdTeam2">
 					SELECT *
@@ -172,8 +180,7 @@ $LastChangedRevision$
 				</cfif>
 			</cfif>
 			
-			<cfif isNumeric(iTeam1ID) AND iTeam1ID NEQ 0
-				AND isNumeric(iTeam2ID) AND iTeam2ID NEQ 0>
+			<cfif isNumeric(iTeam1ID) AND isNumeric(iTeam2ID)>
 				<cfset sStatus = 'play'>
 			<cfelse>
 				<cfset sStatus = 'empty'>
@@ -281,11 +288,27 @@ $LastChangedRevision$
 						<cfset iTeam1ID = 0>
 					</cfif>
 				</cfif>
-			<cfelse>
+			<cfelseif qMatches.col MOD 2>
 				<cfquery dbtype="query" name="qIdTeam1">
 					SELECT *
 					FROM qMatchesPre
 					WHERE row = <cfqueryparam cfsqltype="cf_sql_integer" value="#qMatches.row#">
+					AND winner != ''
+					AND status = 'done'
+				</cfquery>
+
+				<cfif qIdTeam1.recordcount>
+					<cfif qIdTeam1.winner EQ 'team1' AND isNumeric(qIdTeam1.team1)>
+						<cfset iTeam1ID = qIdTeam1.team1>
+					<cfelseif qIdTeam1.winner EQ 'team2' AND isNumeric(qIdTeam1.team2)>
+						<cfset iTeam1ID = qIdTeam1.team2>
+					</cfif>
+				</cfif>
+			<cfelse>
+				<cfquery dbtype="query" name="qIdTeam1">
+					SELECT *
+					FROM qMatchesPre
+					WHERE row = <cfqueryparam cfsqltype="cf_sql_integer" value="#qMatches.row*2-1#">
 					AND winner != ''
 					AND status = 'done'
 				</cfquery>
@@ -318,6 +341,7 @@ $LastChangedRevision$
 		
 		<cfset var stFilter = StructNew()>
 		<cfset var qMatches = 0>
+		<cfset var qMatchesL = 0>
 		<cfset var qRanking = QueryNew('teamid, pos')>
 		<cfset var lExcludeTeams = ''>
 		<cfset var iWinnerID = ''>
@@ -327,6 +351,12 @@ $LastChangedRevision$
 		<cfset var stStats = StructNew()>
 		<cfset var qResults = 0>
 		<cfset var qPoints = 0>
+		
+		<cfset var qTournament = 0>
+		<cfset var iTeams = 0>
+		<cfset var iBrackets = 0>
+		<cfset var iRowCount = 0>
+		<cfset var iRowCountL = 0>
 		
 		<cfset stStats.stWin = StructNew()>
 		<cfset stStats.stLose = StructNew()>
@@ -338,9 +368,34 @@ $LastChangedRevision$
 			WHERE tournamentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.tournamentid#">
 		</cfquery>
 		
+		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.tournaments')#" method="getTournamentData" returnvariable="qTournament">
+			<cfinvokeargument name="id" value="#arguments.tournamentid#">
+		</cfinvoke>
+		
+		<cfset iTeams = 2^Ceiling(LogN(qTournament.currentteams,2))>
+		<cfset iBrackets = iTeams>
+		<cfset iRowCount = 0>
+		
+		<cfloop condition="#iBrackets# GTE 2">
+			<cfset iRowCount = iRowCount + 1>
+			<cfset iBrackets = iBrackets / 2>
+		</cfloop>
+		
+		<cfset iRowCountL = (iRowCount - 1) * 2>
+		<cfset iBrackets = 1>
+		
+		<cfif iTeams GT 2>
+			<cfset iRowCount = iRowCount + 1>
+		</cfif>
+		
+		<!--- winner bracket --->
+		<cfset stFilter = StructNew()>
 		<cfset stFilter.stFields.tournamentid = StructNew()>
 		<cfset stFilter.stFields.tournamentid.mode = 'isEqual'>
 		<cfset stFilter.stFields.tournamentid.value = arguments.tournamentid>
+		<cfset stFilter.stFields.col = StructNew()>
+		<cfset stFilter.stFields.col.mode = 'isGt'>
+		<cfset stFilter.stFields.col.value = iRowCountL+1>
 		<cfset stFilter.stFields.status = StructNew()>
 		<cfset stFilter.stFields.status.mode = 'isEqual'>
 		<cfset stFilter.stFields.status.value = 'done'>
@@ -349,6 +404,51 @@ $LastChangedRevision$
 			<cfinvokeargument name="stFilter" value="#stFilter#">
 		</cfinvoke>
 		
+		<cfquery dbtype="query" name="qMatches">
+			SELECT id, team1, team2, winner, col, row, '' AS maxround, 'winner' AS type
+			FROM qMatches
+			ORDER BY col DESC, row ASC
+		</cfquery>
+		
+		<cfloop query="qMatches">
+			<cfset QuerySetCell(qMatches,'maxround',(qMatches.col-1-iRowCountL)*2+1,qMatches.currentrow)>
+		</cfloop>
+		
+		<!--- loser bracket --->
+		<cfset stFilter = StructNew()>
+		<cfset stFilter.stFields.tournamentid = StructNew()>
+		<cfset stFilter.stFields.tournamentid.mode = 'isEqual'>
+		<cfset stFilter.stFields.tournamentid.value = arguments.tournamentid>
+		<cfset stFilter.stFields.col = StructNew()>
+		<cfset stFilter.stFields.col.mode = 'isLt'>
+		<cfset stFilter.stFields.col.value = iRowCountL+1>
+		<cfset stFilter.stFields.status = StructNew()>
+		<cfset stFilter.stFields.status.mode = 'isEqual'>
+		<cfset stFilter.stFields.status.value = 'done'>
+		
+		<cfinvoke component="#application.lanshock.oFactory.load('tournament_match','reactorGateway')#" method="getRecords" returnvariable="qMatchesL">
+			<cfinvokeargument name="stFilter" value="#stFilter#">
+		</cfinvoke>
+		
+		<cfquery dbtype="query" name="qMatchesL">
+			SELECT id, team1, team2, winner, col, row, '' AS maxround, 'loser' AS type
+			FROM qMatchesL
+			ORDER BY col ASC, row ASC
+		</cfquery>
+		
+		<cfloop query="qMatchesL">
+			<cfset QuerySetCell(qMatchesL,'maxround',iRowCountL-qMatchesL.col+2,qMatchesL.currentrow)>
+		</cfloop>
+		
+		<cfquery dbtype="query" name="qMatches">
+			SELECT id, team1, team2, winner, maxround, row
+			FROM qMatches
+			UNION
+			SELECT id, team1, team2, winner, maxround, row
+			FROM qMatchesL
+			ORDER BY maxround DESC, row ASC
+		</cfquery>
+		
 		<cfif qMatches.recordcount>
 			<cfquery name="qResults" datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#">
 				SELECT matchid, team1_result, team2_result
@@ -356,13 +456,7 @@ $LastChangedRevision$
 				WHERE matchid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qMatches.id)#" list="true">)
 			</cfquery>
 			
-			<cfquery dbtype="query" name="qMatches">
-				SELECT id, team1, team2, winner, col
-				FROM qMatches
-				ORDER BY col DESC, row ASC
-			</cfquery>
-			
-			<cfset iColumn = qMatches.col>
+			<cfset iColumn = qMatches.maxround>
 			
 			<cfloop query="qMatches">
 				<cfif NOT StructKeyExists(stStats.stWin,qMatches.team1)>
@@ -390,9 +484,9 @@ $LastChangedRevision$
 					<cfset stStats.stPointLose[qMatches.team2] = 0>
 				</cfif>
 	
-				<cfif iColumn GT qMatches.col>
+				<cfif iColumn GT qMatches.maxround>
 					<cfset iPosition = iPosition + 1>
-					<cfset iColumn = qMatches.col>
+					<cfset iColumn = qMatches.maxround>
 				</cfif>
 				
 				<cfif qMatches.winner EQ 'team1'>
@@ -410,7 +504,7 @@ $LastChangedRevision$
 				</cfquery>
 			
 				<cfset stStats.stWin[iWinnerID] = stStats.stWin[iWinnerID] + 1>
-				<cfset stStats.stLose[iLoserID] = stStats.stWin[iLoserID] + 1>
+				<cfset stStats.stLose[iLoserID] = stStats.stLose[iLoserID] + 1>
 				<cfif isNumeric(qPoints.team1_result_sum)>
 					<cfset stStats.stPointWin[qMatches.team1] = stStats.stPointWin[qMatches.team1] + qPoints.team1_result_sum>
 					<cfset stStats.stPointLose[qMatches.team2] = stStats.stPointLose[qMatches.team2] + qPoints.team1_result_sum>
@@ -462,6 +556,7 @@ $LastChangedRevision$
 		<cfset var iTeamsDummy = ''>
 		<cfset var qMatchesFirstRound = 0>
 		<cfset var qTournament = 0>
+		<cfset var iSortCount = 0>
 		
 		<cfset var iTeams = 0>
 		<cfset var iBrackets = 0>
@@ -501,8 +596,9 @@ $LastChangedRevision$
 			</cfloop>
 		</cfif>
 		
-		<cfloop condition="#FindNoCase('0,0',lTeamIDs)# NEQ 0">
+		<cfloop condition="#iSortCount# LTE 10 AND #FindNoCase('0,0',lTeamIDs)# NEQ 0">
 			<cfset lTeamIDs = ListRandom(lTeamIDs)>
+			<cfset iSortCount = iSortCount + 1>
 		</cfloop>
 		
 		<cfset qMatchesFirstRound = getMatchesByCol(tournamentid=arguments.tournamentid,col=1+iRowCountL)>

@@ -13,11 +13,15 @@ $LastChangedRevision$
 	<cffunction name="getTournaments" access="public" returntype="query" output="false">
 		
 		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qTournaments">
-			SELECT ts.*, COUNT(t.id) AS currentteams
-			FROM tournament_tournament ts
-			LEFT OUTER JOIN tournament_team t ON t.tournamentid = ts.id
-			GROUP BY ts.id
-			ORDER BY ts.name ASC
+			SELECT t.*, COUNT(tt.id) AS currentteams,
+					g.season_id AS group_season_id, g.name AS group_name, g.description AS group_description, g.maxsignups AS group_maxsignups,
+					s.name AS season_name, s.event_id
+			FROM tournament_group g
+			INNER JOIN tournament_tournament t ON t.groupid = g.id
+			LEFT OUTER JOIN tournament_team tt ON tt.tournamentid = t.id
+			LEFT OUTER JOIN tournament_season s ON s.id = g.season_id
+			GROUP BY t.id
+			ORDER BY g.name ASC, t.name ASC
 		</cfquery>
 		
 		<cfreturn qTournaments>
@@ -43,10 +47,16 @@ $LastChangedRevision$
 	<cffunction name="getTournamentData" access="public" returntype="query" output="false">
 		<cfargument name="id" required="true" type="numeric">
 		
+		<cfset var qTournamentData = 0>
+		
 		<cfquery datasource="#application.lanshock.oRuntime.getEnvironment().sDatasource#" name="qTournamentData">
-			SELECT t.*, COUNT(tm.id) AS currentteams
-			FROM tournament_tournament t
-			LEFT OUTER JOIN tournament_team tm ON tm.tournamentid = t.id
+			SELECT t.*, COUNT(tt.id) AS currentteams,
+					g.season_id AS group_season_id, g.name AS group_name, g.description AS group_description, g.maxsignups AS group_maxsignups,
+					s.name AS season_name, s.event_id
+			FROM tournament_group g
+			INNER JOIN tournament_tournament t ON t.groupid = g.id
+			LEFT OUTER JOIN tournament_team tt ON tt.tournamentid = t.id
+			LEFT OUTER JOIN tournament_season s ON s.id = g.season_id
 			WHERE t.id = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.id#">
 			GROUP BY t.id
 		</cfquery>

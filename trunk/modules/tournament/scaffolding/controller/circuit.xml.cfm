@@ -35,6 +35,12 @@
 		<include circuit="v_#sModule#" template="custom/dsp_export"/>
 	</fuseaction>
 
+	<fuseaction access="public" name="match_overview">
+		<lanshock:security area="manage"/>
+		<include circuit="#sModule#" template="custom/act_match_overview"/>
+		<include circuit="v_#sModule#" template="custom/dsp_match_overview"/>
+	</fuseaction>
+
 	<fuseaction access="public" name="rules">
 		<include circuit="v_#sModule#" template="custom/inc_dsp_tournament_header"/>
 		<include circuit="v_#sModule#" template="custom/dsp_rules"/>
@@ -65,46 +71,46 @@
 
 	<fuseaction access="public" name="team_details">
 		<include circuit="v_#sModule#" template="custom/inc_dsp_tournament_header"/>
-		<include circuit="#sModule#" template="custom/act_team_details"/>
-		<include circuit="v_#sModule#" template="custom/dsp_team_details"/>
+		<include circuit="#sModule#" template="custom/team/act_team_details"/>
+		<include circuit="v_#sModule#" template="custom/team/dsp_team_details"/>
 	</fuseaction>
 
 	<fuseaction access="public" name="team_edit">
 		<include circuit="v_#sModule#" template="custom/inc_dsp_tournament_header"/>
-		<include circuit="#sModule#" template="custom/act_team_edit"/>
-		<include circuit="v_#sModule#" template="custom/dsp_team_edit"/>
+		<include circuit="#sModule#" template="custom/team/act_team_edit"/>
+		<include circuit="v_#sModule#" template="custom/team/dsp_team_edit"/>
 	</fuseaction>
 
 	<fuseaction access="public" name="team_leave">
 		<include circuit="v_#sModule#" template="custom/inc_dsp_tournament_header"/>
-		<include circuit="#sModule#" template="custom/act_team_leave"/>
-		<include circuit="v_#sModule#" template="custom/dsp_team_leave"/>
+		<include circuit="#sModule#" template="custom/team/act_team_leave"/>
+		<include circuit="v_#sModule#" template="custom/team/dsp_team_leave"/>
 	</fuseaction>
 
 	<fuseaction access="public" name="team_join">
 		<include circuit="v_#sModule#" template="custom/inc_dsp_tournament_header"/>
-		<include circuit="#sModule#" template="custom/act_team_join"/>
-		<include circuit="v_#sModule#" template="custom/dsp_team_join"/>
+		<include circuit="#sModule#" template="custom/team/act_team_join"/>
+		<include circuit="v_#sModule#" template="custom/team/dsp_team_join"/>
 	</fuseaction>
 
 	<fuseaction access="public" name="team_delete">
 		<include circuit="v_#sModule#" template="custom/inc_dsp_tournament_header"/>
-		<include circuit="#sModule#" template="custom/act_team_delete"/>
-		<include circuit="v_#sModule#" template="custom/dsp_team_delete"/>
+		<include circuit="#sModule#" template="custom/team/act_team_delete"/>
+		<include circuit="v_#sModule#" template="custom/team/dsp_team_delete"/>
 	</fuseaction>
 
 	<fuseaction access="public" name="team_player_change_status">
-		<include circuit="#sModule#" template="custom/act_team_player_change_status"/>
+		<include circuit="#sModule#" template="custom/team/act_team_player_change_status"/>
 	</fuseaction>
 
 	<fuseaction access="public" name="team_player_rearrange_players">
-		<include circuit="#sModule#" template="custom/act_team_player_rearrange_players"/>
+		<include circuit="#sModule#" template="custom/team/act_team_player_rearrange_players"/>
 	</fuseaction>
 
 	<fuseaction access="public" name="team_player_delete">
 		<include circuit="v_#sModule#" template="custom/inc_dsp_tournament_header"/>
-		<include circuit="#sModule#" template="custom/act_team_player_delete"/>
-		<include circuit="v_#sModule#" template="custom/dsp_team_player_delete"/>
+		<include circuit="#sModule#" template="custom/team/act_team_player_delete"/>
+		<include circuit="v_#sModule#" template="custom/team/dsp_team_player_delete"/>
 	</fuseaction>
 
 	<fuseaction access="public" name="tournaments_edit_exportsettings">

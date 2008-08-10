@@ -77,12 +77,16 @@ $LastChangedRevision: 72 $
 		
 		<cfsavecontent variable="HtmlBox">
 			<cfoutput>
-				<div class="#sClass# team_#qMatches.team1#_box team_#qMatches.team2#_box">
+				<div class="match_box_status #sClass# team_#qMatches.team1#_box team_#qMatches.team2#_box">
 				<cfif bShowLink>
 					<a href="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.matchdetails&tournamentid=#qTournament.id#&matchid=#id#')#">
 				</cfif>
 				<span class="team_name team_#qMatches.team1#<cfif winner EQ 'team1'> team_winner<cfelseif winner EQ 'team2'> team_loser</cfif>#sClass1#"><cfif len(qMatches.team1_country)><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/flags/png/#LCase(qMatches.team1_country)#.png" alt=""> </cfif>#qMatches.team1_name#</span>
-				<span class="team_delimiter">#request.content.versus_short#</span>
+				<cfif len(qMatches.team1_result_sum) AND len(qMatches.team2_result_sum)>
+					<span class="team_delimiter_result">#qMatches.team1_result_sum# : #qMatches.team2_result_sum#</span>
+				<cfelse>
+					<span class="team_delimiter">#request.content.versus_short#</span>
+				</cfif>
 				<span class="team_name team_#qMatches.team2#<cfif winner EQ 'team2'> team_winner<cfelseif winner EQ 'team1'> team_loser</cfif>#sClass2#"><cfif len(qMatches.team2_country)><img src="#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/images/famfamfam/flags/png/#LCase(qMatches.team2_country)#.png" alt=""> </cfif>#qMatches.team2_name#</span>
 				<cfif bShowLink>
 					</a>

@@ -24,16 +24,18 @@ $LastChangedRevision$
 	<cfinvoke component="#application.lanshock.oFactory.load('user','reactorGateway')#" method="getRecords" returnvariable="qDummyUsers">
 	
 	<cfset iCount = 0>
-	<cfloop query="qDummyUsers">
-		<cfset iCount = iCount + 1>
-		<cfif iCount LTE attributes.dummyteams>
-			<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.team')#" method="createTeam" returnvariable="teamid">
-				<cfinvokeargument name="name" value="#qDummyUsers.name#">
-				<cfinvokeargument name="leaderid" value="#qDummyUsers.id#">
-				<cfinvokeargument name="tournamentid" value="#attributes.tournamentid#">
-				<cfinvokeargument name="leagueid" value="">
-			</cfinvoke>
-		</cfif>
+	<cfloop condition="#iCount# LTE #attributes.dummyteams#">
+		<cfloop query="qDummyUsers">
+			<cfset iCount = iCount + 1>
+			<cfif iCount LTE attributes.dummyteams>
+				<cfinvoke component="#application.lanshock.oFactory.load('lanshock.modules.tournament.model.team')#" method="createTeam" returnvariable="teamid">
+					<cfinvokeargument name="name" value="#qDummyUsers.name# ###iCount#">
+					<cfinvokeargument name="leaderid" value="#qDummyUsers.id#">
+					<cfinvokeargument name="tournamentid" value="#attributes.tournamentid#">
+					<cfinvokeargument name="leagueid" value="">
+				</cfinvoke>
+			</cfif>
+		</cfloop>
 	</cfloop>
 	
 	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&tournamentid=#attributes.tournamentid#')#" addtoken="false">
