@@ -17,6 +17,9 @@ $LastChangedRevision$
 	<cfset this.sessionTimeout = createTimeSpan(0,0,20,0)>
 	<cfset this.setClientCookies = true>
 	<cfset this.setDomainCookies = false>
+	<cfset this.mappings['lanshock'] = expandPath('.')>
+	<cfset this.mappings['reactor'] = expandPath('framework/reactor/')>
+	<cfset this.mappings['fusebox5'] = expandPath('fusebox5/')>
 	
 	<cffunction name="onApplicationStart">
 		<cfif NOT fileExists(expandPath('fusebox.xml.cfm'))>
