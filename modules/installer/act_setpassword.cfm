@@ -15,9 +15,10 @@ $LastChangedRevision: 51 $
 <cfset sConfigFile = application.lanshock.oRuntime.getEnvironment().sStoragePath & 'secure/config/lanshock/config.ini.cfm'>
 
 <cfif attributes.form_submitted AND len(attributes.password)>
-	<cffile action="write" file="#sConfigFile#" output="" mode="777">
-
-	<cfset SetProfileString(sConfigFile,'lanshock','password',attributes.password)>
+	
+	<cfset stRuntimeConfig.lanshock.password = attributes.password>
+	
+	<cfset application.lanshock.oRuntime.setRuntimeConfig(stRuntimeConfig)>
 
 	<cflocation url="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.login')#" addtoken="false">
 </cfif>

@@ -12,7 +12,7 @@ $LastChangedRevision: 51 $
 <cfoutput>
 	<div align="center">
 		<table align="center">
-			<form action="#myself##myfusebox.thiscircuit#.setpassword&#session.UrlToken#" method="post" name="password">
+			<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.setpassword')#" method="post" name="password">
 			<input type="hidden" name="form_submitted" value="true"/>
 			<tr>
 				<th>#request.content.setpassword_newpassword#</th>
