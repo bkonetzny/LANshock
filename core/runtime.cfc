@@ -135,7 +135,9 @@ $LastChangedRevision$
 
 		<cfset getRuntimeConfig()>
 		
-		<cfif NOT StructIsEmpty(variables.stRuntimeConfig)>
+		<cfif StructKeyExists(variables.stRuntimeConfig,'lanshock')
+				AND StructKeyExists(variables.stRuntimeConfig.lanshock,'datasource')
+				AND StructKeyExists(variables.stRuntimeConfig.lanshock,'datasource_type')>
 			<cfset variables.stEnvironment.sDatasource = variables.stRuntimeConfig.lanshock.datasource>
 			<cfset variables.stEnvironment.sDatasourceType = variables.stRuntimeConfig.lanshock.datasource_type>
 		</cfif>
