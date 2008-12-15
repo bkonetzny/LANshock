@@ -1,4 +1,4 @@
-<cfsetting enablecfoutputonly="Yes">
+<cfsetting enablecfoutputonly="true">
 <!---
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
@@ -80,7 +80,7 @@ $LastChangedRevision$
 							id: "mediaplayer_flash_#qNews.id#",
 							name: "myDynamicContent"
 						};
-						swfobject.embedSWF("#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/flash/jw_media_player/mediaplayer.swf", "mediaplayer_#qNews.id#", "290", "24", "9.0.0", "expressInstall.swf", flashvars, params, attributes);
+						swfobject.embedSWF("#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/flash/mediaplayer/player.swf", "mediaplayer_#qNews.id#", "290", "24", "9.0.0", "expressInstall.swf", flashvars, params, attributes);
 					</script>
 					<div id="mediaplayer_#qNews.id#">
 						<a href="#qNews.mp3url#" target="_blank">#qNews.mp3url#</a>
@@ -97,4 +97,4 @@ $LastChangedRevision$
 	</cfloop>
 </cfoutput>
 
-<cfsetting enablecfoutputonly="No">
+<cfsetting enablecfoutputonly="false">

@@ -1,4 +1,4 @@
-<cfsetting enablecfoutputonly="Yes">
+<cfsetting enablecfoutputonly="true">
 <!---
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
@@ -12,4 +12,4 @@ $LastChangedRevision$
 <cfcontent type="text/xml">
 <cfset getPageContext().getOut().clearBuffer()><cfoutput>#sXmlResponse#</cfoutput>
 
-<cfsetting enablecfoutputonly="No">
+<cfsetting enablecfoutputonly="false">
