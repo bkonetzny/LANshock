@@ -21,7 +21,7 @@ $LastChangedRevision: 102 $
 <cfif stStatusDb.bStatus>
 	<div class="box_success" onclick="$('##form_config').toggle();">#request.content.status_config_success#</div>
 <cfelse>
-	<div class="box_failure">#request.content.status_config_failure# #stStatusDb.cfcatch.message#</div>
+	<div class="box_failure">#request.content.status_config_failure# #stStatusDb.message#</div>
 </cfif>
 
 <cfif ArrayLen(aError)>
@@ -80,7 +80,7 @@ $LastChangedRevision: 102 $
 </cfif>
 
 <div id="form_user"<cfif stStatusUser.bStatus> style="display:none"</cfif>>
-	<form action="#myself##myfusebox.thiscircuit#.#myfusebox.thisfuseaction#&#session.UrlToken#" method="post">
+	<form action="#application.lanshock.oHelper.buildUrl('#myfusebox.thiscircuit#.#myfusebox.thisfuseaction#')#" method="post">
 	<input type="hidden" name="form_submitted" value="true"/>
 	<input type="hidden" name="form_action" value="user"/>
 	<table>

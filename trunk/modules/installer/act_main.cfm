@@ -102,18 +102,10 @@ $LastChangedRevision: 89 $
 	
 </cfif>
 
-<!--- get all avaible datasources --->
-<cftry>
-	<cfobject type="java" action="create" name="factory" class="coldfusion.server.ServiceFactory">
-	<cfset lDatasources = StructKeyList(factory.getDataSourceService().getdatasources())>
-	<cfcatch>
-		<cfset lDatasources = ''>
-	</cfcatch>
-</cftry>
-<cfset lDatasources = LCase(lDatasources)>
+<cfset lDatasources = application.lanshock.oFactory.load('lanshock.modules.installer.installer').getDatasources()>
 <cfset lDatasourcesTypes = 'mysql'>
 
-<cfset stStatusDb = application.lanshock.oFactory.load('lanshock.modules.installer.installer').checkDbConnection()>
+<cfset stStatusDb = application.lanshock.oFactory.load('lanshock.modules.installer.installer').checkDbConnection(attributes.datasource)>
 <cfset stStatusUser = application.lanshock.oFactory.load('lanshock.modules.installer.installer').checkUserAccounts()>
 
 <cfsetting enablecfoutputonly="No">

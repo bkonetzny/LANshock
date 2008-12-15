@@ -9,7 +9,7 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 75 $
 -->
 
-<module name="LANshock Installer" version="2.0.0.0 beta" date="2008-05-06" author="LANshock" url="http://www.lanshock.com">
+<module name="Installer" version="2.0.0.0" date="2008-12-15" author="LANshock" url="http://www.lanshock.com">
 	
 	<general type="service" requiresLogin="false"/>
 	
