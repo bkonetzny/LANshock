@@ -100,6 +100,8 @@ $LastChangedRevision$
 	<cffunction name="dateTimeFormat" output="false" returntype="string">
 		<cfargument name="datetime" type="string" required="true">
 		<cfargument name="type" type="string" required="false" default="datetime" hint="datetime | date | time">
+		<cfargument name="datemask" type="string" required="false" default="">
+		<cfargument name="timemask" type="string" required="false" default="">
 		
 		<cfset var dtDatetime = arguments.datetime>
 		
@@ -108,11 +110,11 @@ $LastChangedRevision$
 		</cfif>
 		<cftry>
 			<cfif arguments.type EQ 'datetime'>
-				<cfreturn LSDateFormat(dtDatetime) & " " & LSTimeFormat(dtDatetime)>
+				<cfreturn LSDateFormat(dtDatetime, arguments.datemask) & " " & LSTimeFormat(dtDatetime, arguments.timemask)>
 			<cfelseif arguments.type EQ 'date'>
-				<cfreturn LSDateFormat(dtDatetime)>
+				<cfreturn LSDateFormat(dtDatetime, arguments.datemask)>
 			<cfelseif arguments.type EQ 'time'>
-				<cfreturn LSTimeFormat(dtDatetime)>
+				<cfreturn LSTimeFormat(dtDatetime, arguments.timemask)>
 			</cfif>
 			<cfcatch>
 				<cfreturn ''>
