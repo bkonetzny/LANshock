@@ -17,9 +17,11 @@ $LastChangedRevision$
 	<cfset this.sessionTimeout = createTimeSpan(0,0,20,0)>
 	<cfset this.setClientCookies = true>
 	<cfset this.setDomainCookies = false>
+	<cfset this.scriptProtect = false>
 	<cfset this.mappings['lanshock'] = expandPath('.')>
 	<cfset this.mappings['reactor'] = expandPath('framework/reactor/')>
 	<cfset this.mappings['fusebox5'] = expandPath('fusebox5/')>
+	<cfset this.mappings['scaffolder'] = expandPath('scaffolding/')>
 	
 	<cffunction name="onApplicationStart">
 		<cfif NOT fileExists(expandPath('fusebox.xml.cfm'))>
@@ -33,6 +35,7 @@ $LastChangedRevision$
 		<cfset application.lanshock.dtAppStart = now()>
 		<cfset application.lanshock.bInitPhase = true>
 		<cfset application.lanshock.oFactory = CreateObject('component','lanshock.core.factory')>
+		<cfset application.lanshock.oRequest = application.lanshock.oFactory.load('lanshock.core.request')>
 		<cfset application.lanshock.oRuntime = application.lanshock.oFactory.load('lanshock.core.runtime')>
 		<cfset application.lanshock.oRuntime.init()>
 		<cfset application.lanshock.oCache = application.lanshock.oFactory.load('lanshock.core.cache')>
@@ -84,6 +87,7 @@ $LastChangedRevision$
 		<cfset setMyFusebox(myFusebox)>
 		
 		<cfset application.lanshock.oRuntime.prepareRequest()>
+		<cfset application.lanshock.oRequest.init()>
 		
 		<cfset stImageDir = StructNew()>
 		<cfif DirectoryExists(application.lanshock.oRuntime.getEnvironment().sBasePath & 'templates/' & request.lanshock.settings.layout.template & '/images/_general')>
