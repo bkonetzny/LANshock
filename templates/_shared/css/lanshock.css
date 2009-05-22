@@ -1,23 +1,27 @@
-@import url('ext-all.css');
-@import url('ext-ux.grid.RowActions.css');
-@import url('uni-form.css');
+/*
+Copyright (C) by LANshock.com
+Released under the GNU General Public License (v2)
 
-.errorBox{
-	color: #c00;
-}
+$HeadURL$
+$LastChangedDate$
+$LastChangedBy$
+$LastChangedRevision$
+*/
 
-.errorBox h3{
-	background: url(../images/famfamfam/icons/error.png) no-repeat center left;
-	padding-left: 24px;
-	font-weight: bold;
-	color: #c00;
-}
+.clear,
+.clearer		{clear:both; font-size: 0px; line-height: 0px; display: block;	height: 0px;}
 
-div.clearer,
-div.clear{
-	clear:both;
-	font-size:0px;
-	line-height:0px;
-	display:block;
-	height:0px;
-}
+.errorBox		{color: #c00;}
+.errorBox h3	{background: url(../images/famfamfam/icons/error.png) no-repeat center left; padding-left: 24px; font-weight: bold;	color: #c00;}
+
+.notificationBox		{border: 1px solid red; padding: 10px; margin: 0px 0px 10px 0px;}
+.notificationBox h3		{margin: 0px; padding-left: 24px; font-weight: bold;}
+
+.notificationInfo		{border: 1px solid #0061FF;	background-color: #24B2E8; color: #fff;}
+.notificationInfo h3	{background: url(../images/famfamfam/icons/information.png) no-repeat center left;}
+.notificationSuccess	{border: 1px solid #88B31C;	background-color: #B1E824; color: #fff;}
+.notificationSuccess h3	{background: url(../images/famfamfam/icons/accept.png) no-repeat center left;}
+.notificationError		{border: 1px solid #FF341B; background-color: #E8713F; color: #fff;}
+.notificationError h3	{background: url(../images/famfamfam/icons/delete.png) no-repeat center left;}
+.notificationWarn		{border: 1px solid #B38F30; background-color: #FFDD1D; color: #000;}
+.notificationWarn h3	{background: url(../images/famfamfam/icons/error.png) no-repeat center left;}
