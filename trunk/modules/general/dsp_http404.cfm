@@ -1,4 +1,4 @@
-<cfsetting enablecfoutputonly="Yes">
+<cfsetting enablecfoutputonly="true">
 <!---
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
@@ -17,4 +17,4 @@ $LastChangedRevision$
 	<p>The Page you are looking for was not found.</p>
 </cfoutput>
 
-<cfsetting enablecfoutputonly="No">
+<cfsetting enablecfoutputonly="false">

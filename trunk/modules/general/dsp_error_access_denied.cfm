@@ -1,4 +1,4 @@
-<cfsetting enablecfoutputonly="Yes">
+<cfsetting enablecfoutputonly="true">
 <!---
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
@@ -14,4 +14,4 @@ $LastChangedRevision$
 	<p>#request.content.access_denied_txt#</p>
 </cfoutput>
 
-<cfsetting enablecfoutputonly="No">
+<cfsetting enablecfoutputonly="false">

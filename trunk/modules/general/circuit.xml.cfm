@@ -53,8 +53,12 @@ $LastChangedRevision$
 		<include template="dsp_language.cfm"/>
 	</fuseaction>
 	
-	<fuseaction name="session_language">
+	<fuseaction name="session_language" lanshock:showlayout="none">
 		<include template="act_session_language.cfm"/>
+	</fuseaction>
+	
+	<fuseaction name="imagecache" lanshock:showlayout="none">
+		<include template="act_imagecache.cfm"/>
 	</fuseaction>
 
 </circuit>
