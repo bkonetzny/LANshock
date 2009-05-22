@@ -1,4 +1,4 @@
-<cfsetting enablecfoutputonly="Yes">
+<cfsetting enablecfoutputonly="true">
 <!---
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
@@ -14,4 +14,4 @@ $LastChangedRevision$
 <cfset stUserOnline = application.lanshock.oSessionmanager.getSessions()>
 <cfset aStructOrder = StructSort(stUserOnline,'textnocase','DESC','session.dtSessionLastCall')>
 
-<cfsetting enablecfoutputonly="No">
+<cfsetting enablecfoutputonly="false">

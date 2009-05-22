@@ -1,4 +1,4 @@
-<cfsetting enablecfoutputonly="Yes">
+<cfsetting enablecfoutputonly="true">
 <!---
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
@@ -53,4 +53,4 @@ $LastChangedRevision$
 	</ul>
 </cfoutput>
 
-<cfsetting enablecfoutputonly="No">
+<cfsetting enablecfoutputonly="false">
