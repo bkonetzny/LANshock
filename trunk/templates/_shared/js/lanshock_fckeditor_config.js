@@ -21,9 +21,11 @@ FCKConfig.FlashUpload = false;
 FCKConfig.FlashDlgHideAdvanced = true;
 FCKConfig.ForcePasteAsPlainText	= true;
 
+FCKConfig.Plugins.Add('flvPlayer','en');
+
 FCKConfig.ToolbarSets["Default"] = [
 	['Source'],
-	['Bold','Italic','Underline','-','OrderedList','UnorderedList','Blockquote','-','Link','Unlink','Image','Flash','-','About']
+	['Bold','Italic','Underline','-','OrderedList','UnorderedList','Blockquote','-','Link','Unlink','Image','Flash','flvPlayer','-','About']
 ];
 
 FCKConfig.ToolbarSets["Minimum"] = [
