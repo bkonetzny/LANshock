@@ -48,7 +48,6 @@ $LastChangedRevision$
 <!DOCTYPE fusebox>
 <fusebox>
 	<circuits>
-		<circuit alias="udfs" path="core/_utils/udf/" parent="" />
 		#sCircuits#
 	</circuits>
 	<parameters>		
