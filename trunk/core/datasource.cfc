@@ -41,7 +41,7 @@ $LastChangedRevision$
 					#PreserveSingleQuotes(stLocal.sSqlCode)#
 				</cfquery>
 				<cfcatch>
-					<cfset application.lanshock.oLogger.writeLog('core.datasource','SQL Error for table "#application.lanshock.oRuntime.getEnvironment().sDatasource#.#sTableName#" | Message: "#cfcatch.message#" | Detail: "#cfcatch.detail#"','error')>
+					<cfset application.lanshock.oLogger.writeLog('core.datasource','SQL Error for table "#application.lanshock.oRuntime.getEnvironment().sDatasource#.#sTableName#" | Message: "#cfcatch.message#" | Detail: "#cfcatch.detail#" | SQL: "#stLocal.sSqlCode#"','error')>
 				</cfcatch>
 			</cftry>
 		</cfloop>
