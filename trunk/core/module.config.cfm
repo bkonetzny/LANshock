@@ -1,4 +1,4 @@
-<cfsetting enablecfoutputonly="Yes">
+<cfsetting enablecfoutputonly="true">
 <!---
 Copyright (C) by LANshock.com
 Released under the GNU General Public License (v2)
@@ -34,4 +34,4 @@ stConfig.settings.layout.avatar.mode = "lanshock"; // lanshock | gravatar
 
 <cfparam name="application.lanshock.settings.google_maps_key" default="">
 
-<cfsetting enablecfoutputonly="No">
+<cfsetting enablecfoutputonly="false">
