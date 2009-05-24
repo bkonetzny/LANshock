@@ -22,17 +22,7 @@ $LastChangedRevision$
 		<cfif len(qNewsEntry.mp3url)>
 			<div class="mediaplayer">
 				<script type="text/javascript">
-					var flashvars = {
-						soundFile: "#UrlEncodedFormat(qNewsEntry.mp3url)#"
-					};
-					var params = {
-						menu: "false"
-					};
-					var attributes = {
-						id: "mediaplayer_flash_#qNewsEntry.id#",
-						name: "myDynamicContent"
-					};
-					swfobject.embedSWF("#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/flash/mediaplayer/player.swf","mediaplayer_#qNewsEntry.id#", "290", "24", "9.0.0", "expressInstall.swf", flashvars, params, attributes);
+					swfobject.embedSWF("#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/flash/mediaplayer/player.swf","mediaplayer_#qNewsEntry.id#", "290", "24", "9.0.0", "expressInstall.swf", {file: "#UrlEncodedFormat(qNewsEntry.mp3url)#"}, {}, {id: "mediaplayer_flash_#qNewsEntry.id#"});
 				</script>
 				<div id="mediaplayer_#qNewsEntry.id#">
 					<a href="#qNewsEntry.mp3url#">#qNewsEntry.mp3url#</a>
@@ -40,6 +30,7 @@ $LastChangedRevision$
 			</div>
 		</cfif>
 		<div class="text">#application.lanshock.oHelper.ConvertText(qNewsEntry.text)#</div>
+		<div class="clear"></div>
 	</div>
 </cfloop>
 

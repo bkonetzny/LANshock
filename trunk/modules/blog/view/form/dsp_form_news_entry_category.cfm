@@ -37,12 +37,11 @@
 	</div>
 </cfif>
 <!--- Start of the form --->
-<form id="frmAddEdit" action="#self#" method="post" class="uniForm" onsubmit="javascript: return validate();">
+<form id="frmAddEdit" action="#application.lanshock.oHelper.buildUrl('#xfa.save#')#" method="post" class="uniForm" onsubmit="javascript: return validate();">
 	<div class="hidden">
-		<input type="hidden" name="fuseaction" value="#XFA.save#" />
-		<input type="hidden" name="_listSortByFieldList" value="#attributes._listSortByFieldList#" />
+		<!---<input type="hidden" name="_listSortByFieldList" value="#attributes._listSortByFieldList#" />
 		<input type="hidden" name="_Maxrows" value="#attributes._Maxrows#" />
-		<input type="hidden" name="_StartRow" value="#attributes._StartRow#" />
+		<input type="hidden" name="_StartRow" value="#attributes._StartRow#" />--->
 	</div>
 	
 	
@@ -127,9 +126,9 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="id" id="formrow_5E359A26B1E641D39B0A775FAC76D168" value="#onews_entry_category.getid()#" />
+	<input type="hidden" name="id" id="formrow_060BDAE38CCC4F58B2F22B926C70EEEB" value="#onews_entry_category.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_5E359A26B1E641D39B0A775FAC76D168">#request.content.news_entry_category_rowtype_label_id#</label>
+		<label for="formrow_060BDAE38CCC4F58B2F22B926C70EEEB">#request.content.news_entry_category_rowtype_label_id#</label>
 		#Trim(onews_entry_category.getid())#
 	</div>
 	</cfif>
@@ -144,8 +143,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_963980C228304623B9444E6C746115F4"><em>*</em> #request.content.news_entry_category_rowtype_label_entry_id#</label>
-		<input type="text" class="textInput" name="entry_id" id="formrow_963980C228304623B9444E6C746115F4" value="#Trim(onews_entry_category.getentry_id())#"/>
+		<label for="formrow_9DAAFC5737904630B5D26F033BBAC4A3"><em>*</em> #request.content.news_entry_category_rowtype_label_entry_id#</label>
+		<input type="text" class="textInput" name="entry_id" id="formrow_9DAAFC5737904630B5D26F033BBAC4A3" value="#Trim(onews_entry_category.getentry_id())#"/>
 	</div>
 				
 			
@@ -158,8 +157,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_EA2DBB98F0A0469C89E16F77025C6444"><em>*</em> #request.content.news_entry_category_rowtype_label_category_id#</label>
-		<input type="text" class="textInput" name="category_id" id="formrow_EA2DBB98F0A0469C89E16F77025C6444" value="#Trim(onews_entry_category.getcategory_id())#"/>
+		<label for="formrow_6052C3371DB84419B5D1CAEE9F110909"><em>*</em> #request.content.news_entry_category_rowtype_label_category_id#</label>
+		<input type="text" class="textInput" name="category_id" id="formrow_6052C3371DB84419B5D1CAEE9F110909" value="#Trim(onews_entry_category.getcategory_id())#"/>
 	</div>
 				
 			
@@ -214,7 +213,7 @@
 	<div class="buttonHolder">
 		<button type="submit" class="submitButton" id="btnSave">#request.content.form_save#</button>
 		<button type="reset" class="resetButton" id="btnReset">#request.content.form_reset#</button>
-		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';return false;">#request.content.form_cancel#</button>
+		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#jsStringFormat(application.lanshock.oHelper.buildUrl('#xfa.cancel#'))#<!---&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#--->';return false;">#request.content.form_cancel#</button>
 	</div>
 </form>
 </cfoutput>

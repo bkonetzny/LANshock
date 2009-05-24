@@ -37,12 +37,11 @@
 	</div>
 </cfif>
 <!--- Start of the form --->
-<form id="frmAddEdit" action="#self#" method="post" class="uniForm" onsubmit="javascript: return validate();">
+<form id="frmAddEdit" action="#application.lanshock.oHelper.buildUrl('#xfa.save#')#" method="post" class="uniForm" onsubmit="javascript: return validate();">
 	<div class="hidden">
-		<input type="hidden" name="fuseaction" value="#XFA.save#" />
-		<input type="hidden" name="_listSortByFieldList" value="#attributes._listSortByFieldList#" />
+		<!---<input type="hidden" name="_listSortByFieldList" value="#attributes._listSortByFieldList#" />
 		<input type="hidden" name="_Maxrows" value="#attributes._Maxrows#" />
-		<input type="hidden" name="_StartRow" value="#attributes._StartRow#" />
+		<input type="hidden" name="_StartRow" value="#attributes._StartRow#" />--->
 	</div>
 	
 	
@@ -147,9 +146,9 @@
 
 	
 	<cfif mode EQ "edit">
-	<input type="hidden" name="id" id="formrow_EF510058536B432693733BD59DE3D2DC" value="#onews_entry.getid()#" />
+	<input type="hidden" name="id" id="formrow_460609F6B4F14863B1E776F99BDA503A" value="#onews_entry.getid()#" />
 	<div class="ctrlHolder">
-		<label for="formrow_EF510058536B432693733BD59DE3D2DC">#request.content.news_entry_rowtype_label_id#</label>
+		<label for="formrow_460609F6B4F14863B1E776F99BDA503A">#request.content.news_entry_rowtype_label_id#</label>
 		#Trim(onews_entry.getid())#
 	</div>
 	</cfif>
@@ -164,8 +163,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_D3657039340A4A2785961017F2952294"><em>*</em> #request.content.news_entry_rowtype_label_title#</label>
-		<input type="text" class="textInput" name="title" id="formrow_D3657039340A4A2785961017F2952294" value="#Trim(onews_entry.gettitle())#"/>
+		<label for="formrow_BE8D935C0B3B48728B1150C6A48177D0"><em>*</em> #request.content.news_entry_rowtype_label_title#</label>
+		<input type="text" class="textInput" name="title" id="formrow_BE8D935C0B3B48728B1150C6A48177D0" value="#Trim(onews_entry.gettitle())#"/>
 	</div>
 				
 			
@@ -178,20 +177,20 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_67132B506EDE44468A12B7EF6C26A1DB"><em>*</em> #request.content.news_entry_rowtype_label_text#</label>
-		<textarea name="text" id="formrow_67132B506EDE44468A12B7EF6C26A1DB">#Trim(onews_entry.gettext())#</textarea>
-			<script type="text/javascript">
+		<label for="formrow_52929EE79C234F33BA5762EC644E4CEA"><em>*</em> #request.content.news_entry_rowtype_label_text#</label>
+		<textarea name="text" id="formrow_52929EE79C234F33BA5762EC644E4CEA">#Trim(onews_entry.gettext())#</textarea>
+		<script type="text/javascript">
 			<!--
-				var sBasePath = "#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/";
-				var oFCKeditor_formrow_67132B506EDE44468A12B7EF6C26A1DB = new FCKeditor('text');
-				oFCKeditor_formrow_67132B506EDE44468A12B7EF6C26A1DB.BasePath = sBasePath + "fckeditor/";
-				oFCKeditor_formrow_67132B506EDE44468A12B7EF6C26A1DB.Config['CustomConfigurationsPath'] = sBasePath + "lanshock_fckeditor_config.js";
-				oFCKeditor_formrow_67132B506EDE44468A12B7EF6C26A1DB.Value = '';
-				Ext.onReady(function(){
-					oFCKeditor_formrow_67132B506EDE44468A12B7EF6C26A1DB.ReplaceTextarea();
+				$(document).ready(function(){
+					var sBasePath = "#application.lanshock.oRuntime.getEnvironment().sWebPath#templates/_shared/js/";
+					var oFCKeditor_formrow_52929EE79C234F33BA5762EC644E4CEA = new FCKeditor('text');
+					oFCKeditor_formrow_52929EE79C234F33BA5762EC644E4CEA.BasePath = sBasePath + "fckeditor/";
+					oFCKeditor_formrow_52929EE79C234F33BA5762EC644E4CEA.Config['CustomConfigurationsPath'] = sBasePath + "lanshock_fckeditor_config.js";
+					oFCKeditor_formrow_52929EE79C234F33BA5762EC644E4CEA.Value = '';
+					oFCKeditor_formrow_52929EE79C234F33BA5762EC644E4CEA.ReplaceTextarea();
 				});
 			//-->
-			</script>
+		</script>
 	</div>
 				
 			
@@ -207,21 +206,21 @@
 		<cfset onews_entry.setdate(now())>
 	</cfif>
 	<div class="ctrlHolder">
-		<label for="formrow_0374F34BBD004F838669AE3430418939">#request.content.news_entry_rowtype_label_date#</label>
-		<div class="divInput" id="divDatePicker0374F34BBD004F838669AE3430418939"></div>
-		<input type="hidden" name="date" id="formrow_0374F34BBD004F838669AE3430418939" value="#LsDateFormat(Trim(onews_entry.getdate()),'YYYY-MM-DD')# #LsTimeFormat(Trim(onews_entry.getdate()),'HH:MM:SS')#"/>
+		<label for="formrow_F3BF397376564F9BA8F5B8E1CB291644">#request.content.news_entry_rowtype_label_date#</label>
+		<div class="divInput" id="divDatePickerF3BF397376564F9BA8F5B8E1CB291644"></div>
+		<input type="hidden" name="date" id="formrow_F3BF397376564F9BA8F5B8E1CB291644" value="#LsDateFormat(Trim(onews_entry.getdate()),'YYYY-MM-DD')# #LsTimeFormat(Trim(onews_entry.getdate()),'HH:MM:SS')#"/>
 		<script type="text/javascript">
 			<!--
-			var myDatePicker0374F34BBD004F838669AE3430418939 = new Ext.ux.form.DateTime({
+			var myDatePickerF3BF397376564F9BA8F5B8E1CB291644 = new Ext.ux.form.DateTime({
 				handler: function(value){
-					$('##formrow_0374F34BBD004F838669AE3430418939').val(value);
+					$('##formrow_F3BF397376564F9BA8F5B8E1CB291644').val(value);
 				}
 			});
 			Ext.onReady(function(){
-				myDatePicker0374F34BBD004F838669AE3430418939.render('divDatePicker0374F34BBD004F838669AE3430418939');
-				var dt0374F34BBD004F838669AE3430418939 = new Date();
-				dt0374F34BBD004F838669AE3430418939 = Date.parseDate("#LsDateFormat(Trim(onews_entry.getdate()),'YYYY-MM-DD')# #LsTimeFormat(Trim(onews_entry.getdate()),'HH:MM')#","Y-m-d G:i");
-				myDatePicker0374F34BBD004F838669AE3430418939.setValue(dt0374F34BBD004F838669AE3430418939);
+				myDatePickerF3BF397376564F9BA8F5B8E1CB291644.render('divDatePickerF3BF397376564F9BA8F5B8E1CB291644');
+				var dtF3BF397376564F9BA8F5B8E1CB291644 = new Date();
+				dtF3BF397376564F9BA8F5B8E1CB291644 = Date.parseDate("#LsDateFormat(Trim(onews_entry.getdate()),'YYYY-MM-DD')# #LsTimeFormat(Trim(onews_entry.getdate()),'HH:MM')#","Y-m-d G:i");
+				myDatePickerF3BF397376564F9BA8F5B8E1CB291644.setValue(dtF3BF397376564F9BA8F5B8E1CB291644);
 			});
 			//-->
 		</script>
@@ -237,8 +236,8 @@
 
 	
 	<div class="ctrlHolder">
-		<label for="formrow_AFB74A46370D406CA448CCBEC71FE4DC">#request.content.news_entry_rowtype_label_mp3url#</label>
-		<input type="text" class="textInput" name="mp3url" id="formrow_AFB74A46370D406CA448CCBEC71FE4DC" value="#Trim(onews_entry.getmp3url())#"/>
+		<label for="formrow_CAEC057866294DD9A5E740FCF828EFA7">#request.content.news_entry_rowtype_label_mp3url#</label>
+		<input type="text" class="textInput" name="mp3url" id="formrow_CAEC057866294DD9A5E740FCF828EFA7" value="#Trim(onews_entry.getmp3url())#"/>
 	</div>
 				
 			
@@ -263,8 +262,8 @@
 	
 	<cfset sReluser = onews_entry.getuser().getid()>
 	<div class="ctrlHolder">
-		<label for="formrow_75A668A8F0F041FDA10B51B0522678B7">user</label>
-		<select class="selectInput" name="author" id="formrow_75A668A8F0F041FDA10B51B0522678B7">
+		<label for="formrow_1E6A8404C78147208D8791F225F20CF5">user</label>
+		<select class="selectInput" name="author" id="formrow_1E6A8404C78147208D8791F225F20CF5">
 			<option value=""></option>
 			<cfloop query="stRelated.stManyToOne.user.qData">
 				<option value="#stRelated.stManyToOne.user.qData.optionvalue#"<cfif sReluser EQ stRelated.stManyToOne.user.qData.optionvalue> selected="selected"</cfif>>#stRelated.stManyToOne.user.qData.optionname#</option>
@@ -294,8 +293,8 @@
 	
 	<cfset lRelnews_entry_category = onews_entry.getnews_entry_categoryiterator().getValueList('category_id')>
 	<div class="ctrlHolder">
-		<label for="formrow_40B43F436B0D41868D655163D886719C">news_entry_category</label>
-		<select class="selectInput" name="news_entry_category" id="formrow_40B43F436B0D41868D655163D886719C" multiple="multiple" size="6">
+		<label for="formrow_B8C98258C5BB4E159E45FF27117A8494">news_entry_category</label>
+		<select class="selectInput" name="news_entry_category" id="formrow_B8C98258C5BB4E159E45FF27117A8494" multiple="multiple" size="6">
 			<option value=""></option>
 			<cfloop query="stRelated.stManyToMany.news_entry_category.qData">
 				<option value="#stRelated.stManyToMany.news_entry_category.qData.optionvalue#"<cfif ListFind(lRelnews_entry_category,stRelated.stManyToMany.news_entry_category.qData.optionvalue)> selected="selected"</cfif>>#stRelated.stManyToMany.news_entry_category.qData.optionname#</option>
@@ -314,7 +313,7 @@
 	<div class="buttonHolder">
 		<button type="submit" class="submitButton" id="btnSave">#request.content.form_save#</button>
 		<button type="reset" class="resetButton" id="btnReset">#request.content.form_reset#</button>
-		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#self#?fuseaction=#XFA.cancel#&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#';return false;">#request.content.form_cancel#</button>
+		<button type="cancel" class="cancelButton" id="btnCancel" onclick="javascript:location.href='#jsStringFormat(application.lanshock.oHelper.buildUrl('#xfa.cancel#'))#<!---&_listSortByFieldList=#attributes._listSortByFieldList#&_Maxrows=#attributes._Maxrows#&_StartRow=#attributes._Startrow#--->';return false;">#request.content.form_cancel#</button>
 	</div>
 </form>
 </cfoutput>

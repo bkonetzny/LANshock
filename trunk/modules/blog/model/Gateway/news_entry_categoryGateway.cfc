@@ -47,8 +47,38 @@
 						<cfcase value="isEqual">
 							<cfset Where.isEqual(sCurrentTable,sCurrentField,arguments.stFilter.stFields[idx].value)>
 						</cfcase>
+						<cfcase value="isNotEqual">
+							<cfset Where.isNotEqual(sCurrentTable,sCurrentField,arguments.stFilter.stFields[idx].value)>
+						</cfcase>
 						<cfcase value="isLike">
 							<cfset Where.isLike(sCurrentTable,sCurrentField,arguments.stFilter.stFields[idx].value)>
+						</cfcase>
+						<cfcase value="isNotLike">
+							<cfset Where.isNotLike(sCurrentTable,sCurrentField,arguments.stFilter.stFields[idx].value)>
+						</cfcase>
+						<cfcase value="isIn">
+							<cfset Where.isIn(sCurrentTable,sCurrentField,arguments.stFilter.stFields[idx].value)>
+						</cfcase>
+						<cfcase value="isNotIn">
+							<cfset Where.isNotIn(sCurrentTable,sCurrentField,arguments.stFilter.stFields[idx].value)>
+						</cfcase>
+						<cfcase value="isGt">
+							<cfset Where.isGt(sCurrentTable,sCurrentField,arguments.stFilter.stFields[idx].value)>
+						</cfcase>
+						<cfcase value="isGte">
+							<cfset Where.isGte(sCurrentTable,sCurrentField,arguments.stFilter.stFields[idx].value)>
+						</cfcase>
+						<cfcase value="isLt">
+							<cfset Where.isLt(sCurrentTable,sCurrentField,arguments.stFilter.stFields[idx].value)>
+						</cfcase>
+						<cfcase value="isLte">
+							<cfset Where.isLte(sCurrentTable,sCurrentField,arguments.stFilter.stFields[idx].value)>
+						</cfcase>
+						<cfcase value="isNull">
+							<cfset Where.isNull(sCurrentTable,sCurrentField)>
+						</cfcase>
+						<cfcase value="isNotNull">
+							<cfset Where.isNotNull(sCurrentTable,sCurrentField)>
 						</cfcase>
 					</cfswitch>
 				</cfloop>

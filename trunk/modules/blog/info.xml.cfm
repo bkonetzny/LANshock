@@ -88,7 +88,7 @@ $LastChangedRevision$
 		<scaffolding>
 			<table name="news_entry">
 				<list fields="id,title,author,date" sortDefault="date DESC"/>
-				<form fields="id,author,date,title,text,mp3url">
+				<form fields="id,date,title,text,mp3url">
 					<field name="text" formType="FckEditor"/>
 				</form>
 			</table>

@@ -16,7 +16,7 @@ $LastChangedRevision$
 			<cfscript>
 				iMonth = month(date);
 				iYear = year(date);
-				dtCurrentDate = LsParseDateTime('#iYear#-#iMonth#-01 00:00:00');
+				dtCurrentDate = ParseDateTime('#iYear#-#iMonth#-01 00:00:00');
 			</cfscript>
 			<cfif qNews.currentrow NEQ 1></table></cfif>
 			<h4>#LsDateFormat(dtCurrentDate,'YYYY MMMM')#</h4>

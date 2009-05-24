@@ -24,24 +24,10 @@
 								<true>
 									<set name="_fba.debug" value="false"/>
 								</true>
-								<false>
-									<if condition="request.layout EQ 'admin'">
-										<true>
-											
-											<lanshock:htmlhead content="@import url('#application.lanshock.oRuntime.getEnvironment().sWebPath#modules/blog/view/styles.css');" type="style"/>
-											
-										</true>
-									</if>
-								</false>
 							</if>
 						</false>
 					</if>
 				</true>
-				
-				<false>
-					<lanshock:htmlhead content="@import url('#application.lanshock.oRuntime.getEnvironment().sWebPath#modules/blog/view/styles.css');" type="style"/>
-				</false>
-				
 			</if>
 		</lanshock:fuseaction>
 	</postfuseaction>
@@ -57,26 +43,26 @@
 	
 	<fuseaction access="public" name="news">
 		<include circuit="blog" template="custom/act_news"/>
-		<include circuit="v_blog" template="custom/dsp_news"/>
+		<lanshock:display circuit="v_blog" template="custom/dsp_news"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="archive">
 		<include circuit="blog" template="custom/act_archive"/>
-		<include circuit="v_blog" template="custom/dsp_archive"/>
+		<lanshock:display circuit="v_blog" template="custom/dsp_archive"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="categories">
-		<include circuit="v_blog" template="custom/dsp_categories"/>
+		<lanshock:display circuit="v_blog" template="custom/dsp_categories"/>
 	</fuseaction>
 	
 	<fuseaction access="public" lanshock:showlayout="none" name="trackback">
 		<include circuit="blog" template="custom/act_trackback"/>
-		<include circuit="v_blog" template="custom/dsp_trackback"/>
+		<lanshock:display circuit="v_blog" template="custom/dsp_trackback"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="news_details">
 		<include circuit="blog" template="custom/act_news_details"/>
-		<include circuit="v_blog" template="custom/dsp_news_details"/>
+		<lanshock:display circuit="v_blog" template="custom/dsp_news_details"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="news_comment_edit">
@@ -116,7 +102,6 @@
 		<set name="attributes._listSortByFieldList" overwrite="false" value="news_category|id|ASC"/>
 		
 		<set name="fieldlist" value="id,name,"/>
-		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_blog" template="list/dsp_list_news_category"/>
 	</fuseaction>
 	
@@ -162,7 +147,6 @@
 		
 		<!-- /snippet -->
 		
-		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_blog" template="form/dsp_form_news_category"/>
 	</fuseaction>
 	
@@ -220,7 +204,6 @@
 		<set name="attributes._listSortByFieldList" overwrite="false" value="news_entry|id|ASC"/>
 		
 		<set name="fieldlist" value="id,author,title,text,date,mp3url,"/>
-		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_blog" template="list/dsp_list_news_entry"/>
 	</fuseaction>
 	
@@ -266,7 +249,6 @@
 		
 		<!-- /snippet -->
 		
-		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_blog" template="form/dsp_form_news_entry"/>
 	</fuseaction>
 	
@@ -324,7 +306,6 @@
 		<set name="attributes._listSortByFieldList" overwrite="false" value="news_entry_category|id|ASC"/>
 		
 		<set name="fieldlist" value="id,entry_id,category_id,"/>
-		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_blog" template="list/dsp_list_news_entry_category"/>
 	</fuseaction>
 	
@@ -370,7 +351,6 @@
 		
 		<!-- /snippet -->
 		
-		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_blog" template="form/dsp_form_news_entry_category"/>
 	</fuseaction>
 	
@@ -428,7 +408,6 @@
 		<set name="attributes._listSortByFieldList" overwrite="false" value="news_ping_url|id|ASC"/>
 		
 		<set name="fieldlist" value="id,name,url,"/>
-		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_blog" template="list/dsp_list_news_ping_url"/>
 	</fuseaction>
 	
@@ -474,7 +453,6 @@
 		
 		<!-- /snippet -->
 		
-		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_blog" template="form/dsp_form_news_ping_url"/>
 	</fuseaction>
 	
@@ -532,7 +510,6 @@
 		<set name="attributes._listSortByFieldList" overwrite="false" value="news_trackback|id|ASC"/>
 		
 		<set name="fieldlist" value="id,entry_id,blog_name,title,text,date,url,"/>
-		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_blog" template="list/dsp_list_news_trackback"/>
 	</fuseaction>
 	
@@ -578,7 +555,6 @@
 		
 		<!-- /snippet -->
 		
-		<include circuit="udfs" template="udf_appendParam"/>
 		<include circuit="v_blog" template="form/dsp_form_news_trackback"/>
 	</fuseaction>
 	
