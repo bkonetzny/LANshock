@@ -182,13 +182,18 @@ $LastChangedRevision$
 		<cfset var sReturn = myFusebox.getMyself()>
 		<cfset var bEnableSES = true>
 		<cfset var sMode = 'ses'>
+		<cfset var isBot = false>
 		
 		<cfif (NOT len(arguments.bForceMode) AND find('?',myFusebox.getMyself())) OR (len(arguments.bForceMode) AND arguments.bForceMode EQ 'classic')>
 			<cfset sMode = 'classic'>
 		</cfif>
 		
+		<cfif isDefined("session.isBot")>
+			<cfset isBot = session.isBot>
+		</cfif>
+		
 		<cfif sMode EQ 'ses'>
-			<cfif NOT session.isBot>
+			<cfif NOT isBot>
 				<cfset sReturn = myFusebox.getMyself() & replaceList(urlSessionFormat(arguments.sParameters),'?,&,=','/,/,/')>
 			<cfelse>
 				<cfset sReturn = myFusebox.getMyself() & replaceList(arguments.sParameters,'?,&,=','/,/,/')>
@@ -199,13 +204,13 @@ $LastChangedRevision$
 			</cfif>
 		<cfelseif sMode EQ 'classic'>
 			<cfif NOT find('?',myFusebox.getMyself())>
-				<cfif NOT session.isBot>
+				<cfif NOT isBot>
 					<cfset sReturn = urlSessionFormat(application.lanshock.oRuntime.getEnvironment().sWebPath & 'index.cfm?fuseaction=' & arguments.sParameters)>
 				<cfelse>
 					<cfset sReturn = application.lanshock.oRuntime.getEnvironment().sWebPath & 'index.cfm?fuseaction=' & arguments.sParameters>
 				</cfif>
 			<cfelse>
-				<cfif NOT session.isBot>
+				<cfif NOT isBot>
 					<cfset sReturn = myFusebox.getMyself() & urlSessionFormat(arguments.sParameters)>
 				<cfelse>
 					<cfset sReturn = myFusebox.getMyself() & arguments.sParameters>
