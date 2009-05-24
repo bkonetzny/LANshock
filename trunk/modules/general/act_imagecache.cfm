@@ -9,10 +9,27 @@ $LastChangedBy: majestixs $
 $LastChangedRevision: 371 $
 --->
 
+<cfparam name="url.file" default="">
+<cfparam name="url.width" default="">
+<cfparam name="url.height" default="">
+<cfparam name="url.method" default="_scale">
+<cfparam name="url.profile" default="">
+
 <cfset sFilename = application.lanshock.oRuntime.getEnvironment().sStoragePath & 'public/' & url.file>
 
 <cfif FileExists(sFilename)>
-	<cfset sDestination = attributes.width & 'x' & attributes.height & '/' & url.file>
+	<cfset attributes.file = url.file>
+	<cfset attributes.width = url.width>
+	<cfset attributes.height = url.height>
+	<cfset attributes.method = url.method>
+	<cfset attributes.profile = url.profile>
+	
+	<cfif NOT len(attributes.profile)>
+		<cfset sDestination = attributes.width & 'x' & attributes.height & attributes.method & '/' & attributes.file>
+	<cfelse>
+		<cfset sDestination = attributes.profile & '/' & attributes.file>
+	</cfif>
+	
 	<cfset sDestinationBase = application.lanshock.oRuntime.getEnvironment().sStoragePath & 'public/cache/images/'>
 	
 	<cfif NOT DirectoryExists(GetDirectoryFromPath(sDestinationBase & sDestination))>
@@ -26,27 +43,36 @@ $LastChangedRevision: 371 $
 		</cfloop>
 	</cfif>
 	
-	<cfset bResized = false>
+	<cfset bModified = false>
 	
-	<cfimage action="info" structName="stImageInfo" source="#sFilename#">
-	<cfif stImageInfo.width GT attributes.width>
-		<cfimage action="resize" source="#sFilename#" width="#attributes.width#" destination="#sDestinationBase##sDestination#" overwrite="true">
-		<cfset bResized = true>
-		<cfset sFilename = sDestinationBase & sDestination>
+	<cfimage source="#sFilename#" name="oCfImage">
+	
+	<cfif NOT len(attributes.profile)>
+		<cfswitch expression="#attributes.method#">
+			<cfcase value="_crop">
+				<cfset ImageCrop(oCfImage, 0, 0, attributes.width, attributes.height)>
+			</cfcase>
+			<cfcase value="_resize">
+				<cfset ImageResize(oCfImage, attributes.width, attributes.height)>
+			</cfcase>
+			<cfdefaultcase><!--- _scale --->
+				<cfset ImageScaleToFit(oCfImage, attributes.width, attributes.height)>
+			</cfdefaultcase>
+		</cfswitch>
+	<cfelse>
+		<cfswitch expression="#attributes.profile#">
+			<cfcase value="keyvisual">
+				<cfset ImageScaleToFit(oCfImage, 400, '')>
+				<cfset ImageCrop(oCfImage, 0, 0, 400, 160)>
+			</cfcase>
+		</cfswitch>
 	</cfif>
 	
-	<cfimage action="info" structName="stImageInfo" source="#sFilename#">
-	<cfif stImageInfo.height GT attributes.height>
-		<cfimage action="resize" source="#sFilename#" height="#attributes.height#" destination="#sDestinationBase##sDestination#" overwrite="true">
-		<cfset bResized = true>
-	</cfif>
-	
-	<cfif NOT bResized>
-		<cffile action="copy" source="#sFilename#" destination="#sDestinationBase##sDestination#">
-	</cfif>
-
+	<cfimage action="write" destination="#sDestinationBase##sDestination#" source="#oCfImage#" overwrite="true">
+		
 	<cflocation url="#application.lanshock.oRuntime.getEnvironment().sWebPath#storage/public/cache/images/#sDestination#">
 <cfelse>
+	<cfoutput>File #url.file# not found.</cfoutput>
 	<cfheader statuscode="404">
 </cfif>
 
