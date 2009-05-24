@@ -24,6 +24,8 @@
 	
 	<!--- snippet 'modules/blog/controller/form/snippets/act_action_save_postvalidation_news_entry.cfm' --->
 	
+		<cfinclude template="snippets/act_action_save_postvalidation_news_entry.cfm">
+	
 	<!--- /snippet --->
 	<cfparam name="attributes.news_entry_id" default="0">
 	<cfset onews_entry = application.lanshock.oFactory.load('news_entry','reactorRecord')>
@@ -66,7 +68,8 @@
 	
 	<cfif NOT bHasErrors>
 		<cfset onews_entry.save()>
-		<cflocation url="#application.lanshock.oHelper.buildUrl('#XFA.Continue#&_listSortByFieldList=#URLEncodedFormat(attributes._listSortByFieldList)#&_startrow=#attributes._Startrow#&_maxrows=#attributes._Maxrows#')#" addtoken="false">
+		<cflocation url="#application.lanshock.oHelper.buildUrl('#XFA.Continue#')#" addtoken="false">
+		<!--- <cflocation url="#application.lanshock.oHelper.buildUrl('#XFA.Continue#&_listSortByFieldList=#URLEncodedFormat(attributes._listSortByFieldList)#&_startrow=#attributes._Startrow#&_maxrows=#attributes._Maxrows#')#" addtoken="false"> --->
 	<cfelse>
 		<cfset request.layout = "admin">
 		

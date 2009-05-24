@@ -9,9 +9,6 @@
 <cfparam name="attributes._listSortByFieldList" default="">
 <cfparam name="attributes._totalRowCount" default="0">
 <cfparam name="request.searchSafe" default="false">
-<cfset sortParams = appendParam("","_listSortByFieldList",attributes._listSortByFieldList)>
-<cfset sortParams = appendParam(sortParams,"_Maxrows",attributes._Maxrows)>
-<cfset pageParams = appendParam(sortParams,"_StartRow",attributes._Startrow)>
 <!--- Complete list of fields that could be displayed --->
 <cfparam name="variables.fieldlist" default="id,name">
 </cfsilent>
