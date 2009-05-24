@@ -1,26 +1,26 @@
 <cfoutput>
 	<fuseaction access="public" name="news">
 		<include circuit="#sModule#" template="custom/act_news"/>
-		<include circuit="v_#sModule#" template="custom/dsp_news"/>
+		<lanshock:display circuit="v_#sModule#" template="custom/dsp_news"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="archive">
 		<include circuit="#sModule#" template="custom/act_archive"/>
-		<include circuit="v_#sModule#" template="custom/dsp_archive"/>
+		<lanshock:display circuit="v_#sModule#" template="custom/dsp_archive"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="categories">
-		<include circuit="v_#sModule#" template="custom/dsp_categories"/>
+		<lanshock:display circuit="v_#sModule#" template="custom/dsp_categories"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="trackback" lanshock:showlayout="none">
 		<include circuit="#sModule#" template="custom/act_trackback"/>
-		<include circuit="v_#sModule#" template="custom/dsp_trackback"/>
+		<lanshock:display circuit="v_#sModule#" template="custom/dsp_trackback"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="news_details">
 		<include circuit="#sModule#" template="custom/act_news_details"/>
-		<include circuit="v_#sModule#" template="custom/dsp_news_details"/>
+		<lanshock:display circuit="v_#sModule#" template="custom/dsp_news_details"/>
 	</fuseaction>
 	
 	<fuseaction access="public" name="news_comment_edit">
