@@ -147,7 +147,14 @@ $LastChangedRevision$
 	<cffunction name="getConfig" output="false" returntype="void">
 		<cfset var oStruct = application.lanshock.oFactory.load('lanshock.core._utils.cf.struct')>
 		
-		<cfinclude template="mySettings.cfm">
+		<cfinclude template="module.config.cfm">
+
+		<cfinvoke component="#application.lanshock.oFactory.load('lanshock.core.configmanager')#" method="createConfig" returnvariable="stConfig">
+			<cfinvokeargument name="module" value="__core_runtime">
+			<cfinvokeargument name="data" value="#stConfig#">
+			<cfinvokeargument name="version" value="2.0">
+		</cfinvoke>
+		
 		<cfset oStruct.structMerge(application.lanshock,stConfig)>
 	</cffunction>
 	
